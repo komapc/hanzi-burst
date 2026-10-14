@@ -1,0 +1,24 @@
+name = "hanzi-burst"
+main = "worker/index.js"
+compatibility_date = "2025-01-01"
+
+# Статика сайта и API живут на одном домене: куки работают без CORS.
+[assets]
+directory = "./site"
+binding = "ASSETS"
+# /api/* уходит в Worker, остальное отдаётся из site/
+run_worker_first = ["/api/*"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "hanzi-burst"
+database_id = "REPLACE_AFTER_wrangler_d1_create"
+
+[vars]
+GEMINI_MODEL = "gemini-2.5-flash"
+EXPLAIN_DAILY_LIMIT = "30"
+
+# Секреты (wrangler secret put ...):
+#   GOOGLE_CLIENT_ID   OAuth Web client ID (публичный, но не хардкодим)
+#   SESSION_SECRET     случайная строка 32+ байт для подписи куки
+#   GEMINI_API_KEY     ключ Gemini API

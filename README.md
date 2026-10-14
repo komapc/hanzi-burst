@@ -38,3 +38,18 @@ cd site && python3 -m http.server 8765   # http://127.0.0.1:8765/?open=想&explo
 ## Данные и лицензии
 
 Make Me a Hanzi (LGPL/Arphic), CC-CEDICT (CC BY-SA), Unicode/Unihan (Unicode License). Атрибуцию добавить перед публикацией.
+
+## Бэкенд и деплой (Cloudflare Workers + D1)
+
+Один Worker отдаёт статику из `site/` и `/api/*` (`worker/index.js`): вход через Google, список «известных», запоминалки через Gemini (кэш в D1, лимит в сутки).
+Без бэкенда (обычный статический сервер) страница работает, кнопки входа и запоминалок просто не показываются.
+
+```bash
+npm i -g wrangler && wrangler login
+wrangler d1 create hanzi-burst            # id вписать в wrangler.toml
+wrangler d1 execute hanzi-burst --remote --file worker/schema.sql
+wrangler secret put GOOGLE_CLIENT_ID      # Google Cloud Console -> OAuth client (Web), origin = домен сайта
+wrangler secret put SESSION_SECRET        # openssl rand -base64 32
+wrangler secret put GEMINI_API_KEY
+wrangler deploy
+```

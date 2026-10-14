@@ -18,6 +18,10 @@
   .hint { color:var(--muted); font-size:.9rem; margin:8px 0 0; }
   svg.i { width:1.1em; height:1.1em; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; vertical-align:-.2em; }
   svg.hz { fill:currentColor; display:block; }
+  .right { display:flex; align-items:center; gap:12px; }
+  #auth { font-size:.85rem; color:var(--muted); display:flex; align-items:center; gap:8px; }
+  .mn { margin:8px 0; padding:10px 12px; border-radius:10px; background:color-mix(in srgb, var(--accent) 8%, transparent); }
+  .mn small { color:var(--muted); display:block; margin-top:4px; }
   .lang { display:inline-flex; border:1px solid var(--soft); border-radius:999px; overflow:hidden; }
   .lang button { background:none; border:0; color:var(--muted); padding:5px 12px; font:inherit; font-size:.8rem; cursor:pointer; }
   .lang button.on { background:var(--accent); color:#fff; }
@@ -95,8 +99,11 @@
 <main>
   <header>
     <h1>hanzi-burst</h1>
-    <span class="lang" role="group" aria-label="Language">
-      <button data-lang="ru">RU</button><button data-lang="en">EN</button>
+    <span class="right">
+      <span id="auth"></span>
+      <span class="lang" role="group" aria-label="Language">
+        <button data-lang="ru">RU</button><button data-lang="en">EN</button>
+      </span>
     </span>
   </header>
   <div id="phrase"></div>
@@ -123,12 +130,12 @@ const ICON = {
 const T = {
   ru: { hint:'Нажми на иероглиф, затем на любую его часть, чтобы она разлетелась ещё на части.', crumbs:'Нажимай на части, чтобы разбирать дальше',
         all:'Взорвать всё', known:'Знаю', add:'Добавить в известные', where:'Где ещё встречается', words:'Слова', chars:'Иероглифы с этой частью',
-        seen:'Уже встречалось в этой фразе:', nodesc:'Для этой части в словаре нет описания.', derived:'выведено автоматически', atomic:'неделимая часть: радикал или цельный рисунок',
+        seen:'Уже встречалось в этой фразе:', nodesc:'Для этой части в словаре нет описания.', derived:'выведено автоматически', mnemo:'Придумать запоминалку', mnemoLogin:'Войди через Google, чтобы получать запоминалки', mnemoBusy:'Думаю…', mnemoErr:'Не получилось, попробуй позже', mnemoNote:'Выдумка для запоминания, не настоящая этимология', logout:'Выйти', atomic:'неделимая часть: радикал или цельный рисунок',
         phonetic:'Звук подсказывает', semantic:'смысл —', word:'Слово', known_n:'Известно:',
         types:{ pictophonetic:'смысл + звук', ideographic:'смысловая комбинация', pictographic:'рисунок' } },
   en: { hint:'Click a character, then any of its parts to break it down further.', crumbs:'Click parts to break them down',
         all:'Explode all', known:'Known', add:'Add to known', where:'Where else it appears', words:'Words', chars:'Characters with this part',
-        seen:'Already seen in this phrase:', nodesc:'No description for this part in the dictionary.', derived:'derived automatically', atomic:'indivisible part: a radical or a whole picture',
+        seen:'Already seen in this phrase:', nodesc:'No description for this part in the dictionary.', derived:'derived automatically', mnemo:'Make a mnemonic', mnemoLogin:'Sign in with Google to get mnemonics', mnemoBusy:'Thinking…', mnemoErr:'Failed, try again later', mnemoNote:'An invention to aid memory, not real etymology', logout:'Sign out', atomic:'indivisible part: a radical or a whole picture',
         phonetic:'Sound hint:', semantic:'meaning:', word:'Word', known_n:'Known:',
         types:{ pictophonetic:'meaning + sound', ideographic:'meaning combination', pictographic:'picture' } },
 };
@@ -262,9 +269,11 @@ function select(ch, glyphEl) {
   const u = D.usage[ch];
   h += `<div class="actions">
     <button class="btn ${isKnown ? 'on' : ''}" id="knownBtn">${isKnown ? ICON.check : ICON.star}${isKnown ? t('known') : t('add')}</button>
+    ${backend ? `<button class="btn" id="mnemoBtn">${ICON.star}${t('mnemo')}</button>` : ''}
     ${u ? `<button class="btn" id="usageBtn">${ICON.list}${t('where')}</button>` : ''}
     <a class="btn" target="_blank" rel="noopener" href="https://${lang === 'ru' ? 'ru' : 'en'}.wiktionary.org/wiki/${encodeURIComponent(ch)}">${ICON.ext}Wiktionary</a>
   </div>`;
+  h += `<div id="mnemo"></div>`;
   if (u) {
     h += `<div class="usage" id="usage">`;
     if (u.words.length) h += `<h3>${t('words')}</h3><ul class="wl">${u.words.map(w => `<li><span class="w serif">${w.w}</span><span class="p">${w.pinyin}</span>${pick(w, 'def')}</li>`).join('')}</ul>`;
@@ -272,7 +281,13 @@ function select(ch, glyphEl) {
     h += `</div>`;
   }
   $('#info').innerHTML = h;
-  $('#knownBtn').onclick = () => { known.has(ch) ? known.delete(ch) : known.add(ch); saveKnown(); refresh(); };
+  $('#knownBtn').onclick = () => {
+    const add = !known.has(ch);
+    add ? known.add(ch) : known.delete(ch);
+    saveKnown(); refresh();
+    if (user) api('/api/known', { method: 'PUT', body: add ? { add: [ch] } : { remove: [ch] } });
+  };
+  const mb = $('#mnemoBtn'); if (mb) mb.onclick = () => mnemonic(ch);
   const ub = $('#usageBtn'); if (ub) ub.onclick = () => $('#usage').classList.toggle('open');
   document.querySelectorAll('.chip').forEach(b => b.onclick = () => {
     $('#card').scrollIntoView({ behavior: 'smooth', block: 'start' }); openRoot(b.dataset.ch);
@@ -285,6 +300,67 @@ function refresh() {
   $('#stats').textContent = known.size ? `${t('known_n')} ${known.size} (${[...known].join(' ')})` : '';
 }
 
+/* ---------- бэкенд: вход через Google, синхронизация, запоминалки ---------- */
+let backend = false, user = null;
+async function api(path, opt = {}) {
+  const r = await fetch(path, { method: opt.method || 'GET', credentials: 'same-origin',
+    headers: opt.body ? { 'Content-Type': 'application/json' } : {}, body: opt.body ? JSON.stringify(opt.body) : undefined });
+  const ct = r.headers.get('content-type') || '';
+  return { ok: r.ok, status: r.status, data: ct.includes('json') ? await r.json() : null };
+}
+function renderAuth() {
+  const el = $('#auth');
+  if (!backend) { el.innerHTML = ''; return; }
+  if (user) {
+    el.innerHTML = `<span>${user.name || user.email}</span><button class="btn" id="logout">${t('logout')}</button>`;
+    $('#logout').onclick = async () => { await api('/api/auth/logout', { method: 'POST' }); user = null; renderAuth(); if (selected) refresh(); };
+  } else if (window.google && window.google.accounts) {
+    el.innerHTML = '<span id="gbtn"></span>';
+    google.accounts.id.renderButton($('#gbtn'), { theme: 'outline', size: 'medium', type: 'standard', text: 'signin' });
+  }
+}
+async function syncKnown() {
+  const r = await api('/api/known');
+  if (!r.ok) return;
+  const server = new Set(r.data);
+  const localOnly = [...known].filter(c => !server.has(c));
+  server.forEach(c => known.add(c));
+  saveKnown();
+  if (localOnly.length) await api('/api/known', { method: 'PUT', body: { add: localOnly } });
+  refresh(); renderPhrase();
+}
+async function onCredential(resp) {
+  const r = await api('/api/auth/google', { method: 'POST', body: { credential: resp.credential } });
+  if (r.ok) { user = r.data; renderAuth(); syncKnown(); }
+}
+async function mnemonic(ch) {
+  const box = $('#mnemo');
+  if (!user) { box.innerHTML = `<p class="hint">${t('mnemoLogin')}</p>`; return; }
+  box.innerHTML = `<p class="hint">${t('mnemoBusy')}</p>`;
+  const c = D.chars[ch] || {};
+  const parts = (c.components || []).map(x => ({ char: x, meaning: short(defOf(x)) }));
+  const r = await api('/api/explain', { method: 'POST', body: {
+    ch, lang, pinyin: (c.pinyin || []).join(', '), meaning: defOf(ch),
+    etymology: pick(c.etymology || {}, 'hint'), parts } });
+  box.innerHTML = r.ok && r.data.mnemonic
+    ? `<div class="mn">${r.data.mnemonic}<small>${t('mnemoNote')}</small></div>`
+    : `<p class="hint">${t('mnemoErr')}</p>`;
+}
+async function initBackend() {
+  try {
+    const cfg = await api('/api/config');
+    if (!cfg.ok || !cfg.data || !cfg.data.googleClientId) return;   // локальный статический сервер: бэкенда нет
+    backend = true;
+    await new Promise(res => { const s = document.createElement('script'); s.src = 'https://accounts.google.com/gsi/client'; s.async = true; s.onload = res; s.onerror = res; document.head.append(s); });
+    if (window.google && window.google.accounts) google.accounts.id.initialize({ client_id: cfg.data.googleClientId, callback: onCredential });
+    const me = await api('/api/me');
+    user = me.ok ? me.data : null;
+    renderAuth();
+    if (user) syncKnown();
+    if (selected) refresh();
+  } catch (e) { /* без бэкенда сайт работает как статика */ }
+}
+
 /* ---------- язык ---------- */
 function applyLang() {
   document.documentElement.lang = lang;
@@ -292,6 +368,7 @@ function applyLang() {
   $('#hint').textContent = t('hint');
   $('#crumbs').textContent = t('crumbs');
   $('#explodeAll').innerHTML = ICON.burst + t('all');
+  renderAuth();
   if (!D) return;
   // подписи узлов дерева (без пересборки: сохраняем раскрытое состояние)
   document.querySelectorAll('.node').forEach(n => {
@@ -315,6 +392,7 @@ Promise.all([fetch('phrase.json').then(r => r.json()), fetch('glyphs.json').then
       openRoot(q.get('open'));
       if (q.get('explode')) { explodeAll($('#tree > .node')); }
     }
+    initBackend();
   });
 </script>
 </body>
