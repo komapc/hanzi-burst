@@ -238,7 +238,11 @@ function buildList() {   // курируемые фразы + фразы из п
   L = D.phrases.concat(getSeen().map(z => byZh.get(z)).filter(Boolean));
   if (customPhrase) L.push(customPhrase);
 }
-function newPhrase() {
+let poolP = null;
+const ensurePool = () => poolP || (poolP = fetch('pool.json').then(r => r.json()).then(p => { D.pool = p; })
+  .catch(() => { poolP = null; D.pool = D.pool || []; }));
+async function newPhrase() {
+  await ensurePool();
   const have = new Set(L.map(p => p.zh));
   const seenCh = new Set(known);
   L.forEach(p => p.words.forEach(w => (w.chars || []).forEach(c => seenCh.add(c))));
@@ -616,7 +620,10 @@ const ownLabels = () => {
 applyLang();
 Promise.all([fetch('phrase.json').then(r => r.json()), fetch('glyphs.json').then(r => r.json())])
   .then(([d, g]) => {
-    D = d; G = g;
+    D = d; G = g; D.pool = [];
+    const q0 = new URLSearchParams(location.search);
+    return (getSeen().length || q0.get('z') ? ensurePool() : 0);
+  }).then(() => {
     const q0 = new URLSearchParams(location.search);
     let saved = 0; try { saved = parseInt(localStorage.getItem('hanzi-phrase') || '0', 10) || 0; } catch (e) {}
     if (q0.get('z') && !D.phrases.some(p => p.zh === q0.get('z')) && (D.pool || []).some(p => p.zh === q0.get('z'))) {

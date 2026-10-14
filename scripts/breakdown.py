@@ -326,11 +326,13 @@ def main():
             )[:TOP_CHARS],
         }
 
-    result = {"phrases": phrases, "pool": pool, "chars": chars, "usage": usage}
-    text = json.dumps(result, ensure_ascii=False, indent=1)
+    # пул (~0,9 МБ) лежит отдельным файлом: клиент грузит его лениво
+    result = {"phrases": phrases, "chars": chars, "usage": usage}
+    text = json.dumps(result, ensure_ascii=False, separators=(",", ":"))
     if len(sys.argv) > 2:
         out = Path(sys.argv[2])
         out.write_text(text, encoding="utf-8")
+        (out.parent / "pool.json").write_text(json.dumps(pool, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
         glyphs = load_glyphs(set(chars))
         (out.parent / "glyphs.json").write_text(json.dumps(glyphs, ensure_ascii=False), encoding="utf-8")
     print(f"phrases={len(phrases)} pool={len(pool)} core={len(core)} chars={len(chars)} bytes={len(text.encode())}")
