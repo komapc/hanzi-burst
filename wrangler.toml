@@ -4,7 +4,7 @@ compatibility_date = "2025-01-01"
 
 # Статика сайта и API живут на одном домене: куки работают без CORS.
 [build]
-command = "python3 -I scripts/build_static.py"   # страницы /c/, /p/ и sitemap.xml для поисковиков
+command = "python3 -I scripts/build_shards.py && python3 -I scripts/build_static.py"   # шарды для вставки текста, страницы /c/, /p/ и sitemap.xml
 
 [assets]
 directory = "./site"

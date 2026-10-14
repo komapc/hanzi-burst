@@ -73,3 +73,7 @@ wrangler deploy
 ## Предзаполненные запоминалки
 
 `data/mnemonics_prefill.json` — по одной запоминалке (RU и EN) для каждого из 629 иероглифов, написаны моделью по правилам промпта Worker. Залиты в D1 (`mnemonics`, variant 1, `model = 'claude-sonnet-5-5 (prefill)'`, `prompt_version = 2`) через `INSERT OR IGNORE`; «Ещё вариант» по-прежнему просит Gemini. Идеи на будущее — в `ROADMAP.md`.
+
+## Своя фраза (вставка текста)
+
+`python3 -I scripts/build_shards.py` строит `site/data/` (шарды иероглифов, контуров и слов CC-CEDICT по `кодпоинт>>8`, плюс `trad.json`). Каталог в `.gitignore`, генерируется командой `[build]` в `wrangler.toml` при деплое. Клиент грузит нужные шарды лениво, сегментирует текст и открывает обычный интерактивный разбор. Ссылка: `/?t=<текст>`.

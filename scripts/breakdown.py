@@ -336,4 +336,5 @@ def main():
     print(f"phrases={len(phrases)} pool={len(pool)} core={len(core)} chars={len(chars)} bytes={len(text.encode())}")
 
 
-main()
+if __name__ == "__main__":
+    main()

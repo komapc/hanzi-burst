@@ -45,6 +45,9 @@
 
   #picker { display:flex; align-items:center; gap:8px; margin-bottom:14px; }
   #picker .hint { margin:0; }
+  #own { margin:-4px 0 14px; } #own summary { cursor:pointer; color:var(--muted); font-size:.9rem; }
+  #own textarea { width:100%; box-sizing:border-box; margin:8px 0; padding:8px; font:inherit; font-size:1.2rem; background:var(--card); color:var(--fg); border:1px solid var(--soft); border-radius:10px; }
+  #gloss { margin:0 0 12px; }
   .pk.sel { max-width:60vw; border-radius:10px; background:var(--card); }
   .pk { background:none; border:1px solid var(--soft); border-radius:999px; padding:4px 12px; color:var(--muted); font:inherit; font-size:.95rem; cursor:pointer; font-family:"Noto Serif SC","Songti SC",serif; }
   .pk:hover { border-color:var(--accent); color:var(--accent); }
@@ -137,8 +140,13 @@
   </header>
   <noscript><p>hanzi-burst: учи китайские иероглифы, разбирая их на радикалы. Нужен JavaScript. / Learn Chinese characters by breaking them into radicals. JavaScript required.</p></noscript>
   <div id="picker" role="tablist"></div>
+  <details id="own"><summary id="ownSum"></summary>
+    <textarea id="ownText" rows="2" maxlength="300" lang="zh"></textarea>
+    <div><button class="btn" id="ownGo"></button> <span class="hint" id="ownMsg"></span></div>
+  </details>
   <div id="phrase"></div>
   <p class="trans" id="trans"></p>
+  <ul class="wl" id="gloss"></ul>
   <p class="hint" id="hint"></p>
   <section id="card">
     <div class="toolbar">
@@ -188,12 +196,12 @@ const ICON = {
 };
 const T = {
   ru: { hint:'Нажми на иероглиф, затем на любую его часть, чтобы она разлетелась ещё на части.', crumbs:'Нажимай на части, чтобы разбирать дальше',
-        all:'Взорвать всё', newPhrase:'Новая фраза', noMore:'Фразы в пуле закончились', known:'Знаю', add:'Добавить в известные', where:'Где ещё встречается', words:'Слова', chars:'Иероглифы с этой частью',
+        all:'Взорвать всё', newPhrase:'Новая фраза', ownTitle:'Своя фраза', ownGo:'Разобрать', ownPh:'Вставьте китайский текст (до 100 иероглифов)', ownBusy:'Загружаю словарь…', ownEmpty:'Не нашёл иероглифов в тексте', ownErr:'Не удалось загрузить данные', ownNote:'Текст остаётся в вашем браузере. Значения слов из словаря CC-CEDICT, перевода всей фразы нет.', ownTrad:'Традиционные знаки заменены упрощёнными.', noMore:'Фразы в пуле закончились', known:'Знаю', add:'Добавить в известные', where:'Где ещё встречается', words:'Слова', chars:'Иероглифы с этой частью',
         seen:'Уже встречалось в этой фразе:', nodesc:'Для этой части в словаре нет описания.', derived:'выведено автоматически', mnemo:'Придумать запоминалку', mnemoMore:'Ещё вариант', mnemoLimit:'Лимит на сегодня исчерпан', mnemoLogin:'Войди через Google, чтобы получать запоминалки', mnemoBusy:'Думаю…', mnemoErr:'Не получилось, попробуй позже', mnemoNote:'Выдумка для запоминания, не настоящая этимология', logout:'Выйти', atomic:'неделимая часть: радикал или цельный рисунок',
         phonetic:'Звук подсказывает', semantic:'смысл —', word:'Слово', known_n:'Известно:',
         types:{ pictophonetic:'смысл + звук', ideographic:'смысловая комбинация', pictographic:'рисунок' } },
   en: { hint:'Click a character, then any of its parts to break it down further.', crumbs:'Click parts to break them down',
-        all:'Explode all', newPhrase:'New phrase', noMore:'No more phrases in the pool', known:'Known', add:'Add to known', where:'Where else it appears', words:'Words', chars:'Characters with this part',
+        all:'Explode all', newPhrase:'New phrase', ownTitle:'Your own phrase', ownGo:'Break down', ownPh:'Paste Chinese text (up to 100 characters)', ownBusy:'Loading dictionary…', ownEmpty:'No Chinese characters found', ownErr:'Could not load data', ownNote:'Your text stays in your browser. Word meanings come from CC-CEDICT; there is no translation of the whole phrase.', ownTrad:'Traditional characters were converted to simplified.', noMore:'No more phrases in the pool', known:'Known', add:'Add to known', where:'Where else it appears', words:'Words', chars:'Characters with this part',
         seen:'Already seen in this phrase:', nodesc:'No description for this part in the dictionary.', derived:'derived automatically', mnemo:'Make a mnemonic', mnemoMore:'Another one', mnemoLimit:'Daily limit reached', mnemoLogin:'Sign in with Google to get mnemonics', mnemoBusy:'Thinking…', mnemoErr:'Failed, try again later', mnemoNote:'An invention to aid memory, not real etymology', logout:'Sign out', atomic:'indivisible part: a radical or a whole picture',
         phonetic:'Sound hint:', semantic:'meaning:', word:'Word', known_n:'Known:',
         types:{ pictophonetic:'meaning + sound', ideographic:'meaning combination', pictographic:'picture' } },
@@ -221,13 +229,14 @@ function hz(ch, cls = '') {
 let rootCh = null, selected = null;
 
 /* ---------- выбор фразы ---------- */
-let cur = 0, L = [];
+let cur = 0, L = [], customPhrase = null;
 const SEEN_KEY = 'hanzi-seen-pool';
 const getSeen = () => { try { return JSON.parse(localStorage.getItem(SEEN_KEY) || '[]'); } catch (e) { return []; } };
 const saveSeen = a => { try { localStorage.setItem(SEEN_KEY, JSON.stringify(a)); } catch (e) {} };
 function buildList() {   // курируемые фразы + фразы из пула, которые пользователь уже получал
   const byZh = new Map((D.pool || []).map(p => [p.zh, p]));
   L = D.phrases.concat(getSeen().map(z => byZh.get(z)).filter(Boolean));
+  if (customPhrase) L.push(customPhrase);
 }
 function newPhrase() {
   const have = new Set(L.map(p => p.zh));
@@ -263,7 +272,10 @@ function renderPicker() {   // 50+ фраз: стрелки и выпадающ�
 }
 function renderTrans() {
   const ph = L[cur];
-  $('#trans').textContent = ((lang === 'ru' ? ph.ru : ph.en) || ph.en || '') + (ph.mt ? (lang === 'ru' ? '  (машинный перевод)' : '  (machine translation)') : '');
+  $('#trans').textContent = ph.custom ? (ph.trad ? t('ownTrad') : '') :
+    ((lang === 'ru' ? ph.ru : ph.en) || ph.en || '') + (ph.mt ? (lang === 'ru' ? '  (машинный перевод)' : '  (machine translation)') : '');
+  $('#gloss').innerHTML = ph.custom ? ph.words.filter(w => w.gloss).map(w =>
+    `<li><span class="w serif">${w.word}</span><span class="p">${(w.pinyin || w.chars.map(py)).join(' ')}</span>${lang === 'ru' && w.gloss_ru ? w.gloss_ru : w.gloss}</li>`).join('') : '';
 }
 function switchPhrase(i) {
   cur = i;
@@ -513,7 +525,7 @@ function applyLang() {
   $('#hint').textContent = t('hint');
   $('#crumbs').textContent = t('crumbs');
   $('#explodeAll').innerHTML = ICON.burst + t('all');
-  renderAuth();
+  renderAuth(); ownLabels();
   if (!D) return;
   renderPicker(); renderTrans();
   // подписи узлов дерева (без пересборки: сохраняем раскрытое состояние)
@@ -526,6 +538,79 @@ document.querySelectorAll('.lang button').forEach(b => b.onclick = () => {
   lang = b.dataset.lang; try { localStorage.setItem('hanzi-lang', lang); } catch (e) {}
   applyLang();
 });
+
+/* ---------- своя фраза: шарды данных грузятся лениво ---------- */
+const HAN = /[㐀-鿿]/;
+const shardKey = ch => ch.codePointAt(0).toString(16).slice(0, -2);
+const shardCache = {};
+const loadShard = (kind, k) => shardCache[kind + k] || (shardCache[kind + k] =
+  fetch(`data/${kind}/${k}.json`).then(r => r.ok ? r.json() : {}).catch(() => ({})));
+let tradMap = null;
+async function analyzeText(raw) {
+  tradMap = tradMap || await fetch('data/trad.json').then(r => r.json()).catch(() => ({}));
+  let converted = false;
+  const text = [...raw].slice(0, 100).map(c => { if (tradMap[c]) { converted = true; return tradMap[c]; } return c; }).join('');
+  const han = [...new Set([...text].filter(c => HAN.test(c)))];
+  if (!han.length) return null;
+  const wordsBy = {};
+  await Promise.all([...new Set(han.map(shardKey))].map(async k => Object.assign(wordsBy, await loadShard('words', k))));
+  // максимальное совпадение слева направо (слова до 6 знаков)
+  const parts = []; const cs = [...text];
+  for (let i = 0; i < cs.length;) {
+    if (!HAN.test(cs[i])) {
+      let j = i; while (j < cs.length && !HAN.test(cs[j])) j++;
+      const p = cs.slice(i, j).join('').trim(); if (p) parts.push({ word: p, punct: true });
+      i = j; continue;
+    }
+    let n = 1;
+    for (let m = Math.min(6, cs.length - i); m > 1; m--) { if (wordsBy[cs.slice(i, i + m).join('')]) { n = m; break; } }
+    parts.push({ word: cs.slice(i, i + n).join(''), chars: cs.slice(i, i + n) });
+    i += n;
+  }
+  // данные иероглифов и всех их компонентов
+  let need = new Set(han);
+  const done = new Set();
+  while (need.size) {
+    const batch = [...need].filter(c => !done.has(c)); need = new Set();
+    batch.forEach(c => done.add(c));
+    await Promise.all([...new Set(batch.map(shardKey))].map(async k => {
+      const [cd, gl] = await Promise.all([loadShard('chars', k), loadShard('glyphs', k)]);
+      Object.assign(G, gl);
+      batch.filter(c => shardKey(c) === k).forEach(c => {
+        if (!cd[c]) return;
+        D.chars[c] = D.chars[c] || cd[c];
+        (cd[c].components || []).forEach(x => { if (!done.has(x)) need.add(x); });
+      });
+    }));
+  }
+  parts.forEach(w => {
+    if (w.punct) return;
+    const e = wordsBy[w.word];
+    if (e) {
+      const syl = e[0].split(' ');
+      if (syl.length === w.chars.length) w.pinyin = syl;
+      w.gloss = e[1]; w.gloss_ru = e[2];
+    } else if (w.chars.length === 1) {
+      const c = D.chars[w.word];
+      if (c && c.definition) { w.gloss = c.definition; w.gloss_ru = c.definition_ru; }
+    }
+  });
+  return { zh: text, custom: true, trad: converted, words: parts };
+}
+$('#ownGo').onclick = async () => {
+  const msg = $('#ownMsg'); const say = k => { msg.dataset.k = k; msg.textContent = t(k); }; say('ownBusy');
+  try {
+    const ph = await analyzeText($('#ownText').value);
+    if (!ph) { say('ownEmpty'); return; }
+    say('ownNote');
+    customPhrase = ph; buildList(); switchPhrase(L.length - 1);
+    track('own_phrase', { len: ph.zh.length });
+  } catch (e) { say('ownErr'); }
+};
+const ownLabels = () => {
+  $('#ownSum').textContent = t('ownTitle'); $('#ownGo').textContent = t('ownGo');
+  $('#ownText').placeholder = t('ownPh'); $('#ownMsg').textContent = t($('#ownMsg').dataset.k || 'ownNote');
+};
 
 applyLang();
 Promise.all([fetch('phrase.json').then(r => r.json()), fetch('glyphs.json').then(r => r.json())])
@@ -547,6 +632,10 @@ Promise.all([fetch('phrase.json').then(r => r.json()), fetch('glyphs.json').then
     if (q.get('open') && D.chars[q.get('open')]) {
       openRoot(q.get('open'));
       if (q.get('explode')) { explodeAll($('#tree > .node')); }
+    }
+    if (q.get('t')) {
+      $('#own').open = true; $('#ownText').value = q.get('t');
+      $('#ownGo').click();
     }
     initBackend();
   });
