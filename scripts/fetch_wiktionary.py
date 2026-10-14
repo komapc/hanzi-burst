@@ -15,6 +15,9 @@ import argparse, json, re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+# сайт для новичков: грубую лексику в пул не берём
+VULGAR_EN = re.compile(r"\b(fuck\w*|shit\w*|bitch\w*|cunt|dick|cock|pussy|whore|slut|asshole|my ass|bastard|nigg\w*)\b", re.I)
+VULGAR_ZH = re.compile(r"你妈(?!妈)|他妈(?!妈)|妈了个|老母|操你|傻逼|屌")
 HAN = re.compile(r'^[一-鿿，。？！、；：“”]+$')
 IS_HAN = lambda c: '一' <= c <= '鿿'
 
@@ -27,6 +30,8 @@ def candidates():
     for l in open(ROOT / "data/raw/kaikki/zh_examples.jsonl", encoding="utf-8"):
         r = json.loads(l)
         zh, en = r["text"].strip(), (r["en"] or "").strip()
+        if VULGAR_EN.search(en) or VULGAR_ZH.search(zh):
+            continue
         if not en or zh in seen or zh in have or not (4 <= len(zh) <= 16) or not HAN.match(zh):
             continue
         if not all(c in core for c in zh if IS_HAN(c)):

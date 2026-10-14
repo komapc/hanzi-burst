@@ -72080,37 +72080,6 @@
    ]
   },
   {
-   "zh": "干你妈！",
-   "ru": "Ёб твою мать!",
-   "en": "Fuck your mother!",
-   "words": [
-    {
-     "word": "干",
-     "chars": [
-      "干"
-     ],
-     "pinyin": [
-      "gān"
-     ]
-    },
-    {
-     "word": "你妈",
-     "chars": [
-      "你",
-      "妈"
-     ],
-     "pinyin": [
-      "nǐ",
-      "mā"
-     ]
-    },
-    {
-     "word": "！",
-     "punct": true
-    }
-   ]
-  },
-  {
    "zh": "干掉他！",
    "ru": "Убей его!",
    "en": "Kill him!",
@@ -99648,39 +99617,6 @@
    ]
   },
   {
-   "zh": "你他妈的。",
-   "ru": "Пошёл ты.",
-   "en": "Fuck you.",
-   "words": [
-    {
-     "word": "你",
-     "chars": [
-      "你"
-     ],
-     "pinyin": [
-      "nǐ"
-     ]
-    },
-    {
-     "word": "他妈的",
-     "chars": [
-      "他",
-      "妈",
-      "的"
-     ],
-     "pinyin": [
-      "tā",
-      "mā",
-      "de"
-     ]
-    },
-    {
-     "word": "。",
-     "punct": true
-    }
-   ]
-  },
-  {
    "zh": "女士们，先生们，晚上好！",
    "ru": "Дамы и господа, добрый вечер!",
    "en": "Ladies and gentlemen: good evening!",
@@ -106382,46 +106318,6 @@
    ]
   },
   {
-   "zh": "记你老母！",
-   "ru": "Репортёр, как же!",
-   "en": "Reporter (記者／记者), my ass!",
-   "words": [
-    {
-     "word": "记",
-     "chars": [
-      "记"
-     ],
-     "pinyin": [
-      "jì"
-     ]
-    },
-    {
-     "word": "你",
-     "chars": [
-      "你"
-     ],
-     "pinyin": [
-      "nǐ"
-     ]
-    },
-    {
-     "word": "老母",
-     "chars": [
-      "老",
-      "母"
-     ],
-     "pinyin": [
-      "lǎo",
-      "mǔ"
-     ]
-    },
-    {
-     "word": "！",
-     "punct": true
-    }
-   ]
-  },
-  {
    "zh": "这不是好事吗？",
    "ru": "Разве это не хорошо?",
    "en": "Isn't this a good thing?",
@@ -106619,72 +106515,6 @@
     },
     {
      "word": "。",
-     "punct": true
-    }
-   ]
-  },
-  {
-   "zh": "好！好！好你妈好！",
-   "ru": "Хорошо! Хорошо! Да какое там хорошо!",
-   "en": "Good! Good (sarcastic quotation twice)! Good, your ass!",
-   "words": [
-    {
-     "word": "好",
-     "chars": [
-      "好"
-     ],
-     "pinyin": [
-      "hǎo"
-     ]
-    },
-    {
-     "word": "！",
-     "punct": true
-    },
-    {
-     "word": "好",
-     "chars": [
-      "好"
-     ],
-     "pinyin": [
-      "hǎo"
-     ]
-    },
-    {
-     "word": "！",
-     "punct": true
-    },
-    {
-     "word": "好",
-     "chars": [
-      "好"
-     ],
-     "pinyin": [
-      "hǎo"
-     ]
-    },
-    {
-     "word": "你妈",
-     "chars": [
-      "你",
-      "妈"
-     ],
-     "pinyin": [
-      "nǐ",
-      "mā"
-     ]
-    },
-    {
-     "word": "好",
-     "chars": [
-      "好"
-     ],
-     "pinyin": [
-      "hǎo"
-     ]
-    },
-    {
-     "word": "！",
      "punct": true
     }
    ]
@@ -107448,71 +107278,6 @@
     },
     {
      "word": "。",
-     "punct": true
-    }
-   ]
-  },
-  {
-   "zh": "妈了个巴子的！",
-   "ru": "Чёрт!",
-   "en": "Shit!",
-   "words": [
-    {
-     "word": "妈",
-     "chars": [
-      "妈"
-     ],
-     "pinyin": [
-      "mā"
-     ]
-    },
-    {
-     "word": "了",
-     "chars": [
-      "了"
-     ],
-     "pinyin": [
-      "le"
-     ]
-    },
-    {
-     "word": "个",
-     "chars": [
-      "个"
-     ],
-     "pinyin": [
-      "gě"
-     ]
-    },
-    {
-     "word": "巴",
-     "chars": [
-      "巴"
-     ],
-     "pinyin": [
-      "Bā"
-     ]
-    },
-    {
-     "word": "子",
-     "chars": [
-      "子"
-     ],
-     "pinyin": [
-      "zǐ"
-     ]
-    },
-    {
-     "word": "的",
-     "chars": [
-      "的"
-     ],
-     "pinyin": [
-      "de"
-     ]
-    },
-    {
-     "word": "！",
      "punct": true
     }
    ]
@@ -109044,46 +108809,6 @@
       "gǔ",
       "dū"
      ]
-    }
-   ]
-  },
-  {
-   "zh": "去你妈的！",
-   "ru": "Пошёл ты!",
-   "en": "Fuck yourself!",
-   "words": [
-    {
-     "word": "去",
-     "chars": [
-      "去"
-     ],
-     "pinyin": [
-      "qù"
-     ]
-    },
-    {
-     "word": "你妈",
-     "chars": [
-      "你",
-      "妈"
-     ],
-     "pinyin": [
-      "nǐ",
-      "mā"
-     ]
-    },
-    {
-     "word": "的",
-     "chars": [
-      "的"
-     ],
-     "pinyin": [
-      "de"
-     ]
-    },
-    {
-     "word": "！",
-     "punct": true
     }
    ]
   },
