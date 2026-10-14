@@ -2,6 +2,8 @@
 // Всё, что не /api/*, отдаётся статикой из site/ (см. wrangler.toml).
 
 const SESSION_TTL = 60 * 60 * 24 * 30; // 30 дней
+const PROMPT_VERSION = 1;   // поднять при смене промпта: старые запоминалки перестанут показываться
+const MAX_VARIANTS = 3;
 const json = (data, status = 200, headers = {}) =>
   new Response(JSON.stringify(data), { status, headers: { 'Content-Type': 'application/json', ...headers } });
 
@@ -44,12 +46,13 @@ async function verifyGoogle(env, credential) {
 }
 
 /* ---------- LLM ---------- */
-function promptFor({ ch, pinyin, meaning, parts, etymology, lang }) {
+function promptFor({ ch, pinyin, meaning, parts, etymology, lang, avoid = [] }) {
   const ru = lang === 'ru';
   return `${ru ? 'Ты помогаешь новичку запомнить китайский иероглиф.' : 'You help a beginner remember a Chinese character.'}
 Character: ${ch}  Pinyin: ${pinyin}  Meaning: ${meaning}
 Parts: ${parts.map(p => `${p.char} (${p.meaning})`).join(', ') || '—'}
 Real etymology (from a dictionary): ${etymology || '—'}
+${avoid.length ? `Already used (write something clearly different): ${avoid.map(x => '"' + x + '"').join(' | ')}` : ''}
 
 ${ru
   ? 'Придумай короткую (1–2 предложения) яркую запоминалку на русском: сюжет из частей, пусть даже смешной или глупый. Если есть подсказка про звук, свяжи её со звучанием. Не выдавай выдумку за реальную этимологию.'
@@ -103,6 +106,17 @@ export default {
       return json({ ok: true }, 200, { 'Set-Cookie': cookie('', 0) });
     }
 
+    // кэш запоминалок читается без входа: показываем уже придуманное всем
+    if (path === '/api/mnemonics' && method === 'GET') {
+      const ch = url.searchParams.get('ch') || '';
+      const lang = url.searchParams.get('lang') === 'en' ? 'en' : 'ru';
+      if ([...ch].length !== 1) return json({ error: 'bad_char' }, 400);
+      const { results } = await env.DB.prepare(
+        'SELECT variant, text FROM mnemonics WHERE ch = ?1 AND lang = ?2 AND prompt_version = ?3 ORDER BY variant'
+      ).bind(ch, lang, PROMPT_VERSION).all();
+      return json({ variants: results }, 200, { 'Cache-Control': 'public, max-age=60' });
+    }
+
     // дальше нужна сессия
     const session = await readSession(env, request);
     if (!session) return json({ error: 'unauthorized' }, 401);
@@ -129,29 +143,36 @@ export default {
       const lang = b.lang === 'en' ? 'en' : 'ru';
       if (typeof b.ch !== 'string' || [...b.ch].length !== 1) return json({ error: 'bad_char' }, 400);
 
-      const cached = await env.DB.prepare('SELECT text FROM mnemonics WHERE ch = ?1 AND lang = ?2').bind(b.ch, lang).first();
-      if (cached) return json({ mnemonic: cached.text, cached: true });
+      const read = async () => (await env.DB.prepare(
+        'SELECT variant, text FROM mnemonics WHERE ch = ?1 AND lang = ?2 AND prompt_version = ?3 ORDER BY variant'
+      ).bind(b.ch, lang, PROMPT_VERSION).all()).results;
+
+      let have = await read();
+      // уже есть и новый вариант не просили, либо упёрлись в максимум: LLM не нужен
+      if ((have.length && !b.more) || have.length >= MAX_VARIANTS) return json({ variants: have, cached: true });
 
       const day = new Date().toISOString().slice(0, 10);
       const limit = parseInt(env.EXPLAIN_DAILY_LIMIT || '30', 10);
       const row = await env.DB.prepare(
         'INSERT INTO usage (user_id, day, n) VALUES (?1, ?2, 1) ON CONFLICT(user_id, day) DO UPDATE SET n = n + 1 RETURNING n'
       ).bind(uid, day).first();
-      if (row.n > limit) return json({ error: 'rate_limited' }, 429);
+      if (row.n > limit) return json({ error: 'rate_limited', variants: have }, 429);
 
       const clip = (s, n) => String(s || '').slice(0, n);
       const prompt = promptFor({
-        ch: b.ch, lang,
+        ch: b.ch, lang, avoid: have.map(v => v.text),
         pinyin: clip(b.pinyin, 40), meaning: clip(b.meaning, 200), etymology: clip(b.etymology, 300),
         parts: (Array.isArray(b.parts) ? b.parts : []).slice(0, 8).map(p => ({ char: clip(p.char, 4), meaning: clip(p.meaning, 80) })),
       });
       try {
         const text = clip(await askGemini(env, prompt), 600);
-        await env.DB.prepare('INSERT OR REPLACE INTO mnemonics (ch, lang, text, model, created_at) VALUES (?1, ?2, ?3, ?4, ?5)')
-          .bind(b.ch, lang, text, env.GEMINI_MODEL, Date.now()).run();
-        return json({ mnemonic: text, cached: false });
+        // INSERT OR IGNORE: если параллельный запрос успел раньше, остаётся его вариант
+        await env.DB.prepare(
+          'INSERT OR IGNORE INTO mnemonics (ch, lang, variant, text, model, prompt_version, created_by, created_at) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)'
+        ).bind(b.ch, lang, have.length + 1, text, env.GEMINI_MODEL, PROMPT_VERSION, uid, Date.now()).run();
+        return json({ variants: await read(), cached: false });
       } catch (e) {
-        return json({ error: 'llm_failed' }, 502);
+        return json({ error: 'llm_failed', variants: have }, 502);
       }
     }
 
