@@ -101,6 +101,7 @@
     "hint": "A child 子 in a house 宀; 子 also provides the pronunciation",
     "hint_ru": "Ребёнок 子 в доме 宀; 子 также подсказывает произношение"
    },
+   "atomic": false,
    "components": [
     "宀",
     "子"
@@ -120,69 +121,7 @@
     "hint": "A child in a wrap, with outstretched arms but bundled legs",
     "hint_ru": "Ребёнок в пелёнках, с вытянутыми руками, но спелёнатыми ногами"
    },
-   "components": [
-    "了",
-    "一"
-   ]
-  },
-  "一": {
-   "pinyin": [
-    "yī"
-   ],
-   "definition": "one; a, an; alone",
-   "definition_ru": "один; какой-то; один, в одиночку",
-   "definition_source": "mmh",
-   "radical": "一",
-   "decomposition": "？",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "Represents heaven (天), earth (旦), or the number 1",
-    "hint_ru": "Означает небо (天), землю (旦) или число 1"
-   },
-   "components": []
-  },
-  "了": {
-   "pinyin": [
-    "le",
-    "liǎo"
-   ],
-   "definition": "clear; to finish; particle of completed action",
-   "definition_ru": "ясный; завершать; частица завершённого действия",
-   "definition_source": "mmh",
-   "radical": "亅",
-   "decomposition": "⿱乛亅",
-   "etymology": {
-    "type": "pictographic",
-    "hint": "A child swaddled in blanklets; compare 子",
-    "hint_ru": "Ребёнок, закутанный в одеяло; сравни 子"
-   },
-   "components": [
-    "乛",
-    "亅"
-   ]
-  },
-  "亅": {
-   "pinyin": [
-    "jué"
-   ],
-   "definition": "hook",
-   "definition_ru": "крюк",
-   "definition_source": "mmh",
-   "radical": "亅",
-   "decomposition": "？",
-   "etymology": null,
-   "components": []
-  },
-  "乛": {
-   "pinyin": [
-    "ya"
-   ],
-   "definition": "kwukyel",
-   "definition_ru": "кугёль (корейская система пометок к тексту)",
-   "definition_source": "mmh",
-   "radical": "乛",
-   "decomposition": "？",
-   "etymology": null,
+   "atomic": true,
    "components": []
   },
   "宀": {
@@ -196,37 +135,7 @@
    "radical": "宀",
    "decomposition": "⿱丶冖",
    "etymology": null,
-   "components": [
-    "丶",
-    "冖"
-   ]
-  },
-  "冖": {
-   "pinyin": [
-    "mì"
-   ],
-   "definition": "cover",
-   "definition_ru": "покров, накрытие",
-   "definition_source": "mmh",
-   "radical": "冖",
-   "decomposition": "？",
-   "etymology": {
-    "type": "pictographic",
-    "hint": "A cover-cloth",
-    "hint_ru": "Покрывало"
-   },
-   "components": []
-  },
-  "丶": {
-   "pinyin": [
-    "diǎn"
-   ],
-   "definition": "dot",
-   "definition_ru": "точка",
-   "definition_source": "mmh",
-   "radical": "丶",
-   "decomposition": "？",
-   "etymology": null,
+   "atomic": true,
    "components": []
   },
   "汉": {
@@ -243,6 +152,7 @@
     "hint": "Simplified form of 漢; the Han 𦰩 river 氵",
     "hint_ru": "Упрощённая форма 漢; река 氵 Хань 𦰩"
    },
+   "atomic": false,
    "components": [
     "氵",
     "又"
@@ -262,6 +172,7 @@
     "hint": "A right hand, representing a pair; compare 左",
     "hint_ru": "Правая рука, означающая пару; сравни 左"
    },
+   "atomic": true,
    "components": []
   },
   "氵": {
@@ -274,6 +185,7 @@
    "radical": "氵",
    "decomposition": "⿱？？",
    "etymology": null,
+   "atomic": true,
    "components": []
   },
   "学": {
@@ -290,11 +202,29 @@
     "hint": "A building 冖 where children 子 study; ⺍ provides the pronunciation",
     "hint_ru": "Здание 冖, где учатся дети 子; ⺍ подсказывает произношение"
    },
+   "atomic": false,
    "components": [
     "⺍",
     "冖",
     "子"
    ]
+  },
+  "冖": {
+   "pinyin": [
+    "mì"
+   ],
+   "definition": "cover",
+   "definition_ru": "покров, накрытие",
+   "definition_source": "mmh",
+   "radical": "冖",
+   "decomposition": "？",
+   "etymology": {
+    "type": "pictographic",
+    "hint": "A cover-cloth",
+    "hint_ru": "Покрывало"
+   },
+   "atomic": true,
+   "components": []
   },
   "⺍": {
    "pinyin": [],
@@ -304,6 +234,7 @@
    "radical": "⺍",
    "decomposition": "？",
    "etymology": null,
+   "atomic": true,
    "components": []
   },
   "想": {
@@ -322,6 +253,7 @@
     "hint": "mind",
     "hint_ru": "разум"
    },
+   "atomic": false,
    "components": [
     "相",
     "心"
@@ -341,6 +273,7 @@
     "hint": "A heart",
     "hint_ru": "Сердце"
    },
+   "atomic": true,
    "components": []
   },
   "相": {
@@ -357,6 +290,7 @@
     "hint": "To stare 目 at a tree 木, meaning to observe",
     "hint_ru": "Пристально смотреть 目 на дерево 木, то есть наблюдать"
    },
+   "atomic": false,
    "components": [
     "木",
     "目"
@@ -376,72 +310,7 @@
     "hint": "An eye drawn on its side",
     "hint_ru": "Глаз, нарисованный сбоку"
    },
-   "components": [
-    "口",
-    "二"
-   ]
-  },
-  "二": {
-   "pinyin": [
-    "èr"
-   ],
-   "definition": "two; twice",
-   "definition_ru": "два; дважды",
-   "definition_source": "mmh",
-   "radical": "二",
-   "decomposition": "⿱一一",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "Two  parallel lines; compare 一 (one) and 三 (three)",
-    "hint_ru": "Две параллельные линии; сравни 一 (один) и 三 (три)"
-   },
-   "components": [
-    "一"
-   ]
-  },
-  "口": {
-   "pinyin": [
-    "kǒu"
-   ],
-   "definition": "mouth; entrance, gate, opening",
-   "definition_ru": "рот; вход, ворота, отверстие",
-   "definition_source": "mmh",
-   "radical": "口",
-   "decomposition": "⿱冂一",
-   "etymology": {
-    "type": "pictographic",
-    "hint": "An open mouth",
-    "hint_ru": "Открытый рот"
-   },
-   "components": [
-    "冂",
-    "一"
-   ]
-  },
-  "冂": {
-   "pinyin": [
-    "jiōng"
-   ],
-   "definition": "wide",
-   "definition_ru": "широкий",
-   "definition_source": "mmh",
-   "radical": "冂",
-   "decomposition": "⿰丨？",
-   "etymology": null,
-   "components": [
-    "丨"
-   ]
-  },
-  "丨": {
-   "pinyin": [
-    "shù"
-   ],
-   "definition": "number one; line",
-   "definition_ru": "число один; линия",
-   "definition_source": "mmh",
-   "radical": "丨",
-   "decomposition": "？",
-   "etymology": null,
+   "atomic": true,
    "components": []
   },
   "木": {
@@ -458,41 +327,8 @@
     "hint": "A tree",
     "hint_ru": "Дерево"
    },
-   "components": [
-    "十",
-    "八"
-   ]
-  },
-  "八": {
-   "pinyin": [
-    "bā"
-   ],
-   "definition": "eight; all around, all sides",
-   "definition_ru": "восемь; со всех сторон, вокруг",
-   "definition_source": "mmh",
-   "radical": "八",
-   "decomposition": "？",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "Two bent lines meaning \"to divide\"",
-    "hint_ru": "Две изогнутые линии, означающие «делить»"
-   },
+   "atomic": true,
    "components": []
-  },
-  "十": {
-   "pinyin": [
-    "shí"
-   ],
-   "definition": "ten, tenth; complete; perfect",
-   "definition_ru": "десять, десятый; полный; совершенный",
-   "definition_source": "mmh",
-   "radical": "十",
-   "decomposition": "⿻一丨",
-   "etymology": null,
-   "components": [
-    "一",
-    "丨"
-   ]
   },
   "我": {
    "pinyin": [
@@ -508,6 +344,7 @@
     "hint": "A hand 扌 holding a weapon 戈",
     "hint_ru": "Рука 扌, держащая оружие 戈"
    },
+   "atomic": false,
    "components": [
     "扌",
     "戈"
@@ -527,6 +364,7 @@
     "hint": "A spear pointing to the bottom-right",
     "hint_ru": "Копьё, направленное вправо-вниз"
    },
+   "atomic": true,
    "components": []
   },
   "扌": {
@@ -543,10 +381,8 @@
     "hint": "A hand with the fingers splayed; compare 手",
     "hint_ru": "Рука с растопыренными пальцами; сравни 手"
    },
-   "components": [
-    "二",
-    "亅"
-   ]
+   "atomic": true,
+   "components": []
   },
   "护": {
    "pinyin": [
@@ -562,6 +398,7 @@
     "hint": "Guarding 扌 a home 户; 户 also provides the pronunciation",
     "hint_ru": "Охрана 扌 дома 户; 户 также подсказывает произношение"
    },
+   "atomic": false,
    "components": [
     "扌",
     "户"
@@ -581,39 +418,7 @@
     "hint": "Simplified form of 戶; a door swinging on its hinge",
     "hint_ru": "Упрощённая форма 戶; дверь, качающаяся на петле"
    },
-   "components": [
-    "丶",
-    "尸"
-   ]
-  },
-  "尸": {
-   "pinyin": [
-    "shī"
-   ],
-   "definition": "body, corpse",
-   "definition_ru": "тело, труп",
-   "definition_source": "mmh",
-   "radical": "尸",
-   "decomposition": "⿰丿？",
-   "etymology": {
-    "type": "pictographic",
-    "hint": "A man keeled over",
-    "hint_ru": "Человек, упавший ничком"
-   },
-   "components": [
-    "丿"
-   ]
-  },
-  "丿": {
-   "pinyin": [
-    "piě"
-   ],
-   "definition": "slash",
-   "definition_ru": "косая черта",
-   "definition_source": "mmh",
-   "radical": "丿",
-   "decomposition": "？",
-   "etymology": null,
+   "atomic": true,
    "components": []
   },
   "投": {
@@ -632,6 +437,7 @@
     "hint": "hand",
     "hint_ru": "рука"
    },
+   "atomic": false,
    "components": [
     "扌",
     "殳"
@@ -651,44 +457,7 @@
     "hint": "A hand 又 holding a weapon 几",
     "hint_ru": "Рука 又, держащая оружие 几"
    },
-   "components": [
-    "几",
-    "又"
-   ]
-  },
-  "几": {
-   "pinyin": [
-    "jǐ"
-   ],
-   "definition": "small table; how many; a few, some",
-   "definition_ru": "столик; сколько; несколько",
-   "definition_source": "mmh",
-   "radical": "几",
-   "decomposition": "⿰丿乙",
-   "etymology": {
-    "type": "pictographic",
-    "hint": "A small table; compare 丌",
-    "hint_ru": "Маленький столик; сравни 丌"
-   },
-   "components": [
-    "丿",
-    "乙"
-   ]
-  },
-  "乙": {
-   "pinyin": [
-    "yǐ"
-   ],
-   "definition": "second; 2nd heavenly stem",
-   "definition_ru": "второй; 2-й небесный ствол",
-   "definition_source": "mmh",
-   "radical": "乙",
-   "decomposition": "？",
-   "etymology": {
-    "type": "pictographic",
-    "hint": "A swallow",
-    "hint_ru": "Ласточка"
-   },
+   "atomic": true,
    "components": []
   },
   "推": {
@@ -707,6 +476,7 @@
     "hint": "hand",
     "hint_ru": "рука"
    },
+   "atomic": false,
    "components": [
     "扌",
     "隹"
@@ -726,24 +496,7 @@
     "hint": "A bird facing left; compare 鳥",
     "hint_ru": "Птица, повёрнутая влево; сравни 鳥"
    },
-   "components": [
-    "亻"
-   ]
-  },
-  "亻": {
-   "pinyin": [
-    "rén"
-   ],
-   "definition": "man, person; people",
-   "definition_ru": "человек, личность; люди",
-   "definition_source": "mmh",
-   "radical": "亻",
-   "decomposition": "？",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "Visual abbreviation of 人",
-    "hint_ru": "Наглядное сокращение 人"
-   },
+   "atomic": true,
    "components": []
   },
   "托": {
@@ -760,6 +513,7 @@
     "hint": "Using one's hands 扌 for support 乇; 乇 also provides the pronunciation",
     "hint_ru": "Опираясь руками 扌 на опору 乇; 乇 также подсказывает произношение"
    },
+   "atomic": false,
    "components": [
     "扌",
     "乇"
@@ -775,36 +529,7 @@
    "radical": "丿",
    "decomposition": "⿱丿七",
    "etymology": null,
-   "components": [
-    "丿",
-    "七"
-   ]
-  },
-  "七": {
-   "pinyin": [
-    "qī"
-   ],
-   "definition": "seven",
-   "definition_ru": "семь",
-   "definition_source": "mmh",
-   "radical": "一",
-   "decomposition": "⿻一乚",
-   "etymology": null,
-   "components": [
-    "一",
-    "乚"
-   ]
-  },
-  "乚": {
-   "pinyin": [
-    "gōu"
-   ],
-   "definition": "secret, hidden, mysterious; small, minute; to conceal",
-   "definition_ru": "тайный, скрытый, таинственный; малый, мельчайший; скрывать",
-   "definition_source": "mmh",
-   "radical": "乚",
-   "decomposition": "？",
-   "etymology": null,
+   "atomic": true,
    "components": []
   },
   "提": {
@@ -823,6 +548,7 @@
     "hint": "hand",
     "hint_ru": "рука"
    },
+   "atomic": false,
    "components": [
     "扌",
     "是"
@@ -842,6 +568,7 @@
     "hint": "To speak 日 directly 疋",
     "hint_ru": "Говорить 日 прямо 疋"
    },
+   "atomic": false,
    "components": [
     "日",
     "疋"
@@ -861,6 +588,7 @@
     "hint": "A foot 止 with a leg on top",
     "hint_ru": "Нога 止 с ногой сверху"
    },
+   "atomic": true,
    "components": []
   },
   "日": {
@@ -877,10 +605,8 @@
     "hint": "The sun",
     "hint_ru": "Солнце"
    },
-   "components": [
-    "口",
-    "一"
-   ]
+   "atomic": true,
+   "components": []
   },
   "接": {
    "pinyin": [
@@ -898,6 +624,7 @@
     "hint": "hand",
     "hint_ru": "рука"
    },
+   "atomic": false,
    "components": [
     "扌",
     "妾"
@@ -917,6 +644,7 @@
     "hint": "A woman 女 branded 辛 as a slave",
     "hint_ru": "Женщина 女, заклеймённая 辛 как рабыня"
    },
+   "atomic": false,
    "components": [
     "辛",
     "女"
@@ -936,6 +664,7 @@
     "hint": "A woman turned to the side",
     "hint_ru": "Женщина, повёрнутая боком"
    },
+   "atomic": true,
    "components": []
   },
   "辛": {
@@ -952,59 +681,8 @@
     "hint": "A hot iron used to brand prisoners and slaves",
     "hint_ru": "Раскалённое железо, которым клеймили заключённых и рабов"
    },
-   "components": [
-    "立",
-    "十"
-   ]
-  },
-  "立": {
-   "pinyin": [
-    "lì"
-   ],
-   "definition": "to stand; to establish, to set up",
-   "definition_ru": "стоять; устанавливать, основывать",
-   "definition_source": "mmh",
-   "radical": "立",
-   "decomposition": "⿳亠丷一",
-   "etymology": {
-    "type": "pictographic",
-    "hint": "A man standing on the ground 一",
-    "hint_ru": "Человек, стоящий на земле 一"
-   },
-   "components": [
-    "亠",
-    "丷",
-    "一"
-   ]
-  },
-  "丷": {
-   "pinyin": [
-    "ha"
-   ],
-   "definition": "kwukyel",
-   "definition_ru": "кугёль (корейская система пометок к тексту)",
-   "definition_source": "mmh",
-   "radical": "丷",
-   "decomposition": "⿰丶？",
-   "etymology": null,
-   "components": [
-    "丶"
-   ]
-  },
-  "亠": {
-   "pinyin": [
-    "tóu"
-   ],
-   "definition": "lid, cover; head",
-   "definition_ru": "крышка, покров; голова",
-   "definition_source": "mmh",
-   "radical": "亠",
-   "decomposition": "⿱丶一",
-   "etymology": null,
-   "components": [
-    "丶",
-    "一"
-   ]
+   "atomic": true,
+   "components": []
   },
   "指": {
    "pinyin": [
@@ -1020,6 +698,7 @@
     "hint": "To point 旨 by hand 扌; 旨 also provides the pronunciation",
     "hint_ru": "Указывать 旨 рукой 扌; 旨 также подсказывает произношение"
    },
+   "atomic": false,
    "components": [
     "扌",
     "旨"
@@ -1039,6 +718,7 @@
     "hint": "A spoon 匕 aimed for the mouth 日",
     "hint_ru": "Ложка 匕, поднесённая ко рту 日"
    },
+   "atomic": false,
    "components": [
     "匕",
     "日"
@@ -1058,10 +738,8 @@
     "hint": "A spoon",
     "hint_ru": "Ложка"
    },
-   "components": [
-    "乚",
-    "丿"
-   ]
+   "atomic": true,
+   "components": []
   },
   "报": {
    "pinyin": [
@@ -1077,6 +755,7 @@
     "hint": "A hand 扌 cuffing 又 a criminal 卩, representing sentencing",
     "hint_ru": "Рука 扌 надевает наручники 又 на преступника 卩, то есть выносит приговор"
    },
+   "atomic": false,
    "components": [
     "扌",
     "卩",
@@ -1097,9 +776,8 @@
     "hint": "A rolled-up scroll or kneeling person",
     "hint_ru": "Свёрнутый свиток или коленопреклонённый человек"
    },
-   "components": [
-    "丨"
-   ]
+   "atomic": true,
+   "components": []
   },
   "打": {
    "pinyin": [
@@ -1117,6 +795,7 @@
     "hint": "hand",
     "hint_ru": "рука"
    },
+   "atomic": false,
    "components": [
     "扌",
     "丁"
@@ -1136,9 +815,8 @@
     "hint": "A nail",
     "hint_ru": "Гвоздь"
    },
-   "components": [
-    "一"
-   ]
+   "atomic": true,
+   "components": []
   },
   "拉": {
    "pinyin": [
@@ -1156,10 +834,28 @@
     "hint": "hand",
     "hint_ru": "рука"
    },
+   "atomic": false,
    "components": [
     "扌",
     "立"
    ]
+  },
+  "立": {
+   "pinyin": [
+    "lì"
+   ],
+   "definition": "to stand; to establish, to set up",
+   "definition_ru": "стоять; устанавливать, основывать",
+   "definition_source": "mmh",
+   "radical": "立",
+   "decomposition": "⿳亠丷一",
+   "etymology": {
+    "type": "pictographic",
+    "hint": "A man standing on the ground 一",
+    "hint_ru": "Человек, стоящий на земле 一"
+   },
+   "atomic": true,
+   "components": []
   },
   "找": {
    "pinyin": [
@@ -1175,6 +871,7 @@
     "hint": "To go searching with a spear 戈 in hand 扌",
     "hint_ru": "Искать с копьём 戈 в руке 扌"
    },
+   "atomic": false,
    "components": [
     "扌",
     "戈"
@@ -1190,6 +887,7 @@
    "radical": "戈",
    "decomposition": "⿻⿱十異戈",
    "etymology": null,
+   "atomic": false,
    "components": [
     "十",
     "異",
@@ -1210,84 +908,21 @@
     "hint": "A person with a scary face 田",
     "hint_ru": "Человек со страшным лицом 田"
    },
-   "components": [
-    "田",
-    "共"
-   ]
-  },
-  "共": {
-   "pinyin": [
-    "gòng"
-   ],
-   "definition": "all, total; together; to share",
-   "definition_ru": "все, всего; вместе; делить",
-   "definition_source": "mmh",
-   "radical": "八",
-   "decomposition": "⿳廾一八",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "Two hands 八 holding one object 廾",
-    "hint_ru": "Две руки 八, держащие один предмет 廾"
-   },
-   "components": [
-    "廾",
-    "一",
-    "八"
-   ]
-  },
-  "廾": {
-   "pinyin": [
-    "gǒng"
-   ],
-   "definition": "two hands",
-   "definition_ru": "две руки",
-   "definition_source": "mmh",
-   "radical": "廾",
-   "decomposition": "？",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "Two hands 十 side by side",
-    "hint_ru": "Две руки 十 рядом"
-   },
+   "atomic": true,
    "components": []
   },
-  "田": {
+  "十": {
    "pinyin": [
-    "tián"
+    "shí"
    ],
-   "definition": "field, farm, arable land; cultivated",
-   "definition_ru": "поле, ферма, пашня; возделанный",
+   "definition": "ten, tenth; complete; perfect",
+   "definition_ru": "десять, десятый; полный; совершенный",
    "definition_source": "mmh",
-   "radical": "田",
-   "decomposition": "⿵冂土",
-   "etymology": {
-    "type": "pictographic",
-    "hint": "The plots of a rice paddy",
-    "hint_ru": "Участки рисового поля"
-   },
-   "components": [
-    "冂",
-    "土"
-   ]
-  },
-  "土": {
-   "pinyin": [
-    "tǔ"
-   ],
-   "definition": "soil, earth; items made of earth",
-   "definition_ru": "почва, земля; вещи из земли",
-   "definition_source": "mmh",
-   "radical": "土",
-   "decomposition": "⿱十一",
-   "etymology": {
-    "type": "pictographic",
-    "hint": "A lump of clay on a potter's wheel",
-    "hint_ru": "Комок глины на гончарном круге"
-   },
-   "components": [
-    "十",
-    "一"
-   ]
+   "radical": "十",
+   "decomposition": "⿻一丨",
+   "etymology": null,
+   "atomic": true,
+   "components": []
   },
   "裁": {
    "pinyin": [
@@ -1303,6 +938,7 @@
     "hint": "To cut 戈 cloth 衣",
     "hint_ru": "Резать 戈 ткань 衣"
    },
+   "atomic": false,
    "components": [
     "十",
     "戈",
@@ -1323,9 +959,8 @@
     "hint": "A woman's dress",
     "hint_ru": "Женское платье"
    },
-   "components": [
-    "亠"
-   ]
+   "atomic": true,
+   "components": []
   },
   "戒": {
    "pinyin": [
@@ -1341,10 +976,28 @@
     "hint": "Two hands 廾 brandishing a spear 戈",
     "hint_ru": "Две руки 廾, размахивающие копьём 戈"
    },
+   "atomic": false,
    "components": [
     "戈",
     "廾"
    ]
+  },
+  "廾": {
+   "pinyin": [
+    "gǒng"
+   ],
+   "definition": "two hands",
+   "definition_ru": "две руки",
+   "definition_source": "mmh",
+   "radical": "廾",
+   "decomposition": "？",
+   "etymology": {
+    "type": "ideographic",
+    "hint": "Two hands 十 side by side",
+    "hint_ru": "Две руки 十 рядом"
+   },
+   "atomic": true,
+   "components": []
   },
   "划": {
    "pinyin": [
@@ -1356,6 +1009,7 @@
    "radical": "刂",
    "decomposition": "⿰戈刂",
    "etymology": null,
+   "atomic": false,
    "components": [
     "戈",
     "刂"
@@ -1371,10 +1025,8 @@
    "radical": "刂",
    "decomposition": "⿰丨亅",
    "etymology": null,
-   "components": [
-    "丨",
-    "亅"
-   ]
+   "atomic": true,
+   "components": []
   },
   "戏": {
    "pinyin": [
@@ -1390,6 +1042,7 @@
     "hint": "A hand 又 doing tricks with a spear 戈",
     "hint_ru": "Рука 又 показывает фокусы с копьём 戈"
    },
+   "atomic": false,
    "components": [
     "又",
     "戈"
@@ -1411,6 +1064,7 @@
     "hint": "spear",
     "hint_ru": "копьё"
    },
+   "atomic": false,
    "components": [
     "占",
     "戈"
@@ -1430,10 +1084,28 @@
     "hint": "To speak 口 omens ⺊",
     "hint_ru": "Произносить 口 предзнаменования ⺊"
    },
+   "atomic": false,
    "components": [
     "⺊",
     "口"
    ]
+  },
+  "口": {
+   "pinyin": [
+    "kǒu"
+   ],
+   "definition": "mouth; entrance, gate, opening",
+   "definition_ru": "рот; вход, ворота, отверстие",
+   "definition_source": "mmh",
+   "radical": "口",
+   "decomposition": "⿱冂一",
+   "etymology": {
+    "type": "pictographic",
+    "hint": "An open mouth",
+    "hint_ru": "Открытый рот"
+   },
+   "atomic": true,
+   "components": []
   },
   "⺊": {
    "pinyin": [],
@@ -1447,9 +1119,8 @@
     "hint": "A crack on an oracle bone; compare 卜",
     "hint_ru": "Трещина на оракульной кости; сравни 卜"
    },
-   "components": [
-    "丨"
-   ]
+   "atomic": true,
+   "components": []
   },
   "民": {
    "pinyin": [
@@ -1465,6 +1136,7 @@
     "hint": "An eye 巳 pierced by a dagger 戈, an old mark of slavery",
     "hint_ru": "Глаз 巳, пронзённый кинжалом 戈, древний знак рабства"
    },
+   "atomic": false,
    "components": [
     "巳",
     "戈"
@@ -1480,9 +1152,8 @@
    "radical": "巳",
    "decomposition": "⿻乚？",
    "etymology": null,
-   "components": [
-    "乚"
-   ]
+   "atomic": true,
+   "components": []
   },
   "成": {
    "pinyin": [
@@ -1494,6 +1165,7 @@
    "radical": "戈",
    "decomposition": "⿰丁戈",
    "etymology": null,
+   "atomic": false,
    "components": [
     "丁",
     "戈"
@@ -1515,6 +1187,7 @@
     "hint": "grass",
     "hint_ru": "трава"
    },
+   "atomic": false,
    "components": [
     "艹",
     "我"
@@ -1534,6 +1207,7 @@
     "hint": "Simplified form of 艸; grass sprouting",
     "hint_ru": "Упрощённая форма 艸; пробивающаяся трава"
    },
+   "atomic": true,
    "components": []
   },
   "硪": {
@@ -1552,6 +1226,7 @@
     "hint": "stone",
     "hint_ru": "камень"
    },
+   "atomic": false,
    "components": [
     "石",
     "我"
@@ -1571,21 +1246,7 @@
     "hint": "A rock 口 at the base of a cliff 厂",
     "hint_ru": "Камень 口 у подножия утёса 厂"
    },
-   "components": [
-    "厂",
-    "口"
-   ]
-  },
-  "厂": {
-   "pinyin": [
-    "chǎng"
-   ],
-   "definition": "cliff; factory, workshop; building",
-   "definition_ru": "утёс; фабрика, мастерская; здание",
-   "definition_source": "mmh",
-   "radical": "厂",
-   "decomposition": "？",
-   "etymology": null,
+   "atomic": true,
    "components": []
   },
   "皒": {
@@ -1604,6 +1265,7 @@
     "hint": "white",
     "hint_ru": "белый"
    },
+   "atomic": false,
    "components": [
     "白",
     "我"
@@ -1623,9 +1285,8 @@
     "hint": "A burning candle; the rays of the sun",
     "hint_ru": "Горящая свеча; лучи солнца"
    },
-   "components": [
-    "日"
-   ]
+   "atomic": true,
+   "components": []
   },
   "哦": {
    "pinyin": [
@@ -1643,6 +1304,7 @@
     "hint": "mouth",
     "hint_ru": "рот"
    },
+   "atomic": false,
    "components": [
     "口",
     "我"
@@ -1664,6 +1326,7 @@
     "hint": "woman",
     "hint_ru": "женщина"
    },
+   "atomic": false,
    "components": [
     "女",
     "我"
@@ -1685,6 +1348,7 @@
     "hint": "insect",
     "hint_ru": "насекомое"
    },
+   "atomic": false,
    "components": [
     "虫",
     "我"
@@ -1703,28 +1367,8 @@
     "type": "pictophonetic",
     "phonetic": "中"
    },
-   "components": [
-    "中"
-   ]
-  },
-  "中": {
-   "pinyin": [
-    "zhōng"
-   ],
-   "definition": "central; center, middle; amidst; to hit (target), to attain; China; Chinese",
-   "definition_ru": "центральный; центр, середина; среди; попадать (в цель), достигать; Китай; китайский",
-   "definition_source": "mmh",
-   "radical": "丨",
-   "decomposition": "⿻口丨",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "A line 丨 through the center of a box 口",
-    "hint_ru": "Черта 丨 через центр коробки 口"
-   },
-   "components": [
-    "口",
-    "丨"
-   ]
+   "atomic": true,
+   "components": []
   },
   "峨": {
    "pinyin": [
@@ -1742,6 +1386,7 @@
     "hint": "mountain",
     "hint_ru": "гора"
    },
+   "atomic": false,
    "components": [
     "山",
     "我"
@@ -1761,25 +1406,7 @@
     "hint": "Three mountain peaks",
     "hint_ru": "Три горные вершины"
    },
-   "components": [
-    "凵",
-    "丨"
-   ]
-  },
-  "凵": {
-   "pinyin": [
-    "qiǎn"
-   ],
-   "definition": "container; receptacle",
-   "definition_ru": "сосуд; ёмкость",
-   "definition_source": "mmh",
-   "radical": "凵",
-   "decomposition": "？",
-   "etymology": {
-    "type": "pictographic",
-    "hint": "A tray",
-    "hint_ru": "Поднос"
-   },
+   "atomic": true,
    "components": []
   },
   "饿": {
@@ -1796,6 +1423,7 @@
     "hint": "To want 我 food 饣; 我 also provides the pronunciation",
     "hint_ru": "Хотеть 我 еды 饣; 我 также подсказывает произношение"
    },
+   "atomic": false,
    "components": [
     "饣",
     "我"
@@ -1811,9 +1439,8 @@
    "radical": "饣",
    "decomposition": "⿱？乚",
    "etymology": null,
-   "components": [
-    "乚"
-   ]
+   "atomic": true,
+   "components": []
   },
   "鹅": {
    "pinyin": [
@@ -1831,6 +1458,7 @@
     "hint": "bird",
     "hint_ru": "птица"
    },
+   "atomic": false,
    "components": [
     "我",
     "鸟"
@@ -1850,6 +1478,7 @@
     "hint": "Simplified form of 烏, a bird",
     "hint_ru": "Упрощённая форма 烏, птица"
    },
+   "atomic": true,
    "components": []
   },
   "俄": {
@@ -1865,565 +1494,86 @@
     "type": "pictophonetic",
     "phonetic": "我"
    },
+   "atomic": false,
    "components": [
     "亻",
     "我"
    ]
   },
-  "计": {
+  "亻": {
    "pinyin": [
-    "jì"
+    "rén"
    ],
-   "definition": "to calculate, to count; to plan, to reckon; plot, scheme",
-   "definition_ru": "вычислять, считать; планировать, рассчитывать; замысел, уловка",
+   "definition": "man, person; people",
+   "definition_ru": "человек, личность; люди",
    "definition_source": "mmh",
-   "radical": "讠",
-   "decomposition": "⿰讠十",
-   "etymology": {
-    "type": "pictophonetic",
-    "phonetic": "十",
-    "semantic": "讠",
-    "hint": "speech",
-    "hint_ru": "речь"
-   },
-   "components": [
-    "讠",
-    "十"
-   ]
-  },
-  "讠": {
-   "pinyin": [
-    "yán"
-   ],
-   "definition": "words, speech; to speak, to say",
-   "definition_ru": "слова, речь; говорить, сказать",
-   "definition_source": "mmh",
-   "radical": "讠",
-   "decomposition": "⿻？？",
-   "etymology": null,
-   "components": []
-  },
-  "华": {
-   "pinyin": [
-    "huá"
-   ],
-   "definition": "flowery; illustrious; Chinese",
-   "definition_ru": "цветистый; знаменитый; китайский",
-   "definition_source": "mmh",
-   "radical": "十",
-   "decomposition": "⿱化十",
-   "etymology": {
-    "type": "pictophonetic",
-    "phonetic": "化",
-    "semantic": "十",
-    "hint": "ten",
-    "hint_ru": "десять"
-   },
-   "components": [
-    "化",
-    "十"
-   ]
-  },
-  "化": {
-   "pinyin": [
-    "huà"
-   ],
-   "definition": "to change, to convert, to reform; -ize",
-   "definition_ru": "менять, преобразовывать, реформировать; -изировать",
-   "definition_source": "mmh",
-   "radical": "匕",
-   "decomposition": "⿰亻匕",
-   "etymology": null,
-   "components": [
-    "亻",
-    "匕"
-   ]
-  },
-  "干": {
-   "pinyin": [
-    "gàn"
-   ],
-   "definition": "arid, dry; to oppose; to offend; to invade",
-   "definition_ru": "сухой, засушливый; противостоять; оскорблять; вторгаться",
-   "definition_source": "mmh",
-   "radical": "十",
-   "decomposition": "⿱一十",
-   "etymology": {
-    "type": "pictographic",
-    "hint": "A club or axe",
-    "hint_ru": "Дубина или топор"
-   },
-   "components": [
-    "一",
-    "十"
-   ]
-  },
-  "古": {
-   "pinyin": [
-    "gǔ"
-   ],
-   "definition": "old, classic, ancient",
-   "definition_ru": "старый, классический, древний",
-   "definition_source": "mmh",
-   "radical": "口",
-   "decomposition": "⿱十口",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "Words passing through ten 十 mouths 口",
-    "hint_ru": "Слова, проходящие через десять 十 ртов 口"
-   },
-   "components": [
-    "十",
-    "口"
-   ]
-  },
-  "南": {
-   "pinyin": [
-    "nán"
-   ],
-   "definition": "south; southern; southward",
-   "definition_ru": "юг; южный; на юг",
-   "definition_source": "mmh",
-   "radical": "十",
-   "decomposition": "⿱十⿵冂⿱丷干",
-   "etymology": {
-    "type": "pictographic",
-    "hint": "A musical bell",
-    "hint_ru": "Музыкальный колокол"
-   },
-   "components": [
-    "十",
-    "冂",
-    "丷",
-    "干"
-   ]
-  },
-  "德": {
-   "pinyin": [
-    "dé"
-   ],
-   "definition": "ethics, morality; compassion, kindness",
-   "definition_ru": "этика, мораль; сострадание, доброта",
-   "definition_source": "mmh",
-   "radical": "彳",
-   "decomposition": "⿰彳⿱⿱十罒⿱一心",
-   "etymology": {
-    "type": "pictophonetic",
-    "semantic": "心",
-    "hint": "heart",
-    "hint_ru": "сердце"
-   },
-   "components": [
-    "彳",
-    "十",
-    "罒",
-    "一",
-    "心"
-   ]
-  },
-  "罒": {
-   "pinyin": [
-    "wǎng"
-   ],
-   "definition": "net, network",
-   "definition_ru": "сеть",
-   "definition_source": "mmh",
-   "radical": "罒",
-   "decomposition": "⿻口？",
-   "etymology": null,
-   "components": [
-    "口"
-   ]
-  },
-  "彳": {
-   "pinyin": [
-    "chì"
-   ],
-   "definition": "to step with the left foot",
-   "definition_ru": "шагать левой ногой",
-   "definition_source": "mmh",
-   "radical": "彳",
-   "decomposition": "⿱？丨",
-   "etymology": null,
-   "components": [
-    "丨"
-   ]
-  },
-  "车": {
-   "pinyin": [
-    "chē"
-   ],
-   "definition": "cart, vehicle; to move in a cart",
-   "definition_ru": "повозка, транспорт; перевозить на повозке",
-   "definition_source": "mmh",
-   "radical": "车",
-   "decomposition": "⿻七十",
-   "etymology": {
-    "type": "pictographic",
-    "hint": "Simplified form of 車, a cart with two wheels, seen from above",
-    "hint_ru": "Упрощённая форма 車, повозка с двумя колёсами, вид сверху"
-   },
-   "components": [
-    "七",
-    "十"
-   ]
-  },
-  "克": {
-   "pinyin": [
-    "kè"
-   ],
-   "definition": "to subdue, to restrain, to overcome; used in transliterations",
-   "definition_ru": "покорять, обуздывать, преодолевать; используется при транскрипции",
-   "definition_source": "mmh",
-   "radical": "儿",
-   "decomposition": "⿱十兄",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "A weapon 十 used to subdue a beast 兄",
-    "hint_ru": "Оружие 十, которым усмиряют зверя 兄"
-   },
-   "components": [
-    "十",
-    "兄"
-   ]
-  },
-  "兄": {
-   "pinyin": [
-    "xiōng"
-   ],
-   "definition": "elder brother",
-   "definition_ru": "старший брат",
-   "definition_source": "mmh",
-   "radical": "儿",
-   "decomposition": "⿱口儿",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "Older brother 儿 speaking 口 to younger ones",
-    "hint_ru": "Старший брат 儿, говорящий 口 с младшими"
-   },
-   "components": [
-    "口",
-    "儿"
-   ]
-  },
-  "儿": {
-   "pinyin": [
-    "ér"
-   ],
-   "definition": "son, child",
-   "definition_ru": "сын, ребёнок",
-   "definition_source": "mmh",
-   "radical": "儿",
-   "decomposition": "⿰丿乚",
-   "etymology": {
-    "type": "pictographic",
-    "hint": "Simplified form of 兒, a picture of a child; compare 人",
-    "hint_ru": "Упрощённая форма 兒, изображение ребёнка; сравни 人"
-   },
-   "components": [
-    "丿",
-    "乚"
-   ]
-  },
-  "六": {
-   "pinyin": [
-    "liù"
-   ],
-   "definition": "six",
-   "definition_ru": "шесть",
-   "definition_source": "mmh",
-   "radical": "八",
-   "decomposition": "⿱亠八",
-   "etymology": null,
-   "components": [
-    "亠",
-    "八"
-   ]
-  },
-  "其": {
-   "pinyin": [
-    "qí"
-   ],
-   "definition": "his, her, its, their; that",
-   "definition_ru": "его, её, их; тот",
-   "definition_source": "mmh",
-   "radical": "八",
-   "decomposition": "⿱甘⿱一八",
-   "etymology": null,
-   "components": [
-    "甘",
-    "一",
-    "八"
-   ]
-  },
-  "甘": {
-   "pinyin": [
-    "gān"
-   ],
-   "definition": "sweet, tasty; willing",
-   "definition_ru": "сладкий, вкусный; охотный",
-   "definition_source": "mmh",
-   "radical": "甘",
-   "decomposition": "⿵卄二",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "Picture of a tongue with 一 marking the sweet spot",
-    "hint_ru": "Изображение языка, где 一 отмечает сладкое место"
-   },
-   "components": [
-    "卄",
-    "二"
-   ]
-  },
-  "卄": {
-   "pinyin": [
-    "niàn"
-   ],
-   "definition": "twenty, twentieth",
-   "definition_ru": "двадцать, двадцатый",
-   "definition_source": "mmh",
-   "radical": "十",
-   "decomposition": "⿻十丨",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "Two tens 十 side by side",
-    "hint_ru": "Две десятки 十 рядом"
-   },
-   "components": [
-    "十",
-    "丨"
-   ]
-  },
-  "兴": {
-   "pinyin": [
-    "xìng"
-   ],
-   "definition": "to thrive, to prosper, to flourish",
-   "definition_ru": "процветать, расцветать",
-   "definition_source": "mmh",
-   "radical": "八",
-   "decomposition": "⿳⺍一八",
-   "etymology": null,
-   "components": [
-    "⺍",
-    "一",
-    "八"
-   ]
-  },
-  "兵": {
-   "pinyin": [
-    "bīng"
-   ],
-   "definition": "soldier; troops, an army; warlike",
-   "definition_ru": "солдат; войска, армия; воинственный",
-   "definition_source": "mmh",
-   "radical": "八",
-   "decomposition": "⿱丘八",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "Two hands 八 holding an axe 丘",
-    "hint_ru": "Две руки 八, держащие топор 丘"
-   },
-   "components": [
-    "丘",
-    "八"
-   ]
-  },
-  "丘": {
-   "pinyin": [
-    "qiū"
-   ],
-   "definition": "mound, hill; surname",
-   "definition_ru": "холм, курган; фамилия",
-   "definition_source": "mmh",
-   "radical": "一",
-   "decomposition": "⿱斤一",
-   "etymology": {
-    "type": "pictographic",
-    "hint": "Two hills",
-    "hint_ru": "Два холма"
-   },
-   "components": [
-    "斤",
-    "一"
-   ]
-  },
-  "斤": {
-   "pinyin": [
-    "jīn"
-   ],
-   "definition": "a catty (about 500 grams); an axe; keen, shrewd",
-   "definition_ru": "цзинь (около 500 г); топор; острый, проницательный",
-   "definition_source": "mmh",
-   "radical": "斤",
-   "decomposition": "⿸厂下",
-   "etymology": null,
-   "components": [
-    "厂",
-    "下"
-   ]
-  },
-  "下": {
-   "pinyin": [
-    "xià"
-   ],
-   "definition": "below, underneath; inferior; to bring down; next",
-   "definition_ru": "под, внизу; низший; спускать; следующий",
-   "definition_source": "mmh",
-   "radical": "一",
-   "decomposition": "⿱一卜",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "One stroke under another; compare 上 (above)",
-    "hint_ru": "Одна черта под другой; сравни 上 (вверху)"
-   },
-   "components": [
-    "一",
-    "卜"
-   ]
-  },
-  "卜": {
-   "pinyin": [
-    "bo"
-   ],
-   "definition": "divination, fortune-telling; prophecy",
-   "definition_ru": "гадание, предсказание судьбы; пророчество",
-   "definition_source": "mmh",
-   "radical": "卜",
-   "decomposition": "⿻丨丶",
-   "etymology": {
-    "type": "pictographic",
-    "hint": "A crack on an oracle bone",
-    "hint_ru": "Трещина на оракульной кости"
-   },
-   "components": [
-    "丨",
-    "丶"
-   ]
-  },
-  "黄": {
-   "pinyin": [
-    "huáng"
-   ],
-   "definition": "yellow; surname",
-   "definition_ru": "жёлтый; фамилия",
-   "definition_source": "mmh",
-   "radical": "黄",
-   "decomposition": "⿱？⿱由八",
-   "etymology": {
-    "type": "pictographic",
-    "hint": "A jade pendant",
-    "hint_ru": "Нефритовая подвеска"
-   },
-   "components": [
-    "由",
-    "八"
-   ]
-  },
-  "由": {
-   "pinyin": [
-    "yóu"
-   ],
-   "definition": "cause, reason; from",
-   "definition_ru": "причина, повод; от, из",
-   "definition_source": "mmh",
-   "radical": "田",
-   "decomposition": "田",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "Road 丨 leading to the farm 田",
-    "hint_ru": "Дорога 丨, ведущая к полю 田"
-   },
-   "components": [
-    "田"
-   ]
-  },
-  "公": {
-   "pinyin": [
-    "gōng"
-   ],
-   "definition": "fair, equitable; public; duke",
-   "definition_ru": "справедливый, беспристрастный; общественный; герцог",
-   "definition_source": "mmh",
-   "radical": "八",
-   "decomposition": "⿱八厶",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "To divide 八 what is private 厶",
-    "hint_ru": "Разделить 八 то, что принадлежит лично 厶"
-   },
-   "components": [
-    "八",
-    "厶"
-   ]
-  },
-  "厶": {
-   "pinyin": [
-    "sī"
-   ],
-   "definition": "private, secret",
-   "definition_ru": "личный, тайный",
-   "definition_source": "mmh",
-   "radical": "厶",
+   "radical": "亻",
    "decomposition": "？",
    "etymology": {
-    "type": "pictographic",
-    "hint": "A silk cocoon",
-    "hint_ru": "Шёлковый кокон"
+    "type": "ideographic",
+    "hint": "Visual abbreviation of 人",
+    "hint_ru": "Наглядное сокращение 人"
    },
+   "atomic": true,
    "components": []
   },
-  "分": {
+  "树": {
    "pinyin": [
-    "fēn"
+    "shù"
    ],
-   "definition": "to divide, to allocate; fraction; small unit of time or other quantity",
-   "definition_ru": "делить, распределять; дробь; малая единица времени или другой величины",
+   "definition": "tree; to plant; to set up, to establish",
+   "definition_ru": null,
    "definition_source": "mmh",
-   "radical": "刀",
-   "decomposition": "⿱八刀",
+   "radical": "木",
+   "decomposition": "⿰木对",
    "etymology": {
-    "type": "ideographic",
-    "hint": "Pieces 八 being further subdivided with a knife 刀 ",
-    "hint_ru": "Части 八, делимые ещё дальше ножом 刀"
+    "type": "pictophonetic",
+    "phonetic": "对",
+    "semantic": "木",
+    "hint": "tree"
    },
+   "atomic": false,
    "components": [
-    "八",
-    "刀"
+    "木",
+    "对"
    ]
   },
-  "刀": {
+  "对": {
    "pinyin": [
-    "dāo"
+    "duì"
    ],
-   "definition": "knife; old coin; measure",
-   "definition_ru": "нож; старая монета; мера",
+   "definition": "correct, right; facing, opposed",
+   "definition_ru": "правильный, верный; лицом к, напротив",
    "definition_source": "mmh",
-   "radical": "刀",
-   "decomposition": "⿹？丿",
-   "etymology": null,
-   "components": [
-    "丿"
-   ]
-  },
-  "小": {
-   "pinyin": [
-    "xiǎo"
-   ],
-   "definition": "small, tiny, insignificant",
-   "definition_ru": "маленький, крошечный, незначительный",
-   "definition_source": "mmh",
-   "radical": "小",
-   "decomposition": "⿻亅八",
+   "radical": "寸",
+   "decomposition": "⿰又寸",
    "etymology": {
     "type": "ideographic",
-    "hint": "Dividing 八 by a line 亅",
-    "hint_ru": "Деление 八 чертой 亅"
+    "hint": "A pair 又 of hands 寸",
+    "hint_ru": "Пара 又 рук 寸"
    },
+   "atomic": false,
    "components": [
-    "亅",
-    "八"
+    "又",
+    "寸"
    ]
+  },
+  "寸": {
+   "pinyin": [
+    "cùn"
+   ],
+   "definition": "inch; small, tiny",
+   "definition_ru": "цунь (мера длины); маленький, крошечный",
+   "definition_source": "mmh",
+   "radical": "寸",
+   "decomposition": "？",
+   "etymology": {
+    "type": "ideographic",
+    "hint": "A hand with a dot indicating where the pulse can be felt, about an inch up the wrist",
+    "hint_ru": "Рука с точкой, показывающей, где прощупывается пульс, примерно на дюйм выше запястья"
+   },
+   "atomic": true,
+   "components": []
   },
   "果": {
    "pinyin": [
@@ -2439,10 +1589,28 @@
     "hint": "Fruit 田 growing on a tree 木",
     "hint_ru": "Плод 田, растущий на дереве 木"
    },
+   "atomic": false,
    "components": [
     "田",
     "木"
    ]
+  },
+  "田": {
+   "pinyin": [
+    "tián"
+   ],
+   "definition": "field, farm, arable land; cultivated",
+   "definition_ru": "поле, ферма, пашня; возделанный",
+   "definition_source": "mmh",
+   "radical": "田",
+   "decomposition": "⿵冂土",
+   "etymology": {
+    "type": "pictographic",
+    "hint": "The plots of a rice paddy",
+    "hint_ru": "Участки рисового поля"
+   },
+   "atomic": true,
+   "components": []
   },
   "集": {
    "pinyin": [
@@ -2458,6 +1626,7 @@
     "hint": "Birds 隹 flocking on a tree 木",
     "hint_ru": "Птицы 隹, собравшиеся на дереве 木"
    },
+   "atomic": false,
    "components": [
     "隹",
     "木"
@@ -2479,6 +1648,7 @@
     "hint": "wood",
     "hint_ru": "дерево (материал)"
    },
+   "atomic": false,
    "components": [
     "木",
     "又"
@@ -2500,6 +1670,7 @@
     "hint": "wood",
     "hint_ru": "дерево (материал)"
    },
+   "atomic": false,
    "components": [
     "木",
     "反"
@@ -2519,29 +1690,24 @@
     "hint": "A hand 又 held up against a cliff 厂",
     "hint_ru": "Рука 又, поднятая к утёсу 厂"
    },
+   "atomic": false,
    "components": [
     "厂",
     "又"
    ]
   },
-  "米": {
+  "厂": {
    "pinyin": [
-    "mǐ"
+    "chǎng"
    ],
-   "definition": "rice, millet, grain",
-   "definition_ru": "рис, просо, зерно",
+   "definition": "cliff; factory, workshop; building",
+   "definition_ru": "утёс; фабрика, мастерская; здание",
    "definition_source": "mmh",
-   "radical": "米",
-   "decomposition": "⿻丷木",
-   "etymology": {
-    "type": "pictographic",
-    "hint": "Grains of rice",
-    "hint_ru": "Зёрна риса"
-   },
-   "components": [
-    "丷",
-    "木"
-   ]
+   "radical": "厂",
+   "decomposition": "？",
+   "etymology": null,
+   "atomic": true,
+   "components": []
   },
   "格": {
    "pinyin": [
@@ -2559,6 +1725,7 @@
     "hint": "wood",
     "hint_ru": "дерево (материал)"
    },
+   "atomic": false,
    "components": [
     "木",
     "各"
@@ -2578,6 +1745,7 @@
     "hint": "Walking 夂 and talking 口",
     "hint_ru": "Идти 夂 и говорить 口"
    },
+   "atomic": false,
    "components": [
     "夂",
     "口"
@@ -2593,10 +1761,8 @@
    "radical": "夂",
    "decomposition": "⿻丿又",
    "etymology": null,
-   "components": [
-    "丿",
-    "又"
-   ]
+   "atomic": true,
+   "components": []
   },
   "林": {
    "pinyin": [
@@ -2612,6 +1778,7 @@
     "hint": "Two trees 木 representing a forest",
     "hint_ru": "Два дерева 木 означают лес"
    },
+   "atomic": false,
    "components": [
     "木"
    ]
@@ -2630,10 +1797,28 @@
     "hint": "A tree 木 with its roots highlighted",
     "hint_ru": "Дерево 木 с выделенными корнями"
    },
+   "atomic": false,
    "components": [
     "木",
     "一"
    ]
+  },
+  "一": {
+   "pinyin": [
+    "yī"
+   ],
+   "definition": "one; a, an; alone",
+   "definition_ru": "один; какой-то; один, в одиночку",
+   "definition_source": "mmh",
+   "radical": "一",
+   "decomposition": "？",
+   "etymology": {
+    "type": "ideographic",
+    "hint": "Represents heaven (天), earth (旦), or the number 1",
+    "hint_ru": "Означает небо (天), землю (旦) или число 1"
+   },
+   "atomic": true,
+   "components": []
   },
   "机": {
    "pinyin": [
@@ -2649,791 +1834,46 @@
     "hint": "A table 几 made of wood 木; 几 also provides the pronunciation",
     "hint_ru": "Стол 几 из дерева 木; 几 также подсказывает произношение"
    },
+   "atomic": false,
    "components": [
     "木",
     "几"
    ]
   },
-  "引": {
+  "几": {
    "pinyin": [
-    "yǐn"
+    "jǐ"
    ],
-   "definition": "to pull, to stretch; to draw; to attract",
-   "definition_ru": "тянуть, растягивать; рисовать; привлекать",
+   "definition": "small table; how many; a few, some",
+   "definition_ru": "столик; сколько; несколько",
    "definition_source": "mmh",
-   "radical": "弓",
-   "decomposition": "⿰弓丨",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "To pull back a bow's 弓 drawstring 丨",
-    "hint_ru": "Оттянуть тетиву 丨 лука 弓"
-   },
-   "components": [
-    "弓",
-    "丨"
-   ]
-  },
-  "弓": {
-   "pinyin": [
-    "gōng"
-   ],
-   "definition": "bow; curved, arched",
-   "definition_ru": "лук; изогнутый, дугообразный",
-   "definition_source": "mmh",
-   "radical": "弓",
-   "decomposition": "？",
+   "radical": "几",
+   "decomposition": "⿰丿乙",
    "etymology": {
     "type": "pictographic",
-    "hint": "A bow aimed to the left",
-    "hint_ru": "Лук, нацеленный влево"
+    "hint": "A small table; compare 丌",
+    "hint_ru": "Маленький столик; сравни 丌"
    },
+   "atomic": true,
    "components": []
   },
-  "旧": {
+  "泪": {
    "pinyin": [
-    "jiù"
+    "lèi"
    ],
-   "definition": "old, ancient; former, past",
-   "definition_ru": "старый, древний; прежний, прошлый",
+   "definition": "tears; to cry, to weep",
+   "definition_ru": null,
    "definition_source": "mmh",
-   "radical": "日",
-   "decomposition": "⿰丨日",
+   "radical": "氵",
+   "decomposition": "⿰氵目",
    "etymology": {
     "type": "ideographic",
-    "hint": "Older than 丨 the sun 日",
-    "hint_ru": "Старше 丨 солнца 日"
+    "hint": "Water 氵 from the eyes 目"
    },
+   "atomic": false,
    "components": [
-    "丨",
-    "日"
-   ]
-  },
-  "川": {
-   "pinyin": [
-    "chuān"
-   ],
-   "definition": "stream, river",
-   "definition_ru": "поток, река",
-   "definition_source": "mmh",
-   "radical": "川",
-   "decomposition": "⿲丿丨丨",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "A river's flow; compare 巛",
-    "hint_ru": "Течение реки; сравни 巛"
-   },
-   "components": [
-    "丿",
-    "丨"
-   ]
-  },
-  "临": {
-   "pinyin": [
-    "lín"
-   ],
-   "definition": "to draw near, to approach; to descend",
-   "definition_ru": "приближаться; нисходить",
-   "definition_source": "mmh",
-   "radical": "丨",
-   "decomposition": "⿰⿰？丨？",
-   "etymology": null,
-   "components": [
-    "丨"
-   ]
-  },
-  "曲": {
-   "pinyin": [
-    "qū"
-   ],
-   "definition": "crooked, bent; wrong, false",
-   "definition_ru": "кривой, изогнутый; неправильный, ложный",
-   "definition_source": "mmh",
-   "radical": "曰",
-   "decomposition": "⿻曰⿰丨丨",
-   "etymology": {
-    "type": "pictographic",
-    "hint": "A folded object 曰",
-    "hint_ru": "Сложенный предмет 曰"
-   },
-   "components": [
-    "曰",
-    "丨"
-   ]
-  },
-  "曰": {
-   "pinyin": [
-    "yuē"
-   ],
-   "definition": "to speak; to say",
-   "definition_ru": "говорить; сказать",
-   "definition_source": "mmh",
-   "radical": "曰",
-   "decomposition": "⿴口一",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "Picture of an open 一 mouth 口",
-    "hint_ru": "Изображение открытого 一 рта 口"
-   },
-   "components": [
-    "口",
-    "一"
-   ]
-  },
-  "书": {
-   "pinyin": [
-    "shū"
-   ],
-   "definition": "book, letter, document; writing",
-   "definition_ru": "книга, письмо, документ; письменность",
-   "definition_source": "mmh",
-   "radical": "丨",
-   "decomposition": "⿻？丨",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "A mark made by a pen ⺺",
-    "hint_ru": "Отметка, сделанная пером ⺺"
-   },
-   "components": [
-    "丨"
-   ]
-  },
-  "门": {
-   "pinyin": [
-    "mén"
-   ],
-   "definition": "gate, door, entrance, opening",
-   "definition_ru": "ворота, дверь, вход, проём",
-   "definition_source": "mmh",
-   "radical": "门",
-   "decomposition": "⿰⿱丶丨？",
-   "etymology": {
-    "type": "pictographic",
-    "hint": "An open doorway or gate",
-    "hint_ru": "Открытый дверной проём или ворота"
-   },
-   "components": [
-    "丶",
-    "丨"
-   ]
-  },
-  "两": {
-   "pinyin": [
-    "liǎng"
-   ],
-   "definition": "two, both, pair, couple; ounce",
-   "definition_ru": "два, оба, пара; лян (мера веса)",
-   "definition_source": "mmh",
-   "radical": "一",
-   "decomposition": "⿱一⿻冂从",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "Two people 从 together in a cart",
-    "hint_ru": "Два человека 从 вместе на повозке"
-   },
-   "components": [
-    "一",
-    "冂",
-    "从"
-   ]
-  },
-  "从": {
-   "pinyin": [
-    "cóng"
-   ],
-   "definition": "from, by, since, whence, through",
-   "definition_ru": "от, через, с, откуда, посредством",
-   "definition_source": "mmh",
-   "radical": "人",
-   "decomposition": "⿰人人",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "One person 人 following another",
-    "hint_ru": "Один человек 人 следует за другим"
-   },
-   "components": [
-    "人"
-   ]
-  },
-  "人": {
-   "pinyin": [
-    "rén"
-   ],
-   "definition": "man, person; people",
-   "definition_ru": "человек, личность; люди",
-   "definition_source": "mmh",
-   "radical": "人",
-   "decomposition": "？",
-   "etymology": {
-    "type": "pictographic",
-    "hint": "The legs of a human being",
-    "hint_ru": "Ноги человека"
-   },
-   "components": []
-  },
-  "甲": {
-   "pinyin": [
-    "jiǎ"
-   ],
-   "definition": "armor, shell; fingernails; 1st heavenly stem",
-   "definition_ru": "броня, панцирь; ногти; 1-й небесный ствол",
-   "definition_source": "mmh",
-   "radical": "田",
-   "decomposition": "⿻冂？",
-   "etymology": null,
-   "components": [
-    "冂"
-   ]
-  },
-  "肉": {
-   "pinyin": [
-    "ròu"
-   ],
-   "definition": "meat; flesh",
-   "definition_ru": "мясо; плоть",
-   "definition_source": "mmh",
-   "radical": "肉",
-   "decomposition": "⿻冂仌",
-   "etymology": {
-    "type": "pictographic",
-    "hint": "Meat on the ribs of an animal",
-    "hint_ru": "Мясо на рёбрах животного"
-   },
-   "components": [
-    "冂",
-    "仌"
-   ]
-  },
-  "仌": {
-   "pinyin": [
-    "bīng"
-   ],
-   "definition": "frozen; ice-cold",
-   "definition_ru": "замёрзший; ледяной",
-   "definition_source": "mmh",
-   "radical": "人",
-   "decomposition": "⿱人人",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "Old variant of 冰 (\"ice-water\")",
-    "hint_ru": "Старый вариант 冰 («ледяная вода»)"
-   },
-   "components": [
-    "人"
-   ]
-  },
-  "月": {
-   "pinyin": [
-    "yuè"
-   ],
-   "definition": "moon; month",
-   "definition_ru": "луна; месяц",
-   "definition_source": "mmh",
-   "radical": "月",
-   "decomposition": "⿵冂二",
-   "etymology": {
-    "type": "pictographic",
-    "hint": "A crescent moon",
-    "hint_ru": "Полумесяц"
-   },
-   "components": [
-    "冂",
-    "二"
-   ]
-  },
-  "见": {
-   "pinyin": [
-    "jiàn"
-   ],
-   "definition": "to see, to observe, to meet, to appear",
-   "definition_ru": "видеть, наблюдать, встречаться, являться",
-   "definition_source": "mmh",
-   "radical": "见",
-   "decomposition": "⿵冂儿",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "Simplified form of 見; a man 儿 with the eye 目 emphasized",
-    "hint_ru": "Упрощённая форма 見; человек 儿 с подчёркнутым глазом 目"
-   },
-   "components": [
-    "冂",
-    "儿"
-   ]
-  },
-  "网": {
-   "pinyin": [
-    "wǎng"
-   ],
-   "definition": "net; network",
-   "definition_ru": "сеть; сетка",
-   "definition_source": "mmh",
-   "radical": "网",
-   "decomposition": "⿵冂⿰乂乂",
-   "etymology": {
-    "type": "pictographic",
-    "hint": "A net for catching fish",
-    "hint_ru": "Сеть для ловли рыбы"
-   },
-   "components": [
-    "冂",
-    "乂"
-   ]
-  },
-  "乂": {
-   "pinyin": [
-    "yì"
-   ],
-   "definition": "to govern; to control; to nurture",
-   "definition_ru": "управлять; контролировать; воспитывать",
-   "definition_source": "mmh",
-   "radical": "丿",
-   "decomposition": "⿻丿？",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "Shears, for cultivating a garden",
-    "hint_ru": "Ножницы для ухода за садом"
-   },
-   "components": [
-    "丿"
-   ]
-  },
-  "内": {
-   "pinyin": [
-    "nèi"
-   ],
-   "definition": "inside",
-   "definition_ru": "внутри",
-   "definition_source": "mmh",
-   "radical": "入",
-   "decomposition": "⿻冂人",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "A man 人  entering a door 冂",
-    "hint_ru": "Человек 人, входящий в дверь 冂"
-   },
-   "components": [
-    "冂",
-    "人"
-   ]
-  },
-  "用": {
-   "pinyin": [
-    "yòng"
-   ],
-   "definition": "to use, to employ, to apply; use",
-   "definition_ru": "использовать, применять; польза",
-   "definition_source": "mmh",
-   "radical": "用",
-   "decomposition": "⿵冂？",
-   "etymology": null,
-   "components": [
-    "冂"
-   ]
-  },
-  "名": {
-   "pinyin": [
-    "míng"
-   ],
-   "definition": "name; position, rank, title",
-   "definition_ru": "имя; положение, ранг, звание",
-   "definition_source": "mmh",
-   "radical": "口",
-   "decomposition": "⿸夕口",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "A name called out 口 to hail someone at night 夕",
-    "hint_ru": "Имя, выкрикнутое 口, чтобы окликнуть кого-то ночью 夕"
-   },
-   "components": [
-    "夕",
-    "口"
-   ]
-  },
-  "夕": {
-   "pinyin": [
-    "xī"
-   ],
-   "definition": "evening, night, dusk; slanted",
-   "definition_ru": "вечер, ночь, сумерки; наклонный",
-   "definition_source": "mmh",
-   "radical": "夕",
-   "decomposition": "⿻勹丶",
-   "etymology": {
-    "type": "pictographic",
-    "hint": "A crescent moon",
-    "hint_ru": "Полумесяц"
-   },
-   "components": [
-    "勹",
-    "丶"
-   ]
-  },
-  "勹": {
-   "pinyin": [
-    "bāo"
-   ],
-   "definition": "wrap",
-   "definition_ru": "обёртывать",
-   "definition_source": "mmh",
-   "radical": "勹",
-   "decomposition": "⿰丿？",
-   "etymology": null,
-   "components": [
-    "丿"
-   ]
-  },
-  "后": {
-   "pinyin": [
-    "hòu"
-   ],
-   "definition": "after; behind, rear; descendants",
-   "definition_ru": "после; позади, тыл; потомки",
-   "definition_source": "mmh",
-   "radical": "口",
-   "decomposition": "⿸？口",
-   "etymology": null,
-   "components": [
-    "口"
-   ]
-  },
-  "加": {
-   "pinyin": [
-    "jiā"
-   ],
-   "definition": "to add to, to increase, to augment",
-   "definition_ru": "добавлять, увеличивать, приумножать",
-   "definition_source": "mmh",
-   "radical": "力",
-   "decomposition": "⿰力口",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "Supporting a cause with the strength 力 of one's words 口",
-    "hint_ru": "Поддержка дела силой 力 своих слов 口"
-   },
-   "components": [
-    "力",
-    "口"
-   ]
-  },
-  "力": {
-   "pinyin": [
-    "lì"
-   ],
-   "definition": "strength, power; capability, influence",
-   "definition_ru": "сила, мощь; способность, влияние",
-   "definition_source": "mmh",
-   "radical": "力",
-   "decomposition": "⿻丿？",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "A plow's head representing strength",
-    "hint_ru": "Головка плуга, означающая силу"
-   },
-   "components": [
-    "丿"
-   ]
-  },
-  "器": {
-   "pinyin": [
-    "qì"
-   ],
-   "definition": "device, instrument, tool; receptacle, vessel",
-   "definition_ru": "прибор, инструмент, орудие; сосуд, ёмкость",
-   "definition_source": "mmh",
-   "radical": "口",
-   "decomposition": "⿳⿰口口犬⿰口口",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "Four cooking vessels 口 guarded by a dog 犬",
-    "hint_ru": "Четыре кухонных сосуда 口, охраняемые собакой 犬"
-   },
-   "components": [
-    "口",
-    "犬"
-   ]
-  },
-  "犬": {
-   "pinyin": [
-    "quǎn"
-   ],
-   "definition": "dog",
-   "definition_ru": "собака",
-   "definition_source": "mmh",
-   "radical": "犬",
-   "decomposition": "⿻大丶",
-   "etymology": {
-    "type": "pictographic",
-    "hint": "A dog turned to the side",
-    "hint_ru": "Собака, повёрнутая боком"
-   },
-   "components": [
-    "大",
-    "丶"
-   ]
-  },
-  "大": {
-   "pinyin": [
-    "dà"
-   ],
-   "definition": "big, great, vast, high, deep",
-   "definition_ru": "большой, великий, обширный, высокий, глубокий",
-   "definition_source": "mmh",
-   "radical": "大",
-   "decomposition": "⿻一人",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "A man 人 with outstretched arms",
-    "hint_ru": "Человек 人 с раскинутыми руками"
-   },
-   "components": [
-    "一",
-    "人"
-   ]
-  },
-  "合": {
-   "pinyin": [
-    "hé"
-   ],
-   "definition": "to combine, to join, to unite; to gather",
-   "definition_ru": "объединять, соединять; собирать",
-   "definition_source": "mmh",
-   "radical": "口",
-   "decomposition": "⿱亼口",
-   "etymology": null,
-   "components": [
-    "亼",
-    "口"
-   ]
-  },
-  "亼": {
-   "pinyin": [
-    "jí"
-   ],
-   "definition": "to assemble, to gather together",
-   "definition_ru": "собирать, сводить вместе",
-   "definition_source": "mmh",
-   "radical": "人",
-   "decomposition": "⿱人一",
-   "etymology": null,
-   "components": [
-    "人",
-    "一"
-   ]
-  },
-  "事": {
-   "pinyin": [
-    "shì"
-   ],
-   "definition": "affair, matter, business; to serve; accident, incident",
-   "definition_ru": "дело, вопрос, занятие; служить; происшествие, инцидент",
-   "definition_source": "mmh",
-   "radical": "亅",
-   "decomposition": "⿻⿳一口彐亅",
-   "etymology": null,
-   "components": [
-    "一",
-    "口",
-    "彐",
-    "亅"
-   ]
-  },
-  "彐": {
-   "pinyin": [
-    "jì"
-   ],
-   "definition": "snout",
-   "definition_ru": "рыло, пятачок",
-   "definition_source": "mmh",
-   "radical": "彐",
-   "decomposition": "⿹？二",
-   "etymology": null,
-   "components": [
-    "二"
-   ]
-  },
-  "高": {
-   "pinyin": [
-    "gāo"
-   ],
-   "definition": "tall, lofty; high, elevated",
-   "definition_ru": "высокий, возвышенный; поднятый",
-   "definition_source": "mmh",
-   "radical": "高",
-   "decomposition": "⿳亠口冋",
-   "etymology": {
-    "type": "pictographic",
-    "hint": "A tall palace",
-    "hint_ru": "Высокий дворец"
-   },
-   "components": [
-    "亠",
-    "口",
-    "冋"
-   ]
-  },
-  "冋": {
-   "pinyin": [
-    "jiōng"
-   ],
-   "definition": "desert; border",
-   "definition_ru": "пустыня; граница",
-   "definition_source": "mmh",
-   "radical": "冂",
-   "decomposition": "⿵冂口",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "A plot of land 口 surrounded by a border 冂; 冂 also provides the pronunciation",
-    "hint_ru": "Участок земли 口, окружённый границей 冂; 冂 также подсказывает произношение"
-   },
-   "components": [
-    "冂",
-    "口"
-   ]
-  },
-  "仁": {
-   "pinyin": [
-    "rén"
-   ],
-   "definition": "benevolent, humane, kind",
-   "definition_ru": "добрый, человеколюбивый, милосердный",
-   "definition_source": "mmh",
-   "radical": "亻",
-   "decomposition": "⿰亻二",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "A caring relationship between two 二 people 亻",
-    "hint_ru": "Забота между двумя 二 людьми 亻"
-   },
-   "components": [
-    "亻",
-    "二"
-   ]
-  },
-  "于": {
-   "pinyin": [
-    "yú"
-   ],
-   "definition": "at, in, on; to, from; alas!",
-   "definition_ru": "в, на, при; к, от; увы!",
-   "definition_source": "mmh",
-   "radical": "二",
-   "decomposition": "⿻二亅",
-   "etymology": null,
-   "components": [
-    "二",
-    "亅"
-   ]
-  },
-  "元": {
-   "pinyin": [
-    "yuán"
-   ],
-   "definition": "first; dollar; origin; head",
-   "definition_ru": "первый; доллар; начало; голова",
-   "definition_source": "mmh",
-   "radical": "儿",
-   "decomposition": "⿱二儿",
-   "etymology": {
-    "type": "pictographic",
-    "hint": "A man 儿 with two lines emphasizing their head 二",
-    "hint_ru": "Человек 儿 с двумя линиями, подчёркивающими его голову 二"
-   },
-   "components": [
-    "二",
-    "儿"
-   ]
-  },
-  "耳": {
-   "pinyin": [
-    "ěr"
-   ],
-   "definition": "ear; to hear, to hear of; handle",
-   "definition_ru": "ухо; слышать, услышать о; ручка",
-   "definition_source": "mmh",
-   "radical": "耳",
-   "decomposition": "⿻？二",
-   "etymology": {
-    "type": "pictographic",
-    "hint": "An ear",
-    "hint_ru": "Ухо"
-   },
-   "components": [
-    "二"
-   ]
-  },
-  "云": {
-   "pinyin": [
-    "yún"
-   ],
-   "definition": "cloud; to say, to speak",
-   "definition_ru": "облако; говорить, сказать",
-   "definition_source": "mmh",
-   "radical": "二",
-   "decomposition": "⿱二厶",
-   "etymology": {
-    "type": "pictographic",
-    "hint": "A cloud",
-    "hint_ru": "Облако"
-   },
-   "components": [
-    "二",
-    "厶"
-   ]
-  },
-  "五": {
-   "pinyin": [
-    "wǔ"
-   ],
-   "definition": "five; surname",
-   "definition_ru": "пять; фамилия",
-   "definition_source": "mmh",
-   "radical": "二",
-   "decomposition": "⿴二？",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "Five elements (the cross with the extra stroke) between heaven 一 and earth 一 ",
-    "hint_ru": "Пять элементов (крест с дополнительной чертой) между небом 一 и землёй 一"
-   },
-   "components": [
-    "二"
-   ]
-  },
-  "言": {
-   "pinyin": [
-    "yán"
-   ],
-   "definition": "words, speech; to speak, to say",
-   "definition_ru": "слова, речь; говорить, сказать",
-   "definition_source": "mmh",
-   "radical": "言",
-   "decomposition": "⿱亠⿱二口",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "A tongue sticking out of a mouth 口",
-    "hint_ru": "Язык, высунутый изо рта 口"
-   },
-   "components": [
-    "亠",
-    "二",
-    "口"
-   ]
-  },
-  "三": {
-   "pinyin": [
-    "sān"
-   ],
-   "definition": "three",
-   "definition_ru": "три",
-   "definition_source": "mmh",
-   "radical": "一",
-   "decomposition": "⿱一二",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "Three  parallel lines; compare 一 (one) and 二 (two)",
-    "hint_ru": "Три параллельные линии; сравни 一 (один) и 二 (два)"
-   },
-   "components": [
-    "一",
-    "二"
+    "氵",
+    "目"
    ]
   },
   "睡": {
@@ -3452,6 +1892,7 @@
     "hint": "eye",
     "hint_ru": "глаз"
    },
+   "atomic": false,
    "components": [
     "目",
     "垂"
@@ -3471,21 +1912,7 @@
     "hint": "A tree with drooping branches",
     "hint_ru": "Дерево с поникшими ветвями"
    },
-   "components": [
-    "士",
-    "卄"
-   ]
-  },
-  "士": {
-   "pinyin": [
-    "shì"
-   ],
-   "definition": "scholar, gentleman; soldier",
-   "definition_ru": "учёный, джентльмен; воин",
-   "definition_source": "mmh",
-   "radical": "士",
-   "decomposition": "？",
-   "etymology": null,
+   "atomic": true,
    "components": []
   },
   "具": {
@@ -3502,11 +1929,29 @@
     "hint": "Two hands 八 writing on a tablet 目",
     "hint_ru": "Две руки 八, пишущие на табличке 目"
    },
+   "atomic": false,
    "components": [
     "目",
     "一",
     "八"
    ]
+  },
+  "八": {
+   "pinyin": [
+    "bā"
+   ],
+   "definition": "eight; all around, all sides",
+   "definition_ru": "восемь; со всех сторон, вокруг",
+   "definition_source": "mmh",
+   "radical": "八",
+   "decomposition": "？",
+   "etymology": {
+    "type": "ideographic",
+    "hint": "Two bent lines meaning \"to divide\"",
+    "hint_ru": "Две изогнутые линии, означающие «делить»"
+   },
+   "atomic": true,
+   "components": []
   },
   "省": {
    "pinyin": [
@@ -3524,6 +1969,7 @@
     "hint": "division",
     "hint_ru": "деление"
    },
+   "atomic": false,
    "components": [
     "少",
     "目"
@@ -3543,10 +1989,8 @@
     "hint": "Grains of sand; 小 provides the pronunciation and meaning",
     "hint_ru": "Песчинки; 小 подсказывает произношение и значение"
    },
-   "components": [
-    "小",
-    "丿"
-   ]
+   "atomic": true,
+   "components": []
   },
   "眉": {
    "pinyin": [
@@ -3562,10 +2006,28 @@
     "hint": "Picture of hair 尸 above an eye 目",
     "hint_ru": "Изображение волос 尸 над глазом 目"
    },
+   "atomic": false,
    "components": [
     "尸",
     "目"
    ]
+  },
+  "尸": {
+   "pinyin": [
+    "shī"
+   ],
+   "definition": "body, corpse",
+   "definition_ru": "тело, труп",
+   "definition_source": "mmh",
+   "radical": "尸",
+   "decomposition": "⿰丿？",
+   "etymology": {
+    "type": "pictographic",
+    "hint": "A man keeled over",
+    "hint_ru": "Человек, упавший ничком"
+   },
+   "atomic": true,
+   "components": []
   },
   "看": {
    "pinyin": [
@@ -3581,6 +2043,7 @@
     "hint": "Shielding one's eyes 目 with a hand 手 to look to the distance",
     "hint_ru": "Прикрывая глаза 目 рукой 手, чтобы смотреть вдаль"
    },
+   "atomic": false,
    "components": [
     "手",
     "目"
@@ -3600,6 +2063,7 @@
     "hint": "A hand with the fingers splayed",
     "hint_ru": "Рука с растопыренными пальцами"
    },
+   "atomic": true,
    "components": []
   },
   "着": {
@@ -3612,6 +2076,7 @@
    "radical": "目",
    "decomposition": "⿸羊目",
    "etymology": null,
+   "atomic": false,
    "components": [
     "羊",
     "目"
@@ -3631,9 +2096,8 @@
     "hint": "A sheep's head with horns",
     "hint_ru": "Голова барана с рогами"
    },
-   "components": [
-    "丷"
-   ]
+   "atomic": true,
+   "components": []
   },
   "直": {
    "pinyin": [
@@ -3649,6 +2113,7 @@
     "hint": "To look someone in the eye 目",
     "hint_ru": "Смотреть кому-то в глаза 目"
    },
+   "atomic": false,
    "components": [
     "十",
     "目",
@@ -3671,6 +2136,7 @@
     "hint": "eye",
     "hint_ru": "глаз"
    },
+   "atomic": false,
    "components": [
     "目",
     "艮"
@@ -3686,25 +2152,8 @@
    "radical": "艮",
    "decomposition": "⿸？？",
    "etymology": null,
+   "atomic": true,
    "components": []
-  },
-  "自": {
-   "pinyin": [
-    "zì"
-   ],
-   "definition": "self; private, personal; from",
-   "definition_ru": "сам; частный, личный; от",
-   "definition_source": "mmh",
-   "radical": "自",
-   "decomposition": "⿻目？",
-   "etymology": {
-    "type": "pictographic",
-    "hint": "A nose; in China, people refer to themselves by pointing to their noses",
-    "hint_ru": "Нос; в Китае люди указывают на себя, показывая на нос"
-   },
-   "components": [
-    "目"
-   ]
   },
   "廂": {
    "pinyin": [
@@ -3722,6 +2171,7 @@
     "hint": "building",
     "hint_ru": "здание"
    },
+   "atomic": false,
    "components": [
     "广",
     "相"
@@ -3741,10 +2191,8 @@
     "hint": "A lean-to 厂, suggesting a building",
     "hint_ru": "Навес 厂, намекающий на здание"
    },
-   "components": [
-    "丶",
-    "厂"
-   ]
+   "atomic": true,
+   "components": []
   },
   "缃": {
    "pinyin": [
@@ -3762,6 +2210,7 @@
     "hint": "silk",
     "hint_ru": "шёлк"
    },
+   "atomic": false,
    "components": [
     "纟",
     "相"
@@ -3781,9 +2230,8 @@
     "hint": "A twisted strand of silk; see 糸",
     "hint_ru": "Скрученная нить шёлка; см. 糸"
    },
-   "components": [
-    "一"
-   ]
+   "atomic": true,
+   "components": []
   },
   "葙": {
    "pinyin": [
@@ -3801,6 +2249,7 @@
     "hint": "plant",
     "hint_ru": "растение"
    },
+   "atomic": false,
    "components": [
     "艹",
     "相"
@@ -3822,6 +2271,7 @@
     "hint": "building",
     "hint_ru": "здание"
    },
+   "atomic": false,
    "components": [
     "厂",
     "相"
@@ -3843,6 +2293,7 @@
     "hint": "water",
     "hint_ru": "вода"
    },
+   "atomic": false,
    "components": [
     "氵",
     "相"
@@ -3864,6 +2315,7 @@
     "hint": "rain",
     "hint_ru": "дождь"
    },
+   "atomic": false,
    "components": [
     "雨",
     "相"
@@ -3883,43 +2335,8 @@
     "hint": "Rain drops falling from a cloud 帀",
     "hint_ru": "Капли дождя, падающие с облака 帀"
    },
-   "components": [
-    "帀"
-   ]
-  },
-  "帀": {
-   "pinyin": [
-    "zā"
-   ],
-   "definition": "to rotate, to revolve, to make a circuit",
-   "definition_ru": "вращаться, поворачиваться, совершать оборот",
-   "definition_source": "mmh",
-   "radical": "巾",
-   "decomposition": "⿱一巾",
-   "etymology": null,
-   "components": [
-    "一",
-    "巾"
-   ]
-  },
-  "巾": {
-   "pinyin": [
-    "jīn"
-   ],
-   "definition": "cloth, curtain, handkerchief, towel",
-   "definition_ru": "ткань, занавес, платок, полотенце",
-   "definition_source": "mmh",
-   "radical": "巾",
-   "decomposition": "⿻冂丨",
-   "etymology": {
-    "type": "pictographic",
-    "hint": "A curtain or towel hanging from a rack",
-    "hint_ru": "Занавес или полотенце, висящее на вешалке"
-   },
-   "components": [
-    "冂",
-    "丨"
-   ]
+   "atomic": true,
+   "components": []
   },
   "箱": {
    "pinyin": [
@@ -3937,6 +2354,7 @@
     "hint": "bamboo",
     "hint_ru": "бамбук"
    },
+   "atomic": false,
    "components": [
     "⺮",
     "相"
@@ -3956,6 +2374,7 @@
     "hint": "Two stalks of bamboo; see 竹",
     "hint_ru": "Два стебля бамбука; см. 竹"
    },
+   "atomic": true,
    "components": []
   },
   "志": {
@@ -3972,10 +2391,24 @@
     "hint": "The mind 心 of a scholar 士; 士 also provides the pronunciation",
     "hint_ru": "Ум 心 учёного 士; 士 также подсказывает произношение"
    },
+   "atomic": false,
    "components": [
     "士",
     "心"
    ]
+  },
+  "士": {
+   "pinyin": [
+    "shì"
+   ],
+   "definition": "scholar, gentleman; soldier",
+   "definition_ru": "учёный, джентльмен; воин",
+   "definition_source": "mmh",
+   "radical": "士",
+   "decomposition": "？",
+   "etymology": null,
+   "atomic": true,
+   "components": []
   },
   "息": {
    "pinyin": [
@@ -3991,10 +2424,28 @@
     "hint": "To breathe (life, 心) through one's nose 自; 心 also provides the pronunciation",
     "hint_ru": "Дышать (жизнью, 心) через нос 自; 心 также подсказывает произношение"
    },
+   "atomic": false,
    "components": [
     "自",
     "心"
    ]
+  },
+  "自": {
+   "pinyin": [
+    "zì"
+   ],
+   "definition": "self; private, personal; from",
+   "definition_ru": "сам; частный, личный; от",
+   "definition_source": "mmh",
+   "radical": "自",
+   "decomposition": "⿻目？",
+   "etymology": {
+    "type": "pictographic",
+    "hint": "A nose; in China, people refer to themselves by pointing to their noses",
+    "hint_ru": "Нос; в Китае люди указывают на себя, показывая на нос"
+   },
+   "atomic": true,
+   "components": []
   },
   "态": {
    "pinyin": [
@@ -4012,6 +2463,7 @@
     "hint": "heart",
     "hint_ru": "сердце"
    },
+   "atomic": false,
    "components": [
     "太",
     "心"
@@ -4031,10 +2483,41 @@
     "hint": "A giant 大 with a normal-sized man 丶 for scale",
     "hint_ru": "Великан 大 и человек нормального роста 丶 для масштаба"
    },
+   "atomic": false,
    "components": [
     "大",
     "丶"
    ]
+  },
+  "丶": {
+   "pinyin": [
+    "diǎn"
+   ],
+   "definition": "dot",
+   "definition_ru": "точка",
+   "definition_source": "mmh",
+   "radical": "丶",
+   "decomposition": "？",
+   "etymology": null,
+   "atomic": true,
+   "components": []
+  },
+  "大": {
+   "pinyin": [
+    "dà"
+   ],
+   "definition": "big, great, vast, high, deep",
+   "definition_ru": "большой, великий, обширный, высокий, глубокий",
+   "definition_source": "mmh",
+   "radical": "大",
+   "decomposition": "⿻一人",
+   "etymology": {
+    "type": "ideographic",
+    "hint": "A man 人 with outstretched arms",
+    "hint_ru": "Человек 人 с раскинутыми руками"
+   },
+   "atomic": true,
+   "components": []
   },
   "恶": {
    "pinyin": [
@@ -4052,6 +2535,7 @@
     "hint": "heart",
     "hint_ru": "сердце"
    },
+   "atomic": false,
    "components": [
     "亚",
     "心"
@@ -4071,24 +2555,8 @@
     "hint": "Picture of a cross-shaped house or temple",
     "hint_ru": "Изображение дома или храма в форме креста"
    },
-   "components": [
-    "一",
-    "业"
-   ]
-  },
-  "业": {
-   "pinyin": [
-    "yè"
-   ],
-   "definition": "business, profession; to study, to work",
-   "definition_ru": "дело, профессия; учиться, работать",
-   "definition_source": "mmh",
-   "radical": "一",
-   "decomposition": "⿱？一",
-   "etymology": null,
-   "components": [
-    "一"
-   ]
+   "atomic": true,
+   "components": []
   },
   "总": {
    "pinyin": [
@@ -4104,11 +2572,25 @@
     "hint": "Many mouths 口 speaking with one mind 心",
     "hint_ru": "Множество ртов 口, говорящих в один ум 心"
    },
+   "atomic": false,
    "components": [
     "丷",
     "口",
     "心"
    ]
+  },
+  "丷": {
+   "pinyin": [
+    "ha"
+   ],
+   "definition": "kwukyel",
+   "definition_ru": "кугёль (корейская система пометок к тексту)",
+   "definition_source": "mmh",
+   "radical": "丷",
+   "decomposition": "⿰丶？",
+   "etymology": null,
+   "atomic": true,
+   "components": []
   },
   "思": {
    "pinyin": [
@@ -4124,6 +2606,7 @@
     "hint": "Weighing something with your mind 囟 (altered) and heart 心",
     "hint_ru": "Взвешивание чего-то умом 囟 (изменено) и сердцем 心"
    },
+   "atomic": false,
    "components": [
     "田",
     "心"
@@ -4143,6 +2626,7 @@
     "hint": "Two hearts 心 beating together 咸",
     "hint_ru": "Два сердца 心, бьющихся вместе 咸"
    },
+   "atomic": false,
    "components": [
     "咸",
     "心"
@@ -4162,6 +2646,7 @@
     "hint": "One 一 voice 口 surrounded by conflict 戈",
     "hint_ru": "Один 一 голос 口, окружённый конфликтом 戈"
    },
+   "atomic": false,
    "components": [
     "戊",
     "一",
@@ -4178,10 +2663,24 @@
    "radical": "戈",
    "decomposition": "⿰丿戈",
    "etymology": null,
+   "atomic": false,
    "components": [
     "丿",
     "戈"
    ]
+  },
+  "丿": {
+   "pinyin": [
+    "piě"
+   ],
+   "definition": "slash",
+   "definition_ru": "косая черта",
+   "definition_source": "mmh",
+   "radical": "丿",
+   "decomposition": "？",
+   "etymology": null,
+   "atomic": true,
+   "components": []
   },
   "意": {
    "pinyin": [
@@ -4199,6 +2698,7 @@
     "hint": "heart",
     "hint_ru": "сердце"
    },
+   "atomic": false,
    "components": [
     "音",
     "心"
@@ -4218,10 +2718,58 @@
     "hint": "A tongue 立 forming a sound in the mouth 日",
     "hint_ru": "Язык 立, формирующий звук во рту 日"
    },
+   "atomic": true,
+   "components": []
+  },
+  "德": {
+   "pinyin": [
+    "dé"
+   ],
+   "definition": "ethics, morality; compassion, kindness",
+   "definition_ru": "этика, мораль; сострадание, доброта",
+   "definition_source": "mmh",
+   "radical": "彳",
+   "decomposition": "⿰彳⿱⿱十罒⿱一心",
+   "etymology": {
+    "type": "pictophonetic",
+    "semantic": "心",
+    "hint": "heart",
+    "hint_ru": "сердце"
+   },
+   "atomic": false,
    "components": [
-    "立",
-    "日"
+    "彳",
+    "十",
+    "罒",
+    "一",
+    "心"
    ]
+  },
+  "罒": {
+   "pinyin": [
+    "wǎng"
+   ],
+   "definition": "net, network",
+   "definition_ru": "сеть",
+   "definition_source": "mmh",
+   "radical": "罒",
+   "decomposition": "⿻口？",
+   "etymology": null,
+   "atomic": true,
+   "components": []
+  },
+  "彳": {
+   "pinyin": [
+    "chì"
+   ],
+   "definition": "to step with the left foot",
+   "definition_ru": "шагать левой ногой",
+   "definition_source": "mmh",
+   "radical": "彳",
+   "decomposition": "⿱？丨",
+   "etymology": null,
+   "atomic": true,
+   "components": []
   },
   "泶": {
    "pinyin": [
@@ -4233,6 +2781,7 @@
    "radical": "水",
    "decomposition": "⿱⿱⺍冖水",
    "etymology": null,
+   "atomic": false,
    "components": [
     "⺍",
     "冖",
@@ -4253,9 +2802,8 @@
     "hint": "A river running between two banks; compare 川",
     "hint_ru": "Река, текущая между двух берегов; сравни 川"
    },
-   "components": [
-    "亅"
-   ]
+   "atomic": true,
+   "components": []
   },
   "佥": {
    "pinyin": [
@@ -4271,11 +2819,25 @@
     "hint": "Many people gathered 亼 under one roof",
     "hint_ru": "Много людей, собравшихся 亼 под одной крышей"
    },
+   "atomic": false,
    "components": [
     "亼",
     "⺍",
     "一"
    ]
+  },
+  "亼": {
+   "pinyin": [
+    "jí"
+   ],
+   "definition": "to assemble, to gather together",
+   "definition_ru": "собирать, сводить вместе",
+   "definition_source": "mmh",
+   "radical": "人",
+   "decomposition": "⿱人一",
+   "etymology": null,
+   "atomic": true,
+   "components": []
   },
   "黉": {
    "pinyin": [
@@ -4287,11 +2849,29 @@
    "radical": "黄",
    "decomposition": "⿳⺍冖黄",
    "etymology": null,
+   "atomic": false,
    "components": [
     "⺍",
     "冖",
     "黄"
    ]
+  },
+  "黄": {
+   "pinyin": [
+    "huáng"
+   ],
+   "definition": "yellow; surname",
+   "definition_ru": "жёлтый; фамилия",
+   "definition_source": "mmh",
+   "radical": "黄",
+   "decomposition": "⿱？⿱由八",
+   "etymology": {
+    "type": "pictographic",
+    "hint": "A jade pendant",
+    "hint_ru": "Нефритовая подвеска"
+   },
+   "atomic": true,
+   "components": []
   },
   "鲎": {
    "pinyin": [
@@ -4308,6 +2888,7 @@
     "hint": "fish",
     "hint_ru": "рыба"
    },
+   "atomic": false,
    "components": [
     "⺍",
     "冖",
@@ -4328,20 +2909,7 @@
     "hint": "A fish swimming upwards",
     "hint_ru": "Рыба, плывущая вверх"
    },
-   "components": [
-    "⺈",
-    "田",
-    "一"
-   ]
-  },
-  "⺈": {
-   "pinyin": [],
-   "definition": "variant of radical: knife",
-   "definition_ru": "вариант радикала: нож",
-   "definition_source": "unicode-name",
-   "radical": "⺈",
-   "decomposition": "？",
-   "etymology": null,
+   "atomic": true,
    "components": []
   },
   "喾": {
@@ -4354,6 +2922,7 @@
    "radical": "口",
    "decomposition": "⿳⺍冖告",
    "etymology": null,
+   "atomic": false,
    "components": [
     "⺍",
     "冖",
@@ -4374,6 +2943,7 @@
     "hint": "To speak 口 with the force of an ox 牛",
     "hint_ru": "Говорить 口 с силой вола 牛"
    },
+   "atomic": false,
    "components": [
     "牛",
     "口"
@@ -4393,6 +2963,7 @@
     "hint": "An ox's horned head",
     "hint_ru": "Рогатая голова вола"
    },
+   "atomic": true,
    "components": []
   },
   "觉": {
@@ -4411,10 +2982,45 @@
     "hint": "see",
     "hint_ru": "видеть"
    },
+   "atomic": false,
    "components": [
     "⺍",
     "冖",
     "见"
+   ]
+  },
+  "见": {
+   "pinyin": [
+    "jiàn"
+   ],
+   "definition": "to see, to observe, to meet, to appear",
+   "definition_ru": "видеть, наблюдать, встречаться, являться",
+   "definition_source": "mmh",
+   "radical": "见",
+   "decomposition": "⿵冂儿",
+   "etymology": {
+    "type": "ideographic",
+    "hint": "Simplified form of 見; a man 儿 with the eye 目 emphasized",
+    "hint_ru": "Упрощённая форма 見; человек 儿 с подчёркнутым глазом 目"
+   },
+   "atomic": true,
+   "components": []
+  },
+  "兴": {
+   "pinyin": [
+    "xìng"
+   ],
+   "definition": "to thrive, to prosper, to flourish",
+   "definition_ru": "процветать, расцветать",
+   "definition_source": "mmh",
+   "radical": "八",
+   "decomposition": "⿳⺍一八",
+   "etymology": null,
+   "atomic": false,
+   "components": [
+    "⺍",
+    "一",
+    "八"
    ]
   },
   "应": {
@@ -4427,11 +3033,372 @@
    "radical": "广",
    "decomposition": "⿸广⿱⺍一",
    "etymology": null,
+   "atomic": false,
    "components": [
     "广",
     "⺍",
     "一"
    ]
+  },
+  "冠": {
+   "pinyin": [
+    "guān"
+   ],
+   "definition": "cap, crown, headgear",
+   "definition_ru": null,
+   "definition_source": "mmh",
+   "radical": "冖",
+   "decomposition": "⿱冖⿺元寸",
+   "etymology": {
+    "type": "ideographic",
+    "hint": "A man 元 puts on a cap 冖 with his hand 寸"
+   },
+   "atomic": false,
+   "components": [
+    "冖",
+    "元",
+    "寸"
+   ]
+  },
+  "元": {
+   "pinyin": [
+    "yuán"
+   ],
+   "definition": "first; dollar; origin; head",
+   "definition_ru": "первый; доллар; начало; голова",
+   "definition_source": "mmh",
+   "radical": "儿",
+   "decomposition": "⿱二儿",
+   "etymology": {
+    "type": "pictographic",
+    "hint": "A man 儿 with two lines emphasizing their head 二",
+    "hint_ru": "Человек 儿 с двумя линиями, подчёркивающими его голову 二"
+   },
+   "atomic": true,
+   "components": []
+  },
+  "莺": {
+   "pinyin": [
+    "yīng"
+   ],
+   "definition": "oriole, green finch; Sylvia species (various)",
+   "definition_ru": "иволга, зеленушка; различные виды славок",
+   "definition_source": "mmh",
+   "radical": "艹",
+   "decomposition": "⿱艹⿱冖鸟",
+   "etymology": {
+    "type": "ideographic",
+    "hint": "A bird 鸟 covered in 冖 green 艹 feathers",
+    "hint_ru": "Птица 鸟, покрытая 冖 зелёными 艹 перьями"
+   },
+   "atomic": false,
+   "components": [
+    "艹",
+    "冖",
+    "鸟"
+   ]
+  },
+  "营": {
+   "pinyin": [
+    "yíng"
+   ],
+   "definition": "camp, barracks, army; to run, to manage",
+   "definition_ru": "лагерь, казармы, армия; управлять, вести",
+   "definition_source": "mmh",
+   "radical": "艹",
+   "decomposition": "⿱艹⿱冖吕",
+   "etymology": null,
+   "atomic": false,
+   "components": [
+    "艹",
+    "冖",
+    "吕"
+   ]
+  },
+  "吕": {
+   "pinyin": [
+    "lǚ"
+   ],
+   "definition": "a musical note; surname",
+   "definition_ru": "музыкальная нота; фамилия",
+   "definition_source": "mmh",
+   "radical": "口",
+   "decomposition": "⿱口口",
+   "etymology": {
+    "type": "ideographic",
+    "hint": "Two mouths 口 in harmony",
+    "hint_ru": "Два рта 口 в согласии"
+   },
+   "atomic": false,
+   "components": [
+    "口"
+   ]
+  },
+  "索": {
+   "pinyin": [
+    "suǒ"
+   ],
+   "definition": "cable, rope; rules, laws; to demand, to exact; to search, to inquire",
+   "definition_ru": "канат, верёвка; правила, законы; требовать, взыскивать; искать, расспрашивать",
+   "definition_source": "mmh",
+   "radical": "糸",
+   "decomposition": "⿱⿱十冖糸",
+   "etymology": {
+    "type": "ideographic",
+    "hint": "A rope 糸 hanging from the ceiling 冖",
+    "hint_ru": "Верёвка 糸, свисающая с потолка 冖"
+   },
+   "atomic": false,
+   "components": [
+    "十",
+    "冖",
+    "糸"
+   ]
+  },
+  "糸": {
+   "pinyin": [
+    "mì"
+   ],
+   "definition": "silk; thread",
+   "definition_ru": "шёлк; нить",
+   "definition_source": "mmh",
+   "radical": "糸",
+   "decomposition": "⿱幺小",
+   "etymology": {
+    "type": "pictographic",
+    "hint": "A twisted strand of silk",
+    "hint_ru": "Скрученная нить шёлка"
+   },
+   "atomic": true,
+   "components": []
+  },
+  "劳": {
+   "pinyin": [
+    "láo"
+   ],
+   "definition": "to labor, to toil; to do manual work",
+   "definition_ru": "трудиться, тяжело работать; заниматься ручным трудом",
+   "definition_source": "mmh",
+   "radical": "力",
+   "decomposition": "⿱艹⿱冖力",
+   "etymology": {
+    "type": "ideographic",
+    "hint": "A man lifting 力 a load 冖 of grass 艹",
+    "hint_ru": "Человек, поднимающий 力 ношу 冖 травы 艹"
+   },
+   "atomic": false,
+   "components": [
+    "艹",
+    "冖",
+    "力"
+   ]
+  },
+  "力": {
+   "pinyin": [
+    "lì"
+   ],
+   "definition": "strength, power; capability, influence",
+   "definition_ru": "сила, мощь; способность, влияние",
+   "definition_source": "mmh",
+   "radical": "力",
+   "decomposition": "⿻丿？",
+   "etymology": {
+    "type": "ideographic",
+    "hint": "A plow's head representing strength",
+    "hint_ru": "Головка плуга, означающая силу"
+   },
+   "atomic": true,
+   "components": []
+  },
+  "受": {
+   "pinyin": [
+    "shòu"
+   ],
+   "definition": "to receive, to get, to accept; to bear",
+   "definition_ru": "получать, принимать; нести, выносить",
+   "definition_source": "mmh",
+   "radical": "又",
+   "decomposition": "⿳爫冖又",
+   "etymology": {
+    "type": "ideographic",
+    "hint": "Something 冖 passed from one hand 爫 to another 又",
+    "hint_ru": "Нечто 冖, передаваемое из одной руки 爫 в другую 又"
+   },
+   "atomic": false,
+   "components": [
+    "爫",
+    "冖",
+    "又"
+   ]
+  },
+  "爫": {
+   "pinyin": [
+    "zhǎo"
+   ],
+   "definition": "claws, nails, talons",
+   "definition_ru": "когти, ногти, лапы",
+   "definition_source": "mmh",
+   "radical": "爫",
+   "decomposition": "？",
+   "etymology": {
+    "type": "pictographic",
+    "hint": "A bird's talons; compare 爪",
+    "hint_ru": "Птичьи когти; сравни 爪"
+   },
+   "atomic": true,
+   "components": []
+  },
+  "爱": {
+   "pinyin": [
+    "ài"
+   ],
+   "definition": "to love, to like, to be fond of; love, affection",
+   "definition_ru": "любить, нравиться, быть привязанным; любовь, привязанность",
+   "definition_source": "mmh",
+   "radical": "爫",
+   "decomposition": "⿱⿱爫冖友",
+   "etymology": {
+    "type": "ideographic",
+    "hint": "To bring a friend 友 into one's house 冖",
+    "hint_ru": "Привести друга 友 в свой дом 冖"
+   },
+   "atomic": false,
+   "components": [
+    "爫",
+    "冖",
+    "友"
+   ]
+  },
+  "友": {
+   "pinyin": [
+    "yǒu"
+   ],
+   "definition": "friend, companion; fraternity",
+   "definition_ru": "друг, товарищ; братство",
+   "definition_source": "mmh",
+   "radical": "又",
+   "decomposition": "⿸？又",
+   "etymology": {
+    "type": "ideographic",
+    "hint": "Two hands 又 joined, representing friendship; 又 also provides the pronunciation",
+    "hint_ru": "Две руки 又 соединены, означает дружбу; 又 также подсказывает произношение"
+   },
+   "atomic": false,
+   "components": [
+    "又"
+   ]
+  },
+  "带": {
+   "pinyin": [
+    "dài"
+   ],
+   "definition": "belt, strap; band, ribbon; area, zone; to carry, to raise, to wear",
+   "definition_ru": "пояс, ремень; лента; область, зона; нести, поднимать, носить",
+   "definition_source": "mmh",
+   "radical": "巾",
+   "decomposition": "⿱卅⿱冖巾",
+   "etymology": {
+    "type": "ideographic",
+    "hint": "A belt, creasing one's robe above 卅 but not below 巾",
+    "hint_ru": "Пояс, стягивающий одежду выше 卅, но не ниже 巾"
+   },
+   "atomic": false,
+   "components": [
+    "卅",
+    "冖",
+    "巾"
+   ]
+  },
+  "巾": {
+   "pinyin": [
+    "jīn"
+   ],
+   "definition": "cloth, curtain, handkerchief, towel",
+   "definition_ru": "ткань, занавес, платок, полотенце",
+   "definition_source": "mmh",
+   "radical": "巾",
+   "decomposition": "⿻冂丨",
+   "etymology": {
+    "type": "pictographic",
+    "hint": "A curtain or towel hanging from a rack",
+    "hint_ru": "Занавес или полотенце, висящее на вешалке"
+   },
+   "atomic": true,
+   "components": []
+  },
+  "卅": {
+   "pinyin": [
+    "sà"
+   ],
+   "definition": "thirty, thirtieth",
+   "definition_ru": "тридцать, тридцатый",
+   "definition_source": "mmh",
+   "radical": "十",
+   "decomposition": "⿻一川",
+   "etymology": {
+    "type": "ideographic",
+    "hint": "Three tally marks; compare ten 十 and twenty 廿",
+    "hint_ru": "Три счётные палочки; сравни десять 十 и двадцать 廿"
+   },
+   "atomic": false,
+   "components": [
+    "一",
+    "川"
+   ]
+  },
+  "川": {
+   "pinyin": [
+    "chuān"
+   ],
+   "definition": "stream, river",
+   "definition_ru": "поток, река",
+   "definition_source": "mmh",
+   "radical": "川",
+   "decomposition": "⿲丿丨丨",
+   "etymology": {
+    "type": "ideographic",
+    "hint": "A river's flow; compare 巛",
+    "hint_ru": "Течение реки; сравни 巛"
+   },
+   "atomic": true,
+   "components": []
+  },
+  "军": {
+   "pinyin": [
+    "jūn"
+   ],
+   "definition": "army, military; soldiers, troops",
+   "definition_ru": "армия, военный; солдаты, войска",
+   "definition_source": "mmh",
+   "radical": "车",
+   "decomposition": "⿱冖车",
+   "etymology": {
+    "type": "ideographic",
+    "hint": "Soldiers 冖 (distorted 力) in a cart 车",
+    "hint_ru": "Солдаты 冖 (искажённое 力) на повозке 车"
+   },
+   "atomic": false,
+   "components": [
+    "冖",
+    "车"
+   ]
+  },
+  "车": {
+   "pinyin": [
+    "chē"
+   ],
+   "definition": "cart, vehicle; to move in a cart",
+   "definition_ru": "повозка, транспорт; перевозить на повозке",
+   "definition_source": "mmh",
+   "radical": "车",
+   "decomposition": "⿻七十",
+   "etymology": {
+    "type": "pictographic",
+    "hint": "Simplified form of 車, a cart with two wheels, seen from above",
+    "hint_ru": "Упрощённая форма 車, повозка с двумя колёсами, вид сверху"
+   },
+   "atomic": true,
+   "components": []
   },
   "酒": {
    "pinyin": [
@@ -4447,6 +3414,7 @@
     "hint": "A jar 酉 of wine 氵; 酉 also provides the pronunciation",
     "hint_ru": "Кувшин 酉 с вином 氵; 酉 также подсказывает произношение"
    },
+   "atomic": false,
    "components": [
     "氵",
     "酉"
@@ -4466,29 +3434,8 @@
     "hint": "A vessel half-filled with wine",
     "hint_ru": "Сосуд, наполовину наполненный вином"
    },
-   "components": [
-    "兀",
-    "日"
-   ]
-  },
-  "兀": {
-   "pinyin": [
-    "wù"
-   ],
-   "definition": "weak; lame",
-   "definition_ru": "слабый; хромой",
-   "definition_source": "mmh",
-   "radical": "兀",
-   "decomposition": "⿱一儿",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "Cutting 一 off the feet 儿",
-    "hint_ru": "Отрубание 一 ног 儿"
-   },
-   "components": [
-    "一",
-    "儿"
-   ]
+   "atomic": true,
+   "components": []
   },
   "波": {
    "pinyin": [
@@ -4506,6 +3453,7 @@
     "hint": "water",
     "hint_ru": "вода"
    },
+   "atomic": false,
    "components": [
     "氵",
     "皮"
@@ -4525,28 +3473,8 @@
     "hint": "A hand using a tool 攴 to strip the hide from a carcass",
     "hint_ru": "Рука с орудием 攴 снимает шкуру с туши"
    },
-   "components": [
-    "攴"
-   ]
-  },
-  "攴": {
-   "pinyin": [
-    "pū"
-   ],
-   "definition": "to rap, to tap",
-   "definition_ru": "стучать, постукивать",
-   "definition_source": "mmh",
-   "radical": "攴",
-   "decomposition": "⿱⺊又",
-   "etymology": {
-    "type": "pictographic",
-    "hint": "A hand 又 wielding a stick ⺊",
-    "hint_ru": "Рука 又, владеющая палкой ⺊"
-   },
-   "components": [
-    "⺊",
-    "又"
-   ]
+   "atomic": true,
+   "components": []
   },
   "油": {
    "pinyin": [
@@ -4564,10 +3492,28 @@
     "hint": "water",
     "hint_ru": "вода"
    },
+   "atomic": false,
    "components": [
     "氵",
     "由"
    ]
+  },
+  "由": {
+   "pinyin": [
+    "yóu"
+   ],
+   "definition": "cause, reason; from",
+   "definition_ru": "причина, повод; от, из",
+   "definition_source": "mmh",
+   "radical": "田",
+   "decomposition": "田",
+   "etymology": {
+    "type": "ideographic",
+    "hint": "Road 丨 leading to the farm 田",
+    "hint_ru": "Дорога 丨, ведущая к полю 田"
+   },
+   "atomic": true,
+   "components": []
   },
   "清": {
    "pinyin": [
@@ -4585,6 +3531,7 @@
     "hint": "water",
     "hint_ru": "вода"
    },
+   "atomic": false,
    "components": [
     "氵",
     "青"
@@ -4600,19 +3547,7 @@
    "radical": "青",
    "decomposition": "⿱龶月",
    "etymology": null,
-   "components": [
-    "龶",
-    "月"
-   ]
-  },
-  "龶": {
-   "pinyin": [],
-   "definition": "form based on radical 土 (soil, earth; items made of earth) + 1 stroke(s)",
-   "definition_ru": "форма на основе радикала 土 (почва, земля; вещи из земли) + 1 шт.",
-   "definition_source": "unihan-radical",
-   "radical": "龶",
-   "decomposition": "？",
-   "etymology": null,
+   "atomic": true,
    "components": []
   },
   "治": {
@@ -4629,6 +3564,7 @@
     "hint": "A structure 台 that directs the flow of water 氵",
     "hint_ru": "Сооружение 台, направляющее поток воды 氵"
    },
+   "atomic": false,
    "components": [
     "氵",
     "台"
@@ -4644,10 +3580,28 @@
    "radical": "口",
    "decomposition": "⿱厶口",
    "etymology": null,
+   "atomic": false,
    "components": [
     "厶",
     "口"
    ]
+  },
+  "厶": {
+   "pinyin": [
+    "sī"
+   ],
+   "definition": "private, secret",
+   "definition_ru": "личный, тайный",
+   "definition_source": "mmh",
+   "radical": "厶",
+   "decomposition": "？",
+   "etymology": {
+    "type": "pictographic",
+    "hint": "A silk cocoon",
+    "hint_ru": "Шёлковый кокон"
+   },
+   "atomic": true,
+   "components": []
   },
   "江": {
    "pinyin": [
@@ -4665,6 +3619,7 @@
     "hint": "water",
     "hint_ru": "вода"
    },
+   "atomic": false,
    "components": [
     "氵",
     "工"
@@ -4684,29 +3639,8 @@
     "hint": "A spade or other workman's tool",
     "hint_ru": "Лопата или другой инструмент работника"
    },
-   "components": [
-    "一",
-    "丄"
-   ]
-  },
-  "丄": {
-   "pinyin": [
-    "shàng"
-   ],
-   "definition": "above",
-   "definition_ru": "над, сверху",
-   "definition_source": "mmh",
-   "radical": "一",
-   "decomposition": "⿱丨一",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "One stroke on top of another; variant of 上",
-    "hint_ru": "Одна черта над другой; вариант 上"
-   },
-   "components": [
-    "丨",
-    "一"
-   ]
+   "atomic": true,
+   "components": []
   },
   "河": {
    "pinyin": [
@@ -4724,6 +3658,7 @@
     "hint": "water",
     "hint_ru": "вода"
    },
+   "atomic": false,
    "components": [
     "氵",
     "可"
@@ -4745,6 +3680,7 @@
     "phonetic": "口",
     "hint_ru": "энергичный"
    },
+   "atomic": false,
    "components": [
     "丁",
     "口"
@@ -4766,6 +3702,7 @@
     "hint": "water",
     "hint_ru": "вода"
    },
+   "atomic": false,
    "components": [
     "氵",
     "㐬"
@@ -4781,11 +3718,25 @@
    "radical": "川",
    "decomposition": "⿳亠厶川",
    "etymology": null,
+   "atomic": false,
    "components": [
     "亠",
     "厶",
     "川"
    ]
+  },
+  "亠": {
+   "pinyin": [
+    "tóu"
+   ],
+   "definition": "lid, cover; head",
+   "definition_ru": "крышка, покров; голова",
+   "definition_source": "mmh",
+   "radical": "亠",
+   "decomposition": "⿱丶一",
+   "etymology": null,
+   "atomic": true,
+   "components": []
   },
   "法": {
    "pinyin": [
@@ -4801,6 +3752,7 @@
     "hint": "The course 去 followed by a stream 氵",
     "hint_ru": "Путь 去, по которому течёт поток 氵"
    },
+   "atomic": false,
    "components": [
     "氵",
     "去"
@@ -4816,10 +3768,28 @@
    "radical": "厶",
    "decomposition": "⿱土厶",
    "etymology": null,
+   "atomic": false,
    "components": [
     "土",
     "厶"
    ]
+  },
+  "土": {
+   "pinyin": [
+    "tǔ"
+   ],
+   "definition": "soil, earth; items made of earth",
+   "definition_ru": "почва, земля; вещи из земли",
+   "definition_source": "mmh",
+   "radical": "土",
+   "decomposition": "⿱十一",
+   "etymology": {
+    "type": "pictographic",
+    "hint": "A lump of clay on a potter's wheel",
+    "hint_ru": "Комок глины на гончарном круге"
+   },
+   "atomic": true,
+   "components": []
   },
   "海": {
    "pinyin": [
@@ -4837,6 +3807,7 @@
     "hint": "water",
     "hint_ru": "вода"
    },
+   "atomic": false,
    "components": [
     "氵",
     "每"
@@ -4855,6 +3826,7 @@
     "type": "pictophonetic",
     "phonetic": "母"
    },
+   "atomic": false,
    "components": [
     "母"
    ]
@@ -4873,6 +3845,7 @@
     "hint": "A mother's breasts",
     "hint_ru": "Грудь матери"
    },
+   "atomic": false,
    "components": []
   },
   "双": {
@@ -4889,6 +3862,7 @@
     "hint": "Two hands 又 side-by-side",
     "hint_ru": "Две руки 又 рядом"
    },
+   "atomic": false,
    "components": [
     "又"
    ]
@@ -4907,6 +3881,7 @@
     "hint": "Another 又 kind of bird 鸟",
     "hint_ru": "Другой 又 вид птицы 鸟"
    },
+   "atomic": false,
    "components": [
     "又",
     "鸟"
@@ -4926,6 +3901,7 @@
     "hint": "A hand 又 trying to grasp at a bird 隹",
     "hint_ru": "Рука 又, пытающаяся схватить птицу 隹"
    },
+   "atomic": false,
    "components": [
     "又",
     "隹"
@@ -4941,6 +3917,7 @@
    "radical": "又",
    "decomposition": "⿱亦又",
    "etymology": null,
+   "atomic": false,
    "components": [
     "亦",
     "又"
@@ -4960,6 +3937,7 @@
     "hint": "A man standing with arrows pointing to his armpits",
     "hint_ru": "Человек стоит, стрелы указывают ему под мышки"
    },
+   "atomic": false,
    "components": [
     "亠"
    ]
@@ -4978,6 +3956,7 @@
     "hint": "Twenty 廿 people 又 meeting inside a building 广 to deliberate",
     "hint_ru": "Двадцать 廿 человек 又 встречаются в здании 广 для совещания"
    },
+   "atomic": false,
    "components": [
     "广",
     "廿",
@@ -4998,45 +3977,11 @@
     "hint": "Two tens 十 side by side",
     "hint_ru": "Две десятки 十 рядом"
    },
+   "atomic": false,
    "components": [
     "廾",
     "一"
    ]
-  },
-  "对": {
-   "pinyin": [
-    "duì"
-   ],
-   "definition": "correct, right; facing, opposed",
-   "definition_ru": "правильный, верный; лицом к, напротив",
-   "definition_source": "mmh",
-   "radical": "寸",
-   "decomposition": "⿰又寸",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "A pair 又 of hands 寸",
-    "hint_ru": "Пара 又 рук 寸"
-   },
-   "components": [
-    "又",
-    "寸"
-   ]
-  },
-  "寸": {
-   "pinyin": [
-    "cùn"
-   ],
-   "definition": "inch; small, tiny",
-   "definition_ru": "цунь (мера длины); маленький, крошечный",
-   "definition_source": "mmh",
-   "radical": "寸",
-   "decomposition": "？",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "A hand with a dot indicating where the pulse can be felt, about an inch up the wrist",
-    "hint_ru": "Рука с точкой, показывающей, где прощупывается пульс, примерно на дюйм выше запястья"
-   },
-   "components": []
   },
   "发": {
    "pinyin": [
@@ -5048,429 +3993,9 @@
    "radical": "又",
    "decomposition": "⿸？又",
    "etymology": null,
+   "atomic": false,
    "components": [
     "又"
-   ]
-  },
-  "压": {
-   "pinyin": [
-    "yā"
-   ],
-   "definition": "press; oppress; crush; pressure",
-   "definition_ru": "давить; угнетать; сжимать; давление",
-   "definition_source": "mmh",
-   "radical": "厂",
-   "decomposition": "⿸厂⿰土丶",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "Soil 土 crushed under pressure 厂",
-    "hint_ru": "Земля 土, раздавленная давлением 厂"
-   },
-   "components": [
-    "厂",
-    "土",
-    "丶"
-   ]
-  },
-  "术": {
-   "pinyin": [
-    "shù"
-   ],
-   "definition": "skill, art; method, technique; trick",
-   "definition_ru": "умение, искусство; метод, техника; уловка",
-   "definition_source": "mmh",
-   "radical": "木",
-   "decomposition": "⿺木丶",
-   "etymology": null,
-   "components": [
-    "木",
-    "丶"
-   ]
-  },
-  "玉": {
-   "pinyin": [
-    "yù"
-   ],
-   "definition": "jade, gem, precious stone",
-   "definition_ru": "нефрит, самоцвет, драгоценный камень",
-   "definition_source": "mmh",
-   "radical": "玉",
-   "decomposition": "⿻王丶",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "A necklace 丨 adorned with three pieces of jade",
-    "hint_ru": "Ожерелье 丨, украшенное тремя нефритами"
-   },
-   "components": [
-    "王",
-    "丶"
-   ]
-  },
-  "王": {
-   "pinyin": [
-    "wáng"
-   ],
-   "definition": "king, ruler; royal; surname",
-   "definition_ru": "король, правитель; королевский; фамилия",
-   "definition_source": "mmh",
-   "radical": "王",
-   "decomposition": "⿱一土",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "A man 十 bridging heaven and earth (both 一)",
-    "hint_ru": "Человек 十, соединяющий небо и землю (обе 一)"
-   },
-   "components": [
-    "一",
-    "土"
-   ]
-  },
-  "为": {
-   "pinyin": [
-    "wèi"
-   ],
-   "definition": "to do, to act; to handle, to govern; to be",
-   "definition_ru": "делать, действовать; управлять, править; быть",
-   "definition_source": "mmh",
-   "radical": "丶",
-   "decomposition": "⿻丶⿴力丶",
-   "etymology": null,
-   "components": [
-    "丶",
-    "力"
-   ]
-  },
-  "义": {
-   "pinyin": [
-    "yì"
-   ],
-   "definition": "right conduct, propriety; justice",
-   "definition_ru": "правильное поведение, приличие; справедливость",
-   "definition_source": "mmh",
-   "radical": "丿",
-   "decomposition": "⿻丶乂",
-   "etymology": {
-    "type": "pictophonetic",
-    "phonetic": "乂",
-    "semantic": "⺷",
-    "hint": "sheep; simplified form of 義",
-    "hint_ru": "овца; упрощённая форма 義"
-   },
-   "components": [
-    "丶",
-    "乂"
-   ]
-  },
-  "之": {
-   "pinyin": [
-    "zhī"
-   ],
-   "definition": "marks preceding phrase as modifier of following phrase; it, him her, them; to go to",
-   "definition_ru": "признак предшествующей фразы как определения следующей; его, её, их; идти в",
-   "definition_source": "mmh",
-   "radical": "丿",
-   "decomposition": "⿱丶？",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "A foot meaning \"to follow\"; cursive version of 止",
-    "hint_ru": "Нога со значением «следовать»; скорописная форма 止"
-   },
-   "components": [
-    "丶"
-   ]
-  },
-  "主": {
-   "pinyin": [
-    "zhǔ"
-   ],
-   "definition": "to own; to host; master; host; lord",
-   "definition_ru": "владеть; принимать гостей; хозяин; господин",
-   "definition_source": "mmh",
-   "radical": "丶",
-   "decomposition": "⿱丶王",
-   "etymology": {
-    "type": "pictographic",
-    "hint": "A lamp 王 with a flame 丶",
-    "hint_ru": "Лампа 王 с пламенем 丶"
-   },
-   "components": [
-    "丶",
-    "王"
-   ]
-  },
-  "莺": {
-   "pinyin": [
-    "yīng"
-   ],
-   "definition": "oriole, green finch; Sylvia species (various)",
-   "definition_ru": "иволга, зеленушка; различные виды славок",
-   "definition_source": "mmh",
-   "radical": "艹",
-   "decomposition": "⿱艹⿱冖鸟",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "A bird 鸟 covered in 冖 green 艹 feathers",
-    "hint_ru": "Птица 鸟, покрытая 冖 зелёными 艹 перьями"
-   },
-   "components": [
-    "艹",
-    "冖",
-    "鸟"
-   ]
-  },
-  "营": {
-   "pinyin": [
-    "yíng"
-   ],
-   "definition": "camp, barracks, army; to run, to manage",
-   "definition_ru": "лагерь, казармы, армия; управлять, вести",
-   "definition_source": "mmh",
-   "radical": "艹",
-   "decomposition": "⿱艹⿱冖吕",
-   "etymology": null,
-   "components": [
-    "艹",
-    "冖",
-    "吕"
-   ]
-  },
-  "吕": {
-   "pinyin": [
-    "lǚ"
-   ],
-   "definition": "a musical note; surname",
-   "definition_ru": "музыкальная нота; фамилия",
-   "definition_source": "mmh",
-   "radical": "口",
-   "decomposition": "⿱口口",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "Two mouths 口 in harmony",
-    "hint_ru": "Два рта 口 в согласии"
-   },
-   "components": [
-    "口"
-   ]
-  },
-  "农": {
-   "pinyin": [
-    "nóng"
-   ],
-   "definition": "agriculture, farming; farmer",
-   "definition_ru": "земледелие, сельское хозяйство; земледелец",
-   "definition_source": "mmh",
-   "radical": "冖",
-   "decomposition": "⿻冖？",
-   "etymology": {
-    "type": "pictographic",
-    "hint": "Simplified form of 農, tilling the field 田 with a hoe 辰",
-    "hint_ru": "Упрощённая форма 農: возделывание поля 田 мотыгой 辰"
-   },
-   "components": [
-    "冖"
-   ]
-  },
-  "索": {
-   "pinyin": [
-    "suǒ"
-   ],
-   "definition": "cable, rope; rules, laws; to demand, to exact; to search, to inquire",
-   "definition_ru": "канат, верёвка; правила, законы; требовать, взыскивать; искать, расспрашивать",
-   "definition_source": "mmh",
-   "radical": "糸",
-   "decomposition": "⿱⿱十冖糸",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "A rope 糸 hanging from the ceiling 冖",
-    "hint_ru": "Верёвка 糸, свисающая с потолка 冖"
-   },
-   "components": [
-    "十",
-    "冖",
-    "糸"
-   ]
-  },
-  "糸": {
-   "pinyin": [
-    "mì"
-   ],
-   "definition": "silk; thread",
-   "definition_ru": "шёлк; нить",
-   "definition_source": "mmh",
-   "radical": "糸",
-   "decomposition": "⿱幺小",
-   "etymology": {
-    "type": "pictographic",
-    "hint": "A twisted strand of silk",
-    "hint_ru": "Скрученная нить шёлка"
-   },
-   "components": [
-    "幺",
-    "小"
-   ]
-  },
-  "幺": {
-   "pinyin": [
-    "yāo"
-   ],
-   "definition": "one; tiny, small",
-   "definition_ru": "один; крошечный, малый",
-   "definition_source": "mmh",
-   "radical": "幺",
-   "decomposition": "？",
-   "etymology": null,
-   "components": []
-  },
-  "劳": {
-   "pinyin": [
-    "láo"
-   ],
-   "definition": "to labor, to toil; to do manual work",
-   "definition_ru": "трудиться, тяжело работать; заниматься ручным трудом",
-   "definition_source": "mmh",
-   "radical": "力",
-   "decomposition": "⿱艹⿱冖力",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "A man lifting 力 a load 冖 of grass 艹",
-    "hint_ru": "Человек, поднимающий 力 ношу 冖 травы 艹"
-   },
-   "components": [
-    "艹",
-    "冖",
-    "力"
-   ]
-  },
-  "受": {
-   "pinyin": [
-    "shòu"
-   ],
-   "definition": "to receive, to get, to accept; to bear",
-   "definition_ru": "получать, принимать; нести, выносить",
-   "definition_source": "mmh",
-   "radical": "又",
-   "decomposition": "⿳爫冖又",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "Something 冖 passed from one hand 爫 to another 又",
-    "hint_ru": "Нечто 冖, передаваемое из одной руки 爫 в другую 又"
-   },
-   "components": [
-    "爫",
-    "冖",
-    "又"
-   ]
-  },
-  "爫": {
-   "pinyin": [
-    "zhǎo"
-   ],
-   "definition": "claws, nails, talons",
-   "definition_ru": "когти, ногти, лапы",
-   "definition_source": "mmh",
-   "radical": "爫",
-   "decomposition": "？",
-   "etymology": {
-    "type": "pictographic",
-    "hint": "A bird's talons; compare 爪",
-    "hint_ru": "Птичьи когти; сравни 爪"
-   },
-   "components": []
-  },
-  "爱": {
-   "pinyin": [
-    "ài"
-   ],
-   "definition": "to love, to like, to be fond of; love, affection",
-   "definition_ru": "любить, нравиться, быть привязанным; любовь, привязанность",
-   "definition_source": "mmh",
-   "radical": "爫",
-   "decomposition": "⿱⿱爫冖友",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "To bring a friend 友 into one's house 冖",
-    "hint_ru": "Привести друга 友 в свой дом 冖"
-   },
-   "components": [
-    "爫",
-    "冖",
-    "友"
-   ]
-  },
-  "友": {
-   "pinyin": [
-    "yǒu"
-   ],
-   "definition": "friend, companion; fraternity",
-   "definition_ru": "друг, товарищ; братство",
-   "definition_source": "mmh",
-   "radical": "又",
-   "decomposition": "⿸？又",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "Two hands 又 joined, representing friendship; 又 also provides the pronunciation",
-    "hint_ru": "Две руки 又 соединены, означает дружбу; 又 также подсказывает произношение"
-   },
-   "components": [
-    "又"
-   ]
-  },
-  "带": {
-   "pinyin": [
-    "dài"
-   ],
-   "definition": "belt, strap; band, ribbon; area, zone; to carry, to raise, to wear",
-   "definition_ru": "пояс, ремень; лента; область, зона; нести, поднимать, носить",
-   "definition_source": "mmh",
-   "radical": "巾",
-   "decomposition": "⿱卅⿱冖巾",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "A belt, creasing one's robe above 卅 but not below 巾",
-    "hint_ru": "Пояс, стягивающий одежду выше 卅, но не ниже 巾"
-   },
-   "components": [
-    "卅",
-    "冖",
-    "巾"
-   ]
-  },
-  "卅": {
-   "pinyin": [
-    "sà"
-   ],
-   "definition": "thirty, thirtieth",
-   "definition_ru": "тридцать, тридцатый",
-   "definition_source": "mmh",
-   "radical": "十",
-   "decomposition": "⿻一川",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "Three tally marks; compare ten 十 and twenty 廿",
-    "hint_ru": "Три счётные палочки; сравни десять 十 и двадцать 廿"
-   },
-   "components": [
-    "一",
-    "川"
-   ]
-  },
-  "军": {
-   "pinyin": [
-    "jūn"
-   ],
-   "definition": "army, military; soldiers, troops",
-   "definition_ru": "армия, военный; солдаты, войска",
-   "definition_source": "mmh",
-   "radical": "车",
-   "decomposition": "⿱冖车",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "Soldiers 冖 (distorted 力) in a cart 车",
-    "hint_ru": "Солдаты 冖 (искажённое 力) на повозке 车"
-   },
-   "components": [
-    "冖",
-    "车"
    ]
   },
   "赛": {
@@ -5489,6 +4014,7 @@
     "hint": "money",
     "hint_ru": "деньги"
    },
+   "atomic": false,
    "components": [
     "宀",
     "贝"
@@ -5508,10 +4034,8 @@
     "hint": "A sea shell, once used as currency",
     "hint_ru": "Морская раковина, когда-то служившая деньгами"
    },
-   "components": [
-    "冂",
-    "人"
-   ]
+   "atomic": true,
+   "components": []
   },
   "宝": {
    "pinyin": [
@@ -5527,10 +4051,28 @@
     "hint": "Jade 玉 kept in one's house 宀",
     "hint_ru": "Нефрит 玉, хранимый в доме 宀"
    },
+   "atomic": false,
    "components": [
     "宀",
     "玉"
    ]
+  },
+  "玉": {
+   "pinyin": [
+    "yù"
+   ],
+   "definition": "jade, gem, precious stone",
+   "definition_ru": "нефрит, самоцвет, драгоценный камень",
+   "definition_source": "mmh",
+   "radical": "玉",
+   "decomposition": "⿻王丶",
+   "etymology": {
+    "type": "ideographic",
+    "hint": "A necklace 丨 adorned with three pieces of jade",
+    "hint_ru": "Ожерелье 丨, украшенное тремя нефритами"
+   },
+   "atomic": true,
+   "components": []
   },
   "客": {
    "pinyin": [
@@ -5546,6 +4088,7 @@
     "hint": "A person 各 welcomed under one's roof 宀; 各 also provides the pronunciation",
     "hint_ru": "Человек 各, принятый под своей крышей 宀; 各 также подсказывает произношение"
    },
+   "atomic": false,
    "components": [
     "宀",
     "各"
@@ -5567,6 +4110,7 @@
     "hint": "roof",
     "hint_ru": "крыша"
    },
+   "atomic": false,
    "components": [
     "宀",
     "丁"
@@ -5582,6 +4126,7 @@
    "radical": "宀",
    "decomposition": "⿱宀㠯",
    "etymology": null,
+   "atomic": false,
    "components": [
     "宀",
     "㠯"
@@ -5597,6 +4142,7 @@
    "radical": "己",
    "decomposition": "⿻己？",
    "etymology": null,
+   "atomic": false,
    "components": [
     "己"
    ]
@@ -5615,9 +4161,8 @@
     "hint": "A loom woven with thread",
     "hint_ru": "Ткацкий станок с натянутыми нитями"
    },
-   "components": [
-    "乚"
-   ]
+   "atomic": true,
+   "components": []
   },
   "实": {
    "pinyin": [
@@ -5629,6 +4174,7 @@
    "radical": "宀",
    "decomposition": "⿱宀头",
    "etymology": null,
+   "atomic": false,
    "components": [
     "宀",
     "头"
@@ -5649,6 +4195,7 @@
     "hint": "high",
     "hint_ru": "высокий"
    },
+   "atomic": false,
    "components": [
     "⺀",
     "大"
@@ -5662,6 +4209,7 @@
    "radical": "⺀",
    "decomposition": "？",
    "etymology": null,
+   "atomic": true,
    "components": []
   },
   "定": {
@@ -5678,6 +4226,7 @@
     "hint": "A person 疋 settling under a roof 宀",
     "hint_ru": "Человек 疋, поселившийся под крышей 宀"
    },
+   "atomic": false,
    "components": [
     "宀",
     "疋"
@@ -5697,6 +4246,7 @@
     "hint": "A woman 女 safe in a house 宀",
     "hint_ru": "Женщина 女 в безопасности в доме 宀"
    },
+   "atomic": false,
    "components": [
     "宀",
     "女"
@@ -5718,6 +4268,7 @@
     "hint": "roof",
     "hint_ru": "крыша"
    },
+   "atomic": false,
    "components": [
     "宀",
     "豕"
@@ -5737,513 +4288,8 @@
     "hint": "A pig drawn on its side",
     "hint_ru": "Свинья, нарисованная сбоку"
    },
-   "components": [
-    "一",
-    "勿"
-   ]
-  },
-  "勿": {
-   "pinyin": [
-    "wù"
-   ],
-   "definition": "must not, do not; without, never",
-   "definition_ru": "нельзя, не надо; без, никогда",
-   "definition_source": "mmh",
-   "radical": "勹",
-   "decomposition": "⿹勹⿰丿丿",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "A knife 勹 cutting fragments 丿 off",
-    "hint_ru": "Нож 勹 отрезает кусочки 丿"
-   },
-   "components": [
-    "勹",
-    "丿"
-   ]
-  },
-  "壽": {
-   "pinyin": [
-    "shòu"
-   ],
-   "definition": "old age, longevity; lifespan",
-   "definition_ru": "старость, долголетие; срок жизни",
-   "definition_source": "mmh",
-   "radical": "士",
-   "decomposition": "⿳⿳士乛工一吋",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "Ancient form of 老",
-    "hint_ru": "Древняя форма 老"
-   },
-   "components": [
-    "士",
-    "乛",
-    "工",
-    "一",
-    "吋"
-   ]
-  },
-  "吋": {
-   "pinyin": [
-    "cùn"
-   ],
-   "definition": "English inch (unlike 寸, which could be the English or the Chinese inch)",
-   "definition_ru": "английский дюйм (в отличие от 寸, который может быть английским или китайским дюймом)",
-   "definition_source": "mmh",
-   "radical": "口",
-   "decomposition": "⿰口寸",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "A foreign 口 inch 寸; 寸 also provides the pronunciation",
-    "hint_ru": "Чужеземный 口 дюйм 寸; 寸 также подсказывает произношение"
-   },
-   "components": [
-    "口",
-    "寸"
-   ]
-  },
-  "买": {
-   "pinyin": [
-    "mǎi"
-   ],
-   "definition": "to buy, to purchase; to bribe, to persuade",
-   "definition_ru": "покупать, приобретать; подкупать, убеждать",
-   "definition_source": "mmh",
-   "radical": "大",
-   "decomposition": "⿱乛头",
-   "etymology": null,
-   "components": [
-    "乛",
-    "头"
-   ]
-  },
-  "卫": {
-   "pinyin": [
-    "wèi"
-   ],
-   "definition": "to guard, to protect, to defend",
-   "definition_ru": "охранять, защищать, оборонять",
-   "definition_source": "mmh",
-   "radical": "乛",
-   "decomposition": "⿱乛一",
-   "etymology": null,
-   "components": [
-    "乛",
-    "一"
-   ]
-  },
-  "爭": {
-   "pinyin": [
-    "zhēng"
-   ],
-   "definition": "to dispute, to fight, to contend, to strive",
-   "definition_ru": "спорить, драться, состязаться, стремиться",
-   "definition_source": "mmh",
-   "radical": "爫",
-   "decomposition": "⿱爫⿻彐亅",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "Two hands 爪 and 彐 fighting over 亅",
-    "hint_ru": "Две руки 爪 и 彐 борются за 亅"
-   },
-   "components": [
-    "爫",
-    "彐",
-    "亅"
-   ]
-  },
-  "氺": {
-   "pinyin": [
-    "shui"
-   ],
-   "definition": "variant of radical 水: water, liquid, lotion, juice",
-   "definition_ru": "вариант радикала 水: вода, жидкость, лосьон, сок",
-   "definition_source": "unihan-radical",
-   "radical": "氺",
-   "decomposition": "⿻亅？",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "A river running between two banks; compare 川 and 水",
-    "hint_ru": "Река, текущая между двух берегов; сравни 川 и 水"
-   },
-   "components": [
-    "亅"
-   ]
-  },
-  "争": {
-   "pinyin": [
-    "zhēng"
-   ],
-   "definition": "to dispute, to fight, to contend, to strive",
-   "definition_ru": "спорить, драться, состязаться, стремиться",
-   "definition_source": "mmh",
-   "radical": "亅",
-   "decomposition": "⿱⺈⿻彐亅",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "Simplified form of 爭, two hands 爪 and 彐 fighting over 亅",
-    "hint_ru": "Упрощённая форма 爭: две руки 爪 и 彐 борются за 亅"
-   },
-   "components": [
-    "⺈",
-    "彐",
-    "亅"
-   ]
-  },
-  "钌": {
-   "pinyin": [
-    "liǎo"
-   ],
-   "definition": "ruthenium",
-   "definition_ru": "рутений",
-   "definition_source": "mmh",
-   "radical": "钅",
-   "decomposition": "⿰钅了",
-   "etymology": {
-    "type": "pictophonetic",
-    "phonetic": "了",
-    "semantic": "钅",
-    "hint": "metal",
-    "hint_ru": "металл"
-   },
-   "components": [
-    "钅",
-    "了"
-   ]
-  },
-  "钅": {
-   "pinyin": [
-    "jīn"
-   ],
-   "definition": "gold, metal; money",
-   "definition_ru": "золото, металл; деньги",
-   "definition_source": "mmh",
-   "radical": "钅",
-   "decomposition": "⿱？？",
-   "etymology": {
-    "type": "pictographic",
-    "hint": "A cast-iron bell; compare 金",
-    "hint_ru": "Чугунный колокол; сравни 金"
-   },
+   "atomic": true,
    "components": []
-  },
-  "亟": {
-   "pinyin": [
-    "jí"
-   ],
-   "definition": "urgently, immediately, extremely",
-   "definition_ru": "срочно, немедленно, крайне",
-   "definition_source": "mmh",
-   "radical": "二",
-   "decomposition": "⿱⿻了叹一",
-   "etymology": null,
-   "components": [
-    "了",
-    "叹",
-    "一"
-   ]
-  },
-  "叹": {
-   "pinyin": [
-    "tàn"
-   ],
-   "definition": "to sigh, to admire",
-   "definition_ru": "вздыхать, восхищаться",
-   "definition_source": "mmh",
-   "radical": "口",
-   "decomposition": "⿰口又",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "A mouth 口 exhaling 又",
-    "hint_ru": "Рот 口, выдыхающий 又"
-   },
-   "components": [
-    "口",
-    "又"
-   ]
-  },
-  "亨": {
-   "pinyin": [
-    "hēng"
-   ],
-   "definition": "prospering, going smoothly",
-   "definition_ru": "процветающий, идущий гладко",
-   "definition_source": "mmh",
-   "radical": "亠",
-   "decomposition": "⿳亠口了",
-   "etymology": null,
-   "components": [
-    "亠",
-    "口",
-    "了"
-   ]
-  },
-  "辽": {
-   "pinyin": [
-    "liáo"
-   ],
-   "definition": "distant, far",
-   "definition_ru": "далёкий, дальний",
-   "definition_source": "mmh",
-   "radical": "辶",
-   "decomposition": "⿺辶了",
-   "etymology": {
-    "type": "pictophonetic",
-    "phonetic": "了",
-    "semantic": "辶",
-    "hint": "walk",
-    "hint_ru": "ходить"
-   },
-   "components": [
-    "辶",
-    "了"
-   ]
-  },
-  "辶": {
-   "pinyin": [
-    "chuò"
-   ],
-   "definition": "to walk; walking",
-   "definition_ru": "идти пешком; ходьба",
-   "definition_source": "mmh",
-   "radical": "辶",
-   "decomposition": "？",
-   "etymology": {
-    "type": "pictographic",
-    "hint": "A foot stepping",
-    "hint_ru": "Ступающая нога"
-   },
-   "components": []
-  },
-  "函": {
-   "pinyin": [
-    "hán"
-   ],
-   "definition": "correspondence; a case, a box",
-   "definition_ru": "переписка; случай, ящик",
-   "definition_source": "mmh",
-   "radical": "凵",
-   "decomposition": "⿶凵⿻了？",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "Letters placed in a container 凵",
-    "hint_ru": "Письма, положенные в ящик 凵"
-   },
-   "components": [
-    "凵",
-    "了"
-   ]
-  },
-  "疗": {
-   "pinyin": [
-    "liáo"
-   ],
-   "definition": "cured, healed; to recover",
-   "definition_ru": "вылеченный, исцелённый; выздоравливать",
-   "definition_source": "mmh",
-   "radical": "疒",
-   "decomposition": "⿸疒了",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "To clear 了 an illness 疒; 了 also provides the pronunciation",
-    "hint_ru": "Излечить 了 болезнь 疒; 了 также подсказывает произношение"
-   },
-   "components": [
-    "疒",
-    "了"
-   ]
-  },
-  "疒": {
-   "pinyin": [
-    "nè"
-   ],
-   "definition": "sickness, disease",
-   "definition_ru": "болезнь, недуг",
-   "definition_source": "mmh",
-   "radical": "疒",
-   "decomposition": "⿻广冫",
-   "etymology": null,
-   "components": [
-    "广",
-    "冫"
-   ]
-  },
-  "冫": {
-   "pinyin": [
-    "bīng"
-   ],
-   "definition": "ice",
-   "definition_ru": "лёд",
-   "definition_source": "mmh",
-   "radical": "冫",
-   "decomposition": "⿱丶？",
-   "etymology": null,
-   "components": [
-    "丶"
-   ]
-  },
-  "承": {
-   "pinyin": [
-    "chéng"
-   ],
-   "definition": "to undertake, to bear, to accept a duty; inheritance",
-   "definition_ru": "брать на себя, нести, принимать обязанность; наследование",
-   "definition_source": "mmh",
-   "radical": "手",
-   "decomposition": "⿻⿻了三？",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "Three hands 手 lifting a dead body 了",
-    "hint_ru": "Три руки 手, поднимающие мёртвое тело 了"
-   },
-   "components": [
-    "了",
-    "三"
-   ]
-  },
-  "长": {
-   "pinyin": [
-    "zhǎng"
-   ],
-   "definition": "long, lasting; to excel in",
-   "definition_ru": "длинный, долгий; превосходить в",
-   "definition_source": "mmh",
-   "radical": "长",
-   "decomposition": "⿻？一",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "Simplified form of 長; an old man with long hair and a cane",
-    "hint_ru": "Упрощённая форма 長; старик с длинными волосами и тростью"
-   },
-   "components": [
-    "一"
-   ]
-  },
-  "上": {
-   "pinyin": [
-    "shàng"
-   ],
-   "definition": "above, on top, superior; to go up; to attend; previous",
-   "definition_ru": "верх, над, выше; подниматься; посещать; предыдущий",
-   "definition_source": "mmh",
-   "radical": "一",
-   "decomposition": "⿱⺊一",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "One stroke on top of another; compare 下 (below)",
-    "hint_ru": "Одна черта над другой; сравни 下 (внизу)"
-   },
-   "components": [
-    "⺊",
-    "一"
-   ]
-  },
-  "马": {
-   "pinyin": [
-    "mǎ"
-   ],
-   "definition": "horse; surname",
-   "definition_ru": "лошадь; фамилия",
-   "definition_source": "mmh",
-   "radical": "马",
-   "decomposition": "⿹？一",
-   "etymology": {
-    "type": "pictographic",
-    "hint": "Simplified form of 馬, a horse galloping to the left",
-    "hint_ru": "Упрощённая форма 馬, лошадь, скачущая влево"
-   },
-   "components": [
-    "一"
-   ]
-  },
-  "天": {
-   "pinyin": [
-    "tiān"
-   ],
-   "definition": "sky, heaven; god, celestial",
-   "definition_ru": "небо, небеса; бог, небесный",
-   "definition_source": "mmh",
-   "radical": "大",
-   "decomposition": "⿱一大",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "The heavens 一 above a man 大",
-    "hint_ru": "Небеса 一 над человеком 大"
-   },
-   "components": [
-    "一",
-    "大"
-   ]
-  },
-  "无": {
-   "pinyin": [
-    "wú"
-   ],
-   "definition": "no, not; lacking, -less",
-   "definition_ru": "нет, не; без-, -лишённый",
-   "definition_source": "mmh",
-   "radical": "无",
-   "decomposition": "⿱一尢",
-   "etymology": null,
-   "components": [
-    "一",
-    "尢"
-   ]
-  },
-  "尢": {
-   "pinyin": [
-    "yóu"
-   ],
-   "definition": "weak, lame",
-   "definition_ru": "слабый, хромой",
-   "definition_source": "mmh",
-   "radical": "尢",
-   "decomposition": "⿸？乚",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "Cutting 一 off the feet 儿; compare 兀",
-    "hint_ru": "Отрубание 一 ног 儿; сравни 兀"
-   },
-   "components": [
-    "乚"
-   ]
-  },
-  "生": {
-   "pinyin": [
-    "shēng"
-   ],
-   "definition": "life, lifetime; birth; growth",
-   "definition_ru": "жизнь, срок жизни; рождение; рост",
-   "definition_source": "mmh",
-   "radical": "生",
-   "decomposition": "⿻一土",
-   "etymology": {
-    "type": "ideographic",
-    "hint": " A shoot 屮 growing in the soil 土",
-    "hint_ru": " Росток 屮, растущий в земле 土"
-   },
-   "components": [
-    "一",
-    "土"
-   ]
-  },
-  "不": {
-   "pinyin": [
-    "bù"
-   ],
-   "definition": "no, not, un-; negative prefix",
-   "definition_ru": "нет, не, не-; отрицательная приставка",
-   "definition_source": "mmh",
-   "radical": "一",
-   "decomposition": "⿱一？",
-   "etymology": {
-    "type": "ideographic",
-    "hint": "A bird flying toward the sky 一",
-    "hint_ru": "Птица, летящая к небу 一"
-   },
-   "components": [
-    "一"
-   ]
   },
   "孤": {
    "pinyin": [
@@ -6261,6 +4307,7 @@
     "hint": "child",
     "hint_ru": "ребёнок"
    },
+   "atomic": false,
    "components": [
     "子",
     "瓜"
@@ -6280,9 +4327,8 @@
     "hint": "Vines growing with a melon at their base",
     "hint_ru": "Лозы, растущие с дыней у основания"
    },
-   "components": [
-    "厶"
-   ]
+   "atomic": true,
+   "components": []
   },
   "季": {
    "pinyin": [
@@ -6298,6 +4344,7 @@
     "hint": "The time for planting seeds 子 of grain 禾",
     "hint_ru": "Время сажать семена 子 зерновых 禾"
    },
+   "atomic": false,
    "components": [
     "禾",
     "子"
@@ -6317,10 +4364,8 @@
     "hint": "A plant stalk with a sagging head",
     "hint_ru": "Стебель растения с поникшей головкой"
    },
-   "components": [
-    "丿",
-    "木"
-   ]
+   "atomic": true,
+   "components": []
   },
   "孙": {
    "pinyin": [
@@ -6336,10 +4381,28 @@
     "hint": "Simplified form of 孫; a chain 系 of descent 子",
     "hint_ru": "Упрощённая форма 孫; цепочка 系 потомков 子"
    },
+   "atomic": false,
    "components": [
     "子",
     "小"
    ]
+  },
+  "小": {
+   "pinyin": [
+    "xiǎo"
+   ],
+   "definition": "small, tiny, insignificant",
+   "definition_ru": "маленький, крошечный, незначительный",
+   "definition_source": "mmh",
+   "radical": "小",
+   "decomposition": "⿻亅八",
+   "etymology": {
+    "type": "ideographic",
+    "hint": "Dividing 八 by a line 亅",
+    "hint_ru": "Деление 八 чертой 亅"
+   },
+   "atomic": true,
+   "components": []
   },
   "厚": {
    "pinyin": [
@@ -6355,6 +4418,7 @@
     "hint": "Sunlight 日 and children 子 in a building 厂",
     "hint_ru": "Солнечный свет 日 и дети 子 в здании 厂"
    },
+   "atomic": false,
    "components": [
     "厂",
     "日",
@@ -6375,10 +4439,24 @@
     "hint": "The mouth 乚 of a crying baby 子",
     "hint_ru": "Рот 乚 плачущего младенца 子"
    },
+   "atomic": false,
    "components": [
     "子",
     "乚"
    ]
+  },
+  "乚": {
+   "pinyin": [
+    "gōu"
+   ],
+   "definition": "secret, hidden, mysterious; small, minute; to conceal",
+   "definition_ru": "тайный, скрытый, таинственный; малый, мельчайший; скрывать",
+   "definition_source": "mmh",
+   "radical": "乚",
+   "decomposition": "？",
+   "etymology": null,
+   "atomic": true,
+   "components": []
   },
   "存": {
    "pinyin": [
@@ -6396,6 +4474,7 @@
     "hint": "seed",
     "hint_ru": "семя"
    },
+   "atomic": false,
    "components": [
     "才",
     "子"
@@ -6415,9 +4494,8 @@
     "hint": "A sprout growing in the ground, representing a budding talent",
     "hint_ru": "Росток, пробивающийся из земли, означает зарождающийся талант"
    },
-   "components": [
-    "扌"
-   ]
+   "atomic": true,
+   "components": []
   },
   "李": {
    "pinyin": [
@@ -6435,6 +4513,7 @@
     "hint": "wood",
     "hint_ru": "дерево (материал)"
    },
+   "atomic": false,
    "components": [
     "木",
     "子"
@@ -6454,6 +4533,7 @@
     "hint": "A woman 女 with a son 子",
     "hint_ru": "Женщина 女 с сыном 子"
    },
+   "atomic": false,
    "components": [
     "女",
     "子"
@@ -6475,6 +4555,7 @@
     "hint": "cow",
     "hint_ru": "корова"
    },
+   "atomic": false,
    "components": [
     "牛",
     "字"
@@ -6601,156 +4682,6 @@
     "孤"
    ]
   },
-  "一": {
-   "words": [
-    {
-     "w": "一一",
-     "pinyin": "yī yī",
-     "def": "one by one; one after another",
-     "def_ru": "one by one; one after another"
-    },
-    {
-     "w": "一人",
-     "pinyin": "yī rén",
-     "def": "one person; a single person; (literary) the emperor",
-     "def_ru": "one person; a single person; (книжн.) император"
-    },
-    {
-     "w": "不一",
-     "pinyin": "bù yī",
-     "def": "to vary; to differ",
-     "def_ru": "меняться; различаться"
-    },
-    {
-     "w": "大一",
-     "pinyin": "dà yī",
-     "def": "first year of university",
-     "def_ru": "первый курс университета"
-    },
-    {
-     "w": "一头",
-     "pinyin": "yī tóu",
-     "def": "one head; a head full of sth",
-     "def_ru": "одна голова; голова, полная чего-либо"
-    },
-    {
-     "w": "头一",
-     "pinyin": "tóu yī",
-     "def": "the first",
-     "def_ru": "первый"
-    },
-    {
-     "w": "一心",
-     "pinyin": "yī xīn",
-     "def": "wholeheartedly; heart and soul",
-     "def_ru": "всем сердцем; всем сердцем и душой"
-    },
-    {
-     "w": "一生",
-     "pinyin": "yī shēng",
-     "def": "all one's life; throughout one's life",
-     "def_ru": "all one's life; throughout one's life"
-    }
-   ],
-   "chars": [
-    "不",
-    "子",
-    "大",
-    "生",
-    "无",
-    "天",
-    "马",
-    "上",
-    "长",
-    "三"
-   ]
-  },
-  "了": {
-   "words": [
-    {
-     "w": "不了",
-     "pinyin": "bù le",
-     "def": "no thanks (used to politely but informally decline)",
-     "def_ru": "нет, спасибо (вежливо, но неформально отказаться)"
-    },
-    {
-     "w": "了了",
-     "pinyin": "liǎo liǎo",
-     "def": "to realize clearly; to settle a matter",
-     "def_ru": "ясно осознать; уладить дело"
-    },
-    {
-     "w": "了事",
-     "pinyin": "liǎo shì",
-     "def": "to dispose of a matter; to be done with it",
-     "def_ru": "разобраться с делом; покончить с этим"
-    },
-    {
-     "w": "了局",
-     "pinyin": "liǎo jú",
-     "def": "end; conclusion",
-     "def_ru": "конец; заключение"
-    },
-    {
-     "w": "了得",
-     "pinyin": "liǎo de",
-     "def": "exceptional; outstanding",
-     "def_ru": "исключительный; выдающийся"
-    },
-    {
-     "w": "了断",
-     "pinyin": "liǎo duàn",
-     "def": "to bring to a conclusion; to resolve (a dispute etc); to put an end to (once and for all); to break off (a relationship); to commit suicide; resolution (of a matter)",
-     "def_ru": "to bring to a conclusion; to resolve (a dispute etc); to put an end to (once and for all); to break off (a relationship); to commit suicide; resolution (of a matter)"
-    },
-    {
-     "w": "了无",
-     "pinyin": "liǎo wú",
-     "def": "to completely lack; to have not even the slightest",
-     "def_ru": "to completely lack; to have not even the slightest"
-    },
-    {
-     "w": "了然",
-     "pinyin": "liǎo rán",
-     "def": "to understand clearly; evident",
-     "def_ru": "to understand clearly; evident"
-    }
-   ],
-   "chars": [
-    "子",
-    "承",
-    "疗",
-    "函",
-    "辽",
-    "亨",
-    "亟",
-    "钌"
-   ]
-  },
-  "亅": {
-   "words": [],
-   "chars": [
-    "水",
-    "小",
-    "事",
-    "于",
-    "了",
-    "争",
-    "刂",
-    "扌",
-    "氺",
-    "爭"
-   ]
-  },
-  "乛": {
-   "words": [],
-   "chars": [
-    "卫",
-    "了",
-    "买",
-    "壽"
-   ]
-  },
   "宀": {
    "words": [],
    "chars": [
@@ -6764,36 +4695,6 @@
     "客",
     "宝",
     "赛"
-   ]
-  },
-  "冖": {
-   "words": [],
-   "chars": [
-    "学",
-    "军",
-    "带",
-    "爱",
-    "受",
-    "劳",
-    "索",
-    "农",
-    "营",
-    "莺"
-   ]
-  },
-  "丶": {
-   "words": [],
-   "chars": [
-    "主",
-    "之",
-    "门",
-    "义",
-    "为",
-    "太",
-    "玉",
-    "广",
-    "术",
-    "压"
    ]
   },
   "汉": {
@@ -6980,6 +4881,21 @@
     }
    ],
    "chars": []
+  },
+  "冖": {
+   "words": [],
+   "chars": [
+    "学",
+    "军",
+    "带",
+    "爱",
+    "受",
+    "劳",
+    "索",
+    "营",
+    "莺",
+    "冠"
+   ]
   },
   "⺍": {
    "words": [],
@@ -7226,7 +5142,6 @@
     }
    ],
    "chars": [
-    "自",
     "眼",
     "相",
     "直",
@@ -7235,165 +5150,8 @@
     "眉",
     "省",
     "具",
-    "睡"
-   ]
-  },
-  "二": {
-   "words": [
-    {
-     "w": "一二",
-     "pinyin": "yī èr",
-     "def": "one or two; a few; a little; just a bit",
-     "def_ru": "one or two; a few; a little; just a bit"
-    },
-    {
-     "w": "不二",
-     "pinyin": "bù èr",
-     "def": "the only (choice, way etc); undivided (loyalty)",
-     "def_ru": "единственный (выбор, способ и т. п.); нераздельный (верность)"
-    },
-    {
-     "w": "二来",
-     "pinyin": "èr lái",
-     "def": "secondly, ...",
-     "def_ru": "во-вторых, …"
-    },
-    {
-     "w": "二分",
-     "pinyin": "èr fēn",
-     "def": "second part; the equinox",
-     "def_ru": "вторая часть; равноденствие"
-    },
-    {
-     "w": "二心",
-     "pinyin": "èr xīn",
-     "def": "disloyalty; half-heartedness",
-     "def_ru": "нелояльность; нерешительность"
-    },
-    {
-     "w": "二手",
-     "pinyin": "èr shǒu",
-     "def": "indirectly acquired; second-hand (information, equipment etc)",
-     "def_ru": "полученный косвенно; подержанный (сведения, оборудование и т. п.)"
-    },
-    {
-     "w": "二流",
-     "pinyin": "èr liú",
-     "def": "second-rate; second-tier",
-     "def_ru": "второсортный; второго уровня"
-    },
-    {
-     "w": "二线",
-     "pinyin": "èr xiàn",
-     "def": "second line of defense; secondary or supporting position",
-     "def_ru": "вторая линия обороны; второстепенное или вспомогательное положение"
-    }
-   ],
-   "chars": [
-    "三",
-    "言",
-    "目",
-    "月",
-    "五",
-    "云",
-    "耳",
-    "元",
-    "于",
-    "仁"
-   ]
-  },
-  "口": {
-   "words": [
-    {
-     "w": "一口",
-     "pinyin": "yī kǒu",
-     "def": "readily; flatly (deny, admit and so on)",
-     "def_ru": "легко; наотрез (отрицать, признавать и т. п.)"
-    },
-    {
-     "w": "上口",
-     "pinyin": "shàng kǒu",
-     "def": "to be able to read aloud fluently; to be suitable (easy enough) for reading aloud",
-     "def_ru": "уметь бегло читать вслух; подходить (легко) для чтения вслух"
-    },
-    {
-     "w": "人口",
-     "pinyin": "rén kǒu",
-     "def": "population; people",
-     "def_ru": "население; люди"
-    },
-    {
-     "w": "出口",
-     "pinyin": "chū kǒu",
-     "def": "an exit; CL:個|个[ge4]",
-     "def_ru": "выход; счётное слово: 個|个[ge4]"
-    },
-    {
-     "w": "动口",
-     "pinyin": "dòng kǒu",
-     "def": "to use one's mouth (to say sth)",
-     "def_ru": "использовать рот (чтобы что-то сказать)"
-    },
-    {
-     "w": "口子",
-     "pinyin": "kǒu zi",
-     "def": "hole; opening",
-     "def_ru": "дыра; отверстие"
-    },
-    {
-     "w": "口气",
-     "pinyin": "kǒu qì",
-     "def": "tone of voice; the way one speaks",
-     "def_ru": "тон голоса; манера говорить"
-    },
-    {
-     "w": "口水",
-     "pinyin": "kǒu shuǐ",
-     "def": "saliva",
-     "def_ru": "слюна"
-    }
-   ],
-   "chars": [
-    "中",
-    "高",
-    "事",
-    "合",
-    "日",
-    "石",
-    "器",
-    "加",
-    "后",
-    "名"
-   ]
-  },
-  "冂": {
-   "words": [],
-   "chars": [
-    "口",
-    "南",
-    "用",
-    "内",
-    "网",
-    "见",
-    "月",
-    "肉",
-    "甲",
-    "两"
-   ]
-  },
-  "丨": {
-   "words": [],
-   "chars": [
-    "山",
-    "中",
-    "门",
-    "书",
-    "十",
-    "曲",
-    "临",
-    "川",
-    "旧",
-    "引"
+    "睡",
+    "泪"
    ]
   },
   "木": {
@@ -7453,139 +5211,11 @@
     "本",
     "林",
     "格",
-    "米",
     "板",
     "权",
     "集",
-    "果"
-   ]
-  },
-  "八": {
-   "words": [
-    {
-     "w": "三八",
-     "pinyin": "sān bā",
-     "def": "International Women's Day 婦女節|妇女节[Fu4 nu:3 jie2], 8th March; foolish",
-     "def_ru": "Международный женский день 婦女節|妇女节[Fu4 nu:3 jie2], 8 марта; глупый"
-    },
-    {
-     "w": "二八",
-     "pinyin": "èr bā",
-     "def": "16; sixteen",
-     "def_ru": "16; шестнадцать"
-    },
-    {
-     "w": "保八",
-     "pinyin": "bǎo bā",
-     "def": "to maintain an 8% annual growth rate of the GDP (PRC policy)",
-     "def_ru": "поддерживать рост ВВП 8% в год (политика КНР)"
-    },
-    {
-     "w": "八字",
-     "pinyin": "bā zì",
-     "def": "the character 8 or 八; birthdate characters used in fortune-telling",
-     "def_ru": "иероглиф 8 или 八; знаки даты рождения, используемые в гадании"
-    },
-    {
-     "w": "八度",
-     "pinyin": "bā dù",
-     "def": "octave",
-     "def_ru": "октава"
-    },
-    {
-     "w": "八成",
-     "pinyin": "bā chéng",
-     "def": "eighty percent; most probably",
-     "def_ru": "восемьдесят процентов; скорее всего"
-    },
-    {
-     "w": "八方",
-     "pinyin": "bā fāng",
-     "def": "the eight points of the compass; all directions",
-     "def_ru": "восемь сторон света; все направления"
-    },
-    {
-     "w": "八月",
-     "pinyin": "Bā yuè",
-     "def": "August; eighth month (of the lunar year)",
-     "def_ru": "август; восьмой месяц (лунного года)"
-    }
-   ],
-   "chars": [
-    "小",
-    "分",
-    "公",
-    "黄",
-    "木",
-    "共",
-    "兵",
-    "兴",
-    "其",
-    "六"
-   ]
-  },
-  "十": {
-   "words": [
-    {
-     "w": "三十",
-     "pinyin": "sān shí",
-     "def": "thirty; 30",
-     "def_ru": "тридцать; 30"
-    },
-    {
-     "w": "二十",
-     "pinyin": "èr shí",
-     "def": "twenty; 20",
-     "def_ru": "twenty; 20"
-    },
-    {
-     "w": "五十",
-     "pinyin": "wǔ shí",
-     "def": "fifty",
-     "def_ru": "пятьдесят"
-    },
-    {
-     "w": "八十",
-     "pinyin": "bā shí",
-     "def": "eighty; 80",
-     "def_ru": "восемьдесят; 80"
-    },
-    {
-     "w": "十一",
-     "pinyin": "Shí Yī",
-     "def": "PRC National Day (October 1st)",
-     "def_ru": "Национальный день КНР (1 октября)"
-    },
-    {
-     "w": "十三",
-     "pinyin": "shí sān",
-     "def": "thirteen; 13",
-     "def_ru": "тринадцать; 13"
-    },
-    {
-     "w": "十二",
-     "pinyin": "shí èr",
-     "def": "twelve; 12",
-     "def_ru": "двенадцать; 12"
-    },
-    {
-     "w": "十五",
-     "pinyin": "shí wǔ",
-     "def": "fifteen; 15",
-     "def_ru": "пятнадцать; 15"
-    }
-   ],
-   "chars": [
-    "克",
-    "车",
-    "德",
-    "南",
-    "木",
-    "古",
-    "土",
-    "干",
-    "华",
-    "计"
+    "果",
+    "树"
    ]
   },
   "我": {

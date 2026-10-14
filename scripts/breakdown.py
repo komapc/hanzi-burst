@@ -27,6 +27,35 @@ IDS_OPS = set("⿰⿱⿲⿳⿴⿵⿶⿷⿸⿹⿺⿻")
 TOP_WORDS, TOP_CHARS = 8, 10
 
 
+ATOMIC = set()  # части, которые не делим дальше (заполняется в main)
+
+
+def compute_atomic(mmh, maps):
+    """Что считаем неделимым.
+
+    Делить 目 на 口+二 бессмысленно: это рисунок глаза, а не «рот и два». Поэтому стоп, если часть:
+      - сама радикал или его вариант (kRSUnicode без добавочных штрихов: 目, 木, 氵, 心 ...);
+      - пиктограмма по этимологии (этот рисунок целиком);
+      - слишком простая: до 3 черт.
+    """
+    num2char, char2num = maps
+    strokes = {}
+    with GRAPHICS.open(encoding="utf-8") as f:
+        for line in f:
+            d = json.loads(line)
+            strokes[d["character"]] = len(d["strokes"])
+    out = set()
+    for ch, d in mmh.items():
+        rs = char2num.get(ch)
+        if rs and rs[1] == 0:
+            out.add(ch)
+        elif (d.get("etymology") or {}).get("type") == "pictographic":
+            out.add(ch)
+        elif 0 < strokes.get(ch, 99) <= 3:
+            out.add(ch)
+    return out
+
+
 def load_translations():
     return json.loads(TRANSLATIONS.read_text(encoding="utf-8")) if TRANSLATIONS.exists() else {}
 
@@ -203,7 +232,8 @@ def info(ch, mmh, maps=None, tr=None):
         "radical": d.get("radical"),
         "decomposition": d.get("decomposition"),
         "etymology": etymology,
-        "components": components(ch, mmh),
+        "atomic": ch in ATOMIC,
+        "components": [] if ch in ATOMIC else components(ch, mmh),
     }
 
 
@@ -222,6 +252,7 @@ def main():
     mmh, words = load_mmh(), load_cedict()
     maps = load_radical_maps()
     tr = load_translations()
+    ATOMIC.update(compute_atomic(mmh, maps))
 
     # частотный прокси: в скольких словах CEDICT встречается иероглиф
     freq = {}
@@ -244,6 +275,8 @@ def main():
     # какие иероглифы содержат компонент напрямую
     parents = {}
     for c in mmh:
+        if c in ATOMIC:
+            continue
         for comp in components(c, mmh):
             parents.setdefault(comp, []).append(c)
 

@@ -123,12 +123,12 @@ const ICON = {
 const T = {
   ru: { hint:'Нажми на иероглиф, затем на любую его часть, чтобы она разлетелась ещё на части.', crumbs:'Нажимай на части, чтобы разбирать дальше',
         all:'Взорвать всё', known:'Знаю', add:'Добавить в известные', where:'Где ещё встречается', words:'Слова', chars:'Иероглифы с этой частью',
-        seen:'Уже встречалось в этой фразе:', nodesc:'Для этой части в словаре нет описания.', derived:'выведено автоматически',
+        seen:'Уже встречалось в этой фразе:', nodesc:'Для этой части в словаре нет описания.', derived:'выведено автоматически', atomic:'неделимая часть: радикал или цельный рисунок',
         phonetic:'Звук подсказывает', semantic:'смысл —', word:'Слово', known_n:'Известно:',
         types:{ pictophonetic:'смысл + звук', ideographic:'смысловая комбинация', pictographic:'рисунок' } },
   en: { hint:'Click a character, then any of its parts to break it down further.', crumbs:'Click parts to break them down',
         all:'Explode all', known:'Known', add:'Add to known', where:'Where else it appears', words:'Words', chars:'Characters with this part',
-        seen:'Already seen in this phrase:', nodesc:'No description for this part in the dictionary.', derived:'derived automatically',
+        seen:'Already seen in this phrase:', nodesc:'No description for this part in the dictionary.', derived:'derived automatically', atomic:'indivisible part: a radical or a whole picture',
         phonetic:'Sound hint:', semantic:'meaning:', word:'Word', known_n:'Known:',
         types:{ pictophonetic:'meaning + sound', ideographic:'meaning combination', pictographic:'picture' } },
 };
@@ -253,6 +253,7 @@ function select(ch, glyphEl) {
   const def = pick(c, 'definition'), hint = pick(e, 'hint');
   let h = `<h2>${hz(ch)}<small>${(c.pinyin || []).join(', ')}</small></h2>`;
   if (def) h += `<p>${def}${c.definition_source && c.definition_source !== 'mmh' ? ` <span class="tag">${t('derived')}</span>` : ''}</p>`;
+  if (c.atomic) h += `<p><span class="tag">${t('atomic')}</span></p>`;
   if (hint) h += `<p>${typeName ? `<span class="tag">${typeName}</span> ` : ''}${hint}</p>`;
   if (e.type === 'pictophonetic') h += `<p>${t('phonetic')} <b class="serif">${e.phonetic}</b>, ${t('semantic')} <b class="serif">${e.semantic}</b>.</p>`;
   if (!def && !hint) h += `<p class="hint">${t('nodesc')}</p>`;
