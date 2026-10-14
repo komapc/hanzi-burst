@@ -91,6 +91,9 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     const path = url.pathname;
+    // Google Search Console: файл подтверждения должен отдаваться по точному адресу, без редиректа на путь без .html
+    const gv = path.match(/^\/(google[0-9a-f]+\.html)$/);
+    if (gv) return new Response('google-site-verification: ' + gv[1], { headers: { 'content-type': 'text/html; charset=utf-8' } });
     const method = request.method;
 
     if (path === '/api/config') return json({ googleClientId: env.GOOGLE_CLIENT_ID || null });
