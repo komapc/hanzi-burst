@@ -292,7 +292,7 @@ function renderPhrase() {
   D.phrase.forEach((w, wi) => {
     const el = document.createElement('div');
     el.className = 'word'; el.dataset.w = wi;
-    if (w.punct) { el.innerHTML = `<span class="punct">${w.word}</span>`; root.append(el); return; }
+    if (w.punct) { const sp = document.createElement('span'); sp.className = 'punct'; sp.textContent = w.word; el.append(sp); root.append(el); return; }
     w.chars.forEach((c, i) => {
       const b = document.createElement('button');
       b.className = 'ch' + (known.has(c) ? ' known' : '') + (c === rootCh ? ' sel' : '');
@@ -544,7 +544,8 @@ const HAN = /[㐀-鿿]/;
 const shardKey = ch => ch.codePointAt(0).toString(16).slice(0, -2);
 const shardCache = {};
 const loadShard = (kind, k) => shardCache[kind + k] || (shardCache[kind + k] =
-  fetch(`data/${kind}/${k}.json`).then(r => r.ok ? r.json() : {}).catch(() => ({})));
+  fetch(`data/${kind}/${k}.json`).then(r => { if (!r.ok) throw 0; return r.json(); })
+    .catch(() => { delete shardCache[kind + k]; return {}; }));
 let tradMap = null;
 async function analyzeText(raw) {
   tradMap = tradMap || await fetch('data/trad.json').then(r => r.json()).catch(() => ({}));
