@@ -2,7 +2,7 @@
 // Всё, что не /api/*, отдаётся статикой из site/ (см. wrangler.toml).
 
 const SESSION_TTL = 60 * 60 * 24 * 30; // 30 дней
-const PROMPT_VERSION = 1;   // поднять при смене промпта: старые запоминалки перестанут показываться
+const PROMPT_VERSION = 2;   // поднять при смене промпта: старые запоминалки перестанут показываться
 const MAX_VARIANTS = 3;
 const HAN = /^\p{Script=Han}$/u;
 const json = (data, status = 200, headers = {}) =>
@@ -57,15 +57,33 @@ async function verifyGoogle(env, credential) {
 /* ---------- LLM ---------- */
 function promptFor({ ch, pinyin, meaning, parts, etymology, lang, avoid = [] }) {
   const ru = lang === 'ru';
-  return `${ru ? 'Ты помогаешь новичку запомнить китайский иероглиф.' : 'You help a beginner remember a Chinese character.'}
-Character: ${ch}  Pinyin: ${pinyin}  Meaning: ${meaning}
+  const data = `Character: ${ch}  Pinyin: ${pinyin}  Meaning: ${meaning}
 Parts: ${parts.map(p => `${p.char} (${p.meaning})`).join(', ') || '—'}
 Real etymology (from a dictionary): ${etymology || '—'}
-${avoid.length ? `Already used (write something clearly different): ${avoid.map(x => '"' + x + '"').join(' | ')}` : ''}
+${avoid.length ? `Already used (write something clearly different): ${avoid.map(x => '"' + x + '"').join(' | ')}` : ''}`;
+  const rules = ru
+    ? `Ты помогаешь новичку запомнить китайский иероглиф. Напиши ОДНУ запоминалку на русском.
+Правила:
+- 1–2 коротких предложения (до 35 слов): одна конкретная, яркая, слегка нелепая сценка.
+- Используй ровно те части, что даны, и назови каждую по значению (знак можно дать в скобках). Не добавляй частей, которых нет в списке.
+- Сценка должна приводить к значению иероглифа целиком (первое значение).
+- Юмор через нелепую, но понятную картинку; без каламбуров, требующих знания китайского.
+- Связь со звучанием (пиньинь) используй только если она получается естественно, иначе пропусти. Не натягивай.
+- Не пиши «древние люди», «изначально», «этимология» и не выдавай выдумку за историю.
+- Подсказку из словаря можно использовать как опору, но не пересказывай её дословно.`
+    : `You help a beginner remember a Chinese character. Write ONE mnemonic in English.
+Rules:
+- 1–2 short sentences (up to 35 words): one concrete, vivid, slightly absurd little scene.
+- Use exactly the parts given and name each by its meaning (the character may go in parentheses). Do not add parts that are not listed.
+- The scene must lead to the meaning of the whole character (its first sense).
+- Humor comes from a silly but clear picture; no puns that need knowledge of Chinese.
+- Tie in the pronunciation (pinyin) only if it comes out naturally, otherwise skip it. Do not force it.
+- Do not write "ancient people", "originally" or "etymology", and do not present the invention as history.
+- You may lean on the dictionary hint, but do not retell it word for word.`;
+  return `${rules}
 
-${ru
-  ? 'Придумай короткую (1–2 предложения) яркую запоминалку на русском: сюжет из частей, пусть даже смешной или глупый. Если есть подсказка про звук, свяжи её со звучанием. Не выдавай выдумку за реальную этимологию.'
-  : 'Write a short (1–2 sentences), vivid mnemonic in English: a little story built from the parts, even a silly one. If there is a sound hint, tie it to the pronunciation. Do not present the invention as real etymology.'}
+${data}
+
 Ответ строго JSON / Reply strictly as JSON: {"mnemonic": "..."}`;
 }
 
