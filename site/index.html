@@ -26,7 +26,9 @@
   .lang button { background:none; border:0; color:var(--muted); padding:5px 12px; font:inherit; font-size:.8rem; cursor:pointer; }
   .lang button.on { background:var(--accent); color:#fff; }
 
-  #picker { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  #picker { display:flex; align-items:center; gap:8px; margin-bottom:14px; }
+  #picker .hint { margin:0; }
+  .pk.sel { max-width:60vw; border-radius:10px; background:var(--card); }
   .pk { background:none; border:1px solid var(--soft); border-radius:999px; padding:4px 12px; color:var(--muted); font:inherit; font-size:.95rem; cursor:pointer; font-family:"Noto Serif SC","Songti SC",serif; }
   .pk:hover { border-color:var(--accent); color:var(--accent); }
   .pk.on { background:var(--accent); border-color:var(--accent); color:#fff; }
@@ -170,15 +172,19 @@ let rootCh = null, selected = null;
 
 /* ---------- выбор фразы ---------- */
 let cur = 0;
-function renderPicker() {
+function renderPicker() {   // 50+ фраз: стрелки и выпадающий список вместо ряда кнопок
   const el = $('#picker'); el.innerHTML = '';
-  D.phrases.forEach((ph, i) => {
-    const b = document.createElement('button');
-    b.className = 'pk' + (i === cur ? ' on' : '');
-    b.textContent = ph.zh;
-    b.onclick = () => switchPhrase(i);
-    el.append(b);
-  });
+  const n = D.phrases.length;
+  const prev = document.createElement('button'); prev.className = 'pk'; prev.textContent = '‹'; prev.setAttribute('aria-label', 'prev');
+  const next = document.createElement('button'); next.className = 'pk'; next.textContent = '›'; next.setAttribute('aria-label', 'next');
+  const sel = document.createElement('select'); sel.className = 'pk sel';
+  D.phrases.forEach((ph, i) => { const o = document.createElement('option'); o.value = i; o.textContent = `${i + 1}. ${ph.zh}`; sel.append(o); });
+  sel.value = cur;
+  sel.onchange = () => switchPhrase(parseInt(sel.value, 10));
+  prev.onclick = () => switchPhrase((cur - 1 + n) % n);
+  next.onclick = () => switchPhrase((cur + 1) % n);
+  const count = document.createElement('span'); count.className = 'hint'; count.textContent = `${cur + 1} / ${n}`;
+  el.append(prev, sel, next, count);
 }
 function renderTrans() {
   const ph = D.phrases[cur];

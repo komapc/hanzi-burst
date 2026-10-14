@@ -35,9 +35,21 @@ cd site && python3 -m http.server 8765   # http://127.0.0.1:8765/?open=想&explo
 - `data/translations/ru.json`: переводы определений, подсказок и слов {en: ru} (черновик, переведено вручную).
 - `site/`: статическая страница, иероглифы рисуются SVG по контурам, язык RU/EN, «известные» в localStorage.
 
+## Добавление фраз
+
+```bash
+# сырые данные Tatoeba: data/raw/tatoeba/ (cmn_sentences, cmn-eng_links, cmn-rus_links, eng_sentences, rus_sentences .tsv.bz2
+# с https://downloads.tatoeba.org/exports/per_language/)
+python3 -I scripts/fetch_phrases.py --count 40 --max-new 2   # --dry-run чтобы посмотреть без записи
+python3 -I scripts/breakdown.py data/phrases.json site/phrase.json
+```
+
+Скрипт выбирает фразы как учебную программу: мало новых иероглифов относительно уже имеющихся фраз, оба перевода (ru, en) берутся из Tatoeba.
+Для новых иероглифов нужны русские переводы определений в `data/translations/ru.json` (без них показывается английский).
+
 ## Данные и лицензии
 
-Make Me a Hanzi (LGPL/Arphic), CC-CEDICT (CC BY-SA), Unicode/Unihan (Unicode License). Атрибуцию добавить перед публикацией.
+Make Me a Hanzi (LGPL/Arphic), CC-CEDICT (CC BY-SA), Unicode/Unihan (Unicode License), фразы и их переводы: Tatoeba (CC BY 2.0 FR, авторы указаны на tatoeba.org по номеру в `source`). Атрибуцию добавить перед публикацией.
 
 ## Бэкенд и деплой (Cloudflare Workers + D1)
 
