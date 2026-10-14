@@ -3,6 +3,9 @@ main = "worker/index.js"
 compatibility_date = "2025-01-01"
 
 # Статика сайта и API живут на одном домене: куки работают без CORS.
+[build]
+command = "python3 -I scripts/build_static.py"   # страницы /c/, /p/ и sitemap.xml для поисковиков
+
 [assets]
 directory = "./site"
 binding = "ASSETS"

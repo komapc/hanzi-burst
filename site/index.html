@@ -146,6 +146,7 @@
   <p class="stats" id="stats"></p>
   <section class="about hint">
     <h2>Как это работает / How it works</h2>
+    <p><a href="/c/">Все иероглифы / All characters</a> · <a href="/p/">Все фразы / All phrases</a> · <a href="/about">О проекте / About</a></p>
     <p>Выбери короткую фразу, нажми на иероглиф и разбери его на радикалы и фонетики: каждая часть «разлетается» дальше, пока не станет неделимой. Для частей есть значения, пиньинь, слова и иероглифы, где они встречаются. Фразы взяты из открытых корпусов (Tatoeba, Wiktionary, Common Voice) и подобраны так, чтобы в каждой было мало новых иероглифов.</p>
     <p>Pick a short phrase, click a character and break it down into radicals and phonetic components, step by step. Each part comes with meanings, pinyin and other words and characters that use it. Phrases come from open corpora and are ordered so each one introduces few new characters.</p>
   </section>
@@ -504,7 +505,11 @@ Promise.all([fetch('phrase.json').then(r => r.json()), fetch('glyphs.json').then
     D = d; G = g;
     const q0 = new URLSearchParams(location.search);
     let saved = 0; try { saved = parseInt(localStorage.getItem('hanzi-phrase') || '0', 10) || 0; } catch (e) {}
+    if (q0.get('z') && !D.phrases.some(p => p.zh === q0.get('z')) && (D.pool || []).some(p => p.zh === q0.get('z'))) {
+      const sn = getSeen(); if (!sn.includes(q0.get('z'))) { sn.push(q0.get('z')); saveSeen(sn); }
+    }
     buildList();
+    if (q0.get('z')) { const zi = L.findIndex(p => p.zh === q0.get('z')); if (zi >= 0) q0.set('p', String(zi)); }
     cur = Math.min(Math.max(q0.has('p') ? parseInt(q0.get('p'), 10) || 0 : saved, 0), L.length - 1);
     D.phrase = L[cur].words;
     renderPicker(); renderPhrase(); applyLang();
