@@ -77,7 +77,52 @@ def load_mmh():
     for line in MMH.read_text(encoding="utf-8").splitlines():
         d = json.loads(line)
         chars[d["character"]] = d
+    fill_holes(chars)
     return chars
+
+
+IDS_FILE = ROOT / "data/raw/ids/ids.txt"   # cjkvi-ids (производное от CHISE IDS, GPL): только для заполнения «？» в MMH
+
+
+def load_ids():
+    ids = {}
+    if not IDS_FILE.exists():
+        return ids
+    for line in IDS_FILE.read_text(encoding="utf-8").splitlines():
+        p = line.split("\t")
+        if line.startswith("#") or len(p) < 3:
+            continue
+        ids[p[1]] = re.sub(r"\[[^\]]*\]", "", p[2])   # первый вариант без пометок [GTKV]
+    return ids
+
+
+def _usable(c):
+    return c in IDS_OPS or 0x4E00 <= ord(c) <= 0x9FFF or 0x2E80 <= ord(c) <= 0x2FDF
+
+
+def fill_holes(mmh):
+    """У части знаков MMH пишет «？» вместо одного из компонентов (曷 = ⿱日？). Берём разбор из IDS,
+    если все его части — обычные унифицированные иероглифы или радикалы (их можно показать шрифтом).
+    Знаки, у которых «？» — всё разбиение (простые части), не трогаем."""
+    ids = load_ids()
+    filled = []
+    for ch, d in list(mmh.items()):
+        dec = d.get("decomposition", "")
+        if "？" not in dec or not dec.strip("？"):
+            continue
+        new = ids.get(ch)
+        if not new or new == ch or not all(_usable(c) for c in new):
+            continue
+        d["decomposition"] = new
+        filled.append(ch)
+        stack = [c for c in new if c not in IDS_OPS]
+        while stack:  # новые части, которых нет в MMH: добавляем разбор из IDS (без определения и контуров)
+            c = stack.pop()
+            if c in mmh or c not in ids or ids[c] == c or not all(_usable(x) for x in ids[c]):
+                continue
+            mmh[c] = {"character": c, "decomposition": ids[c], "pinyin": [], "added": True}
+            stack.extend(x for x in ids[c] if x not in IDS_OPS)
+    return filled
 
 
 def load_cedict():
@@ -235,6 +280,7 @@ def info(ch, mmh, maps=None, tr=None):
         "decomposition": d.get("decomposition"),
         "etymology": etymology,
         "atomic": ch in ATOMIC,
+        "incomplete": ch not in ATOMIC and "？" in (d.get("decomposition") or "") and bool((d.get("decomposition") or "").strip("？")),
         "components": [] if ch in ATOMIC else components(ch, mmh),
     }
 
