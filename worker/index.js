@@ -4,6 +4,7 @@
 const SESSION_TTL = 60 * 60 * 24 * 30; // 30 дней
 const PROMPT_VERSION = 1;   // поднять при смене промпта: старые запоминалки перестанут показываться
 const MAX_VARIANTS = 3;
+const HAN = /^\p{Script=Han}$/u;
 const json = (data, status = 200, headers = {}) =>
   new Response(JSON.stringify(data), { status, headers: { 'Content-Type': 'application/json', ...headers } });
 
@@ -21,6 +22,7 @@ async function signSession(env, payload) {
   return `${body}.${sig}`;
 }
 async function readSession(env, request) {
+  if (!env.SESSION_SECRET) return null;   // вход ещё не настроен
   const m = /(?:^|;\s*)hb_session=([^;]+)/.exec(request.headers.get('Cookie') || '');
   if (!m) return null;
   const [body, sig] = m[1].split('.');
@@ -32,6 +34,13 @@ async function readSession(env, request) {
 }
 const cookie = (value, maxAge) =>
   `hb_session=${value}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${maxAge}`;
+
+/* ---------- анонимный пользователь: хэш IP, без хранения самого адреса ---------- */
+async function ipId(request) {
+  const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+  const d = await crypto.subtle.digest('SHA-256', enc.encode('hanzi-burst:' + ip));
+  return 'ip:' + b64(d).slice(0, 22);
+}
 
 /* ---------- Google ID token ---------- */
 async function verifyGoogle(env, credential) {
@@ -67,13 +76,14 @@ async function askGemini(env, prompt) {
     headers: { 'Content-Type': 'application/json', 'x-goog-api-key': env.GEMINI_API_KEY },
     body: JSON.stringify({
       contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: { responseMimeType: 'application/json', temperature: 0.9, maxOutputTokens: 300 },
+      // thinkingBudget 0: иначе «размышления» 2.5-flash съедают maxOutputTokens и ответ приходит пустым
+      generationConfig: { responseMimeType: 'application/json', temperature: 0.9, maxOutputTokens: 600, thinkingConfig: { thinkingBudget: 0 } },
     }),
   });
-  if (!r.ok) throw new Error('llm ' + r.status);
+  if (!r.ok) throw new Error('llm http ' + r.status + ' ' + (await r.text()).slice(0, 200));
   const data = await r.json();
   const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-  return JSON.parse(text).mnemonic;
+  try { return JSON.parse(text).mnemonic; } catch { throw new Error('llm bad json: ' + JSON.stringify(data).slice(0, 300)); }
 }
 
 /* ---------- маршруты ---------- */
@@ -110,17 +120,18 @@ export default {
     if (path === '/api/mnemonics' && method === 'GET') {
       const ch = url.searchParams.get('ch') || '';
       const lang = url.searchParams.get('lang') === 'en' ? 'en' : 'ru';
-      if ([...ch].length !== 1) return json({ error: 'bad_char' }, 400);
+      if (!HAN.test(ch)) return json({ error: 'bad_char' }, 400);
       const { results } = await env.DB.prepare(
         'SELECT variant, text FROM mnemonics WHERE ch = ?1 AND lang = ?2 AND prompt_version = ?3 ORDER BY variant'
       ).bind(ch, lang, PROMPT_VERSION).all();
       return json({ variants: results }, 200, { 'Cache-Control': 'public, max-age=60' });
     }
 
-    // дальше нужна сессия
+    // сессия необязательна: без входа лимиты считаются по хэшу IP
     const session = await readSession(env, request);
-    if (!session) return json({ error: 'unauthorized' }, 401);
-    const uid = session.sub;
+    const uid = session ? session.sub : await ipId(request);
+
+    if (path.startsWith('/api/known') && !session) return json({ error: 'unauthorized' }, 401);
 
     if (path === '/api/known' && method === 'GET') {
       const { results } = await env.DB.prepare('SELECT ch FROM known WHERE user_id = ?1').bind(uid).all();
@@ -141,7 +152,7 @@ export default {
     if (path === '/api/explain' && method === 'POST') {
       const b = await request.json().catch(() => ({}));
       const lang = b.lang === 'en' ? 'en' : 'ru';
-      if (typeof b.ch !== 'string' || [...b.ch].length !== 1) return json({ error: 'bad_char' }, 400);
+      if (typeof b.ch !== 'string' || !HAN.test(b.ch)) return json({ error: 'bad_char' }, 400);
 
       const read = async () => (await env.DB.prepare(
         'SELECT variant, text FROM mnemonics WHERE ch = ?1 AND lang = ?2 AND prompt_version = ?3 ORDER BY variant'
@@ -157,6 +168,12 @@ export default {
         'INSERT INTO usage (user_id, day, n) VALUES (?1, ?2, 1) ON CONFLICT(user_id, day) DO UPDATE SET n = n + 1 RETURNING n'
       ).bind(uid, day).first();
       if (row.n > limit) return json({ error: 'rate_limited', variants: have }, 429);
+      // общий потолок на весь сайт: страхует бюджет, пока вход закрыт и аккаунтов нет
+      const globalLimit = parseInt(env.GLOBAL_DAILY_LIMIT || '300', 10);
+      const g = await env.DB.prepare(
+        "INSERT INTO usage (user_id, day, n) VALUES ('*', ?1, 1) ON CONFLICT(user_id, day) DO UPDATE SET n = n + 1 RETURNING n"
+      ).bind(day).first();
+      if (g.n > globalLimit) return json({ error: 'rate_limited', variants: have }, 429);
 
       const clip = (s, n) => String(s || '').slice(0, n);
       const prompt = promptFor({
@@ -169,9 +186,10 @@ export default {
         // INSERT OR IGNORE: если параллельный запрос успел раньше, остаётся его вариант
         await env.DB.prepare(
           'INSERT OR IGNORE INTO mnemonics (ch, lang, variant, text, model, prompt_version, created_by, created_at) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)'
-        ).bind(b.ch, lang, have.length + 1, text, env.GEMINI_MODEL, PROMPT_VERSION, uid, Date.now()).run();
+        ).bind(b.ch, lang, have.length + 1, text, env.GEMINI_MODEL, PROMPT_VERSION, session ? uid : null, Date.now()).run();
         return json({ variants: await read(), cached: false });
       } catch (e) {
+        console.error('explain failed', e.message);
         return json({ error: 'llm_failed', variants: have }, 502);
       }
     }

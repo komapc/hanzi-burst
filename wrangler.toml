@@ -16,7 +16,8 @@ database_id = "2e760b4f-cb72-4e82-96f1-470c590ae6fd"
 
 [vars]
 GEMINI_MODEL = "gemini-2.5-flash"
-EXPLAIN_DAILY_LIMIT = "30"
+EXPLAIN_DAILY_LIMIT = "15"      # новых запоминалок в сутки на пользователя (или IP)
+GLOBAL_DAILY_LIMIT = "300"      # на весь сайт в сутки
 
 # Секреты (wrangler secret put ...):
 #   GOOGLE_CLIENT_ID   OAuth Web client ID (публичный, но не хардкодим)

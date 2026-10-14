@@ -354,7 +354,6 @@ async function loadMnemonics(ch) {          // кэш читается без в
 }
 async function mnemonic(ch) {
   const box = $('#mnemo');
-  if (!user) { box.insertAdjacentHTML('beforeend', `<p class="hint">${t('mnemoLogin')}</p>`); return; }
   box.insertAdjacentHTML('beforeend', `<p class="hint">${t('mnemoBusy')}</p>`);
   const c = D.chars[ch] || {};
   const have = box.querySelectorAll('.mn').length;
@@ -368,8 +367,10 @@ async function mnemonic(ch) {
 async function initBackend() {
   try {
     const cfg = await api('/api/config');
-    if (!cfg.ok || !cfg.data || !cfg.data.googleClientId) return;   // локальный статический сервер: бэкенда нет
+    if (!cfg.ok || !cfg.data) return;   // локальный статический сервер: бэкенда нет
     backend = true;
+    if (selected) refresh();            // кнопка запоминалок работает без входа
+    if (!cfg.data.googleClientId) return;   // вход ещё не настроен: остаёмся анонимными
     await new Promise(res => { const s = document.createElement('script'); s.src = 'https://accounts.google.com/gsi/client'; s.async = true; s.onload = res; s.onerror = res; document.head.append(s); });
     if (window.google && window.google.accounts) google.accounts.id.initialize({ client_id: cfg.data.googleClientId, callback: onCredential });
     const me = await api('/api/me');
