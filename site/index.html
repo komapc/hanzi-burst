@@ -129,6 +129,16 @@
   <p class="hint credits">Data: <a href="https://github.com/skishore/makemeahanzi">Make Me a Hanzi</a> (LGPL, Arphic) · <a href="https://cc-cedict.org/">CC-CEDICT</a> (CC BY-SA) · <a href="https://tatoeba.org/">Tatoeba</a> (CC BY 2.0 FR) · <a href="https://en.wiktionary.org/">Wiktionary</a> via <a href="https://kaikki.org/">kaikki.org</a> (CC BY-SA) · Unicode / Unihan</p>
 </main>
 <script>
+/* Google Analytics 4: вставь Measurement ID (G-XXXXXXXXXX) — пока пусто, ничего не грузится */
+const GA_ID = '';
+if (GA_ID) {
+  const gs = document.createElement('script'); gs.async = true;
+  gs.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID; document.head.append(gs);
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function () { dataLayer.push(arguments); };
+  gtag('js', new Date()); gtag('config', GA_ID);
+}
+const track = (name, params) => { try { if (window.gtag) gtag('event', name, params || {}); } catch (e) {} };
 const $ = s => document.querySelector(s);
 const ICON = {
   star: '<svg class="i" viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg>',
@@ -193,6 +203,7 @@ function newPhrase() {
   }
   if (!best) { $('#trans').textContent = t('noMore'); return; }
   const seen = getSeen(); seen.push(best.zh); saveSeen(seen);
+  track('new_phrase', { source: best.source || '' });
   buildList(); switchPhrase(L.length - 1);
 }
 function renderPicker() {   // 50+ фраз: стрелки и выпадающий список вместо ряда кнопок
