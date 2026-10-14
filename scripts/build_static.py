@@ -47,7 +47,7 @@ def page(title, desc, canon, body, ld=()):
 <link rel="canonical" href="{BASE}{canon}"><meta name="robots" content="index,follow">
 <meta property="og:title" content="{E(title)}"><meta property="og:description" content="{E(desc)}">
 <meta property="og:image" content="{BASE}/og.png"><meta property="og:url" content="{BASE}{canon}">
-{ld_script(ld)}{CSS}</head><body><main><p><a href="/">hanzi-burst</a> · <a href="/c/">Иероглифы / Characters</a> · <a href="/p/">Фразы / Phrases</a> · <a href="/about">О проекте / About</a></p>
+{ld_script(ld)}{CSS}</head><body><main><p><a href="/">hanzi-burst</a> · <a href="/c/">Иероглифы / Characters</a> · <a href="/p/">Фразы / Phrases</a> · <a href="/about">О проекте / About</a> · <a href="/privacy">Privacy</a></p>
 {body}</main></body></html>"""
 
 
@@ -67,7 +67,7 @@ def main():
 
     for d in ("c", "p"):
         shutil.rmtree(SITE / d, ignore_errors=True); (SITE / d).mkdir()
-    urls = [f"{BASE}/", f"{BASE}/about", f"{BASE}/c/", f"{BASE}/p/"]
+    urls = [f"{BASE}/", f"{BASE}/about", f"{BASE}/privacy", f"{BASE}/c/", f"{BASE}/p/"]
     link = lambda ch: f'<a href="/c/{cid(ch)}">{ch}</a>' if ch in chars else ch
 
     for ch, c in chars.items():

@@ -1,0 +1,50 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Конфиденциальность / Privacy — hanzi-burst</title>
+<meta name="description" content="Какие данные использует hanzi-burst: localStorage, Google Analytics с согласия, запросы к Gemini для запоминалок. What data hanzi-burst uses.">
+<link rel="canonical" href="https://hanzi-burst.komapc.workers.dev/privacy">
+<style>
+:root{--bg:#faf7f2;--fg:#1f1b16;--muted:#7a7166;--accent:#c8402a;--line:#cfc6b6}
+@media(prefers-color-scheme:dark){:root{--bg:#17140f;--fg:#f1ebe0;--muted:#9d9486;--accent:#ff7a5c;--line:#5a5144}}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,sans-serif}
+main{max-width:760px;margin:0 auto;padding:20px 16px 60px}
+a{color:var(--accent)}h1{font-size:28px;margin:.5em 0}h2{font-size:18px;margin:1.6em 0 .4em}
+.m{color:var(--muted)}ul{padding-left:20px}code{font-size:14px}
+button{font:inherit;padding:6px 12px;border:1px solid var(--accent);border-radius:8px;background:none;color:var(--fg);cursor:pointer;margin-right:8px}
+</style></head><body><main>
+<p><a href="/">← hanzi-burst</a> · <a href="/about">О проекте / About</a></p>
+<h1>Конфиденциальность / Privacy</h1>
+<p>Сайт бесплатный, учётных записей нет, имя и e-mail мы не запрашиваем.</p>
+<p class="m">The site is free, has no accounts, and does not ask for your name or e-mail.</p>
+
+<h2>Что хранится в твоём браузере / Stored in your browser</h2>
+<p>Через <code>localStorage</code> (остаётся только на твоём устройстве, на сервер не отправляется): список известных иероглифов (<code>hanzi-known</code>), язык (<code>hanzi-lang</code>), текущая и полученные фразы (<code>hanzi-phrase</code>, <code>hanzi-seen-pool</code>), твой выбор по аналитике (<code>hanzi-consent</code>).</p>
+<p class="m">Kept only on your device via localStorage: known characters, language, current/seen phrases and your analytics choice. None of it is sent to the server.</p>
+
+<h2>Аналитика / Analytics</h2>
+<p>Google Analytics 4 включается <b>только после твоего согласия</b>. Он ставит cookies (<code>_ga*</code>) и передаёт Google данные о посещении: страницы, события вроде «новая фраза», примерный регион, тип устройства. IP-адрес анонимизируется. Без согласия ничего не загружается.</p>
+<p class="m">Google Analytics 4 loads <b>only after you consent</b> and sets cookies (<code>_ga*</code>). Without consent nothing is loaded.</p>
+<p><button id="yes">Разрешить / Allow</button><button id="no">Отказаться / Decline</button><span id="st" class="m"></span></p>
+
+<h2>Запоминалки / Mnemonics</h2>
+<p>Когда ты нажимаешь «Придумать запоминалку», на наш сервер уходят иероглиф, его пиньинь, значение, состав и язык интерфейса. Они передаются в Google Gemini API, чтобы получить текст. Готовые тексты кэшируются и показываются всем. Для лимитов на запросы мы храним в базе дневной счётчик, привязанный к хэшу IP-адреса (сам адрес не сохраняется), и этот же хэш помечает созданный текст. Счётчики пока не удаляются автоматически.</p>
+<p class="m">When you request a mnemonic, the character, its pinyin, meaning, components and interface language are sent to our server and to the Google Gemini API. Results are cached and shared. For rate limits we keep a daily counter tied to a hash of your IP address (the address itself is not stored); the same hash tags the generated text. Counters are not purged automatically yet.</p>
+
+<h2>Хостинг / Hosting</h2>
+<p>Сайт работает на Cloudflare (Workers, D1). Как и любой хостинг, Cloudflare видит технические данные запроса (IP, User-Agent) в своих логах.</p>
+<p class="m">The site runs on Cloudflare (Workers, D1), which sees standard request data in its logs.</p>
+
+<h2>Вход через Google / Sign-in</h2>
+<p>Вход через Google подготовлен, но пока не включён. Если мы его включим, этот документ будет обновлён.</p>
+<p class="m">Google sign-in is prepared but not enabled yet; this page will be updated if it is.</p>
+
+<h2>Контакт / Contact</h2>
+<p>Вопросы и просьбы об удалении: <a href="https://github.com/komapc">github.com/komapc</a>.</p>
+<p class="m">Обновлено / Updated: 2026-10-15</p>
+</main>
+<script>
+const g=()=>{try{return localStorage.getItem('hanzi-consent')}catch(e){return null}};
+const s=v=>{try{localStorage.setItem('hanzi-consent',v)}catch(e){}; r()};
+function r(){document.getElementById('st').textContent=({yes:'Сейчас: разрешено / allowed',no:'Сейчас: отказ / declined'})[g()]||'Выбор не сделан / not chosen'}
+document.getElementById('yes').onclick=()=>s('yes');document.getElementById('no').onclick=()=>s('no');r();
+</script></body></html>

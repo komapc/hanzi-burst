@@ -117,6 +117,11 @@
   .chip:hover { border-color:var(--accent); }
   .chip.known { border-color:var(--ok); }
   .stats { color:var(--muted); font-size:.85rem; margin-top:16px; }
+.stats a, .credits a { color: inherit; }
+  #consent { position: fixed; left: 12px; right: 12px; bottom: 12px; max-width: 640px; margin: 0 auto; padding: 12px 14px;
+    background: var(--card); color: var(--fg); border: 1px solid var(--line); border-radius: 10px; font-size: 14px;
+    display: flex; flex-wrap: wrap; gap: 8px 10px; align-items: center; box-shadow: 0 4px 18px rgba(0,0,0,.18); z-index: 50; }
+  #consent[hidden] { display: none; }
 </style>
 </head>
 <body>
@@ -146,22 +151,32 @@
   <p class="stats" id="stats"></p>
   <section class="about hint">
     <h2>Как это работает / How it works</h2>
-    <p><a href="/c/">Все иероглифы / All characters</a> · <a href="/p/">Все фразы / All phrases</a> · <a href="/about">О проекте / About</a></p>
+    <p><a href="/c/">Все иероглифы / All characters</a> · <a href="/p/">Все фразы / All phrases</a> · <a href="/about">О проекте / About</a> · <a href="/privacy">Конфиденциальность / Privacy</a></p>
     <p>Выбери короткую фразу, нажми на иероглиф и разбери его на радикалы и фонетики: каждая часть «разлетается» дальше, пока не станет неделимой. Для частей есть значения, пиньинь, слова и иероглифы, где они встречаются. Фразы взяты из открытых корпусов (Tatoeba, Wiktionary, Common Voice) и подобраны так, чтобы в каждой было мало новых иероглифов.</p>
     <p>Pick a short phrase, click a character and break it down into radicals and phonetic components, step by step. Each part comes with meanings, pinyin and other words and characters that use it. Phrases come from open corpora and are ordered so each one introduces few new characters.</p>
   </section>
   <p class="hint credits">Data: <a href="https://github.com/skishore/makemeahanzi">Make Me a Hanzi</a> (LGPL, Arphic) · <a href="https://cc-cedict.org/">CC-CEDICT</a> (CC BY-SA) · <a href="https://tatoeba.org/">Tatoeba</a> (CC BY 2.0 FR) · <a href="https://en.wiktionary.org/">Wiktionary</a> via <a href="https://kaikki.org/">kaikki.org</a> (CC BY-SA) · <a href="https://commonvoice.mozilla.org/">Mozilla Common Voice</a> (CC0, machine translation) · Unicode / Unihan</p>
 </main>
+<div id="consent" hidden role="dialog" aria-live="polite">
+  <span id="consentText"></span>
+  <button class="btn" id="consentYes"></button><button class="btn" id="consentNo"></button>
+  <a href="/privacy" id="consentMore"></a>
+</div>
 <script>
 /* Google Analytics 4: вставь Measurement ID (G-XXXXXXXXXX) — пока пусто, ничего не грузится */
 const GA_ID = 'G-G4GHN6WZ7B';
-if (GA_ID) {
+/* Аналитика грузится только после согласия (hanzi-consent = 'yes'). */
+function loadGA() {
+  if (!GA_ID || window.gtag) return;
   const gs = document.createElement('script'); gs.async = true;
   gs.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID; document.head.append(gs);
   window.dataLayer = window.dataLayer || [];
   window.gtag = function () { dataLayer.push(arguments); };
-  gtag('js', new Date()); gtag('config', GA_ID);
+  gtag('js', new Date()); gtag('config', GA_ID, { anonymize_ip: true });
 }
+const getConsent = () => { try { return localStorage.getItem('hanzi-consent'); } catch (e) { return null; } };
+const setConsent = v => { try { localStorage.setItem('hanzi-consent', v); } catch (e) {} };
+if (getConsent() === 'yes') loadGA();
 const track = (name, params) => { try { if (window.gtag) gtag('event', name, params || {}); } catch (e) {} };
 const $ = s => document.querySelector(s);
 const ICON = {
@@ -479,7 +494,19 @@ async function initBackend() {
 }
 
 /* ---------- язык ---------- */
+const CONSENT_T = {
+  ru: { text: 'Сайт использует Google Analytics (cookies) для статистики посещений. Включить?', yes: 'Согласен', no: 'Отказаться', more: 'Подробнее' },
+  en: { text: 'This site uses Google Analytics (cookies) for visit statistics. Allow?', yes: 'Allow', no: 'Decline', more: 'Details' } };
+function renderConsent() {
+  const el = $('#consent'); if (!el) return;
+  const c = CONSENT_T[lang] || CONSENT_T.en;
+  $('#consentText').textContent = c.text; $('#consentYes').textContent = c.yes; $('#consentNo').textContent = c.no; $('#consentMore').textContent = c.more;
+  el.hidden = getConsent() !== null;
+}
+$('#consentYes').onclick = () => { setConsent('yes'); loadGA(); renderConsent(); };
+$('#consentNo').onclick = () => { setConsent('no'); renderConsent(); };
 function applyLang() {
+  renderConsent();
   document.documentElement.lang = lang;
   document.querySelectorAll('.lang button').forEach(b => b.classList.toggle('on', b.dataset.lang === lang));
   $('#hint').textContent = t('hint');
