@@ -1,0 +1,6002 @@
+[
+ {
+  "zh": "今天不热，今天很冷。",
+  "ru": "Сегодня не жарко, а холодно.",
+  "en": "It isn't hot today. It's cold actually.",
+  "source": "tatoeba #10961171"
+ },
+ {
+  "zh": "天很冷。",
+  "ru": "Холодно.",
+  "en": "It's cold.",
+  "source": "tatoeba #334647"
+ },
+ {
+  "zh": "今天天气挺冷的。",
+  "ru": "Сегодня очень холодно.",
+  "en": "It's rather cold today.",
+  "source": "tatoeba #450949"
+ },
+ {
+  "zh": "我不再爱你了。",
+  "ru": "Я тебя больше не люблю.",
+  "en": "I no longer love you.",
+  "source": "tatoeba #335060"
+ },
+ {
+  "zh": "今天早上很冷。",
+  "ru": "Было очень холодно утром.",
+  "en": "It was very cold this morning.",
+  "source": "tatoeba #859151"
+ },
+ {
+  "zh": "我不喜欢夏天。",
+  "ru": "Я не люблю лето.",
+  "en": "I don't like summer.",
+  "source": "tatoeba #1700146"
+ },
+ {
+  "zh": "日本的夏天很热。",
+  "ru": "Лето в Японии жаркое.",
+  "en": "It is very hot in the summer in Japan.",
+  "source": "tatoeba #2030729"
+ },
+ {
+  "zh": "今年夏天很冷。",
+  "ru": "В этом году лето холодное.",
+  "en": "Summer is cold this year.",
+  "source": "tatoeba #472815"
+ },
+ {
+  "zh": "我明年想学中文。",
+  "ru": "В следующем году я хочу изучать китайский язык.",
+  "en": "I want to learn Chinese next year.",
+  "source": "tatoeba #336175"
+ },
+ {
+  "zh": "他的英文比我好。",
+  "ru": "Его английский лучше моего.",
+  "en": "His English is better than mine.",
+  "source": "tatoeba #373195"
+ },
+ {
+  "zh": "我明年想学汉语。",
+  "ru": "Я хочу учить китайский в следующем году.",
+  "en": "I want to learn Chinese next year.",
+  "source": "tatoeba #857223"
+ },
+ {
+  "zh": "他学习汉语。",
+  "ru": "Он учит китайский.",
+  "en": "He studies Chinese.",
+  "source": "tatoeba #335139"
+ },
+ {
+  "zh": "我想学英语。",
+  "ru": "Я хочу учить английский язык.",
+  "en": "I want to study English.",
+  "source": "tatoeba #355181"
+ },
+ {
+  "zh": "英语不是我的母语。",
+  "ru": "Английский - не мой родной язык.",
+  "en": "English is not my mother tongue.",
+  "source": "tatoeba #677043"
+ },
+ {
+  "zh": "法语不是我的母语。",
+  "ru": "Французский не является моим родным языком.",
+  "en": "French isn't my mother tongue.",
+  "source": "tatoeba #10190601"
+ },
+ {
+  "zh": "法语是我的母语。",
+  "ru": "Французский - мой родной язык.",
+  "en": "French is my mother tongue.",
+  "source": "tatoeba #2043147"
+ },
+ {
+  "zh": "他是法国人。",
+  "ru": "Он француз.",
+  "en": "He is French.",
+  "source": "tatoeba #483022"
+ },
+ {
+  "zh": "我的汉语不太好。",
+  "ru": "У меня не очень хороший китайский.",
+  "en": "My Chinese isn't very good.",
+  "source": "tatoeba #1105572"
+ },
+ {
+  "zh": "太好了！",
+  "ru": "Отлично!",
+  "en": "Great!",
+  "source": "tatoeba #348004"
+ },
+ {
+  "zh": "太小了。",
+  "ru": "Слишком маленький.",
+  "en": "It's too small.",
+  "source": "tatoeba #349189"
+ },
+ {
+  "zh": "太早了。",
+  "ru": "Слишком рано.",
+  "en": "It's so early.",
+  "source": "tatoeba #2007046"
+ },
+ {
+  "zh": "这不是我的想法。",
+  "ru": "Моя точка зрения не такая.",
+  "en": "It didn't cross my mind.",
+  "source": "tatoeba #4846809"
+ },
+ {
+  "zh": "这不是爱。",
+  "ru": "Не любовь это.",
+  "en": "This isn't love.",
+  "source": "tatoeba #2233803"
+ },
+ {
+  "zh": "这本书不是我的。",
+  "ru": "Это не моя книга.",
+  "en": "This book isn't mine.",
+  "source": "tatoeba #763414"
+ },
+ {
+  "zh": "这是本汉语书。",
+  "ru": "Это книга на китайском.",
+  "en": "This is a Chinese language book.",
+  "source": "tatoeba #3377903"
+ },
+ {
+  "zh": "这本书很小。",
+  "ru": "Эта книга очень маленькая.",
+  "en": "This book is very small.",
+  "source": "tatoeba #340144"
+ },
+ {
+  "zh": "这是书。",
+  "ru": "Это книга.",
+  "en": "This is a book.",
+  "source": "tatoeba #347291"
+ },
+ {
+  "zh": "我不想读这本书。",
+  "ru": "Я не хочу читать эту книгу.",
+  "en": "I don't want to read this book.",
+  "source": "tatoeba #2027947"
+ },
+ {
+  "zh": "我想读。",
+  "ru": "Я хочу почитать.",
+  "en": "I want to read.",
+  "source": "tatoeba #9969972"
+ },
+ {
+  "zh": "不是，这不是我的车。",
+  "ru": "Нет, это не моя машина.",
+  "en": "No, this isn't my car.",
+  "source": "tatoeba #10961139"
+ },
+ {
+  "zh": "这不是我的包。",
+  "ru": "Это не моя сумка.",
+  "en": "This isn't my bag.",
+  "source": "tatoeba #332741"
+ },
+ {
+  "zh": "这是我的字典。",
+  "ru": "Это мой словарь.",
+  "en": "This is my dictionary.",
+  "source": "tatoeba #334384"
+ },
+ {
+  "zh": "他是典型的日本人。",
+  "ru": "Он типичный японец.",
+  "en": "He is a typical Japanese.",
+  "source": "tatoeba #344832"
+ },
+ {
+  "zh": "哪本是你的书？",
+  "ru": "Которая из книг - твоя?",
+  "en": "Which is your book?",
+  "source": "tatoeba #334623"
+ },
+ {
+  "zh": "他也学习汉语。",
+  "ru": "Он также изучает китайский.",
+  "en": "He studies Chinese too.",
+  "source": "tatoeba #713203"
+ },
+ {
+  "zh": "你也是。",
+  "ru": "Взаимно.",
+  "en": "You too.",
+  "source": "tatoeba #2635835"
+ },
+ {
+  "zh": "我去不了，也不想去。",
+  "ru": "Я не смогу поехать, да и не хочу.",
+  "en": "I can't go, nor do I want to.",
+  "source": "tatoeba #334780"
+ },
+ {
+  "zh": "他每天去学校学习。",
+  "ru": "Он каждый день ходит в школу учиться.",
+  "en": "He goes to school to study every day.",
+  "source": "tatoeba #332839"
+ },
+ {
+  "zh": "她不喜欢去学校。",
+  "ru": "Она не любит ходить в школу.",
+  "en": "She doesn't like to go to school.",
+  "source": "tatoeba #1328065"
+ },
+ {
+  "zh": "她是日本人。",
+  "ru": "Она японка.",
+  "en": "She is Japanese.",
+  "source": "tatoeba #1163569"
+ },
+ {
+  "zh": "她不爱我了。",
+  "ru": "Она меня уже не любит.",
+  "en": "She doesn't love me anymore.",
+  "source": "tatoeba #9453450"
+ },
+ {
+  "zh": "她上午学了英语。",
+  "ru": "Утром она учила английский.",
+  "en": "She studied English in the morning.",
+  "source": "tatoeba #1517482"
+ },
+ {
+  "zh": "她爸是日本人。",
+  "ru": "Её отец - японец.",
+  "en": "Her father is Japanese.",
+  "source": "tatoeba #344828"
+ },
+ {
+  "zh": "去年他的爸爸死了。",
+  "ru": "Его отец умер в прошлом году.",
+  "en": "His father died last year.",
+  "source": "tatoeba #661540"
+ },
+ {
+  "zh": "他昨天死了。",
+  "ru": "Он вчера умер.",
+  "en": "He died yesterday.",
+  "source": "tatoeba #347148"
+ },
+ {
+  "zh": "她死了。",
+  "ru": "Она умерла.",
+  "en": "She died.",
+  "source": "tatoeba #717175"
+ },
+ {
+  "zh": "他昨天去世了。",
+  "ru": "Он вчера умер.",
+  "en": "He died yesterday.",
+  "source": "tatoeba #500919"
+ },
+ {
+  "zh": "他昨天过世了。",
+  "ru": "Он вчера умер.",
+  "en": "He died yesterday.",
+  "source": "tatoeba #347149"
+ },
+ {
+  "zh": "夏天过去了。",
+  "ru": "Лето прошло.",
+  "en": "Summer is over.",
+  "source": "tatoeba #7774794"
+ },
+ {
+  "zh": "我昨天见过他们。",
+  "ru": "Я их вчера видел.",
+  "en": "I saw them yesterday.",
+  "source": "tatoeba #4444825"
+ },
+ {
+  "zh": "我们是同学。",
+  "ru": "Мы одноклассники.",
+  "en": "We're classmates.",
+  "source": "tatoeba #333784"
+ },
+ {
+  "zh": "我们想他。",
+  "ru": "Мы за ним скучаем.",
+  "en": "We think of him.",
+  "source": "tatoeba #1325310"
+ },
+ {
+  "zh": "他们呢？",
+  "ru": "А они?",
+  "en": "What about them?",
+  "source": "tatoeba #12294831"
+ },
+ {
+  "zh": "我们每天都学习英文。",
+  "ru": "Мы учим английский каждый день.",
+  "en": "We study English every day.",
+  "source": "tatoeba #392017"
+ },
+ {
+  "zh": "我们都喜欢她。",
+  "ru": "Нам всем она нравится.",
+  "en": "All of us like her.",
+  "source": "tatoeba #405210"
+ },
+ {
+  "zh": "他们的想法太过时了。",
+  "ru": "Их идеи слишком старомодны.",
+  "en": "Their way of thinking is behind the times.",
+  "source": "tatoeba #423191"
+ },
+ {
+  "zh": "她不喜欢不守时的人。",
+  "ru": "Ей не нравятся непунктуальные люди.",
+  "en": "She doesn't like people being late.",
+  "source": "tatoeba #1807070"
+ },
+ {
+  "zh": "那是我们的学校。",
+  "ru": "Это наша школа.",
+  "en": "That is our school.",
+  "source": "tatoeba #336241"
+ },
+ {
+  "zh": "那是我的字典。",
+  "ru": "Это мой словарь.",
+  "en": "That's my dictionary.",
+  "source": "tatoeba #780253"
+ },
+ {
+  "zh": "你的书是这本还是那本？",
+  "ru": "Которая книга твоя: эта или та?",
+  "en": "Which is your book, this one or that one?",
+  "source": "tatoeba #1964452"
+ },
+ {
+  "zh": "每天都有人死去。",
+  "ru": "Люди умирают каждый день.",
+  "en": "People die every day.",
+  "source": "tatoeba #2707934"
+ },
+ {
+  "zh": "所有的书都是我的。",
+  "ru": "Все книги мои.",
+  "en": "All of the books are mine.",
+  "source": "tatoeba #13968301"
+ },
+ {
+  "zh": "所有人都在等你。",
+  "ru": "Все тебя ждут.",
+  "en": "Everybody's waiting for you.",
+  "source": "tatoeba #340129"
+ },
+ {
+  "zh": "爸爸妈妈在叫我们。",
+  "ru": "Нас зовут родители.",
+  "en": "Our parents are calling for us.",
+  "source": "tatoeba #10961062"
+ },
+ {
+  "zh": "这是我的妈妈。",
+  "ru": "Это моя мама.",
+  "en": "This is my mom.",
+  "source": "tatoeba #330581"
+ },
+ {
+  "zh": "你是我妈妈。",
+  "ru": "Ты - моя мать.",
+  "en": "You are my mother.",
+  "source": "tatoeba #1342264"
+ },
+ {
+  "zh": "我们的车走了。",
+  "ru": "Приехал наш автобус.",
+  "en": "There goes our bus.",
+  "source": "tatoeba #346465"
+ },
+ {
+  "zh": "我走了。",
+  "ru": "Я пошёл.",
+  "en": "I'm outta here.",
+  "source": "tatoeba #405498"
+ },
+ {
+  "zh": "我不能再走了。",
+  "ru": "Я не могу идти дальше.",
+  "en": "I can't go any farther.",
+  "source": "tatoeba #348267"
+ },
+ {
+  "zh": "谁也不能帮我。",
+  "ru": "Никто не может мне помочь.",
+  "en": "No one can help me.",
+  "source": "tatoeba #396076"
+ },
+ {
+  "zh": "这是谁的书？",
+  "ru": "Чья это книга?",
+  "en": "Whose book is this?",
+  "source": "tatoeba #493888"
+ },
+ {
+  "zh": "这是谁的茶？",
+  "ru": "Чей это чай?",
+  "en": "Whose tea is this?",
+  "source": "tatoeba #4751229"
+ },
+ {
+  "zh": "那人是谁？",
+  "ru": "Кто этот человек?",
+  "en": "Who is that person?",
+  "source": "tatoeba #354121"
+ },
+ {
+  "zh": "我们是谁？",
+  "ru": "Кто мы?",
+  "en": "Who are we?",
+  "source": "tatoeba #6148608"
+ },
+ {
+  "zh": "他是谁？",
+  "ru": "Кто он?",
+  "en": "Who's he?",
+  "source": "tatoeba #347334"
+ },
+ {
+  "zh": "我们只有茶水。",
+  "ru": "У нас есть только чай.",
+  "en": "We only have tea.",
+  "source": "tatoeba #419713"
+ },
+ {
+  "zh": "没有人能帮我。",
+  "ru": "Никто не может мне помочь.",
+  "en": "No one can help me.",
+  "source": "tatoeba #429067"
+ },
+ {
+  "zh": "我没生病。",
+  "ru": "Я не болен.",
+  "en": "I'm not sick.",
+  "source": "tatoeba #3031836"
+ },
+ {
+  "zh": "我没有书。",
+  "ru": "У меня нет книги.",
+  "en": "I have no books.",
+  "source": "tatoeba #12169790"
+ },
+ {
+  "zh": "还没有。",
+  "ru": "Ещё нет.",
+  "en": "Not yet.",
+  "source": "tatoeba #945672"
+ },
+ {
+  "zh": "我们谁也没看见。",
+  "ru": "Мы никого не видели.",
+  "en": "We have seen no one.",
+  "source": "tatoeba #7771853"
+ },
+ {
+  "zh": "我还在看。",
+  "ru": "Я всё ещё читаю.",
+  "en": "I'm still reading.",
+  "source": "tatoeba #5575198"
+ },
+ {
+  "zh": "我不太同意你的看法。",
+  "ru": "Я с тобой не совсем согласен.",
+  "en": "I don't quite agree with you.",
+  "source": "tatoeba #846072"
+ },
+ {
+  "zh": "我们同意。",
+  "ru": "Мы согласны.",
+  "en": "We agree.",
+  "source": "tatoeba #663299"
+ },
+ {
+  "zh": "我不同意。",
+  "ru": "Я не согласен.",
+  "en": "I don't think I agree.",
+  "source": "tatoeba #9410028"
+ },
+ {
+  "zh": "我同意。",
+  "ru": "Я согласен.",
+  "en": "I agree.",
+  "source": "tatoeba #333224"
+ },
+ {
+  "zh": "我们很乐意帮你。",
+  "ru": "Мы рады тебе помочь.",
+  "en": "We're willing to help you.",
+  "source": "tatoeba #1995147"
+ },
+ {
+  "zh": "这不是他的主意。",
+  "ru": "Это не его идея.",
+  "en": "It wasn't his idea.",
+  "source": "tatoeba #7532566"
+ },
+ {
+  "zh": "我没主意了。",
+  "ru": "У меня нет идей.",
+  "en": "I'm running out of ideas.",
+  "source": "tatoeba #343922"
+ },
+ {
+  "zh": "我有好主意。",
+  "ru": "Мне в голову пришла хорошая идея.",
+  "en": "I have a good idea.",
+  "source": "tatoeba #1113561"
+ },
+ {
+  "zh": "好主意！",
+  "ru": "Хорошая идея!",
+  "en": "Good idea!",
+  "source": "tatoeba #1830195"
+ },
+ {
+  "zh": "我们乐意帮你做。",
+  "ru": "Мы рады помочь тебе в этом.",
+  "en": "We were happy to do that for you.",
+  "source": "tatoeba #9423259"
+ },
+ {
+  "zh": "我会乐意帮你做。",
+  "ru": "Я с радостью тебе помогу.",
+  "en": "I'd be glad to do that for you.",
+  "source": "tatoeba #9434984"
+ },
+ {
+  "zh": "我会想你。",
+  "ru": "Мне будет тебя не хватать.",
+  "en": "I'll miss you.",
+  "source": "tatoeba #1170598"
+ },
+ {
+  "zh": "他不会讲法语。我也不会。",
+  "ru": "Он не говорит по-французски, как и я.",
+  "en": "He doesn't speak French, neither do I.",
+  "source": "tatoeba #426699"
+ },
+ {
+  "zh": "他会讲日语。",
+  "ru": "Он владеет японским языком.",
+  "en": "He's able to speak Japanese.",
+  "source": "tatoeba #349276"
+ },
+ {
+  "zh": "我不会讲日本话。",
+  "ru": "Я не говорю по-японски.",
+  "en": "I don't speak Japanese.",
+  "source": "tatoeba #347901"
+ },
+ {
+  "zh": "明天我会去问他。",
+  "ru": "Я спрошу его завтра.",
+  "en": "Tomorrow, I will ask him.",
+  "source": "tatoeba #1883169"
+ },
+ {
+  "zh": "我会读完这本书。",
+  "ru": "Я прочту эту книгу до конца.",
+  "en": "I'll finish reading this book.",
+  "source": "tatoeba #6075166"
+ },
+ {
+  "zh": "我们都迟早会死。",
+  "ru": "Рано или поздно все умирают.",
+  "en": "We will all die, sooner or later.",
+  "source": "tatoeba #8856217"
+ },
+ {
+  "zh": "您的书很有意思。",
+  "ru": "Ваша книга интересная.",
+  "en": "Your book is interesting.",
+  "source": "tatoeba #12360521"
+ },
+ {
+  "zh": "看书很有意思。",
+  "ru": "Читать книги интересно.",
+  "en": "Reading books is interesting.",
+  "source": "tatoeba #345790"
+ },
+ {
+  "zh": "不好意思，我爸爸不在家。",
+  "ru": "Извините, мой отец не дома.",
+  "en": "I'm sorry, my father is out.",
+  "source": "tatoeba #469432"
+ },
+ {
+  "zh": "他明天会在家。",
+  "ru": "Завтра он будет дома.",
+  "en": "He will be at home tomorrow.",
+  "source": "tatoeba #333678"
+ },
+ {
+  "zh": "那是他家。",
+  "ru": "Это его дом.",
+  "en": "That's his house.",
+  "source": "tatoeba #8673598"
+ },
+ {
+  "zh": "我想家。",
+  "ru": "Я хочу домой.",
+  "en": "I'm homesick.",
+  "source": "tatoeba #382434"
+ },
+ {
+  "zh": "不好意思，我要走了。",
+  "ru": "Извините, мне нужно идти.",
+  "en": "I am afraid I must be going now.",
+  "source": "tatoeba #388380"
+ },
+ {
+  "zh": "我要冷死了。",
+  "ru": "Я умру от холода.",
+  "en": "I'm dying of cold.",
+  "source": "tatoeba #11241262"
+ },
+ {
+  "zh": "不，我不要去。",
+  "ru": "Нет, я не пойду.",
+  "en": "No, I don't want to go.",
+  "source": "tatoeba #2817868"
+ },
+ {
+  "zh": "我要走了。",
+  "ru": "Я пойду.",
+  "en": "I'm leaving.",
+  "source": "tatoeba #33"
+ },
+ {
+  "zh": "我不要。",
+  "ru": "Я не хочу.",
+  "en": "I don't want to.",
+  "source": "tatoeba #3068723"
+ },
+ {
+  "zh": "我们需要的是帮助。",
+  "ru": "Что нам нужно, так это помощь.",
+  "en": "What we need is help.",
+  "source": "tatoeba #333457"
+ },
+ {
+  "zh": "我们不再需要你了。",
+  "ru": "Ты нам больше не нужен.",
+  "en": "We no longer need you.",
+  "source": "tatoeba #3593468"
+ },
+ {
+  "zh": "我需要他的帮助。",
+  "ru": "Мне нужна его помощь.",
+  "en": "I need his help.",
+  "source": "tatoeba #343475"
+ },
+ {
+  "zh": "我需要你的帮助。",
+  "ru": "Мне нужна твоя помощь.",
+  "en": "I need your help.",
+  "source": "tatoeba #385201"
+ },
+ {
+  "zh": "我需要帮助。",
+  "ru": "Мне нужна помощь.",
+  "en": "I need help.",
+  "source": "tatoeba #7768354"
+ },
+ {
+  "zh": "我需要你。",
+  "ru": "Ты мне нужен.",
+  "en": "I need you.",
+  "source": "tatoeba #512853"
+ },
+ {
+  "zh": "她真的需要你的帮助。",
+  "ru": "Ей действительно нужна твоя помощь.",
+  "en": "She really needs your help.",
+  "source": "tatoeba #3468059"
+ },
+ {
+  "zh": "那真是太好了。",
+  "ru": "Это просто замечательно.",
+  "en": "That's great.",
+  "source": "tatoeba #5978354"
+ },
+ {
+  "zh": "这不是真的。",
+  "ru": "Это неправда.",
+  "en": "This is not true.",
+  "source": "tatoeba #409219"
+ },
+ {
+  "zh": "真是太好了。",
+  "ru": "Это просто замечательно.",
+  "en": "It's great.",
+  "source": "tatoeba #5942060"
+ },
+ {
+  "zh": "我真的冷。",
+  "ru": "Мне очень холодно.",
+  "en": "I'm very cold.",
+  "source": "tatoeba #6065730"
+ },
+ {
+  "zh": "我今天的运气真好。",
+  "ru": "Мне сегодня очень повезло.",
+  "en": "I've been very lucky today.",
+  "source": "tatoeba #348510"
+ },
+ {
+  "zh": "我今天真是太累了。",
+  "ru": "Я так устал сегодня.",
+  "en": "I'm really tired today.",
+  "source": "tatoeba #499642"
+ },
+ {
+  "zh": "我累死了。",
+  "ru": "Устал до смерти.",
+  "en": "I'm exhausted.",
+  "source": "tatoeba #333923"
+ },
+ {
+  "zh": "我很累。",
+  "ru": "Я устала.",
+  "en": "I'm tired.",
+  "source": "tatoeba #397734"
+ },
+ {
+  "zh": "我累了。",
+  "ru": "Я устал.",
+  "en": "I'm tired.",
+  "source": "tatoeba #517695"
+ },
+ {
+  "zh": "我好累。",
+  "ru": "Я так устала!",
+  "en": "I'm so tired.",
+  "source": "tatoeba #785298"
+ },
+ {
+  "zh": "这可能是真的，可能不是。",
+  "ru": "Возможно, это верно, а возможно, и нет.",
+  "en": "It may or may not be true.",
+  "source": "tatoeba #336680"
+ },
+ {
+  "zh": "那不可能是真的。",
+  "ru": "Это не может быть правдой.",
+  "en": "It can't be true.",
+  "source": "tatoeba #346766"
+ },
+ {
+  "zh": "这是不可能的。",
+  "ru": "Это невозможно.",
+  "en": "This is impossible.",
+  "source": "tatoeba #709492"
+ },
+ {
+  "zh": "他可能病了。",
+  "ru": "Он, наверное, заболел.",
+  "en": "He may have been ill.",
+  "source": "tatoeba #426880"
+ },
+ {
+  "zh": "这不可能！",
+  "ru": "Не может быть!",
+  "en": "It can't be!",
+  "source": "tatoeba #334699"
+ },
+ {
+  "zh": "不可能！",
+  "ru": "Быть не может!",
+  "en": "No way!",
+  "source": "tatoeba #503298"
+ },
+ {
+  "zh": "他上学很可能会迟到。",
+  "ru": "Он, по всей вероятности, опоздает на учёбу.",
+  "en": "He is likely to be late for school.",
+  "source": "tatoeba #334677"
+ },
+ {
+  "zh": "他们到了。",
+  "ru": "Они достигли цели.",
+  "en": "They have arrived.",
+  "source": "tatoeba #1865015"
+ },
+ {
+  "zh": "看到了。",
+  "ru": "Я видел это.",
+  "en": "I saw it.",
+  "source": "tatoeba #2303103"
+ },
+ {
+  "zh": "没有你我无法做到，谢谢。",
+  "ru": "Если бы не ты, я бы не справился, спасибо.",
+  "en": "Thank you, I couldn't do it without you.",
+  "source": "tatoeba #334160"
+ },
+ {
+  "zh": "我做得好到不能再好了。",
+  "ru": "Не могу сделать ничего лучше.",
+  "en": "I did my best.",
+  "source": "tatoeba #335046"
+ },
+ {
+  "zh": "我得走了。",
+  "ru": "Мне пора идти.",
+  "en": "Gotta go.",
+  "source": "tatoeba #345397"
+ },
+ {
+  "zh": "我妈妈英语说得不太好。",
+  "ru": "Моя мама не очень хорошо говорит по-английски.",
+  "en": "My mom doesn't speak English very well.",
+  "source": "tatoeba #335027"
+ },
+ {
+  "zh": "他英语说得很好。",
+  "ru": "Он хорошо говорит по-английски.",
+  "en": "He speaks English well.",
+  "source": "tatoeba #709080"
+ },
+ {
+  "zh": "法语他也会说。",
+  "ru": "Он тоже говорит по-французски.",
+  "en": "He also speaks French.",
+  "source": "tatoeba #1131026"
+ },
+ {
+  "zh": "我不会说汉语。",
+  "ru": "Я не говорю по-китайски.",
+  "en": "I don't speak Chinese.",
+  "source": "tatoeba #3697861"
+ },
+ {
+  "zh": "我不会再说了。",
+  "ru": "Я повторять не буду.",
+  "en": "I won't say it again.",
+  "source": "tatoeba #9959195"
+ },
+ {
+  "zh": "我不说日语。",
+  "ru": "Я не говорю по-японски.",
+  "en": "I don't speak Japanese.",
+  "source": "tatoeba #334909"
+ },
+ {
+  "zh": "他会说法语。",
+  "ru": "Он говорит по-французски.",
+  "en": "He speaks French.",
+  "source": "tatoeba #340482"
+ },
+ {
+  "zh": "她会说法语。",
+  "ru": "Она умеет говорить по-французски.",
+  "en": "She can speak French.",
+  "source": "tatoeba #340485"
+ },
+ {
+  "zh": "不要说日语。",
+  "ru": "Не говори по-японски.",
+  "en": "Don't speak in Japanese.",
+  "source": "tatoeba #389358"
+ },
+ {
+  "zh": "他会说日语。",
+  "ru": "Он умеет говорить по-японски.",
+  "en": "He can speak Japanese.",
+  "source": "tatoeba #697642"
+ },
+ {
+  "zh": "他们说了不。",
+  "ru": "Они сказали нет.",
+  "en": "They said no.",
+  "source": "tatoeba #8932562"
+ },
+ {
+  "zh": "说得也是。",
+  "ru": "И то правда.",
+  "en": "That's true as well.",
+  "source": "tatoeba #776420"
+ },
+ {
+  "zh": "不好意思，你会说英语吗？",
+  "ru": "Извините, вы говорите по-английски?",
+  "en": "Excuse me, do you speak English?",
+  "source": "tatoeba #2479069"
+ },
+ {
+  "zh": "你真的需要车吗？",
+  "ru": "Тебе действительно нужна машина?",
+  "en": "Do you really need a car?",
+  "source": "tatoeba #5780552"
+ },
+ {
+  "zh": "明天天气会好吗？",
+  "ru": "Завтра будет хорошая погода?",
+  "en": "Will the weather be good tomorrow?",
+  "source": "tatoeba #385107"
+ },
+ {
+  "zh": "她会说法语吗？",
+  "ru": "Она умеет говорить по-французски?",
+  "en": "Does she speak French?",
+  "source": "tatoeba #340486"
+ },
+ {
+  "zh": "你是日本人吗？",
+  "ru": "Вы японец?",
+  "en": "Are you Japanese?",
+  "source": "tatoeba #820939"
+ },
+ {
+  "zh": "你需要帮助吗？",
+  "ru": "Тебе нужна помощь?",
+  "en": "Do you need help?",
+  "source": "tatoeba #1424333"
+ },
+ {
+  "zh": "这是你要的吗？",
+  "ru": "Ты этого хочешь?",
+  "en": "Is this something you want?",
+  "source": "tatoeba #5663588"
+ },
+ {
+  "zh": "你能说汉语吗？",
+  "ru": "Ты можешь говорить по-китайски?",
+  "en": "Can you speak Chinese?",
+  "source": "tatoeba #10966843"
+ },
+ {
+  "zh": "你是学生吗？",
+  "ru": "Ты студент?",
+  "en": "Are you a student?",
+  "source": "tatoeba #352933"
+ },
+ {
+  "zh": "他说英语吗？",
+  "ru": "Он говорит по-английски?",
+  "en": "Can he speak English?",
+  "source": "tatoeba #430978"
+ },
+ {
+  "zh": "您学英语吗？",
+  "ru": "Вы изучаете английский язык?",
+  "en": "Do you study English?",
+  "source": "tatoeba #469341"
+ },
+ {
+  "zh": "她讲法语吗？",
+  "ru": "Она говорит по-французски?",
+  "en": "Does she speak French?",
+  "source": "tatoeba #475827"
+ },
+ {
+  "zh": "您生气了吗？",
+  "ru": "Вы рассержены?",
+  "en": "Are you mad?",
+  "source": "tatoeba #476597"
+ },
+ {
+  "zh": "你生气了吗？",
+  "ru": "Ты злишься?",
+  "en": "Are you mad?",
+  "source": "tatoeba #476598"
+ },
+ {
+  "zh": "您能帮我吗？",
+  "ru": "Можете мне помочь?",
+  "en": "Can you help me?",
+  "source": "tatoeba #7772052"
+ },
+ {
+  "zh": "你说完了吗？",
+  "ru": "У тебя всё?",
+  "en": "Are you done talking?",
+  "source": "tatoeba #7774372"
+ },
+ {
+  "zh": "你是我爸吗？",
+  "ru": "Ты мой папа?",
+  "en": "Are you my father?",
+  "source": "tatoeba #9972811"
+ },
+ {
+  "zh": "你说英语吗？",
+  "ru": "Ты говоришь по-английски?",
+  "en": "Do you speak English?",
+  "source": "tatoeba #10052415"
+ },
+ {
+  "zh": "你能看吗？",
+  "ru": "Можешь посмотреть?",
+  "en": "Can you see?",
+  "source": "tatoeba #1783787"
+ },
+ {
+  "zh": "你想我吗？",
+  "ru": "Ты по мне скучаешь?",
+  "en": "Do you miss me?",
+  "source": "tatoeba #4835859"
+ },
+ {
+  "zh": "你不热吗？",
+  "ru": "Тебе не жарко?",
+  "en": "Aren't you hot?",
+  "source": "tatoeba #4956714"
+ },
+ {
+  "zh": "有人吗？",
+  "ru": "Есть здесь кто-нибудь?",
+  "en": "Anybody here?",
+  "source": "tatoeba #450959"
+ },
+ {
+  "zh": "是你吗？",
+  "ru": "Это ты?",
+  "en": "Is it you?",
+  "source": "tatoeba #10696048"
+ },
+ {
+  "zh": "在这里有人会说汉语吗？",
+  "ru": "Здесь кто-нибудь говорит по-китайски?",
+  "en": "Can anyone here speak Mandarin?",
+  "source": "tatoeba #1173432"
+ },
+ {
+  "zh": "你家里人都还好吗？",
+  "ru": "Твоя семья в порядке?",
+  "en": "How is your family?",
+  "source": "tatoeba #5097884"
+ },
+ {
+  "zh": "你家里有书吗？",
+  "ru": "У тебя дома есть книги?",
+  "en": "Are there books in your house?",
+  "source": "tatoeba #397368"
+ },
+ {
+  "zh": "你在家里吗？",
+  "ru": "Ты дома?",
+  "en": "Are you at home?",
+  "source": "tatoeba #406192"
+ },
+ {
+  "zh": "家里有人吗？",
+  "ru": "Есть кто дома?",
+  "en": "Anyone home?",
+  "source": "tatoeba #12918650"
+ },
+ {
+  "zh": "这里很冷。",
+  "ru": "Тут очень холодно.",
+  "en": "It's very cold here.",
+  "source": "tatoeba #381930"
+ },
+ {
+  "zh": "在这里吗？",
+  "ru": "Здесь?",
+  "en": "Is it here?",
+  "source": "tatoeba #1175767"
+ },
+ {
+  "zh": "她所说的话是不真实的。",
+  "ru": "То, что она говорит, - неправда.",
+  "en": "What she said wasn't true.",
+  "source": "tatoeba #340637"
+ },
+ {
+  "zh": "我昨天晚上到了这儿。",
+  "ru": "Я приехал сюда вчера вечером.",
+  "en": "I arrived here last night.",
+  "source": "tatoeba #387070"
+ },
+ {
+  "zh": "那本书在哪儿？",
+  "ru": "Где книга?",
+  "en": "Where is the book?",
+  "source": "tatoeba #1786106"
+ },
+ {
+  "zh": "他还在这儿。",
+  "ru": "Он ещё здесь.",
+  "en": "He is still here.",
+  "source": "tatoeba #465860"
+ },
+ {
+  "zh": "我们去哪儿？",
+  "ru": "Куда мы идём?",
+  "en": "Where do we go?",
+  "source": "tatoeba #471103"
+ },
+ {
+  "zh": "我们在哪儿？",
+  "ru": "Где мы?",
+  "en": "Where are we?",
+  "source": "tatoeba #573150"
+ },
+ {
+  "zh": "她家在哪儿？",
+  "ru": "Где её дом?",
+  "en": "Where is her house?",
+  "source": "tatoeba #1691786"
+ },
+ {
+  "zh": "你去哪儿？",
+  "ru": "Куда ты идёшь?",
+  "en": "Where are you going?",
+  "source": "tatoeba #389803"
+ },
+ {
+  "zh": "我的法语说得不够好。",
+  "ru": "Я говорю по-французски недостаточно хорошо.",
+  "en": "My French isn't good enough.",
+  "source": "tatoeba #472809"
+ },
+ {
+  "zh": "不够吗？",
+  "ru": "Этого не достаточно?",
+  "en": "Is that not enough?",
+  "source": "tatoeba #2081687"
+ },
+ {
+  "zh": "今天早上我起得很晚。",
+  "ru": "Сегодня утром я встал очень поздно.",
+  "en": "I got up very late this morning.",
+  "source": "tatoeba #880987"
+ },
+ {
+  "zh": "他不早起。",
+  "ru": "Он не встаёт рано.",
+  "en": "He does not get up early.",
+  "source": "tatoeba #336654"
+ },
+ {
+  "zh": "我不早起。",
+  "ru": "Я рано не встаю.",
+  "en": "I don't get up early.",
+  "source": "tatoeba #11509565"
+ },
+ {
+  "zh": "请问，你会说法语吗？",
+  "ru": "Простите, Вы говорите по-французски?",
+  "en": "Excuse me, do you speak French?",
+  "source": "tatoeba #8904350"
+ },
+ {
+  "zh": "请看看这里。",
+  "ru": "Посмотрите на это, пожалуйста.",
+  "en": "Please take a look at this.",
+  "source": "tatoeba #8777611"
+ },
+ {
+  "zh": "请帮帮她！",
+  "ru": "Помоги ей, пожалуйста!",
+  "en": "Please, help her!",
+  "source": "tatoeba #9991961"
+ },
+ {
+  "zh": "请喝茶！",
+  "ru": "Пожалуйста, выпейте чаю.",
+  "en": "Please drink tea.",
+  "source": "tatoeba #1216135"
+ },
+ {
+  "zh": "我好久没见到她了。",
+  "ru": "Я очень давно её не видел.",
+  "en": "I haven't seen her in a long time.",
+  "source": "tatoeba #345979"
+ },
+ {
+  "zh": "好久不见了。",
+  "ru": "Давно не виделись.",
+  "en": "Long time no see.",
+  "source": "tatoeba #710777"
+ },
+ {
+  "zh": "其实他没去过美国。",
+  "ru": "На самом деле он не был в Америке.",
+  "en": "He hasn't actually been to America.",
+  "source": "tatoeba #2833113"
+ },
+ {
+  "zh": "所有人都注意到了。",
+  "ru": "Все это заметили.",
+  "en": "Everyone noticed.",
+  "source": "tatoeba #5092609"
+ },
+ {
+  "zh": "你没注意到吗？",
+  "ru": "Ты этого не заметил?",
+  "en": "Didn't you notice?",
+  "source": "tatoeba #9958192"
+ },
+ {
+  "zh": "请注意！",
+  "ru": "Будь внимателен!",
+  "en": "Pay attention!",
+  "source": "tatoeba #426717"
+ },
+ {
+  "zh": "我能找到的都在那。",
+  "ru": "Это всё, что я смог найти.",
+  "en": "That's all I could find.",
+  "source": "tatoeba #5574363"
+ },
+ {
+  "zh": "我今早上课迟到了。",
+  "ru": "Я сегодня утром опоздал на урок.",
+  "en": "I was late for class this morning.",
+  "source": "tatoeba #9637799"
+ },
+ {
+  "zh": "这本课本很好。",
+  "ru": "Это хороший учебник.",
+  "en": "This is a good textbook.",
+  "source": "tatoeba #475474"
+ },
+ {
+  "zh": "我们明天下午不上课。",
+  "ru": "Завтра днем у нас нет уроков.",
+  "en": "We don't have class tomorrow afternoon.",
+  "source": "tatoeba #8293438"
+ },
+ {
+  "zh": "明天可能会下雨。",
+  "ru": "Завтра, возможно, будет дождь.",
+  "en": "It may rain tomorrow.",
+  "source": "tatoeba #333813"
+ },
+ {
+  "zh": "明天会下雨吗？",
+  "ru": "Может ли завтра пойти дождь?",
+  "en": "Will it rain tomorrow?",
+  "source": "tatoeba #333928"
+ },
+ {
+  "zh": "下午我不在家。",
+  "ru": "После полудня меня не будет дома.",
+  "en": "I won't be home this afternoon.",
+  "source": "tatoeba #423411"
+ },
+ {
+  "zh": "今天下雨了。",
+  "ru": "Сегодня пошел дождь.",
+  "en": "It's rainy today.",
+  "source": "tatoeba #686757"
+ },
+ {
+  "zh": "昨天下雨了。",
+  "ru": "Вчера шёл дождь.",
+  "en": "It rained yesterday.",
+  "source": "tatoeba #819458"
+ },
+ {
+  "zh": "在下雨吗？",
+  "ru": "Идёт дождь?",
+  "en": "Is it raining?",
+  "source": "tatoeba #10617221"
+ },
+ {
+  "zh": "下雨了。",
+  "ru": "Идёт дождь.",
+  "en": "It's raining.",
+  "source": "tatoeba #346836"
+ },
+ {
+  "zh": "在下雨。",
+  "ru": "Идёт дождь.",
+  "en": "It's raining.",
+  "source": "tatoeba #409681"
+ },
+ {
+  "zh": "下午好。",
+  "ru": "Добрый день.",
+  "en": "Good afternoon.",
+  "source": "tatoeba #812493"
+ },
+ {
+  "zh": "下雨吗？",
+  "ru": "Идёт дождь?",
+  "en": "Is it raining?",
+  "source": "tatoeba #1289086"
+ },
+ {
+  "zh": "我觉得明天会很热。",
+  "ru": "Думаю, завтра будет жарко.",
+  "en": "I think it'll be hot tomorrow.",
+  "source": "tatoeba #9955857"
+ },
+ {
+  "zh": "我觉得很热。",
+  "ru": "Мне жарко.",
+  "en": "I'm hot.",
+  "source": "tatoeba #489080"
+ },
+ {
+  "zh": "我觉得是你。",
+  "ru": "Думаю, что ты.",
+  "en": "I think that it's you.",
+  "source": "tatoeba #966523"
+ },
+ {
+  "zh": "我觉得冷。",
+  "ru": "Мне холодно.",
+  "en": "I feel cold.",
+  "source": "tatoeba #352054"
+ },
+ {
+  "zh": "我觉得这主意不行。",
+  "ru": "Не думаю, что это хорошая идея.",
+  "en": "I don't think it's a good idea.",
+  "source": "tatoeba #8463547"
+ },
+ {
+  "zh": "他喜欢旅行。我也是。",
+  "ru": "Ему нравится путешествовать. Мне тоже.",
+  "en": "He likes to travel. I do, too.",
+  "source": "tatoeba #330591"
+ },
+ {
+  "zh": "我喜欢旅行。",
+  "ru": "Я люблю путешествовать.",
+  "en": "I love trips.",
+  "source": "tatoeba #180700"
+ },
+ {
+  "zh": "你没看见那个人吗？",
+  "ru": "Ты не видел этого человека?",
+  "en": "Have you seen that person?",
+  "source": "tatoeba #10966819"
+ },
+ {
+  "zh": "我不是这个意思。",
+  "ru": "Я не об этом.",
+  "en": "I didn't mean it.",
+  "source": "tatoeba #461601"
+ },
+ {
+  "zh": "我喜欢那个人。",
+  "ru": "Мне нравится этот человек.",
+  "en": "I like that person.",
+  "source": "tatoeba #1749861"
+ },
+ {
+  "zh": "没人问你这个。",
+  "ru": "Тебя никто об этом не спрашивал.",
+  "en": "Nobody asked you.",
+  "source": "tatoeba #13751977"
+ },
+ {
+  "zh": "他是个好人。",
+  "ru": "Он хороший человек.",
+  "en": "He's a good man.",
+  "source": "tatoeba #363983"
+ },
+ {
+  "zh": "你是个美人。",
+  "ru": "Ты красавица.",
+  "en": "You're a beautiful woman.",
+  "source": "tatoeba #3671259"
+ },
+ {
+  "zh": "这个不会。",
+  "ru": "Этот не будет.",
+  "en": "This one won't.",
+  "source": "tatoeba #2930903"
+ },
+ {
+  "zh": "我的字典里没有这个词。",
+  "ru": "В моём словаре нет этого слова.",
+  "en": "The word is not in my dictionary.",
+  "source": "tatoeba #336699"
+ },
+ {
+  "zh": "你有法语词典吗？",
+  "ru": "У вас есть французский словарь?",
+  "en": "Do you have a French dictionary?",
+  "source": "tatoeba #9101911"
+ },
+ {
+  "zh": "我有词典。",
+  "ru": "У меня есть словарь.",
+  "en": "I have a dictionary.",
+  "source": "tatoeba #695413"
+ },
+ {
+  "zh": "不是每个人都是老实的。",
+  "ru": "Не все честны.",
+  "en": "Not everyone is honest.",
+  "source": "tatoeba #375306"
+ },
+ {
+  "zh": "我是个老实人。",
+  "ru": "Я честный человек.",
+  "en": "I'm an honest person.",
+  "source": "tatoeba #426409"
+ },
+ {
+  "zh": "这是我们汉语老师的车。",
+  "ru": "Это машина нашего учителя по китайскому языку.",
+  "en": "This is our Chinese language teacher's car.",
+  "source": "tatoeba #10338222"
+ },
+ {
+  "zh": "老师说明了词的意思。",
+  "ru": "Учитель объяснил нам значение слова.",
+  "en": "The teacher explained the meaning of the word to us.",
+  "source": "tatoeba #396829"
+ },
+ {
+  "zh": "他们都是好老师。",
+  "ru": "Все они хорошие учителя.",
+  "en": "They are all good teachers.",
+  "source": "tatoeba #333284"
+ },
+ {
+  "zh": "我不是法语老师。",
+  "ru": "Я не учитель французского.",
+  "en": "I'm not a French teacher.",
+  "source": "tatoeba #9927281"
+ },
+ {
+  "zh": "我是老师。",
+  "ru": "Я учитель.",
+  "en": "I'm a teacher.",
+  "source": "tatoeba #1050441"
+ },
+ {
+  "zh": "你是从哪个国家来的？",
+  "ru": "Из какой ты страны?",
+  "en": "What country are you from?",
+  "source": "tatoeba #75"
+ },
+ {
+  "zh": "我不是来了吗？",
+  "ru": "Я разве не пришёл?",
+  "en": "I came, didn't I?",
+  "source": "tatoeba #405506"
+ },
+ {
+  "zh": "她还没有到来。",
+  "ru": "Она ещё не пришла.",
+  "en": "She hasn't come yet.",
+  "source": "tatoeba #840439"
+ },
+ {
+  "zh": "没有人来了。",
+  "ru": "Никто не пришёл.",
+  "en": "No one came.",
+  "source": "tatoeba #501581"
+ },
+ {
+  "zh": "其中一个学生今天没来。",
+  "ru": "Один из студентов сегодня не пришёл.",
+  "en": "One of the students didn't come today.",
+  "source": "tatoeba #408899"
+ },
+ {
+  "zh": "我是一个好人。",
+  "ru": "Я хороший человек.",
+  "en": "I'm a good guy.",
+  "source": "tatoeba #1786008"
+ },
+ {
+  "zh": "我有一本书。",
+  "ru": "У меня есть книга.",
+  "en": "I have a book.",
+  "source": "tatoeba #526974"
+ },
+ {
+  "zh": "我有一个家。",
+  "ru": "У меня есть дом.",
+  "en": "I have a home.",
+  "source": "tatoeba #1786136"
+ },
+ {
+  "zh": "帮我一下。",
+  "ru": "Помогите мне.",
+  "en": "Help me.",
+  "source": "tatoeba #332800"
+ },
+ {
+  "zh": "一会儿见！",
+  "ru": "Скоро увидимся.",
+  "en": "See you soon!",
+  "source": "tatoeba #337874"
+ },
+ {
+  "zh": "等一下。",
+  "ru": "Подожди минуту.",
+  "en": "Wait a moment.",
+  "source": "tatoeba #9007563"
+ },
+ {
+  "zh": "他的看法真是一文不值。",
+  "ru": "Его идеи не заработали ему ни копейки.",
+  "en": "His ideas never earned him a single penny.",
+  "source": "tatoeba #474782"
+ },
+ {
+  "zh": "我觉得这值得一问。",
+  "ru": "Я считаю, это заслуживает того, чтобы спросить.",
+  "en": "I think it's worth asking.",
+  "source": "tatoeba #344212"
+ },
+ {
+  "zh": "日本是个富有的国家。",
+  "ru": "Япония — богатая страна.",
+  "en": "Japan is a rich country.",
+  "source": "tatoeba #345924"
+ },
+ {
+  "zh": "日本是个美丽的国家。",
+  "ru": "Япония — красивая страна.",
+  "en": "Japan is a beautiful country.",
+  "source": "tatoeba #366850"
+ },
+ {
+  "zh": "我周日从来都不在家。",
+  "ru": "По воскресеньям меня не бывает дома.",
+  "en": "I am never at home on Sundays.",
+  "source": "tatoeba #472874"
+ },
+ {
+  "zh": "我周日从不在家。",
+  "ru": "По воскресеньям меня никогда нет дома.",
+  "en": "I'm never at home on Sundays.",
+  "source": "tatoeba #406736"
+ },
+ {
+  "zh": "他气得说不出话来了。",
+  "ru": "Он был так зол, что не мог даже говорить.",
+  "en": "He was so angry he couldn't speak.",
+  "source": "tatoeba #1316154"
+ },
+ {
+  "zh": "她从车里出来了。",
+  "ru": "Она вышла из машины.",
+  "en": "She got out of the car.",
+  "source": "tatoeba #407251"
+ },
+ {
+  "zh": "我想要出国。",
+  "ru": "Я хочу уехать за границу.",
+  "en": "I want to go abroad.",
+  "source": "tatoeba #394187"
+ },
+ {
+  "zh": "我没出息。",
+  "ru": "У меня нет будущего.",
+  "en": "I have no future.",
+  "source": "tatoeba #1169923"
+ },
+ {
+  "zh": "玛丽明天会来帮我们。",
+  "ru": "Завтра Мэри нам поможет.",
+  "en": "Mary is going to help us tomorrow.",
+  "source": "tatoeba #1358629"
+ },
+ {
+  "zh": "你看起来像个老实人。",
+  "ru": "Похоже, ты честный человек.",
+  "en": "You seem to be an honest man.",
+  "source": "tatoeba #1992626"
+ },
+ {
+  "zh": "看起来像天书。",
+  "ru": "Это для меня китайская грамота.",
+  "en": "That's Greek to me.",
+  "source": "tatoeba #426700"
+ },
+ {
+  "zh": "好像她病了。",
+  "ru": "Похоже, она больна.",
+  "en": "She seemed to have been ill.",
+  "source": "tatoeba #795744"
+ },
+ {
+  "zh": "他好像病了。",
+  "ru": "Кажется, он болен.",
+  "en": "He seems to be ill.",
+  "source": "tatoeba #845112"
+ },
+ {
+  "zh": "这太不像话。",
+  "ru": "Это ни на что не похоже.",
+  "en": "It doesn't look like anything.",
+  "source": "tatoeba #3883059"
+ },
+ {
+  "zh": "你不能跟我们一起去。",
+  "ru": "Ты не можешь пойти с нами.",
+  "en": "You can't come with us.",
+  "source": "tatoeba #3389748"
+ },
+ {
+  "zh": "你在跟我说话吗？",
+  "ru": "Ты со мной говоришь?",
+  "en": "Are you talking to me?",
+  "source": "tatoeba #478844"
+ },
+ {
+  "zh": "我不跟你要好了。",
+  "ru": "Я больше не твой друг.",
+  "en": "I'm going to stop trying to be friendly with you.",
+  "source": "tatoeba #2637077"
+ },
+ {
+  "zh": "跟我们来。",
+  "ru": "Пойдём с нами.",
+  "en": "Come with us.",
+  "source": "tatoeba #778962"
+ },
+ {
+  "zh": "跟我来！",
+  "ru": "Иди за мной!",
+  "en": "Come with me!",
+  "source": "tatoeba #419988"
+ },
+ {
+  "zh": "你走得太快我跟不上。",
+  "ru": "Ты слишком быстро идёшь, поэтому я отстаю.",
+  "en": "You walk too fast for me to keep up with you.",
+  "source": "tatoeba #7012162"
+ },
+ {
+  "zh": "我想快要下雨了。",
+  "ru": "Кажется, дождь собирается.",
+  "en": "I think it's going to rain.",
+  "source": "tatoeba #389521"
+ },
+ {
+  "zh": "说时迟，那时快。",
+  "ru": "Сказано — сделано.",
+  "en": "It's slow to say, but it was quick.",
+  "source": "tatoeba #1762996"
+ },
+ {
+  "zh": "你学得很快。",
+  "ru": "Ты быстро учишься.",
+  "en": "You are a fast learner.",
+  "source": "tatoeba #4297288"
+ },
+ {
+  "zh": "您走太快了。",
+  "ru": "Вы идёте слишком быстро.",
+  "en": "You're walking too fast.",
+  "source": "tatoeba #9968956"
+ },
+ {
+  "zh": "生日快乐！",
+  "ru": "С днём рождения!",
+  "en": "Happy birthday!",
+  "source": "tatoeba #346492"
+ },
+ {
+  "zh": "快到家了。",
+  "ru": "Мы почти дома.",
+  "en": "We're almost home.",
+  "source": "tatoeba #12836670"
+ },
+ {
+  "zh": "我要在那里跟她见面。",
+  "ru": "Я собираюсь встретиться с ней там.",
+  "en": "I'm going to meet her there.",
+  "source": "tatoeba #9970072"
+ },
+ {
+  "zh": "每个人都是一个世界。",
+  "ru": "Каждый человек - это целый мир.",
+  "en": "Each person is a world.",
+  "source": "tatoeba #503242"
+ },
+ {
+  "zh": "你好，世界！",
+  "ru": "Здравствуй, мир!",
+  "en": "Hello, world!",
+  "source": "tatoeba #398749"
+ },
+ {
+  "zh": "我觉得世界语很难学。",
+  "ru": "По-моему, эсперанто очень сложен.",
+  "en": "In my opinion, Esperanto is very difficult.",
+  "source": "tatoeba #957454"
+ },
+ {
+  "zh": "这很难。",
+  "ru": "Это трудно.",
+  "en": "This is difficult.",
+  "source": "tatoeba #869094"
+ },
+ {
+  "zh": "这本书对我来说很难读。",
+  "ru": "Мне трудно читать эту книгу.",
+  "en": "This book is hard for me to read.",
+  "source": "tatoeba #465937"
+ },
+ {
+  "zh": "你是在对我说吗？",
+  "ru": "Ты сейчас мне говорил?",
+  "en": "Are you talking to me?",
+  "source": "tatoeba #1827545"
+ },
+ {
+  "zh": "对不起，我爱你。",
+  "ru": "Извини, я люблю тебя.",
+  "en": "I'm sorry, I love you.",
+  "source": "tatoeba #352613"
+ },
+ {
+  "zh": "你是对的。",
+  "ru": "Ты прав.",
+  "en": "You're right.",
+  "source": "tatoeba #349193"
+ },
+ {
+  "zh": "对不起。",
+  "ru": "Извините.",
+  "en": "Sorry.",
+  "source": "tatoeba #472304"
+ },
+ {
+  "zh": "有一天你会忘了我。",
+  "ru": "Когда-нибудь ты меня забудешь.",
+  "en": "You'll forget about me someday.",
+  "source": "tatoeba #334164"
+ },
+ {
+  "zh": "我没有忘。",
+  "ru": "Я не забыл.",
+  "en": "I didn't forget.",
+  "source": "tatoeba #902035"
+ },
+ {
+  "zh": "他一个人住在那儿。",
+  "ru": "Он живёт там один.",
+  "en": "He lives there alone.",
+  "source": "tatoeba #343414"
+ },
+ {
+  "zh": "他住在这里吗？",
+  "ru": "Он тут живёт?",
+  "en": "Does he live here?",
+  "source": "tatoeba #136598"
+ },
+ {
+  "zh": "他没有家可住。",
+  "ru": "Ему было негде жить.",
+  "en": "He had no place to live.",
+  "source": "tatoeba #736511"
+ },
+ {
+  "zh": "我想住在这里。",
+  "ru": "Я хочу здесь жить.",
+  "en": "I want to live here.",
+  "source": "tatoeba #10260768"
+ },
+ {
+  "zh": "你住在哪里？",
+  "ru": "Где ты живёшь?",
+  "en": "Where do you live?",
+  "source": "tatoeba #136401"
+ },
+ {
+  "zh": "他住在哪里？",
+  "ru": "Где он живёт?",
+  "en": "Where does he live?",
+  "source": "tatoeba #7768199"
+ },
+ {
+  "zh": "你不能再住在这边了。",
+  "ru": "Ты больше не можешь жить на этой стороне.",
+  "en": "You can't live on this side anymore.",
+  "source": "tatoeba #480125"
+ },
+ {
+  "zh": "我一个人去那边。",
+  "ru": "Я пойду туда один.",
+  "en": "I'm going there alone.",
+  "source": "tatoeba #405492"
+ },
+ {
+  "zh": "他再也忍不住气了。",
+  "ru": "Он не мог больше сдержать раздражения.",
+  "en": "He could no longer contain his anger.",
+  "source": "tatoeba #336439"
+ },
+ {
+  "zh": "他明天出发去中国。",
+  "ru": "Завтра он отправляется в Китай.",
+  "en": "He leaves for China tomorrow.",
+  "source": "tatoeba #363883"
+ },
+ {
+  "zh": "那有时会发生。",
+  "ru": "Бывает иногда.",
+  "en": "Sometimes it happens.",
+  "source": "tatoeba #10535638"
+ },
+ {
+  "zh": "所有被发明的都是真的。",
+  "ru": "Всё то, что было изобретено, правильно.",
+  "en": "All that which is invented, is true.",
+  "source": "tatoeba #62"
+ },
+ {
+  "zh": "那是一个真正的人。",
+  "ru": "Это настоящий человек.",
+  "en": "That's a real person.",
+  "source": "tatoeba #402774"
+ },
+ {
+  "zh": "她正要出去。",
+  "ru": "Она собиралась уйти.",
+  "en": "She was about to leave.",
+  "source": "tatoeba #392259"
+ },
+ {
+  "zh": "这个看法可能是正确的。",
+  "ru": "Возможно, это мнение верно.",
+  "en": "Maybe this opinion is correct.",
+  "source": "tatoeba #888422"
+ },
+ {
+  "zh": "她看起来确实很累。",
+  "ru": "Она действительно выглядит усталой.",
+  "en": "She does look tired.",
+  "source": "tatoeba #896357"
+ },
+ {
+  "zh": "她是一位真正的美人。",
+  "ru": "Она настоящая красавица.",
+  "en": "She's a real beauty.",
+  "source": "tatoeba #425569"
+ },
+ {
+  "zh": "我是一位美国人。",
+  "ru": "Я американец.",
+  "en": "I am an American.",
+  "source": "tatoeba #813277"
+ },
+ {
+  "zh": "他说话就像一位老师。",
+  "ru": "Он говорит, как учитель.",
+  "en": "He talks as if he were a teacher.",
+  "source": "tatoeba #718456"
+ },
+ {
+  "zh": "我想要的就是这个。",
+  "ru": "Это именно то, что я хотел.",
+  "en": "It's just what I wanted.",
+  "source": "tatoeba #1314313"
+ },
+ {
+  "zh": "想要被爱就得去爱。",
+  "ru": "Если хочешь быть любимым — люби!",
+  "en": "Love if you want to be loved!",
+  "source": "tatoeba #4757693"
+ },
+ {
+  "zh": "这就要看你了。",
+  "ru": "Как хочешь.",
+  "en": "It's up to you.",
+  "source": "tatoeba #347705"
+ },
+ {
+  "zh": "他很快就好了。",
+  "ru": "Он скоро закончит.",
+  "en": "He'll be done soon.",
+  "source": "tatoeba #410788"
+ },
+ {
+  "zh": "我家就是你家。",
+  "ru": "Мой дом — твой дом.",
+  "en": "My home is your home.",
+  "source": "tatoeba #6057775"
+ },
+ {
+  "zh": "那就是人生",
+  "ru": "Такова жизнь!",
+  "en": "Such is life!",
+  "source": "tatoeba #4546933"
+ },
+ {
+  "zh": "人就是人。",
+  "ru": "Люди есть люди.",
+  "en": "People are people.",
+  "source": "tatoeba #13715720"
+ },
+ {
+  "zh": "我生来就是为了爱你的。",
+  "ru": "Я рождён только для того, чтобы любить тебя.",
+  "en": "I was born to love you.",
+  "source": "tatoeba #472332"
+ },
+ {
+  "zh": "我是为你来的。",
+  "ru": "Я пришла за тобой.",
+  "en": "It's you I've come for.",
+  "source": "tatoeba #4287488"
+ },
+ {
+  "zh": "因为下雨，我们不能出去。",
+  "ru": "Мы не можем выйти на улицу из-за дождя.",
+  "en": "We can't go outside because it's raining.",
+  "source": "tatoeba #481162"
+ },
+ {
+  "zh": "你只要坐在这儿就行了。",
+  "ru": "Тебе просто нужно сесть здесь.",
+  "en": "You have only to sit here.",
+  "source": "tatoeba #1516196"
+ },
+ {
+  "zh": "你们想坐一下吗？",
+  "ru": "Не хотите ли присесть?",
+  "en": "Do you want to sit down?",
+  "source": "tatoeba #1307775"
+ },
+ {
+  "zh": "你是不是想坐下？",
+  "ru": "Ты хочешь сесть?",
+  "en": "Do you want to sit down?",
+  "source": "tatoeba #1307774"
+ },
+ {
+  "zh": "老人坐了下来。",
+  "ru": "Старик сел.",
+  "en": "The old man sat down.",
+  "source": "tatoeba #332886"
+ },
+ {
+  "zh": "我想坐下来。",
+  "ru": "Я хочу сесть.",
+  "en": "I want to sit down.",
+  "source": "tatoeba #3666937"
+ },
+ {
+  "zh": "请坐一下。",
+  "ru": "Сядь, пожалуйста!",
+  "en": "Please sit down.",
+  "source": "tatoeba #415599"
+ },
+ {
+  "zh": "我不认为明天会下雨。",
+  "ru": "Я не думаю, что завтра может быть дождь.",
+  "en": "I don't think it'll rain tomorrow.",
+  "source": "tatoeba #333815"
+ },
+ {
+  "zh": "我没有认出来他们。",
+  "ru": "Я их не узнал.",
+  "en": "I did not recognise them.",
+  "source": "tatoeba #4444844"
+ },
+ {
+  "zh": "我不认为是你做的。",
+  "ru": "Не думаю, что ты это сделал.",
+  "en": "I don't think you did this.",
+  "source": "tatoeba #7841390"
+ },
+ {
+  "zh": "她好像没认出我。",
+  "ru": "Похоже, она меня не узнала.",
+  "en": "She didn't appear to recognize me.",
+  "source": "tatoeba #8924824"
+ },
+ {
+  "zh": "你是认真的吗？",
+  "ru": "Ты серьезно?",
+  "en": "Are you serious?",
+  "source": "tatoeba #4887667"
+ },
+ {
+  "zh": "就算你不想，你也得走。",
+  "ru": "Даже если ты не хочешь, тебе нужно идти.",
+  "en": "Even if you don't want to, you have to go.",
+  "source": "tatoeba #4061619"
+ },
+ {
+  "zh": "他的弟弟学习很认真。",
+  "ru": "Его брат учился очень усердно.",
+  "en": "His brother studies hard.",
+  "source": "tatoeba #3488703"
+ },
+ {
+  "zh": "他弟弟很认真学习。",
+  "ru": "Его брат учился очень усердно.",
+  "en": "His brother studies hard.",
+  "source": "tatoeba #3488702"
+ },
+ {
+  "zh": "他是我弟弟。",
+  "ru": "Он мой младший брат.",
+  "en": "He's my younger brother.",
+  "source": "tatoeba #771449"
+ },
+ {
+  "zh": "他的哥哥学习很认真。",
+  "ru": "Его брат учился очень усердно.",
+  "en": "His brother studies hard.",
+  "source": "tatoeba #3488706"
+ },
+ {
+  "zh": "他哥哥很认真学习。",
+  "ru": "Его брат учился очень усердно.",
+  "en": "His brother studies hard.",
+  "source": "tatoeba #3488715"
+ },
+ {
+  "zh": "我有个哥哥。",
+  "ru": "У меня есть брат.",
+  "en": "I have an older brother.",
+  "source": "tatoeba #679442"
+ },
+ {
+  "zh": "再来一步，你就死了！",
+  "ru": "Ещё шаг, и ты умрёшь!",
+  "en": "One more step, and you're dead.",
+  "source": "tatoeba #7781443"
+ },
+ {
+  "zh": "我们三个都是学生。",
+  "ru": "Мы трое все студенты.",
+  "en": "All three of us are students.",
+  "source": "tatoeba #410489"
+ },
+ {
+  "zh": "他去世三年了。",
+  "ru": "Три года, как он умер.",
+  "en": "He has been dead for three years.",
+  "source": "tatoeba #889544"
+ },
+ {
+  "zh": "雨下了三天。",
+  "ru": "Три дня шли дожди.",
+  "en": "It was rainy for three days.",
+  "source": "tatoeba #2807844"
+ },
+ {
+  "zh": "我们会在那里待上三周。",
+  "ru": "Мы остановимся здесь на три недели.",
+  "en": "We're going to stay there for three weeks.",
+  "source": "tatoeba #11236315"
+ },
+ {
+  "zh": "不要等待！",
+  "ru": "Не жди.",
+  "en": "Don't wait.",
+  "source": "tatoeba #4970132"
+ },
+ {
+  "zh": "中国发展得太快了。",
+  "ru": "Китай развивается слишком быстро.",
+  "en": "China's developing too quickly.",
+  "source": "tatoeba #533405"
+ },
+ {
+  "zh": "它比你想像的要难。",
+  "ru": "Это труднее, чем ты думаешь.",
+  "en": "It's more difficult than you think.",
+  "source": "tatoeba #1539385"
+ },
+ {
+  "zh": "我马上就认出了他。",
+  "ru": "Я сразу его узнал.",
+  "en": "I recognized him instantly.",
+  "source": "tatoeba #1565718"
+ },
+ {
+  "zh": "你必需马上去那儿。",
+  "ru": "Ты обязан немедленно быть там.",
+  "en": "It is necessary for you to go there immediately.",
+  "source": "tatoeba #336678"
+ },
+ {
+  "zh": "我想没这个必要。",
+  "ru": "Думаю, в этом нет необходимости.",
+  "en": "I don't think that it's necessary.",
+  "source": "tatoeba #7768256"
+ },
+ {
+  "zh": "不必在意。",
+  "ru": "Попустись.",
+  "en": "Forget it.",
+  "source": "tatoeba #345723"
+ },
+ {
+  "zh": "他是一个生物学家。",
+  "ru": "Он биолог.",
+  "en": "He's a biologist.",
+  "source": "tatoeba #1706402"
+ },
+ {
+  "zh": "他是生物学家。",
+  "ru": "Он биолог.",
+  "en": "He's a biologist.",
+  "source": "tatoeba #3076614"
+ },
+ {
+  "zh": "她从家里跑了出来。",
+  "ru": "Она выбежала из дома.",
+  "en": "She's running from home.",
+  "source": "tatoeba #1944807"
+ },
+ {
+  "zh": "他跑得比我快。",
+  "ru": "Он бежит быстрее меня.",
+  "en": "He runs faster than I.",
+  "source": "tatoeba #672319"
+ },
+ {
+  "zh": "我每天跑步。",
+  "ru": "Я бегаю каждый день.",
+  "en": "I run every day.",
+  "source": "tatoeba #414247"
+ },
+ {
+  "zh": "没有人跑在他前面。",
+  "ru": "Впереди него никто не бежал.",
+  "en": "No one ran ahead of him.",
+  "source": "tatoeba #332726"
+ },
+ {
+  "zh": "我三年前见过他。",
+  "ru": "Я видел его три года назад.",
+  "en": "I saw him three years ago.",
+  "source": "tatoeba #348515"
+ },
+ {
+  "zh": "他走在我的面前。",
+  "ru": "Он шёл передо мной.",
+  "en": "He walked before me.",
+  "source": "tatoeba #760397"
+ },
+ {
+  "zh": "他三年前死了。",
+  "ru": "Он умер три года назад.",
+  "en": "He died three years ago.",
+  "source": "tatoeba #823031"
+ },
+ {
+  "zh": "玛丽没有认出她的前夫。",
+  "ru": "Мэри не узнала бывшего мужа.",
+  "en": "Mary didn't recognize her ex-husband.",
+  "source": "tatoeba #8463738"
+ },
+ {
+  "zh": "我以前从没见过她。",
+  "ru": "Я никогда раньше её не видел.",
+  "en": "I've never met her.",
+  "source": "tatoeba #333154"
+ },
+ {
+  "zh": "我以为你想见我呢。",
+  "ru": "Я думал, что вы хотите меня видеть.",
+  "en": "I thought that you wanted to see me.",
+  "source": "tatoeba #1990220"
+ },
+ {
+  "zh": "我以前在山里。",
+  "ru": "Я был в горах.",
+  "en": "I was in the mountains.",
+  "source": "tatoeba #15"
+ },
+ {
+  "zh": "你以前喜欢吗？",
+  "ru": "Раньше он тебе нравился?",
+  "en": "Did you use to like it?",
+  "source": "tatoeba #1783793"
+ },
+ {
+  "zh": "你可以去了。",
+  "ru": "Ты можешь идти.",
+  "en": "You may go.",
+  "source": "tatoeba #476578"
+ },
+ {
+  "zh": "可以过来吗？",
+  "ru": "Ты можешь прийти сюда?",
+  "en": "Can you come over here?",
+  "source": "tatoeba #9400945"
+ },
+ {
+  "zh": "我可以借一会你的书吗？",
+  "ru": "Можно у тебя книгу на минутку одолжить?",
+  "en": "Can I borrow your book for a minute?",
+  "source": "tatoeba #9955978"
+ },
+ {
+  "zh": "有借有还。",
+  "ru": "То, что одолжили, надо возвращать.",
+  "en": "You should return what you borrow.",
+  "source": "tatoeba #392283"
+ },
+ {
+  "zh": "你到了以后等一会儿。",
+  "ru": "Когда доедете, подождите немного.",
+  "en": "When you get there, wait for a while.",
+  "source": "tatoeba #1305918"
+ },
+ {
+  "zh": "以后再讲。",
+  "ru": "Поговорим позже.",
+  "en": "Let's talk later.",
+  "source": "tatoeba #330582"
+ },
+ {
+  "zh": "他走后，我们都很想念他。",
+  "ru": "После его ухода мы все скучали по нему.",
+  "en": "We've really been missing him since he left.",
+  "source": "tatoeba #1186884"
+ },
+ {
+  "zh": "我想念你。",
+  "ru": "Я скучаю по тебе.",
+  "en": "I miss you.",
+  "source": "tatoeba #2180625"
+ },
+ {
+  "zh": "她半年后就要出国了。",
+  "ru": "Она уедет из страны через полгода.",
+  "en": "In half a year she'll be going abroad.",
+  "source": "tatoeba #332421"
+ },
+ {
+  "zh": "我很思念过去的日子。",
+  "ru": "Я очень скучаю по прошлому.",
+  "en": "I really miss the old days.",
+  "source": "tatoeba #3065695"
+ },
+ {
+  "zh": "周日是一周的最后一天。",
+  "ru": "Воскресенье - последний день недели.",
+  "en": "Sunday is the last day of the week.",
+  "source": "tatoeba #476639"
+ },
+ {
+  "zh": "我是最好的。",
+  "ru": "Я - лучший.",
+  "en": "I'm the best.",
+  "source": "tatoeba #409665"
+ },
+ {
+  "zh": "我最好。",
+  "ru": "Я лучше всех.",
+  "en": "I'm the best.",
+  "source": "tatoeba #12283024"
+ },
+ {
+  "zh": "他失去了最爱的儿子。",
+  "ru": "Он потерял своего самого любимого сына.",
+  "en": "He lost his most beloved son.",
+  "source": "tatoeba #476219"
+ },
+ {
+  "zh": "没有他的帮助，我会失败。",
+  "ru": "Без его помощи у меня бы ничего не вышло.",
+  "en": "Without his help, I will fail.",
+  "source": "tatoeba #461505"
+ },
+ {
+  "zh": "爸爸，我的杯子在哪里？",
+  "ru": "Папа, где мой стакан?",
+  "en": "Dad, where's my glass?",
+  "source": "tatoeba #10961056"
+ },
+ {
+  "zh": "我可以要杯水吗？",
+  "ru": "Можно попросить стакан воды?",
+  "en": "May I have a glass of water?",
+  "source": "tatoeba #452653"
+ },
+ {
+  "zh": "哪个是你的杯子？",
+  "ru": "Какая из чашек твоя?",
+  "en": "Which cup is yours?",
+  "source": "tatoeba #3580024"
+ },
+ {
+  "zh": "爸，我的杯子呢？",
+  "ru": "Папа, где мой стакан?",
+  "en": "Dad, where's my glass?",
+  "source": "tatoeba #10961055"
+ },
+ {
+  "zh": "我想要一杯水。",
+  "ru": "Мне нужен стакан воды.",
+  "en": "I'd like a glass of water.",
+  "source": "tatoeba #727810"
+ },
+ {
+  "zh": "这是谁的杯子？",
+  "ru": "Чей это стакан?",
+  "en": "Whose cup is this?",
+  "source": "tatoeba #4885037"
+ },
+ {
+  "zh": "我很累所以早睡了。",
+  "ru": "Я так устал, что лёг спать пораньше.",
+  "en": "I was very tired, so I went to bed early.",
+  "source": "tatoeba #348007"
+ },
+ {
+  "zh": "我小睡了一会儿。",
+  "ru": "Сосну чуток.",
+  "en": "I took a nap.",
+  "source": "tatoeba #602903"
+ },
+ {
+  "zh": "你睡得好吗？",
+  "ru": "Ты хорошо спал?",
+  "en": "Did you sleep well?",
+  "source": "tatoeba #475849"
+ },
+ {
+  "zh": "我想睡觉。",
+  "ru": "Я хочу спать.",
+  "en": "I want to sleep.",
+  "source": "tatoeba #380912"
+ },
+ {
+  "zh": "你可以用我的字典。",
+  "ru": "Можешь пользоваться моим словарём.",
+  "en": "You may use my dictionary.",
+  "source": "tatoeba #1227100"
+ },
+ {
+  "zh": "不用，谢谢。我累了。",
+  "ru": "Не, спасибо. Я устал.",
+  "en": "No, thanks. I am tired.",
+  "source": "tatoeba #573549"
+ },
+ {
+  "zh": "借用他的思想。",
+  "ru": "Позаимствуй его мысли.",
+  "en": "Borrow his thoughts.",
+  "source": "tatoeba #13138959"
+ },
+ {
+  "zh": "用英语说。",
+  "ru": "Скажи это по-английски.",
+  "en": "Say it in English.",
+  "source": "tatoeba #333760"
+ },
+ {
+  "zh": "不要掉了这个杯子。",
+  "ru": "Не уроните эту чашку.",
+  "en": "Don't drop this cup.",
+  "source": "tatoeba #1785980"
+ },
+ {
+  "zh": "我打算明年去美国。",
+  "ru": "В следующем году я собираюсь поехать в Штаты.",
+  "en": "I plan to go to America next year.",
+  "source": "tatoeba #5550203"
+ },
+ {
+  "zh": "你打算在这儿待多久？",
+  "ru": "Как долго ты планируешь оставаться здесь?",
+  "en": "How long do you plan on staying here?",
+  "source": "tatoeba #408842"
+ },
+ {
+  "zh": "他有很多书。",
+  "ru": "У него много книг.",
+  "en": "He has books galore.",
+  "source": "tatoeba #2032311"
+ },
+ {
+  "zh": "我要学很多。",
+  "ru": "Мне нужно многому научиться.",
+  "en": "I've got a lot more to learn.",
+  "source": "tatoeba #5650402"
+ },
+ {
+  "zh": "有很多水。",
+  "ru": "Есть много воды.",
+  "en": "There's plenty of water.",
+  "source": "tatoeba #3365840"
+ },
+ {
+  "zh": "我们能在哪儿打电话？",
+  "ru": "Где мы бы могли позвонить?",
+  "en": "Where can we make a phone call?",
+  "source": "tatoeba #501694"
+ },
+ {
+  "zh": "他正在打电话。",
+  "ru": "Он сейчас звонит по телефону.",
+  "en": "He's talking on the telephone.",
+  "source": "tatoeba #334343"
+ },
+ {
+  "zh": "谁发明了电话？",
+  "ru": "Кто изобрёл телефон?",
+  "en": "Who invented the telephone?",
+  "source": "tatoeba #343714"
+ },
+ {
+  "zh": "打电话。",
+  "ru": "Позвони.",
+  "en": "Make a call.",
+  "source": "tatoeba #10961146"
+ },
+ {
+  "zh": "您晚上给我打电话了吗？",
+  "ru": "Вы звонили мне сегодня вечером?",
+  "en": "Did you call me up last night?",
+  "source": "tatoeba #5403308"
+ },
+ {
+  "zh": "他每天都给她打电话。",
+  "ru": "Он звонит ей каждый день.",
+  "en": "He calls her on the phone every day.",
+  "source": "tatoeba #2029431"
+ },
+ {
+  "zh": "我今晚给你打电话。",
+  "ru": "Я позвоню тебе вечером.",
+  "en": "I'll ring you up tonight.",
+  "source": "tatoeba #354118"
+ },
+ {
+  "zh": "请你给我一杯水。",
+  "ru": "Дайте мне стакан воды, пожалуйста.",
+  "en": "Please give me a cup of water.",
+  "source": "tatoeba #334646"
+ },
+ {
+  "zh": "我给了你一本书。",
+  "ru": "Я дал тебе книгу.",
+  "en": "I gave you a book.",
+  "source": "tatoeba #335126"
+ },
+ {
+  "zh": "他给谁打的电话？",
+  "ru": "Кому конкретно он звонит?",
+  "en": "Who was it that he phoned?",
+  "source": "tatoeba #844697"
+ },
+ {
+  "zh": "明天打电话给我。",
+  "ru": "Позвони завтра.",
+  "en": "Call me tomorrow.",
+  "source": "tatoeba #1738150"
+ },
+ {
+  "zh": "我会打电话给你。",
+  "ru": "Я тебе обязательно позвоню.",
+  "en": "I'll call you.",
+  "source": "tatoeba #2163111"
+ },
+ {
+  "zh": "给，给你！",
+  "ru": "Возьми!",
+  "en": "Here, this is for you!",
+  "source": "tatoeba #419994"
+ },
+ {
+  "zh": "他半夜打了个电话给我。",
+  "ru": "Он позвонил мне среди ночи.",
+  "en": "He gave me a ring at midnight.",
+  "source": "tatoeba #333194"
+ },
+ {
+  "zh": "这房子给我们住太小了。",
+  "ru": "Этот дом слишком мал для нас.",
+  "en": "This is too small a house for us to live in.",
+  "source": "tatoeba #401131"
+ },
+ {
+  "zh": "你想看房子吗？",
+  "ru": "Хочешь посмотреть дом?",
+  "en": "Do you want to see the house?",
+  "source": "tatoeba #9963199"
+ },
+ {
+  "zh": "看那个房子。",
+  "ru": "Посмотри на этот дом.",
+  "en": "Look at that house.",
+  "source": "tatoeba #336236"
+ },
+ {
+  "zh": "这本书谁想要就给谁吧。",
+  "ru": "Это такая книга - кто захочет, тот ее и получит.",
+  "en": "Give the book to whomever wants it.",
+  "source": "tatoeba #333436"
+ },
+ {
+  "zh": "我走一步算一步吧。",
+  "ru": "Я живу сегодняшним днём.",
+  "en": "I'll see as I walk along.",
+  "source": "tatoeba #4282794"
+ },
+ {
+  "zh": "也借我用吧！",
+  "ru": "Одолжи и мне!",
+  "en": "Lend it to me too!",
+  "source": "tatoeba #1670045"
+ },
+ {
+  "zh": "跟我走吧！",
+  "ru": "Пойдём со мной!",
+  "en": "Follow me!",
+  "source": "tatoeba #9868432"
+ },
+ {
+  "zh": "快来吧！",
+  "ru": "Приходите быстро!",
+  "en": "Come quick!",
+  "source": "tatoeba #339046"
+ },
+ {
+  "zh": "起来吧！",
+  "ru": "Вставай!",
+  "en": "Get up!",
+  "source": "tatoeba #797554"
+ },
+ {
+  "zh": "请来吧。",
+  "ru": "Приходи, пожалуйста.",
+  "en": "Please come.",
+  "source": "tatoeba #5102210"
+ },
+ {
+  "zh": "六月下了很多天的雨。",
+  "ru": "В июне много дождливых дней.",
+  "en": "We have many rainy days in June.",
+  "source": "tatoeba #903424"
+ },
+ {
+  "zh": "能用电脑的就只有她。",
+  "ru": "Из тех, кто умеет пользоваться компьютером, есть лишь она.",
+  "en": "Only she can use the computer.",
+  "source": "tatoeba #2029286"
+ },
+ {
+  "zh": "我正在用电脑。",
+  "ru": "Я использую компьютер.",
+  "en": "I'm using the computer.",
+  "source": "tatoeba #420048"
+ },
+ {
+  "zh": "那只会在电影里发生。",
+  "ru": "Такое только в кино бывает.",
+  "en": "That only happens in the movies.",
+  "source": "tatoeba #2510785"
+ },
+ {
+  "zh": "我喜欢看电影。",
+  "ru": "Люблю кино.",
+  "en": "I like movies.",
+  "source": "tatoeba #667350"
+ },
+ {
+  "zh": "请你不要发信息给我。",
+  "ru": "Пожалуйста, не присылайте мне сообщения.",
+  "en": "Please don't send me messages.",
+  "source": "tatoeba #9821316"
+ },
+ {
+  "zh": "没有人相信我说的话。",
+  "ru": "Никто не верит тому, что я говорю.",
+  "en": "Nobody believes what I say.",
+  "source": "tatoeba #333942"
+ },
+ {
+  "zh": "不要相信他说的话。",
+  "ru": "Не верь тому, что он говорит.",
+  "en": "Don't believe what he says.",
+  "source": "tatoeba #336440"
+ },
+ {
+  "zh": "我很想相信。",
+  "ru": "Мне так хотелось в это верить.",
+  "en": "I so wanted to believe that.",
+  "source": "tatoeba #9974930"
+ },
+ {
+  "zh": "我好想相信。",
+  "ru": "Мне так хотелось в это верить.",
+  "en": "I so wanted to believe that.",
+  "source": "tatoeba #9974955"
+ },
+ {
+  "zh": "我相信你。",
+  "ru": "Я верю тебе.",
+  "en": "I believe you.",
+  "source": "tatoeba #335418"
+ },
+ {
+  "zh": "我相信他。",
+  "ru": "Я верю в него.",
+  "en": "I believe in him.",
+  "source": "tatoeba #674233"
+ },
+ {
+  "zh": "她相信他。",
+  "ru": "Она ему верит.",
+  "en": "She trusts him.",
+  "source": "tatoeba #1862829"
+ },
+ {
+  "zh": "相信我。",
+  "ru": "Верь мне.",
+  "en": "Trust me.",
+  "source": "tatoeba #5092404"
+ },
+ {
+  "zh": "好久没收到你的来信。",
+  "ru": "Я давно не получал от тебя никаких известий.",
+  "en": "I haven't heard from you for a long time.",
+  "source": "tatoeba #715856"
+ },
+ {
+  "zh": "我今天收到了她的信。",
+  "ru": "Сегодня я получил от неё письмо.",
+  "en": "I got a letter from her today.",
+  "source": "tatoeba #804609"
+ },
+ {
+  "zh": "这台电脑是不是你的？",
+  "ru": "Этот компьютер принадлежит тебе?",
+  "en": "This computer is yours, isn't it?",
+  "source": "tatoeba #397443"
+ },
+ {
+  "zh": "我有一台电脑。",
+  "ru": "У меня есть компьютер.",
+  "en": "I have a computer.",
+  "source": "tatoeba #343844"
+ },
+ {
+  "zh": "那是我的台词！",
+  "ru": "Это мой текст!",
+  "en": "That's MY line!",
+  "source": "tatoeba #395685"
+ },
+ {
+  "zh": "中国比日本大得多。",
+  "ru": "Китай гораздо больше Японии.",
+  "en": "China is much larger than Japan.",
+  "source": "tatoeba #394786"
+ },
+ {
+  "zh": "昨晚雨下得很大。",
+  "ru": "Дождь вчера вечером был очень сильным.",
+  "en": "It rained hard last night.",
+  "source": "tatoeba #510779"
+ },
+ {
+  "zh": "大家都在等你。",
+  "ru": "Все тебя ждут.",
+  "en": "Everybody's waiting for you.",
+  "source": "tatoeba #458163"
+ },
+ {
+  "zh": "你是大学生吗？",
+  "ru": "Ты - студент?",
+  "en": "Are you a college student?",
+  "source": "tatoeba #475871"
+ },
+ {
+  "zh": "我是大学生。",
+  "ru": "Я студент.",
+  "en": "I'm at university.",
+  "source": "tatoeba #567558"
+ },
+ {
+  "zh": "昨天下大雨。",
+  "ru": "Вчера был сильный дождь.",
+  "en": "It rained heavily yesterday.",
+  "source": "tatoeba #870126"
+ },
+ {
+  "zh": "她比他大。",
+  "ru": "Она старше него.",
+  "en": "She's older than him.",
+  "source": "tatoeba #1178883"
+ },
+ {
+  "zh": "大多数学生步行去学校。",
+  "ru": "Большинство учеников добираются до школы пешком.",
+  "en": "Most students walk to school.",
+  "source": "tatoeba #1735642"
+ },
+ {
+  "zh": "你数学好吗？",
+  "ru": "Ты хорош в арифметике?",
+  "en": "Are you good at math?",
+  "source": "tatoeba #472397"
+ },
+ {
+  "zh": "我想学数学。",
+  "ru": "Я хочу изучать математику.",
+  "en": "I want to study math.",
+  "source": "tatoeba #616204"
+ },
+ {
+  "zh": "大家都想坐在她旁边。",
+  "ru": "Все хотят сидеть возле неё.",
+  "en": "Everybody wants to sit beside her.",
+  "source": "tatoeba #405261"
+ },
+ {
+  "zh": "我坐在他旁边。",
+  "ru": "Я сяду рядом с ним.",
+  "en": "I sat by his side.",
+  "source": "tatoeba #334889"
+ },
+ {
+  "zh": "大家都哭了，就我没哭。",
+  "ru": "Все плакали, один я не плакал.",
+  "en": "Everyone cried except me.",
+  "source": "tatoeba #11937827"
+ },
+ {
+  "zh": "不要哭。我爱你。",
+  "ru": "Не плачь. Я тебя люблю.",
+  "en": "Don't cry. I love you.",
+  "source": "tatoeba #1121802"
+ },
+ {
+  "zh": "请你不要哭。",
+  "ru": "Пожалуйста, не плачь.",
+  "en": "Please don't cry.",
+  "source": "tatoeba #334469"
+ },
+ {
+  "zh": "我想哭。",
+  "ru": "Хочется плакать.",
+  "en": "I want to cry.",
+  "source": "tatoeba #334542"
+ },
+ {
+  "zh": "她哭了。",
+  "ru": "Она плакала.",
+  "en": "She cried.",
+  "source": "tatoeba #5092280"
+ },
+ {
+  "zh": "京都有很多所大学。",
+  "ru": "В Киото много университетов.",
+  "en": "Kyoto has many universities.",
+  "source": "tatoeba #333508"
+ },
+ {
+  "zh": "她收下了他的礼物。",
+  "ru": "Она приняла его подарок.",
+  "en": "She accepted his gift.",
+  "source": "tatoeba #493515"
+ },
+ {
+  "zh": "这是给你的礼物。",
+  "ru": "Это подарок для тебя.",
+  "en": "This gift is for you.",
+  "source": "tatoeba #3076593"
+ },
+ {
+  "zh": "谢谢你的礼物！",
+  "ru": "Спасибо за твой подарок.",
+  "en": "Thank you for your present.",
+  "source": "tatoeba #348019"
+ },
+ {
+  "zh": "你在大学碰到他了？",
+  "ru": "Ты встретил его в университете?",
+  "en": "You met him at the university?",
+  "source": "tatoeba #502881"
+ },
+ {
+  "zh": "我昨天碰到你父母了。",
+  "ru": "Я вчера твоих родителей встретил.",
+  "en": "I met your parents yesterday.",
+  "source": "tatoeba #10708133"
+ },
+ {
+  "zh": "我父母不在家。",
+  "ru": "Моих родителей нет дома.",
+  "en": "My parents aren't home.",
+  "source": "tatoeba #10182722"
+ },
+ {
+  "zh": "有其父必有其子。",
+  "ru": "Каков отец — таков и сын.",
+  "en": "Like father, like son.",
+  "source": "tatoeba #728638"
+ },
+ {
+  "zh": "昨天我遇到你父母了。",
+  "ru": "Вчера я встретил твоих родителей.",
+  "en": "I met your parents yesterday.",
+  "source": "tatoeba #414055"
+ },
+ {
+  "zh": "我觉得这难以置信。",
+  "ru": "Мне трудно в это поверить.",
+  "en": "It is hard for me to believe this.",
+  "source": "tatoeba #791377"
+ },
+ {
+  "zh": "难以置信！",
+  "ru": "Невероятно!",
+  "en": "Unbelievable!",
+  "source": "tatoeba #4505070"
+ },
+ {
+  "zh": "因为他们在看电视。",
+  "ru": "Потому что они смотрят телевизор.",
+  "en": "Because they're watching television.",
+  "source": "tatoeba #4558246"
+ },
+ {
+  "zh": "我一天到晚看电视。",
+  "ru": "Я весь день смотрю телевизор.",
+  "en": "I watch TV all day.",
+  "source": "tatoeba #10019658"
+ },
+ {
+  "zh": "您看电视吗？",
+  "ru": "Вы смотрите телевизор?",
+  "en": "Do you watch TV?",
+  "source": "tatoeba #405016"
+ },
+ {
+  "zh": "你有电视吗？",
+  "ru": "У тебя есть телевизор?",
+  "en": "Do you have a TV?",
+  "source": "tatoeba #4913620"
+ },
+ {
+  "zh": "我一次也没见过他。",
+  "ru": "Я ни разу его не видел.",
+  "en": "I haven't met him even once.",
+  "source": "tatoeba #11236323"
+ },
+ {
+  "zh": "您多久见他一次？",
+  "ru": "Как часто ты его видишь?",
+  "en": "How often do you see him?",
+  "source": "tatoeba #481255"
+ },
+ {
+  "zh": "不会再有下次了。",
+  "ru": "Следующего раза не будет.",
+  "en": "I won't do it again.",
+  "source": "tatoeba #794242"
+ },
+ {
+  "zh": "她叫了我很多次。",
+  "ru": "Она много раз звала меня.",
+  "en": "She called me many a time.",
+  "source": "tatoeba #5780505"
+ },
+ {
+  "zh": "我一个月去一次电影院。",
+  "ru": "Я хожу в кино раз в месяц.",
+  "en": "I go to the movies once a month.",
+  "source": "tatoeba #709189"
+ },
+ {
+  "zh": "院子里有很多花吗？",
+  "ru": "В саду много цветов?",
+  "en": "Are there many flowers in the garden?",
+  "source": "tatoeba #1399754"
+ },
+ {
+  "zh": "我以为你认识他们。",
+  "ru": "Я думал, ты знаешь их.",
+  "en": "I thought you knew them.",
+  "source": "tatoeba #12717253"
+ },
+ {
+  "zh": "他认识很多人。",
+  "ru": "Он знаком с большим количеством людей.",
+  "en": "He knows many people.",
+  "source": "tatoeba #335104"
+ },
+ {
+  "zh": "我们不认识他。",
+  "ru": "Мы с ним не знакомы.",
+  "en": "We don't know him.",
+  "source": "tatoeba #383003"
+ },
+ {
+  "zh": "你认识她吗？",
+  "ru": "Ты знаешь её?",
+  "en": "Do you know her?",
+  "source": "tatoeba #1163565"
+ },
+ {
+  "zh": "我认识了他有十年了。",
+  "ru": "Десять лет с тех пор, как я познакомился с ним.",
+  "en": "I've known him for ten years.",
+  "source": "tatoeba #1305930"
+ },
+ {
+  "zh": "你认识那个美女吗？",
+  "ru": "Ты знаком с этой красавицей?",
+  "en": "Do you know that nice-looking girl?",
+  "source": "tatoeba #612711"
+ },
+ {
+  "zh": "他有三个女儿。",
+  "ru": "У него три дочери.",
+  "en": "He has three daughters.",
+  "source": "tatoeba #383300"
+ },
+ {
+  "zh": "我爱我的女儿。",
+  "ru": "Я люблю свою дочь.",
+  "en": "I love my daughter.",
+  "source": "tatoeba #1890391"
+ },
+ {
+  "zh": "我是女人。",
+  "ru": "Я женщина.",
+  "en": "I'm a woman.",
+  "source": "tatoeba #747591"
+ },
+ {
+  "zh": "我的书不超过十本。",
+  "ru": "У меня не больше десяти книг.",
+  "en": "I have not more than ten books.",
+  "source": "tatoeba #1918188"
+ },
+ {
+  "zh": "我们在上海认识的。",
+  "ru": "Мы познакомились в Шанхае.",
+  "en": "We met in Shanghai.",
+  "source": "tatoeba #2737461"
+ },
+ {
+  "zh": "你会说上海话吗？",
+  "ru": "Ты умеешь говорить на шанхайском диалекте?",
+  "en": "Can you speak Shanghainese?",
+  "source": "tatoeba #374892"
+ },
+ {
+  "zh": "我明天要去上海。",
+  "ru": "Завтра я еду в Шанхай.",
+  "en": "Tomorrow I'm going to Shanghai.",
+  "source": "tatoeba #1953188"
+ },
+ {
+  "zh": "我出生在上海。",
+  "ru": "Я родился в Шанхае.",
+  "en": "I was born in Shanghai.",
+  "source": "tatoeba #9991970"
+ },
+ {
+  "zh": "我是上海人。",
+  "ru": "Я шанхаец.",
+  "en": "I'm Shanghainese.",
+  "source": "tatoeba #347342"
+ },
+ {
+  "zh": "这是一家新电影院。",
+  "ru": "Это новый кинотеатр.",
+  "en": "This is a new cinema.",
+  "source": "tatoeba #13881530"
+ },
+ {
+  "zh": "你是新来的吗？",
+  "ru": "Ты новенький?",
+  "en": "Are you new?",
+  "source": "tatoeba #429821"
+ },
+ {
+  "zh": "我是个新生。",
+  "ru": "Я новый ученик.",
+  "en": "I'm a new student.",
+  "source": "tatoeba #347055"
+ },
+ {
+  "zh": "你是新生吗？",
+  "ru": "Ты новый студент?",
+  "en": "You're a new student?",
+  "source": "tatoeba #347085"
+ },
+ {
+  "zh": "他是新来的。",
+  "ru": "Он новенький.",
+  "en": "He's a newcomer.",
+  "source": "tatoeba #1064508"
+ },
+ {
+  "zh": "电脑是新的。",
+  "ru": "Компьютер новый.",
+  "en": "The computer is new.",
+  "source": "tatoeba #1144001"
+ },
+ {
+  "zh": "新年快乐！",
+  "ru": "С Новым годом!",
+  "en": "Happy New Year!",
+  "source": "tatoeba #373237"
+ },
+ {
+  "zh": "今天在地上，明天在地下。",
+  "ru": "Сегодня на земле, а завтра под землёй.",
+  "en": "Today above ground tomorrow under.",
+  "source": "tatoeba #806586"
+ },
+ {
+  "zh": "要是卖完了，就算了。",
+  "ru": "Если он распродан, тогда и ладно.",
+  "en": "If it’s sold out, then just forget it.",
+  "source": "tatoeba #2737408"
+ },
+ {
+  "zh": "他出卖了我。",
+  "ru": "Он предал меня.",
+  "en": "He betrayed me.",
+  "source": "tatoeba #332784"
+ },
+ {
+  "zh": "我想见见他的父亲。",
+  "ru": "Я хотел бы увидеться с его отцом.",
+  "en": "I'd like to meet his father.",
+  "source": "tatoeba #346809"
+ },
+ {
+  "zh": "她父亲是日本人。",
+  "ru": "Её отец - японец.",
+  "en": "Her father is Japanese.",
+  "source": "tatoeba #344826"
+ },
+ {
+  "zh": "我父亲是个大夫。",
+  "ru": "Мой отец врач.",
+  "en": "My father's a doctor.",
+  "source": "tatoeba #787604"
+ },
+ {
+  "zh": "这是我父亲的。",
+  "ru": "Это моего отца.",
+  "en": "This is my father's.",
+  "source": "tatoeba #413069"
+ },
+ {
+  "zh": "谁帮助你母亲？",
+  "ru": "Кто помогает твоей маме?",
+  "en": "Who helps your mother?",
+  "source": "tatoeba #3078805"
+ },
+ {
+  "zh": "他父亲去世了。",
+  "ru": "Его отец умер.",
+  "en": "His father passed away.",
+  "source": "tatoeba #8089863"
+ },
+ {
+  "zh": "他站在他母亲的后面。",
+  "ru": "Он стоит позади своей матери.",
+  "en": "He's standing behind his mother.",
+  "source": "tatoeba #2364529"
+ },
+ {
+  "zh": "我站在你这边。",
+  "ru": "Я на твоей стороне.",
+  "en": "I'm on your side.",
+  "source": "tatoeba #1394786"
+ },
+ {
+  "zh": "几天前我在站看到了他。",
+  "ru": "Пару дней назад я видел его на станции.",
+  "en": "I saw him at the station a few days ago.",
+  "source": "tatoeba #6822551"
+ },
+ {
+  "zh": "我需要几个人帮我。",
+  "ru": "Мне нужны несколько помощников.",
+  "en": "I need help from several people.",
+  "source": "tatoeba #442144"
+ },
+ {
+  "zh": "你们是几位？",
+  "ru": "Сколько вас?",
+  "en": "How many of you are there?",
+  "source": "tatoeba #419685"
+ },
+ {
+  "zh": "对了，我明天有事。",
+  "ru": "А да, у меня завтра что-то есть.",
+  "en": "Oh right, I have something tomorrow.",
+  "source": "tatoeba #411272"
+ },
+ {
+  "zh": "你做了必要的事。",
+  "ru": "Ты сделал необходимое.",
+  "en": "You did what was necessary.",
+  "source": "tatoeba #6070974"
+ },
+ {
+  "zh": "没事儿。",
+  "ru": "Ничего особенного.",
+  "en": "No prob.",
+  "source": "tatoeba #374840"
+ },
+ {
+  "zh": "他没事。",
+  "ru": "С ним всё в порядке.",
+  "en": "There is nothing wrong with him.",
+  "source": "tatoeba #2254359"
+ },
+ {
+  "zh": "这件事很难以相信的。",
+  "ru": "Трудно в это поверить.",
+  "en": "It's hard to believe.",
+  "source": "tatoeba #830192"
+ },
+ {
+  "zh": "这件事我算是都不了解。",
+  "ru": "Я почти ничего не знаю об этом.",
+  "en": "I know almost nothing about it.",
+  "source": "tatoeba #1315019"
+ },
+ {
+  "zh": "他的秘书好像了解真相。",
+  "ru": "Кажется, его секретарь знает правду.",
+  "en": "His secretary seems to know the truth.",
+  "source": "tatoeba #902030"
+ },
+ {
+  "zh": "这件事对谁都没有好处。",
+  "ru": "Это никому не принесёт пользы.",
+  "en": "This event benefits no one.",
+  "source": "tatoeba #4408164"
+ },
+ {
+  "zh": "这对谁有好处？",
+  "ru": "Кому это выгодно?",
+  "en": "Who benefits?",
+  "source": "tatoeba #9857805"
+ },
+ {
+  "zh": "他想进一步了解他们。",
+  "ru": "Он хочет больше о них знать.",
+  "en": "He wants to know more about them.",
+  "source": "tatoeba #452589"
+ },
+ {
+  "zh": "进来吧。",
+  "ru": "Войдите!",
+  "en": "Come in.",
+  "source": "tatoeba #348108"
+ },
+ {
+  "zh": "你想不想喝点儿茶？",
+  "ru": "Хочешь выпить чаю?",
+  "en": "Would you care for a cup of tea?",
+  "source": "tatoeba #718431"
+ },
+ {
+  "zh": "三点给她打电话。",
+  "ru": "Позвони ей в три.",
+  "en": "Call her at 3.",
+  "source": "tatoeba #4815133"
+ },
+ {
+  "zh": "那有点难以置信。",
+  "ru": "В это немного сложно поверить.",
+  "en": "That's a little hard to believe.",
+  "source": "tatoeba #5617264"
+ },
+ {
+  "zh": "她说她有点累了。",
+  "ru": "Она сказала, что немного устала.",
+  "en": "She said she was a bit tired.",
+  "source": "tatoeba #2032147"
+ },
+ {
+  "zh": "他说一点英语。",
+  "ru": "Он немного говорит по-английски.",
+  "en": "He speaks English a little.",
+  "source": "tatoeba #423394"
+ },
+ {
+  "zh": "您几点下课？",
+  "ru": "Во сколько у вас заканчиваются занятия?",
+  "en": "What time does your class end?",
+  "source": "tatoeba #410476"
+ },
+ {
+  "zh": "对不起，火车晚点了。",
+  "ru": "Извините, поезд немного задержался.",
+  "en": "Sorry. The train was late.",
+  "source": "tatoeba #750140"
+ },
+ {
+  "zh": "走着去火车站要多久？",
+  "ru": "Сколько времени нужно, чтобы дойти до вокзала пешком?",
+  "en": "How long does it take to walk to the station?",
+  "source": "tatoeba #334074"
+ },
+ {
+  "zh": "老大哥在看着你。",
+  "ru": "Большой Брат смотрит на тебя.",
+  "en": "Big Brother is watching you.",
+  "source": "tatoeba #2165982"
+ },
+ {
+  "zh": "我睡不着。",
+  "ru": "Мне не спится.",
+  "en": "I can't sleep.",
+  "source": "tatoeba #1189409"
+ },
+ {
+  "zh": "小女孩哭着找她的妈妈。",
+  "ru": "Девочка со слезами искала маму.",
+  "en": "Crying out, the little girl was looking for her mother.",
+  "source": "tatoeba #613110"
+ },
+ {
+  "zh": "她下个月生孩子。",
+  "ru": "В следующем месяце она родит ребенка.",
+  "en": "She will give birth to a child next month.",
+  "source": "tatoeba #2031422"
+ },
+ {
+  "zh": "他没喜欢孩子。",
+  "ru": "Он не любил детей.",
+  "en": "He did not like children.",
+  "source": "tatoeba #2888065"
+ },
+ {
+  "zh": "他没有孩子。",
+  "ru": "У него нет детей.",
+  "en": "He has no children.",
+  "source": "tatoeba #181028"
+ },
+ {
+  "zh": "我没有孩子。",
+  "ru": "У меня нет детей.",
+  "en": "I don't have any children.",
+  "source": "tatoeba #344213"
+ },
+ {
+  "zh": "他们是孩子。",
+  "ru": "Они дети.",
+  "en": "They're kids.",
+  "source": "tatoeba #3579720"
+ },
+ {
+  "zh": "她们是孩子。",
+  "ru": "Они дети.",
+  "en": "They're kids.",
+  "source": "tatoeba #3579729"
+ },
+ {
+  "zh": "我看书的时候睡着了。",
+  "ru": "Я уснул читая.",
+  "en": "I fell asleep while reading.",
+  "source": "tatoeba #1446791"
+ },
+ {
+  "zh": "有时候我不懂他的意思。",
+  "ru": "Иногда я его не понимаю.",
+  "en": "At times I can't understand him.",
+  "source": "tatoeba #902040"
+ },
+ {
+  "zh": "我一点英语也不懂。",
+  "ru": "Я совсем не понимаю английского.",
+  "en": "I don't understand English at all.",
+  "source": "tatoeba #4265052"
+ },
+ {
+  "zh": "我懂你的意思。",
+  "ru": "Я понимаю, что ты хочешь сказать.",
+  "en": "I know what you mean.",
+  "source": "tatoeba #980937"
+ },
+ {
+  "zh": "只有你懂我。",
+  "ru": "Ты один меня понимаешь.",
+  "en": "You're the only one who understands me.",
+  "source": "tatoeba #5706109"
+ },
+ {
+  "zh": "我想我懂了。",
+  "ru": "Кажется, я понял.",
+  "en": "I think I understand.",
+  "source": "tatoeba #335167"
+ },
+ {
+  "zh": "我不懂。",
+  "ru": "Я не понимаю.",
+  "en": "I don't get it.",
+  "source": "tatoeba #409679"
+ },
+ {
+  "zh": "他试着跟我们说法语。",
+  "ru": "Он пытался говорить с нами по-французски.",
+  "en": "He tried to talk to us in French.",
+  "source": "tatoeba #3078821"
+ },
+ {
+  "zh": "我今天有个面试。",
+  "ru": "У меня сегодня собеседование.",
+  "en": "I have an audition today.",
+  "source": "tatoeba #3467924"
+ },
+ {
+  "zh": "我能试一下吗？",
+  "ru": "Я могу это примерить?",
+  "en": "May I try it on?",
+  "source": "tatoeba #782915"
+ },
+ {
+  "zh": "我再试试，谢谢！",
+  "ru": "Спасибо, попробую ещё раз.",
+  "en": "I'll try again, thank you.",
+  "source": "tatoeba #810474"
+ },
+ {
+  "zh": "再试一次。",
+  "ru": "Попробуй ещё раз.",
+  "en": "Try it once again.",
+  "source": "tatoeba #796840"
+ },
+ {
+  "zh": "我试试。",
+  "ru": "Я попробую.",
+  "en": "I'll try it.",
+  "source": "tatoeba #8870261"
+ },
+ {
+  "zh": "我今天要早点回家。",
+  "ru": "Мне сегодня нужно пораньше вернуться домой.",
+  "en": "I need to go home a little early today.",
+  "source": "tatoeba #427894"
+ },
+ {
+  "zh": "他从中国回来了。",
+  "ru": "Он вернулся из Китая.",
+  "en": "He returned from China.",
+  "source": "tatoeba #343360"
+ },
+ {
+  "zh": "她没有回我的信。",
+  "ru": "Она не ответила на моё письмо.",
+  "en": "She didn't answer my letter.",
+  "source": "tatoeba #408474"
+ },
+ {
+  "zh": "我不会回来的。",
+  "ru": "Я не вернусь.",
+  "en": "I won't return.",
+  "source": "tatoeba #382427"
+ },
+ {
+  "zh": "您明天回来吗？",
+  "ru": "Вы вернётесь завтра?",
+  "en": "Will you come back tomorrow?",
+  "source": "tatoeba #431121"
+ },
+ {
+  "zh": "我回到了日本。",
+  "ru": "Я вернулся в Японию.",
+  "en": "I returned to Japan.",
+  "source": "tatoeba #602906"
+ },
+ {
+  "zh": "他会回来的。",
+  "ru": "Он вернётся.",
+  "en": "He will come back.",
+  "source": "tatoeba #346717"
+ },
+ {
+  "zh": "我会回来的。",
+  "ru": "Я вернусь.",
+  "en": "I'll come back.",
+  "source": "tatoeba #512881"
+ },
+ {
+  "zh": "请快点回信。",
+  "ru": "Пожалуйста, напишите ответ побыстрее.",
+  "en": "Please write back soon.",
+  "source": "tatoeba #794210"
+ },
+ {
+  "zh": "他很晚回家。",
+  "ru": "Он очень поздно пришёл домой.",
+  "en": "He came home very late.",
+  "source": "tatoeba #2104089"
+ },
+ {
+  "zh": "你在回家吗？",
+  "ru": "Ты идёшь домой?",
+  "en": "Are you going home?",
+  "source": "tatoeba #3378230"
+ },
+ {
+  "zh": "打电话回家！",
+  "ru": "Позвоните домой!",
+  "en": "Call home!",
+  "source": "tatoeba #5092540"
+ },
+ {
+  "zh": "我十点回来。",
+  "ru": "Я вернусь в десять.",
+  "en": "I'll be back at ten.",
+  "source": "tatoeba #8791918"
+ },
+ {
+  "zh": "他去去就回。",
+  "ru": "Он скоро вернётся.",
+  "en": "He'll be back soon.",
+  "source": "tatoeba #12478438"
+ },
+ {
+  "zh": "我回来了。",
+  "ru": "Я вернулся.",
+  "en": "I'm back.",
+  "source": "tatoeba #591712"
+ },
+ {
+  "zh": "她在回家。",
+  "ru": "Она идёт домой.",
+  "en": "She's going home.",
+  "source": "tatoeba #8865549"
+ },
+ {
+  "zh": "请回来。",
+  "ru": "Вернись, пожалуйста.",
+  "en": "Turn back, please.",
+  "source": "tatoeba #5978335"
+ },
+ {
+  "zh": "我会在明天午饭前回来。",
+  "ru": "Я вернусь завтра до обеда.",
+  "en": "I'll be back before lunch tomorrow.",
+  "source": "tatoeba #9959075"
+ },
+ {
+  "zh": "这是你的午饭吗？",
+  "ru": "Это твой обед?",
+  "en": "Is this your lunch?",
+  "source": "tatoeba #6956996"
+ },
+ {
+  "zh": "饭还没做好。",
+  "ru": "Еда ещё не готова.",
+  "en": "The food's not ready yet.",
+  "source": "tatoeba #426709"
+ },
+ {
+  "zh": "饭做好了。",
+  "ru": "Еда готова.",
+  "en": "The food's ready.",
+  "source": "tatoeba #2307383"
+ },
+ {
+  "zh": "我会做饭。",
+  "ru": "Я умею готовить.",
+  "en": "I can cook.",
+  "source": "tatoeba #4456369"
+ },
+ {
+  "zh": "我爸爸会在这周末回家。",
+  "ru": "Мой папа вернётся домой на этих выходных.",
+  "en": "My father will come home at the end of this week.",
+  "source": "tatoeba #334238"
+ },
+ {
+  "zh": "我们的饭店是最好的。",
+  "ru": "Наш ресторан лучше всех.",
+  "en": "Our restaurant is the best.",
+  "source": "tatoeba #431118"
+ },
+ {
+  "zh": "只有一家商店卖这本书。",
+  "ru": "Эта книга есть только в одном магазине.",
+  "en": "Only one store carries this book.",
+  "source": "tatoeba #1047372"
+ },
+ {
+  "zh": "我家旁边有几家商店。",
+  "ru": "Рядом с моим домом есть несколько магазинов.",
+  "en": "There are a few shops next to my house.",
+  "source": "tatoeba #408838"
+ },
+ {
+  "zh": "他在书店买了本英文书。",
+  "ru": "Он купил в книжном английскую книгу.",
+  "en": "He bought an English book at a bookstore.",
+  "source": "tatoeba #1021003"
+ },
+ {
+  "zh": "我买了花。",
+  "ru": "Я покупал цветы.",
+  "en": "I bought flowers.",
+  "source": "tatoeba #11508980"
+ },
+ {
+  "zh": "这本书太贵了。我买不起。",
+  "ru": "Эта книга слишком дорогая. Я не могу её себе позволить.",
+  "en": "This book is too expensive. I can't afford to buy it.",
+  "source": "tatoeba #9797466"
+ },
+ {
+  "zh": "在哪里可以买到车票？",
+  "ru": "Где можно достать билет?",
+  "en": "Where can you get tickets?",
+  "source": "tatoeba #2394804"
+ },
+ {
+  "zh": "那家店有很多客人。",
+  "ru": "В том магазине много посетителей.",
+  "en": "That shop has many customers.",
+  "source": "tatoeba #335615"
+ },
+ {
+  "zh": "今天我来请客。",
+  "ru": "Сегодня угощаю я.",
+  "en": "It's my treat today.",
+  "source": "tatoeba #420290"
+ },
+ {
+  "zh": "今天是我请客。",
+  "ru": "Сегодня угощаю я.",
+  "en": "Today is my treat.",
+  "source": "tatoeba #470019"
+ },
+ {
+  "zh": "晚饭我请客。",
+  "ru": "Я угощу тебя ужином.",
+  "en": "I'll treat you to dinner.",
+  "source": "tatoeba #8742132"
+ },
+ {
+  "zh": "不用客气。",
+  "ru": "Не за что.",
+  "en": "You're welcome.",
+  "source": "tatoeba #700676"
+ },
+ {
+  "zh": "你有客人。",
+  "ru": "У тебя гости.",
+  "en": "You have a visitor.",
+  "source": "tatoeba #10552170"
+ },
+ {
+  "zh": "不客气。",
+  "ru": "Не за что.",
+  "en": "You're welcome.",
+  "source": "tatoeba #700670"
+ },
+ {
+  "zh": "这部小说很难读懂。",
+  "ru": "Понять этот роман трудно.",
+  "en": "This novel is difficult to understand.",
+  "source": "tatoeba #478839"
+ },
+ {
+  "zh": "我想看这部电影。",
+  "ru": "Я хочу посмотреть этот фильм.",
+  "en": "I want to see the movie.",
+  "source": "tatoeba #333946"
+ },
+ {
+  "zh": "我想要这部电话。",
+  "ru": "Я хочу этот телефон.",
+  "en": "I want this phone.",
+  "source": "tatoeba #343351"
+ },
+ {
+  "zh": "我记得看过这部电影。",
+  "ru": "Я помню, что я смотрел этот фильм.",
+  "en": "I remember seeing the movie.",
+  "source": "tatoeba #745901"
+ },
+ {
+  "zh": "我记得见过他。",
+  "ru": "Я помню, что видел его.",
+  "en": "I remember seeing him.",
+  "source": "tatoeba #1415766"
+ },
+ {
+  "zh": "你记日记吗？",
+  "ru": "Ты ведёшь дневник?",
+  "en": "Do you keep a diary?",
+  "source": "tatoeba #396625"
+ },
+ {
+  "zh": "你记得吗？",
+  "ru": "Помнишь?",
+  "en": "Do you remember?",
+  "source": "tatoeba #444736"
+ },
+ {
+  "zh": "我不记得你的名字了。",
+  "ru": "Я не помню твоего имени.",
+  "en": "I don't remember your name.",
+  "source": "tatoeba #466283"
+ },
+ {
+  "zh": "我没有名字。",
+  "ru": "У меня нет имени.",
+  "en": "I have no name.",
+  "source": "tatoeba #11046616"
+ },
+ {
+  "zh": "他出名了。",
+  "ru": "Он стал знаменитым.",
+  "en": "He became famous.",
+  "source": "tatoeba #413307"
+ },
+ {
+  "zh": "我明天必须买一个。",
+  "ru": "Мне завтра придётся купить одну штуку.",
+  "en": "I have to buy one tomorrow.",
+  "source": "tatoeba #564560"
+ },
+ {
+  "zh": "你必须做到最好。",
+  "ru": "Ты должна сделать всё возможное.",
+  "en": "You must do your best.",
+  "source": "tatoeba #1992640"
+ },
+ {
+  "zh": "你们必须回家。",
+  "ru": "Вам надо пойти домой.",
+  "en": "You have to go home.",
+  "source": "tatoeba #9961677"
+ },
+ {
+  "zh": "你必须走。",
+  "ru": "Ты должен уйти.",
+  "en": "You must leave.",
+  "source": "tatoeba #407097"
+ },
+ {
+  "zh": "你必须在天黑前回来。",
+  "ru": "Ты должен вернуться домой прежде, чем стемнеет.",
+  "en": "You must come back before it gets dark.",
+  "source": "tatoeba #333233"
+ },
+ {
+  "zh": "我买了台新电视机。",
+  "ru": "Я купил новый телевизор.",
+  "en": "I bought a new television.",
+  "source": "tatoeba #785933"
+ },
+ {
+  "zh": "给我一次机会吧！",
+  "ru": "Дай мне шанс!",
+  "en": "Give me a chance!",
+  "source": "tatoeba #1992444"
+ },
+ {
+  "zh": "我们还有个老式电视机。",
+  "ru": "У нас по-прежнему есть телевизор старого типа.",
+  "en": "We still have an old tube television.",
+  "source": "tatoeba #1409034"
+ },
+ {
+  "zh": "这个连小孩都能读。",
+  "ru": "Даже ребенок может это прочесть.",
+  "en": "Even a child can read this.",
+  "source": "tatoeba #1992349"
+ },
+ {
+  "zh": "无聊得我都睡着了。",
+  "ru": "Мне было так скучно, что я заснул.",
+  "en": "I was bored, so I fell asleep.",
+  "source": "tatoeba #4264670"
+ },
+ {
+  "zh": "好无聊。",
+  "ru": "Вот скукотища.",
+  "en": "I am bored.",
+  "source": "tatoeba #3697870"
+ },
+ {
+  "zh": "我还是一直想着他。",
+  "ru": "Я всё ещё постоянно думаю о нём.",
+  "en": "I still think about him all the time.",
+  "source": "tatoeba #5555685"
+ },
+ {
+  "zh": "三天一直下雨。",
+  "ru": "Дождь шёл три дня подряд.",
+  "en": "It rained continuously for three days.",
+  "source": "tatoeba #1045391"
+ },
+ {
+  "zh": "一直向前走！",
+  "ru": "Всегда иди прямо!",
+  "en": "Keep going straight ahead!",
+  "source": "tatoeba #789314"
+ },
+ {
+  "zh": "有时候还是说谎好",
+  "ru": "Иногда лучше соврать.",
+  "en": "Sometimes it's better to lie.",
+  "source": "tatoeba #1163586"
+ },
+ {
+  "zh": "他们从不说谎。",
+  "ru": "Они когда не лгут.",
+  "en": "They never tell a lie.",
+  "source": "tatoeba #7768216"
+ },
+ {
+  "zh": "说谎不好。",
+  "ru": "Врать нехорошо.",
+  "en": "Lying is wrong.",
+  "source": "tatoeba #343586"
+ },
+ {
+  "zh": "他不说谎。",
+  "ru": "Он не лжёт.",
+  "en": "He doesn't lie.",
+  "source": "tatoeba #5865517"
+ },
+ {
+  "zh": "你的回答是正确的。",
+  "ru": "Твой ответ правилен.",
+  "en": "Your answer is right.",
+  "source": "tatoeba #475324"
+ },
+ {
+  "zh": "我无法回答所有问题。",
+  "ru": "У меня нет возможности ответить на все вопросы.",
+  "en": "I couldn't answer all the questions.",
+  "source": "tatoeba #401117"
+ },
+ {
+  "zh": "我能回答您的问题。",
+  "ru": "Я могу ответить на ваш вопрос.",
+  "en": "I can answer your question.",
+  "source": "tatoeba #902021"
+ },
+ {
+  "zh": "请回答我的问题。",
+  "ru": "Пожалуйста, ответьте на мой вопрос.",
+  "en": "Please answer my question.",
+  "source": "tatoeba #349931"
+ },
+ {
+  "zh": "您可以回答问题。",
+  "ru": "Можешь ответить на вопрос.",
+  "en": "You may answer the question.",
+  "source": "tatoeba #9956690"
+ },
+ {
+  "zh": "这是我的问题。",
+  "ru": "Это мой вопрос.",
+  "en": "That's my problem.",
+  "source": "tatoeba #476600"
+ },
+ {
+  "zh": "有一个小问题。",
+  "ru": "Есть небольшая проблема.",
+  "en": "There's a small problem.",
+  "source": "tatoeba #10740689"
+ },
+ {
+  "zh": "没问题！",
+  "ru": "Нет проблем!",
+  "en": "No problem!",
+  "source": "tatoeba #2043289"
+ },
+ {
+  "zh": "这是个很难解决的问题。",
+  "ru": "Это трудноразрешимая проблема.",
+  "en": "This problem is hard to solve.",
+  "source": "tatoeba #343800"
+ },
+ {
+  "zh": "我难以解决这问题。",
+  "ru": "Мне трудно решить эту задачу.",
+  "en": "It's difficult for me to solve this problem.",
+  "source": "tatoeba #5551094"
+ },
+ {
+  "zh": "解决他们。",
+  "ru": "Разберитесь с ними.",
+  "en": "Deal with them.",
+  "source": "tatoeba #5091689"
+ },
+ {
+  "zh": "他给了以下的答复。",
+  "ru": "Он ответил следующим образом...",
+  "en": "He answered as follows.",
+  "source": "tatoeba #429475"
+ },
+ {
+  "zh": "谢谢你的答复。",
+  "ru": "Спасибо за твой ответ.",
+  "en": "Thanks for your reply.",
+  "source": "tatoeba #332508"
+ },
+ {
+  "zh": "谢谢您的答复。",
+  "ru": "Спасибо за ваш ответ.",
+  "en": "Thanks for your answer.",
+  "source": "tatoeba #700502"
+ },
+ {
+  "zh": "能不能请你重复一下？",
+  "ru": "Не мог бы ты это повторить?",
+  "en": "Can you repeat that, please?",
+  "source": "tatoeba #429093"
+ },
+ {
+  "zh": "想法很重要。",
+  "ru": "Идеи очень важны.",
+  "en": "Ideas matter.",
+  "source": "tatoeba #8463682"
+ },
+ {
+  "zh": "这不重要。",
+  "ru": "Это не важно.",
+  "en": "It's not important.",
+  "source": "tatoeba #1415838"
+ },
+ {
+  "zh": "了解他的人都尊重他。",
+  "ru": "Он пользуется уважением у всех, кто его хорошо знает.",
+  "en": "Whoever knows him well respects him.",
+  "source": "tatoeba #336094"
+ },
+ {
+  "zh": "他的行为值得尊重。",
+  "ru": "Его поведение заслуживает уважения.",
+  "en": "His behavior is worthy of respect.",
+  "source": "tatoeba #1395067"
+ },
+ {
+  "zh": "你我的问题很相似。",
+  "ru": "Наши с тобой проблемы очень похожи.",
+  "en": "Your problem and mine are similar.",
+  "source": "tatoeba #1757277"
+ },
+ {
+  "zh": "死了就像做梦似的。",
+  "ru": "Смерть похожа на сон.",
+  "en": "Death is like dreaming.",
+  "source": "tatoeba #9308536"
+ },
+ {
+  "zh": "做个美梦！",
+  "ru": "Сладких снов!",
+  "en": "Have a good dream!",
+  "source": "tatoeba #3657125"
+ },
+ {
+  "zh": "这个问题有多严重？",
+  "ru": "Насколько проблема серьёзна?",
+  "en": "How serious is the problem?",
+  "source": "tatoeba #12804047"
+ },
+ {
+  "zh": "我能问一些问题吗？",
+  "ru": "Могу я задать несколько вопросов?",
+  "en": "May I ask a few questions?",
+  "source": "tatoeba #332979"
+ },
+ {
+  "zh": "他今天好些了吗？",
+  "ru": "Ему сегодня лучше?",
+  "en": "Is he better today?",
+  "source": "tatoeba #1328169"
+ },
+ {
+  "zh": "我认识这些学生。",
+  "ru": "Я знаком с этими учениками.",
+  "en": "I know these students.",
+  "source": "tatoeba #3537985"
+ },
+ {
+  "zh": "我不懂这些。",
+  "ru": "Я их не понимаю.",
+  "en": "I don't understand these.",
+  "source": "tatoeba #6850369"
+ },
+ {
+  "zh": "想起这些，我忍不住要笑。",
+  "ru": "Подумав об этом, я не мог не рассмеяться.",
+  "en": "When I thought of that, I couldn’t help smiling.",
+  "source": "tatoeba #2367631"
+ },
+ {
+  "zh": "我忍不住要大笑。",
+  "ru": "Я не мог удержаться от смеха.",
+  "en": "I could hardly keep from laughing.",
+  "source": "tatoeba #846341"
+ },
+ {
+  "zh": "我真是哭笑不得。",
+  "ru": "Не знаю, плакать мне или смеяться.",
+  "en": "I do not know whether to take it as a compliment or an insult.",
+  "source": "tatoeba #1946774"
+ },
+ {
+  "zh": "她忍不住笑了。",
+  "ru": "Она не могла сдержать смех.",
+  "en": "She cannot but laugh.",
+  "source": "tatoeba #778477"
+ },
+ {
+  "zh": "我哭不得，笑不得。",
+  "ru": "Я не знаю, плакать мне или смеяться.",
+  "en": "I don't know whether to laugh or cry.",
+  "source": "tatoeba #9848313"
+ },
+ {
+  "zh": "你在笑话谁？",
+  "ru": "Над кем ты смеёшься?",
+  "en": "Who are you laughing at?",
+  "source": "tatoeba #1324961"
+ },
+ {
+  "zh": "我忍不住取笑他的发型。",
+  "ru": "Я не мог удержаться от смеха над его причёской.",
+  "en": "I could not help laughing at his haircut.",
+  "source": "tatoeba #1407999"
+ },
+ {
+  "zh": "一切事物都是个笑话。",
+  "ru": "Всё было лишь шуткой.",
+  "en": "Everything was only a joke.",
+  "source": "tatoeba #5067377"
+ },
+ {
+  "zh": "一切都会好的。",
+  "ru": "Всё будет хорошо.",
+  "en": "Everything will be OK.",
+  "source": "tatoeba #710795"
+ },
+ {
+  "zh": "我理解你所说的一切。",
+  "ru": "Я понимаю всё, что ты сказал.",
+  "en": "I understand everything you said.",
+  "source": "tatoeba #2052723"
+ },
+ {
+  "zh": "我理解你说的话。",
+  "ru": "Я понимаю, что вы говорите.",
+  "en": "I get what you're saying.",
+  "source": "tatoeba #2040305"
+ },
+ {
+  "zh": "我今天去理发。",
+  "ru": "Сегодня я иду стричься.",
+  "en": "I'm going to the barber today.",
+  "source": "tatoeba #1423337"
+ },
+ {
+  "zh": "算数处理数字。",
+  "ru": "Арифметика занимается числами.",
+  "en": "Arithmetic deals with numbers.",
+  "source": "tatoeba #2819991"
+ },
+ {
+  "zh": "没人理解我。",
+  "ru": "Никто меня не понимает.",
+  "en": "Nobody understands me.",
+  "source": "tatoeba #2032285"
+ },
+ {
+  "zh": "我没明白那个笑话。",
+  "ru": "Я не понял шутки.",
+  "en": "I don't get the joke.",
+  "source": "tatoeba #804871"
+ },
+ {
+  "zh": "他在做白日梦。",
+  "ru": "Он грезит.",
+  "en": "He is daydreaming.",
+  "source": "tatoeba #844266"
+ },
+ {
+  "zh": "我不明白。",
+  "ru": "Я не понимаю.",
+  "en": "I don't get it.",
+  "source": "tatoeba #340435"
+ },
+ {
+  "zh": "我明白了。",
+  "ru": "Я понял.",
+  "en": "I understand.",
+  "source": "tatoeba #819294"
+ },
+ {
+  "zh": "你不明白。他会杀了你的。",
+  "ru": "Ты не понимаешь. Он тебя убьёт.",
+  "en": "You don't understand. He'll kill you.",
+  "source": "tatoeba #574692"
+ },
+ {
+  "zh": "我妈会杀了我的。",
+  "ru": "Мама убьет меня.",
+  "en": "My mother's going to kill me.",
+  "source": "tatoeba #2004706"
+ },
+ {
+  "zh": "我能杀你。",
+  "ru": "Я мог тебя убить.",
+  "en": "I could kill you.",
+  "source": "tatoeba #8854080"
+ },
+ {
+  "zh": "上帝死了。我们杀死了他。",
+  "ru": "Бог умер. Мы его убили.",
+  "en": "God died. We killed Him.",
+  "source": "tatoeba #1185710"
+ },
+ {
+  "zh": "你喜欢日本料理吗？",
+  "ru": "Тебе нравится японская кухня?",
+  "en": "Do you like Japanese food?",
+  "source": "tatoeba #2196767"
+ },
+ {
+  "zh": "他的故事是真的吗？",
+  "ru": "Его рассказ - правда?",
+  "en": "Is his story true?",
+  "source": "tatoeba #782197"
+ },
+ {
+  "zh": "事故发生在前天。",
+  "ru": "Происшествие имело место позавчера.",
+  "en": "The accident happened the day before yesterday.",
+  "source": "tatoeba #336943"
+ },
+ {
+  "zh": "我不是故意的。",
+  "ru": "Я не специально.",
+  "en": "I didn't do it on purpose.",
+  "source": "tatoeba #338810"
+ },
+ {
+  "zh": "他遇到了事故。",
+  "ru": "Он попал в аварию.",
+  "en": "He had an accident.",
+  "source": "tatoeba #947986"
+ },
+ {
+  "zh": "我思故我在。",
+  "ru": "Мыслю, следовательно, существую.",
+  "en": "I think, therefore I am.",
+  "source": "tatoeba #392689"
+ },
+ {
+  "zh": "十二月有三十一天。",
+  "ru": "В декабре 31 день.",
+  "en": "December has thirty-one days.",
+  "source": "tatoeba #1440499"
+ },
+ {
+  "zh": "我们处理第二个问题吧。",
+  "ru": "Давай решим второй вопрос.",
+  "en": "Let's take up the second problem, shall we?",
+  "source": "tatoeba #789557"
+ },
+ {
+  "zh": "我第一次做到。",
+  "ru": "Я сделал это в первый раз.",
+  "en": "I did it for the first time.",
+  "source": "tatoeba #9958448"
+ },
+ {
+  "zh": "今天是第一天。",
+  "ru": "Сегодня первый день.",
+  "en": "Today is the first day.",
+  "source": "tatoeba #13203871"
+ },
+ {
+  "zh": "他最多能拿到第三名。",
+  "ru": "В лучшем случае он может занять третье место.",
+  "en": "At best he may take third place.",
+  "source": "tatoeba #334154"
+ },
+ {
+  "zh": "去拿点水来。",
+  "ru": "Сходи принеси воды!",
+  "en": "Go get some water.",
+  "source": "tatoeba #2047864"
+ },
+ {
+  "zh": "拿本书读！",
+  "ru": "Возьми книгу и прочитай!",
+  "en": "Take a book and read it.",
+  "source": "tatoeba #389789"
+ },
+ {
+  "zh": "他拿到了很大一笔钱。",
+  "ru": "У него много денег.",
+  "en": "He got a lot of money.",
+  "source": "tatoeba #443200"
+ },
+ {
+  "zh": "你能借我些钱吗？",
+  "ru": "Можешь одолжить мне немного денег?",
+  "en": "Would you please lend me some money?",
+  "source": "tatoeba #1360005"
+ },
+ {
+  "zh": "给我一点钱。",
+  "ru": "Дай мне немного денег.",
+  "en": "Give me a little money.",
+  "source": "tatoeba #347057"
+ },
+ {
+  "zh": "钱太多了吗？",
+  "ru": "Денег слишком много?",
+  "en": "Too much money?",
+  "source": "tatoeba #398083"
+ },
+ {
+  "zh": "钱包在包里。",
+  "ru": "Кошелек в сумке.",
+  "en": "The wallet is in the bag.",
+  "source": "tatoeba #3377883"
+ },
+ {
+  "zh": "他需要钱。",
+  "ru": "Ему нужны деньги.",
+  "en": "He needs money.",
+  "source": "tatoeba #382945"
+ },
+ {
+  "zh": "我没有钱。",
+  "ru": "У меня нет денег.",
+  "en": "I have no money.",
+  "source": "tatoeba #687042"
+ },
+ {
+  "zh": "请给我钱。",
+  "ru": "Пожалуйста, дай мне денег.",
+  "en": "Please give me money.",
+  "source": "tatoeba #3377929"
+ },
+ {
+  "zh": "他要钱。",
+  "ru": "Он хочет деньги.",
+  "en": "He wants the money.",
+  "source": "tatoeba #902032"
+ },
+ {
+  "zh": "她花很多钱在买鞋上。",
+  "ru": "Она потратила много денег на туфли.",
+  "en": "She spends a lot of money on shoes.",
+  "source": "tatoeba #396377"
+ },
+ {
+  "zh": "这里只卖女鞋。",
+  "ru": "Здесь продаётся только женская обувь.",
+  "en": "They only sell women's shoes here.",
+  "source": "tatoeba #349665"
+ },
+ {
+  "zh": "不好意思，我没零钱。",
+  "ru": "Извините, у меня нет сдачи.",
+  "en": "Sorry, I don't have any change.",
+  "source": "tatoeba #7798822"
+ },
+ {
+  "zh": "他出发去加拿大了。",
+  "ru": "Он отправился в Канаду.",
+  "en": "He has set out for Canada.",
+  "source": "tatoeba #336423"
+ },
+ {
+  "zh": "你们是加拿大人吗？",
+  "ru": "Вы канадцы?",
+  "en": "Are you Canadian?",
+  "source": "tatoeba #12378260"
+ },
+ {
+  "zh": "我不是加拿大人。",
+  "ru": "Я не канадец.",
+  "en": "I am not Canadian.",
+  "source": "tatoeba #1423388"
+ },
+ {
+  "zh": "加拿大比日本大。",
+  "ru": "Канада больше Японии.",
+  "en": "Canada is larger than Japan.",
+  "source": "tatoeba #393380"
+ },
+ {
+  "zh": "他是加拿大人。",
+  "ru": "Он канадец.",
+  "en": "He's Canadian.",
+  "source": "tatoeba #3783447"
+ },
+ {
+  "zh": "有人拿错了我的鞋。",
+  "ru": "Кто-то по ошибке взял мои туфли.",
+  "en": "Someone has taken my shoes by mistake.",
+  "source": "tatoeba #427646"
+ },
+ {
+  "zh": "在我看来，你错了。",
+  "ru": "По-моему, ты ошибаешься.",
+  "en": "In my opinion, you're wrong.",
+  "source": "tatoeba #7771922"
+ },
+ {
+  "zh": "这个主意不错。",
+  "ru": "Это неплохая идея.",
+  "en": "That's not a bad idea.",
+  "source": "tatoeba #1413703"
+ },
+ {
+  "zh": "他们从不认错。",
+  "ru": "Они никогда не признают свои ошибки.",
+  "en": "They never admit their own mistakes.",
+  "source": "tatoeba #3700713"
+ },
+ {
+  "zh": "我错过了太多。",
+  "ru": "Я сильно ошибся.",
+  "en": "I've missed so much.",
+  "source": "tatoeba #3770499"
+ },
+ {
+  "zh": "妈的！真不错！",
+  "ru": "Черт подери! Это неплохо!",
+  "en": "Damn! It's not bad!",
+  "source": "tatoeba #334418"
+ },
+ {
+  "zh": "机会错过了。",
+  "ru": "Упустили шанс.",
+  "en": "The chance is gone.",
+  "source": "tatoeba #408974"
+ },
+ {
+  "zh": "看起来不错。",
+  "ru": "Выглядит неплохо.",
+  "en": "It looks good.",
+  "source": "tatoeba #1808254"
+ },
+ {
+  "zh": "我读错了。",
+  "ru": "Я неправильно прочитал.",
+  "en": "I read it wrong.",
+  "source": "tatoeba #10537182"
+ },
+ {
+  "zh": "有人穿错了我的鞋。",
+  "ru": "Кто-то по ошибке взял мои туфли.",
+  "en": "Someone has taken my shoes by mistake.",
+  "source": "tatoeba #335223"
+ },
+ {
+  "zh": "我看见他穿过了马路。",
+  "ru": "Я видел, как он переходил улицу.",
+  "en": "I saw him cross the road.",
+  "source": "tatoeba #405046"
+ },
+ {
+  "zh": "我上路了！",
+  "ru": "Я иду!",
+  "en": "I'm going now!",
+  "source": "tatoeba #5658827"
+ },
+ {
+  "zh": "他手里拿着一本书。",
+  "ru": "Он держит в руке книгу.",
+  "en": "He had a book in his hand.",
+  "source": "tatoeba #510870"
+ },
+ {
+  "zh": "我还是个新手。",
+  "ru": "Я ещё новичок.",
+  "en": "I'm still a beginner.",
+  "source": "tatoeba #9573085"
+ },
+ {
+  "zh": "我挺喜欢那个歌手的。",
+  "ru": "Я очень люблю этого певца.",
+  "en": "I like that singer a lot.",
+  "source": "tatoeba #395055"
+ },
+ {
+  "zh": "你喜欢的歌手是谁？",
+  "ru": "Кто твой любимый певец?",
+  "en": "Who is your favourite singer?",
+  "source": "tatoeba #5153282"
+ },
+ {
+  "zh": "你不是歌手。",
+  "ru": "Ты не певец.",
+  "en": "You're no singer.",
+  "source": "tatoeba #5780566"
+ },
+ {
+  "zh": "我这个歌唱得好不好？",
+  "ru": "Хорошо ли я спел эту песню?",
+  "en": "Am I singing that song well?",
+  "source": "tatoeba #400358"
+ },
+ {
+  "zh": "你喜欢唱歌吗？",
+  "ru": "Тебе нравится петь?",
+  "en": "Do you like singing?",
+  "source": "tatoeba #397199"
+ },
+ {
+  "zh": "我喜欢唱歌。",
+  "ru": "Я люблю петь.",
+  "en": "I like to sing.",
+  "source": "tatoeba #357940"
+ },
+ {
+  "zh": "请唱歌。",
+  "ru": "Спойте, пожалуйста!",
+  "en": "Please sing.",
+  "source": "tatoeba #5092671"
+ },
+ {
+  "zh": "您的孩子是男是女？",
+  "ru": "У вас мальчик или девочка?",
+  "en": "Is your child a boy or a girl?",
+  "source": "tatoeba #2202364"
+ },
+ {
+  "zh": "我们是男人。",
+  "ru": "Мы мужчины.",
+  "en": "We are men.",
+  "source": "tatoeba #706434"
+ },
+ {
+  "zh": "男孩跑得快。",
+  "ru": "Мальчики быстро бегают.",
+  "en": "Boys run fast.",
+  "source": "tatoeba #1694457"
+ },
+ {
+  "zh": "她不喜欢她的老公。",
+  "ru": "Ей не нравится её муж.",
+  "en": "She doesn't like her husband.",
+  "source": "tatoeba #2865936"
+ },
+ {
+  "zh": "他穿过公路。",
+  "ru": "Он перешёл дорогу.",
+  "en": "He crossed the street.",
+  "source": "tatoeba #6482591"
+ },
+ {
+  "zh": "今天早上我去了公园。",
+  "ru": "Сегодня утром я пошёл в парк.",
+  "en": "I went to a park this morning.",
+  "source": "tatoeba #410855"
+ },
+ {
+  "zh": "我爸爸在花园里。",
+  "ru": "Мой отец в саду.",
+  "en": "My father's in the garden.",
+  "source": "tatoeba #791652"
+ },
+ {
+  "zh": "公园里有动物园吗？",
+  "ru": "В парке есть зоопарк?",
+  "en": "Is there a zoo in the park?",
+  "source": "tatoeba #336484"
+ },
+ {
+  "zh": "我走不动了。",
+  "ru": "Я не могу идти дальше.",
+  "en": "I can't walk any farther.",
+  "source": "tatoeba #348266"
+ },
+ {
+  "zh": "人是唯一会说话的动物。",
+  "ru": "Человек - единственное говорящее животное.",
+  "en": "Man is the only animal that can speak.",
+  "source": "tatoeba #375372"
+ },
+ {
+  "zh": "那是唯一的出路。",
+  "ru": "Это единственный выход.",
+  "en": "It was the only way to go.",
+  "source": "tatoeba #6065362"
+ },
+ {
+  "zh": "现在是行动的时候了。",
+  "ru": "Пришло время действовать.",
+  "en": "Now is the time to act.",
+  "source": "tatoeba #333240"
+ },
+ {
+  "zh": "你最好现在就走。",
+  "ru": "Сейчас тебе лучше идти.",
+  "en": "You'd better go now.",
+  "source": "tatoeba #334627"
+ },
+ {
+  "zh": "你现在是大人了。",
+  "ru": "Теперь ты взрослый.",
+  "en": "You are now an adult.",
+  "source": "tatoeba #471372"
+ },
+ {
+  "zh": "现在正是好时候。",
+  "ru": "Сейчас хорошее время.",
+  "en": "The present time is a good time.",
+  "source": "tatoeba #2581482"
+ },
+ {
+  "zh": "我们现在在做饭。",
+  "ru": "Мы сейчас готовим.",
+  "en": "We're cooking now.",
+  "source": "tatoeba #9968805"
+ },
+ {
+  "zh": "现在休息一下。",
+  "ru": "Давайте-ка сейчас отдохнём немного.",
+  "en": "Try resting for now.",
+  "source": "tatoeba #333585"
+ },
+ {
+  "zh": "我现在没有钱。",
+  "ru": "У меня сейчас нет денег.",
+  "en": "I don't have money now.",
+  "source": "tatoeba #8589662"
+ },
+ {
+  "zh": "现在太晚了。",
+  "ru": "Сейчас очень поздно.",
+  "en": "It's too late now.",
+  "source": "tatoeba #3539203"
+ },
+ {
+  "zh": "这里，现在。",
+  "ru": "Здесь и сейчас.",
+  "en": "Here and now.",
+  "source": "tatoeba #818934"
+ },
+ {
+  "zh": "他的演说打动了我们。",
+  "ru": "Его речь взволновала нас.",
+  "en": "His speech moved us.",
+  "source": "tatoeba #1438316"
+ },
+ {
+  "zh": "父亲让我去演唱会。",
+  "ru": "Отец разрешил мне пойти на концерт.",
+  "en": "My father asked me to go to the concert.",
+  "source": "tatoeba #1403288"
+ },
+ {
+  "zh": "让他一个人待着。",
+  "ru": "Оставь его в покое.",
+  "en": "Leave him alone.",
+  "source": "tatoeba #363872"
+ },
+ {
+  "zh": "这个让我笑死了！",
+  "ru": "Это смешно до смерти!",
+  "en": "This is very funny!",
+  "source": "tatoeba #1815631"
+ },
+ {
+  "zh": "让我们一周后见！",
+  "ru": "Давайте встретимся через неделю!",
+  "en": "Let's meet in a week.",
+  "source": "tatoeba #10219978"
+ },
+ {
+  "zh": "我不想让你走。",
+  "ru": "Я не хочу, чтобы ты ездил.",
+  "en": "I don't want you to go.",
+  "source": "tatoeba #9972844"
+ },
+ {
+  "zh": "不要再让这种事发生了！",
+  "ru": "Не позволяйте этому повториться!",
+  "en": "Don't let that happen again!",
+  "source": "tatoeba #333710"
+ },
+ {
+  "zh": "她在花园里种了一些菜。",
+  "ru": "Она посадила несколько овощей в саду.",
+  "en": "She seeded vegetables in her garden.",
+  "source": "tatoeba #2411926"
+ },
+ {
+  "zh": "你喜欢日本菜吗？",
+  "ru": "Тебе нравится японская кухня?",
+  "en": "Do you like Japanese food?",
+  "source": "tatoeba #390546"
+ },
+ {
+  "zh": "我不会让你跳下去的。",
+  "ru": "Я не дам тебе спрыгнуть.",
+  "en": "I won't let you jump down.",
+  "source": "tatoeba #13881405"
+ },
+ {
+  "zh": "他就是那种人，别理他。",
+  "ru": "Ну вот такой он человек, не обращай на него внимания.",
+  "en": "He is just that kind of person, don't mind him.",
+  "source": "tatoeba #2081730"
+ },
+ {
+  "zh": "别再给我打电话。",
+  "ru": "Больше не звони мне.",
+  "en": "Don't call me anymore.",
+  "source": "tatoeba #2188474"
+ },
+ {
+  "zh": "待在那儿别动。",
+  "ru": "Оставайтесь там, не двигайтесь!",
+  "en": "Remain there and don't move.",
+  "source": "tatoeba #332468"
+ },
+ {
+  "zh": "别忘了我们！",
+  "ru": "Не забывай нас!",
+  "en": "Don't forget us!",
+  "source": "tatoeba #337720"
+ },
+ {
+  "zh": "你别相信他。",
+  "ru": "Не верь ему.",
+  "en": "Don't trust him.",
+  "source": "tatoeba #1750369"
+ },
+ {
+  "zh": "别生气。",
+  "ru": "Не злись.",
+  "en": "Don't get angry.",
+  "source": "tatoeba #1889330"
+ },
+ {
+  "zh": "妈妈，别等我来吃中午饭。",
+  "ru": "Мама, не жди меня к обеду.",
+  "en": "Mom, don't wait for me to have lunch.",
+  "source": "tatoeba #2766894"
+ },
+ {
+  "zh": "你几点吃的晚饭？",
+  "ru": "Во сколько ты ужинаешь?",
+  "en": "At what time did you eat dinner?",
+  "source": "tatoeba #3376539"
+ },
+ {
+  "zh": "他们在吃午饭。",
+  "ru": "Они сейчас обедают.",
+  "en": "They are at lunch.",
+  "source": "tatoeba #1839200"
+ },
+ {
+  "zh": "一起吃晚饭吧。",
+  "ru": "Давай поужинаем вместе.",
+  "en": "Let's have dinner together.",
+  "source": "tatoeba #5574501"
+ },
+ {
+  "zh": "我不想再吃了。",
+  "ru": "Мне больше не хочется есть.",
+  "en": "I don't want to eat again.",
+  "source": "tatoeba #5714619"
+ },
+ {
+  "zh": "他吃得很多。",
+  "ru": "Он много ест.",
+  "en": "He eats a lot.",
+  "source": "tatoeba #356380"
+ },
+ {
+  "zh": "我还没吃。",
+  "ru": "Я ещё не ел.",
+  "en": "I haven't eaten yet.",
+  "source": "tatoeba #420110"
+ },
+ {
+  "zh": "你想吃吗？",
+  "ru": "Ты хочешь есть?",
+  "en": "Do you want to eat?",
+  "source": "tatoeba #1493378"
+ },
+ {
+  "zh": "我吃多了。",
+  "ru": "Я переел.",
+  "en": "I ate too much.",
+  "source": "tatoeba #11046276"
+ },
+ {
+  "zh": "人不吃人。",
+  "ru": "Люди не едят людей.",
+  "en": "Man doesn't eat man.",
+  "source": "tatoeba #541843"
+ },
+ {
+  "zh": "吃了没。",
+  "ru": "Поел?",
+  "en": "Have you eaten?",
+  "source": "tatoeba #684363"
+ },
+ {
+  "zh": "真好吃。",
+  "ru": "Это так вкусно.",
+  "en": "It's so yummy.",
+  "source": "tatoeba #5611611"
+ },
+ {
+  "zh": "好好吃！",
+  "ru": "Как же вкусно!",
+  "en": "So delicious!",
+  "source": "tatoeba #12369252"
+ },
+ {
+  "zh": "别介意别人所说的话。",
+  "ru": "Не обращайте внимания на то, что говорят другие.",
+  "en": "Don't worry about what others say.",
+  "source": "tatoeba #431622"
+ },
+ {
+  "zh": "我比以前吃得少了。",
+  "ru": "Я ем не так много, как раньше.",
+  "en": "I don't eat as much as I used to.",
+  "source": "tatoeba #8463707"
+ },
+ {
+  "zh": "他是个日本少年。",
+  "ru": "Он японский мальчик.",
+  "en": "He's a Japanese boy.",
+  "source": "tatoeba #347096"
+ },
+ {
+  "zh": "她上学很少迟到。",
+  "ru": "Она редко опаздывает в школу.",
+  "en": "She is seldom late for school.",
+  "source": "tatoeba #354510"
+ },
+ {
+  "zh": "你家有多少人？",
+  "ru": "Твоя семья состоит из скольких членов?",
+  "en": "How many people are in your family?",
+  "source": "tatoeba #333605"
+ },
+ {
+  "zh": "汉字有多少个？",
+  "ru": "Сколько всего китайских иероглифов?",
+  "en": "How many hanzi are there?",
+  "source": "tatoeba #10961163"
+ },
+ {
+  "zh": "你有多少钱？",
+  "ru": "Сколько у тебя денег?",
+  "en": "How much money do you have?",
+  "source": "tatoeba #771082"
+ },
+ {
+  "zh": "这个班有多少男生？",
+  "ru": "В этой группе сколько ребят?",
+  "en": "How many boys are in this class?",
+  "source": "tatoeba #332709"
+ },
+ {
+  "zh": "她走路上班。",
+  "ru": "Она ходит на работу пешком.",
+  "en": "She walks to work.",
+  "source": "tatoeba #13158370"
+ },
+ {
+  "zh": "我们班有四十个学生。",
+  "ru": "В нашем классе сорок учеников.",
+  "en": "There are forty students in our class.",
+  "source": "tatoeba #333354"
+ },
+ {
+  "zh": "我爸快四十了。",
+  "ru": "Моему папе скоро сорок.",
+  "en": "My father will be forty soon.",
+  "source": "tatoeba #2680389"
+ },
+ {
+  "zh": "我有四个孩子。",
+  "ru": "У меня четверо детей.",
+  "en": "I had four children.",
+  "source": "tatoeba #4831137"
+ },
+ {
+  "zh": "日本的人口是多少？",
+  "ru": "Каково население Японии?",
+  "en": "What is the population of Japan?",
+  "source": "tatoeba #874482"
+ },
+ {
+  "zh": "死人是无法开口说话的。",
+  "ru": "Мёртвые не говорят.",
+  "en": "Dead men tell no tales.",
+  "source": "tatoeba #347160"
+ },
+ {
+  "zh": "电影快要开演了。",
+  "ru": "Кино вот-вот начнётся.",
+  "en": "The movie's about to start.",
+  "source": "tatoeba #939611"
+ },
+ {
+  "zh": "我去哪里都开车。",
+  "ru": "Я повсюду езжу.",
+  "en": "I drive everywhere.",
+  "source": "tatoeba #7704623"
+ },
+ {
+  "zh": "下周一开学。",
+  "ru": "Учёба начнётся в понедельник.",
+  "en": "School starts next Monday.",
+  "source": "tatoeba #431555"
+ },
+ {
+  "zh": "您会开车吗？",
+  "ru": "Вы умеете водить машину?",
+  "en": "Can you drive?",
+  "source": "tatoeba #472411"
+ },
+ {
+  "zh": "他开车来的。",
+  "ru": "Он приехал на машине.",
+  "en": "He came by car.",
+  "source": "tatoeba #2050794"
+ },
+ {
+  "zh": "你开车很好。",
+  "ru": "Ты очень хорошо водишь.",
+  "en": "You're a good driver.",
+  "source": "tatoeba #4265129"
+ },
+ {
+  "zh": "我喜欢开车。",
+  "ru": "Мне нравится водить.",
+  "en": "I like to drive.",
+  "source": "tatoeba #13893627"
+ },
+ {
+  "zh": "我会开车。",
+  "ru": "Я умею водить машину.",
+  "en": "I can drive a car.",
+  "source": "tatoeba #4764637"
+ },
+ {
+  "zh": "请走开！",
+  "ru": "Пожалуйста, уходи!",
+  "en": "Please go away!",
+  "source": "tatoeba #9961558"
+ },
+ {
+  "zh": "你觉得我是在开玩笑吗？",
+  "ru": "Ты думаешь, я шучу?",
+  "en": "Do you think I'm joking?",
+  "source": "tatoeba #786037"
+ },
+ {
+  "zh": "这只是一个玩笑。",
+  "ru": "Это просто шутка.",
+  "en": "Just joshing.",
+  "source": "tatoeba #389347"
+ },
+ {
+  "zh": "我在花园里玩。",
+  "ru": "Я играю в саду.",
+  "en": "I'm playing in the garden.",
+  "source": "tatoeba #2785224"
+ },
+ {
+  "zh": "我不开玩笑。",
+  "ru": "Я не шучу.",
+  "en": "I'm not kidding.",
+  "source": "tatoeba #3656925"
+ },
+ {
+  "zh": "我也不想玩。",
+  "ru": "Мне тоже не хочется играть.",
+  "en": "I don't feel like playing either.",
+  "source": "tatoeba #9955892"
+ },
+ {
+  "zh": "我开玩笑。",
+  "ru": "Я шучу.",
+  "en": "I'm kidding.",
+  "source": "tatoeba #398518"
+ },
+ {
+  "zh": "我去玩了！",
+  "ru": "Я пойду погуляю.",
+  "en": "I went to play!",
+  "source": "tatoeba #1699103"
+ },
+ {
+  "zh": "你开始学习英语了吗？",
+  "ru": "Ты начал изучать английский?",
+  "en": "Have you begun studying English?",
+  "source": "tatoeba #332546"
+ },
+ {
+  "zh": "现在你开始热起来了。",
+  "ru": "Сейчас ты начнёшь согреваться.",
+  "en": "You're starting to warm up now.",
+  "source": "tatoeba #476568"
+ },
+ {
+  "zh": "这班火车几点钟开？",
+  "ru": "Когда отправляется этот поезд?",
+  "en": "What time does the train leave from here?",
+  "source": "tatoeba #420510"
+ },
+ {
+  "zh": "您几点钟上班？",
+  "ru": "Вы в какое время идёте на работу?",
+  "en": "What time do you go to work?",
+  "source": "tatoeba #425136"
+ },
+ {
+  "zh": "你对她是不是一见钟情？",
+  "ru": "Ты влюбилась в неё с первого взгляда?",
+  "en": "Did you fall in love with her at first sight?",
+  "source": "tatoeba #755822"
+ },
+ {
+  "zh": "我不记得事故的情况。",
+  "ru": "Я не помню обстоятельства аварии.",
+  "en": "I don't remember anything about the incident.",
+  "source": "tatoeba #5993940"
+ },
+ {
+  "zh": "这要看情况。",
+  "ru": "Тут нужно смотреть по ситуации.",
+  "en": "It depends on the context.",
+  "source": "tatoeba #501316"
+ },
+ {
+  "zh": "这得看情况。",
+  "ru": "Тут нужно смотреть по ситуации.",
+  "en": "It depends on the context.",
+  "source": "tatoeba #1768156"
+ },
+ {
+  "zh": "我的房间里没有时钟。",
+  "ru": "В моей комнате нет часов.",
+  "en": "There is no clock in my room.",
+  "source": "tatoeba #8703965"
+ },
+ {
+  "zh": "我喜欢你的房间。",
+  "ru": "Мне нравится ваша квартира.",
+  "en": "I like your room.",
+  "source": "tatoeba #1807052"
+ },
+ {
+  "zh": "吃饭时间到了。",
+  "ru": "Не поесть ли нам?",
+  "en": "Time for dinner.",
+  "source": "tatoeba #336431"
+ },
+ {
+  "zh": "别在房间里跑。",
+  "ru": "Не бегай по комнате.",
+  "en": "Don't run in the room.",
+  "source": "tatoeba #347083"
+ },
+ {
+  "zh": "房间里有人吗？",
+  "ru": "Есть кто в комнате?",
+  "en": "Is anyone in the room?",
+  "source": "tatoeba #349657"
+ },
+ {
+  "zh": "父亲在房间里。",
+  "ru": "Отец в комнате.",
+  "en": "Dad is in the room.",
+  "source": "tatoeba #1897465"
+ },
+ {
+  "zh": "跟我进房间。",
+  "ru": "Зайди со мной в комнату.",
+  "en": "Follow me into the room.",
+  "source": "tatoeba #444694"
+ },
+ {
+  "zh": "这需要时间。",
+  "ru": "Это займёт время.",
+  "en": "It takes time.",
+  "source": "tatoeba #707522"
+ },
+ {
+  "zh": "我有时间。",
+  "ru": "У меня есть время.",
+  "en": "I have time.",
+  "source": "tatoeba #4859550"
+ },
+ {
+  "zh": "我很少能抽出时间看书。",
+  "ru": "Я редко могу найти время для чтения.",
+  "en": "I can seldom find time for reading.",
+  "source": "tatoeba #528036"
+ },
+ {
+  "zh": "我昨天大部分时间在家。",
+  "ru": "Вчера я большую часть времени был дома.",
+  "en": "I was at home most of the day yesterday.",
+  "source": "tatoeba #5624924"
+ },
+ {
+  "zh": "我母亲十分生气。",
+  "ru": "Моя мать очень сердита.",
+  "en": "My mother is quite angry.",
+  "source": "tatoeba #1783838"
+ },
+ {
+  "zh": "我只会等三分钟。",
+  "ru": "Я подожду только три минуты.",
+  "en": "I'll only wait for three minutes.",
+  "source": "tatoeba #11231373"
+ },
+ {
+  "zh": "让我再睡十分钟！",
+  "ru": "Дай мне ещё десять минут поспать!",
+  "en": "Let me sleep for ten more minutes.",
+  "source": "tatoeba #11698445"
+ },
+ {
+  "zh": "六点二十分了。",
+  "ru": "Сейчас двадцать минут седьмого.",
+  "en": "It's twenty past six.",
+  "source": "tatoeba #382432"
+ },
+ {
+  "zh": "你太过分了。",
+  "ru": "Ты переборщил.",
+  "en": "You went too far!",
+  "source": "tatoeba #831409"
+ },
+ {
+  "zh": "他十分正直。",
+  "ru": "Он очень честен.",
+  "en": "He is very honest.",
+  "source": "tatoeba #2662470"
+ },
+ {
+  "zh": "我走了四分之三英里。",
+  "ru": "Я прошёл три четверти мили.",
+  "en": "I walked three-fourths of a mile.",
+  "source": "tatoeba #859223"
+ },
+ {
+  "zh": "你必须在九点之前回来。",
+  "ru": "Ты должен вернуться до 9 часов.",
+  "en": "You must come back before nine o'clock.",
+  "source": "tatoeba #1992650"
+ },
+ {
+  "zh": "天黑之后他从不出门。",
+  "ru": "Он не выходит после наступления темноты.",
+  "en": "He never goes out after dark.",
+  "source": "tatoeba #380736"
+ },
+ {
+  "zh": "您能开一下门吗？",
+  "ru": "Не могли бы вы открыть дверь, пожалуйста?",
+  "en": "Could you open the door, please?",
+  "source": "tatoeba #1753100"
+ },
+ {
+  "zh": "门票多少钱？",
+  "ru": "Почём билет?",
+  "en": "How much is the admission?",
+  "source": "tatoeba #457644"
+ },
+ {
+  "zh": "门在哪里？",
+  "ru": "Где дверь?",
+  "en": "Where's the door?",
+  "source": "tatoeba #10007048"
+ },
+ {
+  "zh": "请开门。",
+  "ru": "Пожалуйста, откройте дверь.",
+  "en": "Open the door, please.",
+  "source": "tatoeba #794003"
+ },
+ {
+  "zh": "学一门外语是很难的。",
+  "ru": "Трудно выучить иностранный язык.",
+  "en": "It's hard to learn a foreign language.",
+  "source": "tatoeba #613887"
+ },
+ {
+  "zh": "外国人很有意思。",
+  "ru": "Иностранцы занятны.",
+  "en": "Foreign people intrigue me.",
+  "source": "tatoeba #380261"
+ },
+ {
+  "zh": "我想去外国。",
+  "ru": "Я хочу уехать за границу.",
+  "en": "I want to go abroad.",
+  "source": "tatoeba #382414"
+ },
+ {
+  "zh": "我是外国人。",
+  "ru": "Я иностранец.",
+  "en": "I'm a foreigner.",
+  "source": "tatoeba #2221094"
+ },
+ {
+  "zh": "你去外面吗？",
+  "ru": "Ты выйдешь?",
+  "en": "Are you going outside?",
+  "source": "tatoeba #3780477"
+ },
+ {
+  "zh": "这个钟每天慢三分钟。",
+  "ru": "Эти часы отстают на три минуты в день.",
+  "en": "This clock loses three minutes a day.",
+  "source": "tatoeba #792845"
+ },
+ {
+  "zh": "他慢慢地走。",
+  "ru": "Он медленно ходит.",
+  "en": "He walks slowly.",
+  "source": "tatoeba #512111"
+ },
+ {
+  "zh": "请问，洗手间在哪里？",
+  "ru": "Скажите, пожалуйста, где ванная?",
+  "en": "Where are the toilets, please?",
+  "source": "tatoeba #9927011"
+ },
+ {
+  "zh": "你有洗发水吗？",
+  "ru": "У тебя есть шампунь?",
+  "en": "Have you got shampoo?",
+  "source": "tatoeba #1176664"
+ },
+ {
+  "zh": "你在哪里洗手？",
+  "ru": "Где ты моешь руки?",
+  "en": "Where do you wash your hands?",
+  "source": "tatoeba #9927487"
+ },
+ {
+  "zh": "你洗手了吗？",
+  "ru": "Ты помыл руки?",
+  "en": "Have you washed your hands?",
+  "source": "tatoeba #1470404"
+ },
+ {
+  "zh": "飞机十分钟前起飞了。",
+  "ru": "Самолёт взлетел десять минут назад.",
+  "en": "The airplane took off ten minutes ago.",
+  "source": "tatoeba #10002074"
+ },
+ {
+  "zh": "你乘飞机还是乘火车去？",
+  "ru": "Ты полетишь на самолёте или поедешь на поезде?",
+  "en": "Are you going by air or by train?",
+  "source": "tatoeba #332924"
+ },
+ {
+  "zh": "我的房间号是多少？",
+  "ru": "Какой номер моей комнаты?",
+  "en": "What's my room number?",
+  "source": "tatoeba #332881"
+ },
+ {
+  "zh": "给我拿件中号的。",
+  "ru": "Дайте мне одну среднего размера, пожалуйста.",
+  "en": "Get me one in size \"M\", please.",
+  "source": "tatoeba #1589735"
+ },
+ {
+  "zh": "今天是几号？",
+  "ru": "Какая сегодня дата?",
+  "en": "What's the date today?",
+  "source": "tatoeba #408909"
+ },
+ {
+  "zh": "我等她好长时间了。",
+  "ru": "Я её очень долго ждал.",
+  "en": "I waited for her a long time.",
+  "source": "tatoeba #2318412"
+ },
+ {
+  "zh": "人无法长生不死。",
+  "ru": "Люди не могут жить вечно.",
+  "en": "Man cannot live forever.",
+  "source": "tatoeba #1839150"
+ },
+ {
+  "zh": "我不想长大。",
+  "ru": "Я не хочу взрослеть.",
+  "en": "I don't want to grow up.",
+  "source": "tatoeba #3839406"
+ },
+ {
+  "zh": "他是长子。",
+  "ru": "Он старший сын.",
+  "en": "He's the oldest son.",
+  "source": "tatoeba #7768239"
+ },
+ {
+  "zh": "一年之后他搬走了。",
+  "ru": "Он переехал через год.",
+  "en": "He moved away after a year.",
+  "source": "tatoeba #9839457"
+ },
+ {
+  "zh": "我喜欢超现实主义",
+  "ru": "Я люблю сюрреализм.",
+  "en": "I like surrealism.",
+  "source": "tatoeba #4966284"
+ },
+ {
+  "zh": "吃点点心你看好吗？",
+  "ru": "Ты не против что-нибудь перехватить?",
+  "en": "Let's eat some dessert, alright?",
+  "source": "tatoeba #400231"
+ },
+ {
+  "zh": "你不能一心二用。",
+  "ru": "Нельзя делать два дела одновременно.",
+  "en": "You can't do two things at once.",
+  "source": "tatoeba #803795"
+ },
+ {
+  "zh": "今天心情不好。",
+  "ru": "Я сегодня в плохом настроении.",
+  "en": "I'm feeling down today.",
+  "source": "tatoeba #1927155"
+ },
+ {
+  "zh": "玩得开心点！",
+  "ru": "Хорошо отдохнуть!",
+  "en": "Have fun!",
+  "source": "tatoeba #471129"
+ },
+ {
+  "zh": "你不要死心。",
+  "ru": "Не теряй надежды.",
+  "en": "Don't lose hope.",
+  "source": "tatoeba #1361897"
+ },
+ {
+  "zh": "我父亲现在在医院。",
+  "ru": "Мой отец сейчас в госпитале.",
+  "en": "My father is in the hospital now.",
+  "source": "tatoeba #510655"
+ },
+ {
+  "zh": "玛丽是一位医生。",
+  "ru": "Мэри - врач.",
+  "en": "Mary is a doctor.",
+  "source": "tatoeba #3068670"
+ },
+ {
+  "zh": "他是不是医生？",
+  "ru": "Он врач?",
+  "en": "Is he a doctor?",
+  "source": "tatoeba #483688"
+ },
+ {
+  "zh": "您不是医生。",
+  "ru": "Вы не врач.",
+  "en": "You're not a doctor.",
+  "source": "tatoeba #782332"
+ },
+ {
+  "zh": "她是医生。",
+  "ru": "Она врач.",
+  "en": "She's a doctor.",
+  "source": "tatoeba #334971"
+ },
+ {
+  "zh": "他是医生。",
+  "ru": "Он врач.",
+  "en": "He's a doctor.",
+  "source": "tatoeba #348032"
+ },
+ {
+  "zh": "我的老婆是一个医生。",
+  "ru": "Моя жена — врач.",
+  "en": "My wife is a doctor.",
+  "source": "tatoeba #378953"
+ },
+ {
+  "zh": "我老婆是中国人。",
+  "ru": "Моя жена - китаянка.",
+  "en": "My wife is Chinese.",
+  "source": "tatoeba #1307039"
+ },
+ {
+  "zh": "他不是医生，他是教师。",
+  "ru": "Он не доктор, а преподаватель.",
+  "en": "He is not a doctor but a teacher.",
+  "source": "tatoeba #343353"
+ },
+ {
+  "zh": "谁教了你说话？",
+  "ru": "Кто тебя научил разговаривать?",
+  "en": "Who taught you to speak?",
+  "source": "tatoeba #3377927"
+ },
+ {
+  "zh": "谁教你法语？",
+  "ru": "Кто учит тебя французскому?",
+  "en": "Who teaches you French?",
+  "source": "tatoeba #340477"
+ },
+ {
+  "zh": "他不信教。",
+  "ru": "Он не верующий.",
+  "en": "He is not religious.",
+  "source": "tatoeba #462045"
+ },
+ {
+  "zh": "教学相长。",
+  "ru": "Учить - это учиться.",
+  "en": "Teaching is learning.",
+  "source": "tatoeba #810762"
+ },
+ {
+  "zh": "我教书。",
+  "ru": "Я преподаю.",
+  "en": "I teach.",
+  "source": "tatoeba #335164"
+ },
+ {
+  "zh": "父母很重视孩子的教育。",
+  "ru": "Родители придают большое значение воспитанию своих детей.",
+  "en": "The parents value their children's education.",
+  "source": "tatoeba #3061876"
+ },
+ {
+  "zh": "我们在教堂里遇到。",
+  "ru": "Мы встретились в церкви.",
+  "en": "We met at the church.",
+  "source": "tatoeba #4147290"
+ },
+ {
+  "zh": "我每天上教堂。",
+  "ru": "Я хожу в церковь каждый день.",
+  "en": "I go to church every day.",
+  "source": "tatoeba #848458"
+ },
+ {
+  "zh": "我能教你迷住男人。",
+  "ru": "Я могу научить тебя сводить с ума мужчин.",
+  "en": "I can teach you how to bewitch men.",
+  "source": "tatoeba #5691238"
+ },
+ {
+  "zh": "他被你迷住了。",
+  "ru": "Он очарован тобой.",
+  "en": "He's crazy about you.",
+  "source": "tatoeba #393756"
+ },
+ {
+  "zh": "因为他迷路了。",
+  "ru": "Это потому, что он заблудился.",
+  "en": "It's because he got lost.",
+  "source": "tatoeba #2200459"
+ },
+ {
+  "zh": "我想我迷路了。",
+  "ru": "Думаю, что я заблудился.",
+  "en": "I think I'm lost.",
+  "source": "tatoeba #6559041"
+ },
+ {
+  "zh": "您迷路了吗？",
+  "ru": "Вы потерялись?",
+  "en": "Are you lost?",
+  "source": "tatoeba #465006"
+ },
+ {
+  "zh": "你迷路了吗？",
+  "ru": "Ты потерялся?",
+  "en": "Are you lost?",
+  "source": "tatoeba #465008"
+ },
+ {
+  "zh": "有一次，我在树里迷路了。",
+  "ru": "Однажды, я заблудился внутри дерева.",
+  "en": "Once, I got lost inside a tree.",
+  "source": "tatoeba #553827"
+ },
+ {
+  "zh": "我们在树林中迷路了。",
+  "ru": "Мы заблудились в лесу.",
+  "en": "We got lost in the woods.",
+  "source": "tatoeba #552096"
+ },
+ {
+  "zh": "我在树林里迷路了。",
+  "ru": "Я заблудился в лесу.",
+  "en": "I got lost in the woods.",
+  "source": "tatoeba #678189"
+ },
+ {
+  "zh": "不论去哪，我都会迷路。",
+  "ru": "Куда бы я ни пошел, я заблужусь.",
+  "en": "No matter where I go, I get lost.",
+  "source": "tatoeba #1314149"
+ },
+ {
+  "zh": "他的理论很难懂。",
+  "ru": "Его теорию сложно понять.",
+  "en": "It's difficult to understand his theory.",
+  "source": "tatoeba #846766"
+ },
+ {
+  "zh": "她被他的笑容迷住了。",
+  "ru": "Она была околдована его улыбкой.",
+  "en": "She was bewitched by his smile.",
+  "source": "tatoeba #512129"
+ },
+ {
+  "zh": "他提出了一种新理论。",
+  "ru": "Он выдвинул новую теорию.",
+  "en": "He put forward a new theory.",
+  "source": "tatoeba #6451977"
+ },
+ {
+  "zh": "好运向他露出了笑容。",
+  "ru": "Удача ему улыбнулась.",
+  "en": "Fortune beamed on him.",
+  "source": "tatoeba #8739345"
+ },
+ {
+  "zh": "她的手提包被偷了。",
+  "ru": "У неё украли сумочку.",
+  "en": "She had her handbag stolen.",
+  "source": "tatoeba #419901"
+ },
+ {
+  "zh": "她是偷偷去的。",
+  "ru": "Она ушла тайно.",
+  "en": "She went secretly.",
+  "source": "tatoeba #2737436"
+ },
+ {
+  "zh": "她有很多手提行李。",
+  "ru": "У неё много ручной клади.",
+  "en": "She has a lot of carry-on luggage.",
+  "source": "tatoeba #466273"
+ },
+ {
+  "zh": "有人偷了我的行李。",
+  "ru": "Кто-то украл мой багаж.",
+  "en": "Somebody has stolen my suitcase.",
+  "source": "tatoeba #817281"
+ },
+ {
+  "zh": "这是我的行李。",
+  "ru": "Это мой багаж.",
+  "en": "Here is my baggage.",
+  "source": "tatoeba #481345"
+ },
+ {
+  "zh": "外语很多，时间很短",
+  "ru": "Так много языков, так мало времени…",
+  "en": "So many languages, so little time...",
+  "source": "tatoeba #4047395"
+ },
+ {
+  "zh": "现在我有很多现金。",
+  "ru": "Теперь у меня много денег.",
+  "en": "I have a lot of cash now.",
+  "source": "tatoeba #6402747"
+ },
+ {
+  "zh": "金子比水重得多。",
+  "ru": "Золото гораздо тяжелее воды.",
+  "en": "Gold is far heavier than water.",
+  "source": "tatoeba #332591"
+ },
+ {
+  "zh": "他说他是不幸运的。",
+  "ru": "Он сказал, что ему не повезло.",
+  "en": "He said he's unlucky.",
+  "source": "tatoeba #9690039"
+ },
+ {
+  "zh": "你觉得幸运吗？",
+  "ru": "Ты думаешь, что тебе повезло?",
+  "en": "Do you feel lucky?",
+  "source": "tatoeba #1808260"
+ },
+ {
+  "zh": "我相信他是幸福的。",
+  "ru": "Я уверена, что он счастлив.",
+  "en": "I believe that he's happy.",
+  "source": "tatoeba #426417"
+ },
+ {
+  "zh": "我会让你幸福的。",
+  "ru": "Я принесу тебе счастье.",
+  "en": "I'll make you happy.",
+  "source": "tatoeba #408459"
+ },
+ {
+  "zh": "她说了她很幸福。",
+  "ru": "Она сказала, что она очень счастлива.",
+  "en": "She said she was happy.",
+  "source": "tatoeba #334284"
+ },
+ {
+  "zh": "他死得不幸福。",
+  "ru": "Он умер несчастным.",
+  "en": "He didn't die happily.",
+  "source": "tatoeba #349648"
+ },
+ {
+  "zh": "钱买不到幸福。",
+  "ru": "Счастья за деньги не купишь.",
+  "en": "Money can't buy happiness.",
+  "source": "tatoeba #401010"
+ },
+ {
+  "zh": "你幸福吗？",
+  "ru": "Ты счастлив?",
+  "en": "Are you happy?",
+  "source": "tatoeba #1877958"
+ },
+ {
+  "zh": "他晚上很晚才回家。",
+  "ru": "Он вернулся домой поздно вечером.",
+  "en": "He came home late in the evening.",
+  "source": "tatoeba #10541627"
+ },
+ {
+  "zh": "不，我不是！你才是！",
+  "ru": "Нет, не я, а ты!",
+  "en": "No I'm not; you are!",
+  "source": "tatoeba #40"
+ },
+ {
+  "zh": "我来自法国，你呢？",
+  "ru": "Я из Франции, а ты?",
+  "en": "I'm from France, and you?",
+  "source": "tatoeba #10727087"
+ },
+ {
+  "zh": "这是我的自行车。",
+  "ru": "Это мой велосипед.",
+  "en": "This is my bike.",
+  "source": "tatoeba #334532"
+ },
+ {
+  "zh": "他自杀了。",
+  "ru": "Он покончил с собой.",
+  "en": "He committed suicide.",
+  "source": "tatoeba #405244"
+ },
+ {
+  "zh": "我是自学这门语言的。",
+  "ru": "Я изучаю этот язык самостоятельно.",
+  "en": "I learn the language by myself.",
+  "source": "tatoeba #1545676"
+ },
+ {
+  "zh": "这本书对我而言太贵了。",
+  "ru": "Эта книга слишком дорогая для меня.",
+  "en": "This book is too expensive for me.",
+  "source": "tatoeba #9961247"
+ },
+ {
+  "zh": "从哪里而来？",
+  "ru": "Откуда это?",
+  "en": "Where did it come from?",
+  "source": "tatoeba #670949"
+ },
+ {
+  "zh": "这辆自行车是谁的？",
+  "ru": "Чей это велосипед?",
+  "en": "Whose bike is this?",
+  "source": "tatoeba #334531"
+ },
+ {
+  "zh": "我需要一辆新车。",
+  "ru": "Мне нужна новая машина.",
+  "en": "I need a new car.",
+  "source": "tatoeba #1869205"
+ },
+ {
+  "zh": "我要买辆新车。",
+  "ru": "Я собираюсь купить новую машину.",
+  "en": "I'm going to buy a new car.",
+  "source": "tatoeba #343931"
+ },
+ {
+  "zh": "我有一辆车。",
+  "ru": "У меня есть машина.",
+  "en": "I have a car.",
+  "source": "tatoeba #342842"
+ },
+ {
+  "zh": "他有辆车。",
+  "ru": "У него есть машина.",
+  "en": "He has a car.",
+  "source": "tatoeba #493519"
+ },
+ {
+  "zh": "这辆自行车需要修理。",
+  "ru": "Этот велосипед требует починки.",
+  "en": "This bicycle needs repairing.",
+  "source": "tatoeba #334533"
+ },
+ {
+  "zh": "这条马路在修理呢。",
+  "ru": "Дорога в ремонте.",
+  "en": "This road is under repair.",
+  "source": "tatoeba #2220879"
+ },
+ {
+  "zh": "那条裙子是不是太短了？",
+  "ru": "Юбка слишком короткая?",
+  "en": "Isn't that skirt too short?",
+  "source": "tatoeba #8851416"
+ },
+ {
+  "zh": "这条路是去机场的。",
+  "ru": "Эта дорога приведёт вас в аэропорт.",
+  "en": "This road will lead you to the airport.",
+  "source": "tatoeba #1395080"
+ },
+ {
+  "zh": "中场比分是多少？",
+  "ru": "Какой счёт был в первом тайме?",
+  "en": "What was the score at halftime?",
+  "source": "tatoeba #778867"
+ },
+ {
+  "zh": "我们在机场为她送行。",
+  "ru": "Мы проводили её в аэропорту.",
+  "en": "We saw her off at the airport.",
+  "source": "tatoeba #528024"
+ },
+ {
+  "zh": "你愿意让我送你回家吗？",
+  "ru": "Ты хочешь, чтобы я проводил тебя до дому?",
+  "en": "Would you like me to see you home?",
+  "source": "tatoeba #796813"
+ },
+ {
+  "zh": "你愿意来吗？",
+  "ru": "Ты хочешь приехать?",
+  "en": "Would you like to come?",
+  "source": "tatoeba #1776642"
+ },
+ {
+  "zh": "我不愿意做。",
+  "ru": "Я не желаю этого делать.",
+  "en": "I'd be opposed to doing that.",
+  "source": "tatoeba #9401508"
+ },
+ {
+  "zh": "快步前进，同志们！",
+  "ru": "Скорей вперёд, товарищи!",
+  "en": "Hurry on, comrades!",
+  "source": "tatoeba #12271016"
+ },
+ {
+  "zh": "我是同志。",
+  "ru": "Я гей.",
+  "en": "I'm gay.",
+  "source": "tatoeba #1703630"
+ },
+ {
+  "zh": "她答应几时见他？",
+  "ru": "Когда она пообещала увидеться с ним?",
+  "en": "When did she promise to meet him?",
+  "source": "tatoeba #332995"
+ },
+ {
+  "zh": "这是他们应得的。",
+  "ru": "Они заслуживают это.",
+  "en": "They deserve it.",
+  "source": "tatoeba #3680887"
+ },
+ {
+  "zh": "我认识她两年了。",
+  "ru": "Я знал её два года.",
+  "en": "I have known her for two years.",
+  "source": "tatoeba #333348"
+ },
+ {
+  "zh": "我们有两个孩子。",
+  "ru": "У нас двое детей.",
+  "en": "We have two kids.",
+  "source": "tatoeba #408165"
+ },
+ {
+  "zh": "你不能一心两用。",
+  "ru": "Нельзя делать два дела одновременно.",
+  "en": "You can't do two things at once.",
+  "source": "tatoeba #803801"
+ },
+ {
+  "zh": "他晚回来了两天。",
+  "ru": "Он вернулся двумя днями позднее.",
+  "en": "He came back two days late.",
+  "source": "tatoeba #993768"
+ },
+ {
+  "zh": "我学两种外语。",
+  "ru": "Я изучаю два иностранных языка.",
+  "en": "I am learning two foreign languages.",
+  "source": "tatoeba #400992"
+ },
+ {
+  "zh": "我有两个哥哥。",
+  "ru": "У меня два старших брата.",
+  "en": "I have two big brothers.",
+  "source": "tatoeba #1778675"
+ },
+ {
+  "zh": "我有两辆车。",
+  "ru": "У меня есть две машины.",
+  "en": "I had two cars.",
+  "source": "tatoeba #411702"
+ },
+ {
+  "zh": "你有两本书。",
+  "ru": "У тебя две книги.",
+  "en": "You have two books.",
+  "source": "tatoeba #524451"
+ },
+ {
+  "zh": "我到东京是两个月前。",
+  "ru": "Я приехал в Токио два месяца назад.",
+  "en": "It was two months ago that I arrived in Tokyo.",
+  "source": "tatoeba #4287494"
+ },
+ {
+  "zh": "我去东京站见他。",
+  "ru": "Я встретил его на вокзале в Токио.",
+  "en": "I met him at Tokyo Station.",
+  "source": "tatoeba #3667788"
+ },
+ {
+  "zh": "它比东京小。",
+  "ru": "Он меньше, чем Токио.",
+  "en": "It is smaller than Tokyo.",
+  "source": "tatoeba #689224"
+ },
+ {
+  "zh": "他住在东京。",
+  "ru": "Он живёт в Токио.",
+  "en": "He lives in Tokyo.",
+  "source": "tatoeba #3666959"
+ },
+ {
+  "zh": "我好多天没吃东西了。",
+  "ru": "Я много дней ничего не ел.",
+  "en": "I haven't eaten for days.",
+  "source": "tatoeba #1417555"
+ },
+ {
+  "zh": "他说的东西笑死我了。",
+  "ru": "Я умираю от смеха от его рассказов.",
+  "en": "I almost die laughing at the things he says.",
+  "source": "tatoeba #7012143"
+ },
+ {
+  "zh": "这些东西不是我的！",
+  "ru": "Это не мои вещи!",
+  "en": "These things aren't mine!",
+  "source": "tatoeba #501533"
+ },
+ {
+  "zh": "这东西多少钱？",
+  "ru": "Сколько это стоит?",
+  "en": "How much is this thing?",
+  "source": "tatoeba #420698"
+ },
+ {
+  "zh": "西班牙语是她的母语。",
+  "ru": "Испанский — её родной язык.",
+  "en": "Spanish is her mother tongue.",
+  "source": "tatoeba #347044"
+ },
+ {
+  "zh": "我爱西班牙语！",
+  "ru": "Обожаю испанский!",
+  "en": "I love Spanish!",
+  "source": "tatoeba #1714800"
+ },
+ {
+  "zh": "他去看牙医了。",
+  "ru": "Он пошёл к зубному врачу.",
+  "en": "He went to the dentist.",
+  "source": "tatoeba #7771894"
+ },
+ {
+  "zh": "我在西班牙。",
+  "ru": "Я в Испании.",
+  "en": "I'm in Spain.",
+  "source": "tatoeba #5119519"
+ },
+ {
+  "zh": "她在超市做秘书。",
+  "ru": "Она работает секретарём в супермаркете.",
+  "en": "She is a clerk in the supermarket.",
+  "source": "tatoeba #333668"
+ },
+ {
+  "zh": "他认识市长。",
+  "ru": "Он знаком с мэром.",
+  "en": "He knows the mayor.",
+  "source": "tatoeba #390545"
+ },
+ {
+  "zh": "东京是一个很大的城市。",
+  "ru": "Токио - большой город.",
+  "en": "Tokyo is a big city.",
+  "source": "tatoeba #333362"
+ },
+ {
+  "zh": "我住在一个大城市里。",
+  "ru": "Я живу в большом городе.",
+  "en": "I live in a big city.",
+  "source": "tatoeba #334645"
+ },
+ {
+  "zh": "这是他出生的城市。",
+  "ru": "Это город, где он родился.",
+  "en": "This is the town where he was born.",
+  "source": "tatoeba #782373"
+ },
+ {
+  "zh": "我喜欢你们的城市。",
+  "ru": "Мне нравится ваш город.",
+  "en": "I like your city.",
+  "source": "tatoeba #1807058"
+ },
+ {
+  "zh": "她想住在城市里。",
+  "ru": "Она хочет жить в городе.",
+  "en": "She wants to live in the city.",
+  "source": "tatoeba #1867364"
+ },
+ {
+  "zh": "他再次被选为市长。",
+  "ru": "Он снова избран мэром.",
+  "en": "He was re-elected mayor.",
+  "source": "tatoeba #405202"
+ },
+ {
+  "zh": "他被选为市长。",
+  "ru": "Его избрали мэром.",
+  "en": "He was elected mayor.",
+  "source": "tatoeba #332862"
+ },
+ {
+  "zh": "我们何不回家呢？",
+  "ru": "Почему мы не возвращаемся домой?",
+  "en": "Why don't we go home?",
+  "source": "tatoeba #334555"
+ },
+ {
+  "zh": "我再也不相信任何人了！",
+  "ru": "Я больше никому не могу доверять.",
+  "en": "I can't believe anyone anymore.",
+  "source": "tatoeba #4906193"
+ },
+ {
+  "zh": "没有任何人帮助我。",
+  "ru": "Мне никто не помогает.",
+  "en": "No one helped me.",
+  "source": "tatoeba #349432"
+ },
+ {
+  "zh": "任何人都可以做到。",
+  "ru": "Это кто угодно может сделать.",
+  "en": "Anyone can do that.",
+  "source": "tatoeba #825765"
+ },
+ {
+  "zh": "任何小孩都能做到。",
+  "ru": "С этим справится любой ребёнок.",
+  "en": "Any child can do that.",
+  "source": "tatoeba #833179"
+ },
+ {
+  "zh": "我没有任何借口。",
+  "ru": "У меня нет оправданий.",
+  "en": "I don't have an excuse.",
+  "source": "tatoeba #395290"
+ },
+ {
+  "zh": "他不值得信任。",
+  "ru": "Ему нельзя доверять.",
+  "en": "He can't be trusted.",
+  "source": "tatoeba #353510"
+ },
+ {
+  "zh": "我信任他。",
+  "ru": "Я доверяю ему.",
+  "en": "I trust him.",
+  "source": "tatoeba #1762944"
+ },
+ {
+  "zh": "我喜欢独自旅行。",
+  "ru": "Я люблю путешествовать один.",
+  "en": "I like to travel alone.",
+  "source": "tatoeba #335410"
+ },
+ {
+  "zh": "我喜欢独自一人散步。",
+  "ru": "Мне нравится гулять наедине с самим собой.",
+  "en": "I like a solitary walk.",
+  "source": "tatoeba #348508"
+ },
+ {
+  "zh": "他喜欢独自散步。",
+  "ru": "Ему нравится гулять в одиночестве.",
+  "en": "He likes taking a walk by himself.",
+  "source": "tatoeba #462007"
+ },
+ {
+  "zh": "你要出去散步吗？",
+  "ru": "Хочешь пойти погулять?",
+  "en": "Do you want to go for a walk?",
+  "source": "tatoeba #9453423"
+ },
+ {
+  "zh": "我独自待在教室里。",
+  "ru": "Я был в классе один.",
+  "en": "I was alone in the classroom.",
+  "source": "tatoeba #463921"
+ },
+ {
+  "zh": "他正坐在会议室里。",
+  "ru": "Он заседает в зале заседаний.",
+  "en": "He's sitting in the meeting room.",
+  "source": "tatoeba #332471"
+ },
+ {
+  "zh": "你必须去会议。",
+  "ru": "Ты должен пойти на собрание.",
+  "en": "You have to go to the meeting.",
+  "source": "tatoeba #3011102"
+ },
+ {
+  "zh": "我和他都不相信。",
+  "ru": "Ни он, ни я этому не верим.",
+  "en": "I, as well as he, am not convinced.",
+  "source": "tatoeba #339282"
+ },
+ {
+  "zh": "爸爸和妈妈都在家。",
+  "ru": "И папа, и мама дома.",
+  "en": "Both dad and mom are at home.",
+  "source": "tatoeba #10961060"
+ },
+ {
+  "zh": "她和我同班。",
+  "ru": "Мы с ней в одном классе.",
+  "en": "She and I are in the same class.",
+  "source": "tatoeba #1328123"
+ },
+ {
+  "zh": "他常和她一起去看电影。",
+  "ru": "Он часто ходит с ней смотреть кино.",
+  "en": "He often goes with her to watch movies.",
+  "source": "tatoeba #993776"
+ },
+ {
+  "zh": "我以前常在那儿。",
+  "ru": "Я часто там бывал.",
+  "en": "I was often there.",
+  "source": "tatoeba #1516204"
+ },
+ {
+  "zh": "她常来我这做客。",
+  "ru": "Она часто ходит ко мне в гости.",
+  "en": "She often comes over my place.",
+  "source": "tatoeba #4265151"
+ },
+ {
+  "zh": "我们昨晚过得非常开心。",
+  "ru": "Мы хорошо провели время прошлой ночью.",
+  "en": "We had a very good time last night.",
+  "source": "tatoeba #8762954"
+ },
+ {
+  "zh": "她是个非常好的老师。",
+  "ru": "Она очень хороший учитель.",
+  "en": "She is a very good teacher.",
+  "source": "tatoeba #512495"
+ },
+ {
+  "zh": "我非常喜欢这些故事。",
+  "ru": "Мне очень нравятся эти истории.",
+  "en": "I really like these stories.",
+  "source": "tatoeba #686978"
+ },
+ {
+  "zh": "我们都非常喜欢你。",
+  "ru": "Всем нам ты весьма нравишься.",
+  "en": "We all like you a lot.",
+  "source": "tatoeba #510780"
+ },
+ {
+  "zh": "我昨天非常想念你。",
+  "ru": "Я очень скучал по тебе вчера.",
+  "en": "I missed you very much yesterday.",
+  "source": "tatoeba #848418"
+ },
+ {
+  "zh": "我们相处得非常好。",
+  "ru": "Мы замечательно уживаемся.",
+  "en": "We get along very well.",
+  "source": "tatoeba #3333012"
+ },
+ {
+  "zh": "她非常像她的母亲。",
+  "ru": "Она очень похожа на её мать.",
+  "en": "She looks a lot like her mother.",
+  "source": "tatoeba #465002"
+ },
+ {
+  "zh": "我们都非常想你。",
+  "ru": "Мы все очень по тебе скучаем.",
+  "en": "We all miss you very much.",
+  "source": "tatoeba #335821"
+ },
+ {
+  "zh": "水是非常必要的。",
+  "ru": "Вода крайне необходима.",
+  "en": "Water is much needed.",
+  "source": "tatoeba #886585"
+ },
+ {
+  "zh": "这里夏天非常热。",
+  "ru": "Летом здесь очень жарко.",
+  "en": "It is very hot here in summer.",
+  "source": "tatoeba #1397140"
+ },
+ {
+  "zh": "我非常乐意前来。",
+  "ru": "Я очень рад приехать.",
+  "en": "I'm very happy to come.",
+  "source": "tatoeba #9797558"
+ },
+ {
+  "zh": "我非常想见她。",
+  "ru": "Мне очень хочется её увидеть.",
+  "en": "I want to see her very much.",
+  "source": "tatoeba #12947981"
+ },
+ {
+  "zh": "他非常了解他。",
+  "ru": "Он очень хорошо его знает.",
+  "en": "He knows him very well.",
+  "source": "tatoeba #10619345"
+ },
+ {
+  "zh": "他是非不分。",
+  "ru": "Он не делает никакого различия между истиной и ложью.",
+  "en": "He has no sense of right and wrong.",
+  "source": "tatoeba #332927"
+ }
+]

@@ -65,3 +65,7 @@ wrangler secret put SESSION_SECRET        # openssl rand -base64 32
 wrangler secret put GEMINI_API_KEY
 wrangler deploy
 ```
+
+## Пул фраз и кнопка «Новая фраза»
+
+`data/pool.json` — пул из 1000 фраз Tatoeba (`fetch_phrases.py --count 1000 --max-new 3 --out data/pool.json`), собирается в `site/phrase.json` (`pool`). Кнопка «Новая фраза» выбирает фразу с минимумом ещё не виденных иероглифов (известные + уже показанные); полученные фразы запоминаются в localStorage (`hanzi-seen-pool`) и попадают в выпадающий список. Данные Tatoeba — CC BY 2.0 FR.

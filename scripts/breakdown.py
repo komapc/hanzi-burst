@@ -1,7 +1,7 @@
 """Разбор китайской фразы: слова (CC-CEDICT) + иероглифы, рекурсивно на компоненты (Make Me a Hanzi).
 
 Использование:
-  python3 -I scripts/breakdown.py data/phrases.json site/phrase.json   # список фраз [{zh, ru, en}]
+  python3 -I scripts/breakdown.py data/phrases.json site/phrase.json [data/pool.json]   # список фраз [{zh, ru, en}] + пул для «новой фразы»
   python3 -I scripts/breakdown.py "我想学汉字" [out.json]                # одна фраза
 
 Рядом с out.json кладётся glyphs.json (контуры черт из Make Me a Hanzi, чтобы рисовать иероглифы SVG,
@@ -255,6 +255,7 @@ def main():
         phrase_defs = json.loads(Path(arg).read_text(encoding="utf-8"))
     else:
         phrase_defs = [{"zh": arg}]
+    pool_defs = json.loads(Path(sys.argv[3]).read_text(encoding="utf-8")) if len(sys.argv) > 3 else []
     mmh, words = load_mmh(), load_cedict()
     maps = load_radical_maps()
     tr = load_translations()
@@ -266,20 +267,29 @@ def main():
         for c in set(w):
             freq[c] = freq.get(c, 0) + 1
 
-    phrases, seed = [], []
-    for pd in phrase_defs:
-        parsed = []
-        for w in segment(pd["zh"], words):
-            if not re.match(r"[\u4e00-\u9fff]", w[0]):
-                parsed.append({"word": w, "punct": True})
-                continue
-            entry = {"word": w, "cedict": [dict(e, defs_ru=[tr.get(x, x) for x in e["defs"]]) for e in words.get(w, [])[:2]], "chars": list(w)}
-            syl = words[w][0]["pinyin"].split() if w in words else []
-            if len(syl) == len(w):  # чтение в контексте слова (好 hǎo/hào, 了 le/liǎo)
-                entry["pinyin"] = syl
-            parsed.append(entry)
-            seed.extend(w)
-        phrases.append({"zh": pd["zh"], "ru": pd.get("ru"), "en": pd.get("en"), "words": parsed})
+    seed = []
+
+    def build(defs, slim):
+        out = []
+        for pd in defs:
+            parsed = []
+            for w in segment(pd["zh"], words):
+                if not re.match(r"[\u4e00-\u9fff]", w[0]):
+                    parsed.append({"word": w, "punct": True})
+                    continue
+                entry = {"word": w, "chars": list(w)}
+                if not slim:
+                    entry["cedict"] = [dict(e, defs_ru=[tr.get(x, x) for x in e["defs"]]) for e in words.get(w, [])[:2]]
+                syl = words[w][0]["pinyin"].split() if w in words else []
+                if len(syl) == len(w):  # чтение в контексте слова (好 hǎo/hào, 了 le/liǎo)
+                    entry["pinyin"] = syl
+                parsed.append(entry)
+                seed.extend(w)
+            out.append({"zh": pd["zh"], "ru": pd.get("ru"), "en": pd.get("en"), "words": parsed})
+        return out
+
+    phrases = build(phrase_defs, slim=False)
+    pool = build(pool_defs, slim=True)
 
     chars = {}
     closure(seed, mmh, chars, maps, tr)
@@ -294,6 +304,7 @@ def main():
             parents.setdefault(comp, []).append(c)
 
     usage = {}
+    in_data = set(core)   # «иероглифы с этой частью» только из тех, что есть во фразах: данные не раздуваются
     for c in core:
         ws = [w for w in words if c in w and w != c and 2 <= len(w) <= 4]
         ws.sort(key=lambda w: (-min(freq.get(x, 0) for x in w), len(w)))
@@ -304,21 +315,19 @@ def main():
                 for w in ws[:TOP_WORDS]
             ],
             "chars": sorted(
-                (p for p in parents.get(c, []) if re.match(r"[一-鿿]", p)),
+                (p for p in parents.get(c, []) if p in in_data),
                 key=lambda p: -freq.get(p, 0),
             )[:TOP_CHARS],
         }
-    extra = [p for u in usage.values() for p in u["chars"]]
-    closure(extra, mmh, chars, maps, tr)
 
-    result = {"phrases": phrases, "chars": chars, "usage": usage}
+    result = {"phrases": phrases, "pool": pool, "chars": chars, "usage": usage}
     text = json.dumps(result, ensure_ascii=False, indent=1)
     if len(sys.argv) > 2:
         out = Path(sys.argv[2])
         out.write_text(text, encoding="utf-8")
         glyphs = load_glyphs(set(chars))
         (out.parent / "glyphs.json").write_text(json.dumps(glyphs, ensure_ascii=False), encoding="utf-8")
-    print(f"phrases={len(phrases)} core={len(core)} chars={len(chars)} bytes={len(text.encode())}")
+    print(f"phrases={len(phrases)} pool={len(pool)} core={len(core)} chars={len(chars)} bytes={len(text.encode())}")
 
 
 main()

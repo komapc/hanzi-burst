@@ -55,9 +55,12 @@ def main():
     ap.add_argument("--min-len", type=int, default=3)
     ap.add_argument("--max-len", type=int, default=10)
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--out", default=str(PHRASES), help="куда писать (по умолчанию data/phrases.json)")
+    ap.add_argument("--base", default=str(PHRASES), help="какой файл считать уже имеющимся (для учебной программы)")
+    ap.add_argument("--quiet", action="store_true")
     a = ap.parse_args()
 
-    existing = json.loads(PHRASES.read_text(encoding="utf-8"))
+    existing = json.loads(Path(a.base).read_text(encoding="utf-8"))
     norm = lambda t: "".join(c for c in t if HAN.match(c))
     have_text = {norm(p["zh"]) for p in existing}
     have_sets = {frozenset(norm(p["zh"])) for p in existing}   # «我想你» и «我很想你。» считаем разными, «今天是我生日» дублем «今天是我的生日» нет
@@ -118,14 +121,19 @@ def main():
         cands = [c for c in cands if c is not best and frozenset(c["han"]) not in have_sets]
 
     print(f"кандидатов после фильтров: {len(cands) + len(picked)}, выбрано: {len(picked)}")
-    for p in picked:
+    for p in ([] if a.quiet else picked):
         print(f"  {p['zh']}  |  {p['ru']}  |  {p['en']}")
     if a.dry_run:
         return
-    for p in picked:
-        existing.append({"zh": p["zh"], "ru": p["ru"], "en": p["en"], "source": f"tatoeba #{p['id']}"})
-    PHRASES.write_text(json.dumps(existing, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
-    print(f"всего фраз: {len(existing)}")
+    new = [{"zh": p["zh"], "ru": p["ru"], "en": p["en"], "source": f"tatoeba #{p['id']}"} for p in picked]
+    out = Path(a.out)
+    if out == PHRASES:      # дописываем к основному списку
+        existing.extend(new)
+        out.write_text(json.dumps(existing, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+        print(f"всего фраз: {len(existing)}")
+    else:                   # пул: только новые фразы
+        out.write_text(json.dumps(new, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+        print(f"записано в {out}: {len(new)}")
 
 
 main()
