@@ -1,12 +1,14 @@
 """Разбор китайской фразы: слова (CC-CEDICT) + иероглифы, рекурсивно на компоненты (Make Me a Hanzi).
 
-Использование: python3 -I scripts/breakdown.py "我想学汉字" [out.json]
+Использование:
+  python3 -I scripts/breakdown.py data/phrases.json site/phrase.json   # список фраз [{zh, ru, en}]
+  python3 -I scripts/breakdown.py "我想学汉字" [out.json]                # одна фраза
 
 Рядом с out.json кладётся glyphs.json (контуры черт из Make Me a Hanzi, чтобы рисовать иероглифы SVG,
 а не шрифтом: шрифты с фолбэком иногда теряют черты). Переводы: data/translations/ru.json {en: ru}.
 
 Формат результата:
-  phrase: [{word, punct?, cedict?, chars?: [ch, ...]}]
+  phrases: [{zh, ru, en, words: [{word, punct?, cedict?, chars?: [ch, ...], pinyin?: [слог на иероглиф]}]}]
   chars:  {ch: {pinyin, definition, radical, decomposition, etymology, components: [ch, ...]}}
   usage:  {ch: {words: [{w, pinyin, def}], chars: [ch, ...]}}  # только для иероглифов и компонентов фразы
 """
@@ -248,7 +250,11 @@ def closure(seed, mmh, out, maps=None, tr=None):
 
 
 def main():
-    phrase = sys.argv[1]
+    arg = sys.argv[1]
+    if arg.endswith(".json"):
+        phrase_defs = json.loads(Path(arg).read_text(encoding="utf-8"))
+    else:
+        phrase_defs = [{"zh": arg}]
     mmh, words = load_mmh(), load_cedict()
     maps = load_radical_maps()
     tr = load_translations()
@@ -260,13 +266,20 @@ def main():
         for c in set(w):
             freq[c] = freq.get(c, 0) + 1
 
-    parsed, seed = [], []
-    for w in segment(phrase, words):
-        if not re.match(r"[一-鿿]", w[0]):
-            parsed.append({"word": w, "punct": True})
-            continue
-        parsed.append({"word": w, "cedict": [dict(e, defs_ru=[tr.get(x, x) for x in e["defs"]]) for e in words.get(w, [])[:2]], "chars": list(w)})
-        seed.extend(w)
+    phrases, seed = [], []
+    for pd in phrase_defs:
+        parsed = []
+        for w in segment(pd["zh"], words):
+            if not re.match(r"[\u4e00-\u9fff]", w[0]):
+                parsed.append({"word": w, "punct": True})
+                continue
+            entry = {"word": w, "cedict": [dict(e, defs_ru=[tr.get(x, x) for x in e["defs"]]) for e in words.get(w, [])[:2]], "chars": list(w)}
+            syl = words[w][0]["pinyin"].split() if w in words else []
+            if len(syl) == len(w):  # чтение в контексте слова (好 hǎo/hào, 了 le/liǎo)
+                entry["pinyin"] = syl
+            parsed.append(entry)
+            seed.extend(w)
+        phrases.append({"zh": pd["zh"], "ru": pd.get("ru"), "en": pd.get("en"), "words": parsed})
 
     chars = {}
     closure(seed, mmh, chars, maps, tr)
@@ -298,14 +311,14 @@ def main():
     extra = [p for u in usage.values() for p in u["chars"]]
     closure(extra, mmh, chars, maps, tr)
 
-    result = {"phrase": parsed, "chars": chars, "usage": usage}
+    result = {"phrases": phrases, "chars": chars, "usage": usage}
     text = json.dumps(result, ensure_ascii=False, indent=1)
     if len(sys.argv) > 2:
         out = Path(sys.argv[2])
         out.write_text(text, encoding="utf-8")
-        glyphs = load_glyphs(set(chars) | set("".join(w["word"] for w in parsed)))
+        glyphs = load_glyphs(set(chars))
         (out.parent / "glyphs.json").write_text(json.dumps(glyphs, ensure_ascii=False), encoding="utf-8")
-    print(f"phrase={phrase} core={len(core)} chars={len(chars)} bytes={len(text.encode())}")
+    print(f"phrases={len(phrases)} core={len(core)} chars={len(chars)} bytes={len(text.encode())}")
 
 
 main()

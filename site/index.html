@@ -26,6 +26,11 @@
   .lang button { background:none; border:0; color:var(--muted); padding:5px 12px; font:inherit; font-size:.8rem; cursor:pointer; }
   .lang button.on { background:var(--accent); color:#fff; }
 
+  #picker { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .pk { background:none; border:1px solid var(--soft); border-radius:999px; padding:4px 12px; color:var(--muted); font:inherit; font-size:.95rem; cursor:pointer; font-family:"Noto Serif SC","Songti SC",serif; }
+  .pk:hover { border-color:var(--accent); color:var(--accent); }
+  .pk.on { background:var(--accent); border-color:var(--accent); color:#fff; }
+  .trans { margin:6px 0 0; font-size:1.05rem; }
   #phrase { display:flex; flex-wrap:wrap; gap:8px 20px; }
   .word { display:flex; gap:2px; padding:4px 6px; border-radius:10px; }
   .word.active { background:color-mix(in srgb, var(--accent) 12%, transparent); }
@@ -106,7 +111,9 @@
       </span>
     </span>
   </header>
+  <div id="picker" role="tablist"></div>
   <div id="phrase"></div>
+  <p class="trans" id="trans"></p>
   <p class="hint" id="hint"></p>
   <section id="card">
     <div class="toolbar">
@@ -161,6 +168,31 @@ function hz(ch, cls = '') {
 
 let rootCh = null, selected = null;
 
+/* ---------- выбор фразы ---------- */
+let cur = 0;
+function renderPicker() {
+  const el = $('#picker'); el.innerHTML = '';
+  D.phrases.forEach((ph, i) => {
+    const b = document.createElement('button');
+    b.className = 'pk' + (i === cur ? ' on' : '');
+    b.textContent = ph.zh;
+    b.onclick = () => switchPhrase(i);
+    el.append(b);
+  });
+}
+function renderTrans() {
+  const ph = D.phrases[cur];
+  $('#trans').textContent = (lang === 'ru' ? ph.ru : ph.en) || ph.en || '';
+}
+function switchPhrase(i) {
+  cur = i;
+  try { localStorage.setItem('hanzi-phrase', String(i)); } catch (e) {}
+  D.phrase = D.phrases[i].words;
+  rootCh = null; selected = null;
+  $('#card').style.display = 'none';
+  renderPicker(); renderPhrase(); renderTrans(); refresh();
+}
+
 /* ---------- фраза ---------- */
 function renderPhrase() {
   const root = $('#phrase'); root.innerHTML = '';
@@ -168,11 +200,11 @@ function renderPhrase() {
     const el = document.createElement('div');
     el.className = 'word'; el.dataset.w = wi;
     if (w.punct) { el.innerHTML = `<span class="punct">${w.word}</span>`; root.append(el); return; }
-    w.chars.forEach(c => {
+    w.chars.forEach((c, i) => {
       const b = document.createElement('button');
       b.className = 'ch' + (known.has(c) ? ' known' : '') + (c === rootCh ? ' sel' : '');
       b.dataset.ch = c;
-      b.innerHTML = `<span class="py">${py(c)}</span>${hz(c)}`;
+      b.innerHTML = `<span class="py">${(w.pinyin && w.pinyin[i]) || py(c)}</span>${hz(c)}`;
       b.onclick = () => openRoot(c);
       el.append(b);
     });
@@ -390,6 +422,7 @@ function applyLang() {
   $('#explodeAll').innerHTML = ICON.burst + t('all');
   renderAuth();
   if (!D) return;
+  renderTrans();
   // подписи узлов дерева (без пересборки: сохраняем раскрытое состояние)
   document.querySelectorAll('.node').forEach(n => {
     const m = n.querySelector(':scope > .glyph .m'); if (m) m.textContent = short(defOf(n.dataset.ch)) || ' ';
@@ -404,7 +437,12 @@ document.querySelectorAll('.lang button').forEach(b => b.onclick = () => {
 applyLang();
 Promise.all([fetch('phrase.json').then(r => r.json()), fetch('glyphs.json').then(r => r.json())])
   .then(([d, g]) => {
-    D = d; G = g; renderPhrase(); applyLang();
+    D = d; G = g;
+    const q0 = new URLSearchParams(location.search);
+    let saved = 0; try { saved = parseInt(localStorage.getItem('hanzi-phrase') || '0', 10) || 0; } catch (e) {}
+    cur = Math.min(Math.max(q0.has('p') ? parseInt(q0.get('p'), 10) || 0 : saved, 0), D.phrases.length - 1);
+    D.phrase = D.phrases[cur].words;
+    renderPicker(); renderPhrase(); applyLang();
     // ссылка вида ?open=想&explode=1&lang=en открывает иероглиф сразу
     const q = new URLSearchParams(location.search);
     if (q.get('lang')) { lang = q.get('lang'); applyLang(); }
