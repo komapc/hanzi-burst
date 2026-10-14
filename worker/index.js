@@ -92,7 +92,7 @@ export default {
     const url = new URL(request.url);
     const path = url.pathname;
     // Google Search Console: файл подтверждения должен отдаваться по точному адресу, без редиректа на путь без .html
-    const gv = path.match(/^\/(google[0-9a-f]+\.html)$/);
+    const gv = path === '/googled1d667f41fecd0d0.html' ? [null, 'googled1d667f41fecd0d0.html'] : null;
     if (gv) return new Response('google-site-verification: ' + gv[1], { headers: { 'content-type': 'text/html; charset=utf-8' } });
     const method = request.method;
 

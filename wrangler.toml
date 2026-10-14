@@ -10,7 +10,7 @@ command = "python3 -I scripts/build_static.py"   # страницы /c/, /p/ и 
 directory = "./site"
 binding = "ASSETS"
 # /api/* и файл подтверждения Google уходят в Worker, остальное отдаётся из site/
-run_worker_first = ["/api/*", "/google*.html"]
+run_worker_first = ["/api/*", "/googled1d667f41fecd0d0.html"]
 
 [[d1_databases]]
 binding = "DB"
