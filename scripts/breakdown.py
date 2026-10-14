@@ -285,7 +285,13 @@ def main():
                     entry["pinyin"] = syl
                 parsed.append(entry)
                 seed.extend(w)
-            out.append({"zh": pd["zh"], "ru": pd.get("ru"), "en": pd.get("en"), "words": parsed})
+            item = {"zh": pd["zh"], "ru": pd.get("ru"), "en": pd.get("en"), "words": parsed}
+            if pd.get("mt"):
+                item["mt"] = True   # машинный перевод (Common Voice)
+            src = (pd.get("source") or "").split(" ")[0]
+            if src in ("wiktionary", "commonvoice"):
+                item["src"] = src   # приоритет при выборе фразы: tatoeba/ручные > wiktionary > commonvoice
+            out.append(item)
         return out
 
     phrases = build(phrase_defs, slim=False)

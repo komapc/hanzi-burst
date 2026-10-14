@@ -238,7 +238,8 @@ function newPhrase() {
     if (have.has(p.zh)) continue;
     const fresh = new Set();
     p.words.forEach(w => (w.chars || []).forEach(c => { if (!seenCh.has(c)) fresh.add(c); }));
-    if (fresh.size < bestScore) { best = p; bestScore = fresh.size; }
+    const score = fresh.size * 10 + (p.src === 'commonvoice' ? 2 : p.src === 'wiktionary' ? 1 : 0);   // при равенстве: Tatoeba > Wiktionary > Common Voice
+    if (score < bestScore) { best = p; bestScore = score; }
   }
   if (!best) { $('#trans').textContent = t('noMore'); return; }
   const seen = getSeen(); seen.push(best.zh); saveSeen(seen);
@@ -262,7 +263,7 @@ function renderPicker() {   // 50+ фраз: стрелки и выпадающ�
 }
 function renderTrans() {
   const ph = L[cur];
-  $('#trans').textContent = (lang === 'ru' ? ph.ru : ph.en) || ph.en || '';
+  $('#trans').textContent = ((lang === 'ru' ? ph.ru : ph.en) || ph.en || '') + (ph.mt ? (lang === 'ru' ? '  (машинный перевод)' : '  (machine translation)') : '');
 }
 function switchPhrase(i) {
   cur = i;
