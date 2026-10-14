@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>hanzi-burst</title>
+<style>
+  :root { --bg:#faf7f2; --fg:#1f1b16; --muted:#7a7166; --card:#fff; --accent:#c8402a; --line:#cfc6b6; --soft:#e6dfd3; --ok:#2f8f5b; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#17140f; --fg:#f1ebe0; --muted:#9d9486; --card:#221e17; --accent:#ff7a5c; --line:#5a5144; --soft:#352f25; --ok:#5fcf93; }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font-family:system-ui,"Noto Sans SC",sans-serif; }
+  main { max-width:860px; margin:0 auto; padding:24px 16px 64px; }
+  header { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; }
+  h1 { font-size:1rem; font-weight:600; color:var(--muted); margin:0; letter-spacing:.04em; }
+  .serif { font-family:"Noto Serif SC","Songti SC",serif; }
+  .hint { color:var(--muted); font-size:.9rem; margin:8px 0 0; }
+  svg.i { width:1.1em; height:1.1em; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; vertical-align:-.2em; }
+  svg.hz { fill:currentColor; display:block; }
+  .lang { display:inline-flex; border:1px solid var(--soft); border-radius:999px; overflow:hidden; }
+  .lang button { background:none; border:0; color:var(--muted); padding:5px 12px; font:inherit; font-size:.8rem; cursor:pointer; }
+  .lang button.on { background:var(--accent); color:#fff; }
+
+  #phrase { display:flex; flex-wrap:wrap; gap:8px 20px; }
+  .word { display:flex; gap:2px; padding:4px 6px; border-radius:10px; }
+  .word.active { background:color-mix(in srgb, var(--accent) 12%, transparent); }
+  .ch { position:relative; display:flex; flex-direction:column; align-items:center; background:none; border:0; color:inherit;
+        cursor:pointer; padding:4px 6px; border-radius:8px; font:inherit; }
+  .ch:hover { background:color-mix(in srgb, var(--accent) 15%, transparent); }
+  .ch .py { font-size:.8rem; color:var(--muted); }
+  .ch svg.hz { width:3.2rem; height:3.2rem; }
+  .ch.sel { color:var(--accent); }
+  .ch.known::after, .glyph.known::after { content:""; position:absolute; top:4px; right:4px; width:10px; height:10px; border-radius:50%; background:var(--ok); }
+  .punct { font-size:3.2rem; align-self:flex-end; }
+
+  #card { margin-top:24px; background:var(--card); border:1px solid var(--soft); border-radius:16px; padding:20px; display:none; }
+  .toolbar { display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:8px; flex-wrap:wrap; }
+  .crumbs { color:var(--muted); font-size:.85rem; }
+  .btn { display:inline-flex; align-items:center; gap:6px; background:none; color:var(--fg); border:1px solid var(--soft); border-radius:999px;
+         padding:6px 12px; font:inherit; font-size:.85rem; cursor:pointer; text-decoration:none; }
+  .btn:hover { border-color:var(--accent); color:var(--accent); }
+  .btn.on { background:var(--ok); border-color:var(--ok); color:#fff; }
+
+  /* дерево: линии соединяют родителя с каждым потомком */
+  #tree { display:flex; justify-content:safe center; overflow-x:auto; padding:12px 8px 8px; }
+  .node { display:flex; flex-direction:column; align-items:center; position:relative; }
+  .glyph { position:relative; background:var(--bg); border:2px solid var(--line); border-radius:14px; cursor:pointer; color:var(--fg);
+           min-width:72px; padding:6px 10px 4px; text-align:center; font:inherit; transition:border-color .2s, transform .2s; z-index:1; }
+  .glyph:hover { border-color:var(--accent); transform:translateY(-2px); }
+  .glyph.sel { border-color:var(--accent); box-shadow:0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent); }
+  .glyph.leaf { border-style:dashed; }
+  .glyph svg.hz { width:52px; height:52px; margin:0 auto; }
+  .glyph .m { display:block; font-size:.72rem; color:var(--muted); max-width:100px; line-height:1.2; }
+  .kids { display:flex; padding-top:24px; position:relative; }
+  .kids::before { content:""; position:absolute; top:0; left:50%; height:24px; border-left:2px solid var(--line); }
+  .kids > .node { padding:24px 8px 0; }
+  .kids > .node::before, .kids > .node::after { content:""; position:absolute; top:0; width:50%; height:24px; border-top:2px solid var(--line); }
+  .kids > .node::before { right:50%; }
+  .kids > .node::after { left:50%; border-left:2px solid var(--line); }
+  .kids > .node:first-child::before { border-top:0; }
+  .kids > .node:last-child::after { border-top:0; }
+  .kids > .node:only-child { padding-top:0; }
+  .kids > .node:only-child::before, .kids > .node:only-child::after { display:none; }
+  .kids:has(> .node:only-child) { padding-top:24px; }
+  .kids > .node:only-child .glyph { margin-top:0; }
+  .kids .node.enter { opacity:0; transform:translateY(-70px) scale(.15) rotate(-140deg); }
+  .kids .node { transition:transform .65s cubic-bezier(.2,1.4,.4,1), opacity .35s; }
+
+  #info { border-top:1px solid var(--soft); margin-top:16px; padding-top:14px; }
+  #info h2 { margin:0; font-size:1.3rem; display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+  #info h2 svg.hz { width:48px; height:48px; }
+  #info h2 small { color:var(--muted); font-weight:400; font-size:.95rem; }
+  #info p { margin:8px 0; }
+  .tag { display:inline-block; font-size:.75rem; padding:2px 8px; border-radius:999px; border:1px solid var(--soft); color:var(--muted); }
+  .seen { margin:6px 0; padding:8px 12px; border-left:3px solid var(--accent); background:color-mix(in srgb, var(--accent) 8%, transparent);
+          border-radius:0 8px 8px 0; font-size:.92rem; }
+  .actions { display:flex; gap:8px; flex-wrap:wrap; margin:12px 0; }
+  .usage { margin-top:10px; display:none; }
+  .usage.open { display:block; }
+  .usage h3 { font-size:.85rem; color:var(--muted); margin:10px 0 6px; font-weight:600; }
+  .wl { list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:6px 14px; }
+  .wl li { font-size:.9rem; }
+  .wl .w { font-size:1.2rem; margin-right:6px; }
+  .wl .p { color:var(--muted); font-size:.8rem; margin-right:6px; }
+  .chips { display:flex; flex-wrap:wrap; gap:6px; }
+  .chip { padding:4px 8px; border:1px solid var(--soft); border-radius:10px; background:none; color:var(--fg); cursor:pointer; position:relative; }
+  .chip svg.hz { width:30px; height:30px; }
+  .chip:hover { border-color:var(--accent); }
+  .chip.known { border-color:var(--ok); }
+  .stats { color:var(--muted); font-size:.85rem; margin-top:16px; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>hanzi-burst</h1>
+    <span class="lang" role="group" aria-label="Language">
+      <button data-lang="ru">RU</button><button data-lang="en">EN</button>
+    </span>
+  </header>
+  <div id="phrase"></div>
+  <p class="hint" id="hint"></p>
+  <section id="card">
+    <div class="toolbar">
+      <span class="crumbs" id="crumbs"></span>
+      <button class="btn" id="explodeAll"></button>
+    </div>
+    <div id="tree"></div>
+    <div id="info"></div>
+  </section>
+  <p class="stats" id="stats"></p>
+</main>
+<script>
+const $ = s => document.querySelector(s);
+const ICON = {
+  star: '<svg class="i" viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg>',
+  check: '<svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+  list: '<svg class="i" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></svg>',
+  ext: '<svg class="i" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>',
+  burst: '<svg class="i" viewBox="0 0 24 24"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M18.4 5.6l-2.8 2.8M8.4 15.6l-2.8 2.8"/></svg>',
+};
+const T = {
+  ru: { hint:'Нажми на иероглиф, затем на любую его часть, чтобы она разлетелась ещё на части.', crumbs:'Нажимай на части, чтобы разбирать дальше',
+        all:'Взорвать всё', known:'Знаю', add:'Добавить в известные', where:'Где ещё встречается', words:'Слова', chars:'Иероглифы с этой частью',
+        seen:'Уже встречалось в этой фразе:', nodesc:'Для этой части в словаре нет описания.', derived:'выведено автоматически',
+        phonetic:'Звук подсказывает', semantic:'смысл —', word:'Слово', known_n:'Известно:',
+        types:{ pictophonetic:'смысл + звук', ideographic:'смысловая комбинация', pictographic:'рисунок' } },
+  en: { hint:'Click a character, then any of its parts to break it down further.', crumbs:'Click parts to break them down',
+        all:'Explode all', known:'Known', add:'Add to known', where:'Where else it appears', words:'Words', chars:'Characters with this part',
+        seen:'Already seen in this phrase:', nodesc:'No description for this part in the dictionary.', derived:'derived automatically',
+        phonetic:'Sound hint:', semantic:'meaning:', word:'Word', known_n:'Known:',
+        types:{ pictophonetic:'meaning + sound', ideographic:'meaning combination', pictographic:'picture' } },
+};
+let D = null, G = {};
+let lang = 'ru';
+try { lang = localStorage.getItem('hanzi-lang') || (navigator.language.startsWith('ru') ? 'ru' : 'en'); } catch (e) {}
+let known = new Set();
+try { known = new Set(JSON.parse(localStorage.getItem('hanzi-known') || '[]')); } catch (e) {}
+const saveKnown = () => { try { localStorage.setItem('hanzi-known', JSON.stringify([...known])); } catch (e) {} };
+const t = k => T[lang][k];
+const pick = (o, base) => (lang === 'ru' && o && o[base + '_ru']) || (o && o[base]) || '';
+
+const short = d => d ? d.split(/[;,]/)[0].trim() : '';
+const py = ch => ((D.chars[ch] || {}).pinyin || [])[0] || '';
+const defOf = ch => pick(D.chars[ch], 'definition');
+
+/* Иероглиф рисуется по контурам черт (Make Me a Hanzi), а не шрифтом: шрифты теряют черты. */
+function hz(ch, cls = '') {
+  const s = G[ch];
+  if (!s) return `<span class="serif">${ch}</span>`;
+  return `<svg class="hz ${cls}" viewBox="0 0 1024 1024" role="img" aria-label="${ch}"><g transform="scale(1,-1) translate(0,-900)">${s.map(d => `<path d="${d}"/>`).join('')}</g></svg>`;
+}
+
+let rootCh = null, selected = null;
+
+/* ---------- фраза ---------- */
+function renderPhrase() {
+  const root = $('#phrase'); root.innerHTML = '';
+  D.phrase.forEach((w, wi) => {
+    const el = document.createElement('div');
+    el.className = 'word'; el.dataset.w = wi;
+    if (w.punct) { el.innerHTML = `<span class="punct">${w.word}</span>`; root.append(el); return; }
+    w.chars.forEach(c => {
+      const b = document.createElement('button');
+      b.className = 'ch' + (known.has(c) ? ' known' : '') + (c === rootCh ? ' sel' : '');
+      b.dataset.ch = c;
+      b.innerHTML = `<span class="py">${py(c)}</span>${hz(c)}`;
+      b.onclick = () => openRoot(c);
+      el.append(b);
+    });
+    root.append(el);
+  });
+  markWord();
+}
+function markWord() {
+  document.querySelectorAll('.word').forEach(e => e.classList.remove('active'));
+  if (!rootCh) return;
+  const w = D.phrase.findIndex(w => w.chars && w.chars.includes(rootCh));
+  const el = document.querySelector(`.word[data-w="${w}"]`); if (el) el.classList.add('active');
+}
+
+/* ---------- дерево ---------- */
+function makeNode(ch, ancestors, animate) {
+  const info = D.chars[ch] || { components: [] };
+  const comps = (info.components || []).filter(c => !ancestors.includes(c));
+  const node = document.createElement('div');
+  node.className = 'node' + (animate ? ' enter' : '');
+  node.dataset.ch = ch;
+  const g = document.createElement('button');
+  g.className = 'glyph' + (comps.length ? '' : ' leaf') + (known.has(ch) ? ' known' : '');
+  g.innerHTML = `${hz(ch)}<span class="m">${short(defOf(ch)) || '&nbsp;'}</span>`;
+  g.onclick = () => { select(ch, g); if (comps.length) toggle(node, ancestors.concat(ch)); };
+  node.append(g);
+  node._ancestors = ancestors.concat(ch);
+  node._comps = comps;
+  if (animate) requestAnimationFrame(() => requestAnimationFrame(() => node.classList.remove('enter')));
+  return node;
+}
+function toggle(node, anc, forceOpen) {
+  let kids = node.querySelector(':scope > .kids');
+  if (kids && !forceOpen) { kids.remove(); return; }
+  if (kids) return;
+  kids = document.createElement('div'); kids.className = 'kids';
+  node._comps.forEach((c, i) => {
+    const n = makeNode(c, anc, true);
+    n.style.transitionDelay = (i * 90) + 'ms';
+    kids.append(n);
+  });
+  node.append(kids);
+}
+function explodeAll(node) {
+  if (!node._comps || !node._comps.length) return;
+  toggle(node, node._ancestors, true);
+  node.querySelectorAll(':scope > .kids > .node').forEach(explodeAll);
+}
+
+function openRoot(ch) {
+  rootCh = ch;
+  $('#card').style.display = 'block';
+  const tree = $('#tree'); tree.innerHTML = '';
+  const node = makeNode(ch, [], false);
+  tree.append(node);
+  toggle(node, [ch]);
+  select(ch, node.querySelector('.glyph'));
+  document.querySelectorAll('.ch').forEach(b => b.classList.toggle('sel', b.dataset.ch === ch));
+  markWord();
+}
+$('#explodeAll').onclick = () => { const r = $('#tree > .node'); if (r) explodeAll(r); };
+
+/* ---------- детали ---------- */
+function allParts(ch, acc = new Set(), depth = 0) {
+  if (depth > 6) return acc;
+  ((D.chars[ch] || {}).components || []).forEach(c => { acc.add(c); allParts(c, acc, depth + 1); });
+  return acc;
+}
+function seenInPhrase(comp, ch) {
+  const hits = new Set();
+  D.phrase.forEach(w => (w.chars || []).forEach(c => {
+    if (c !== ch && c !== comp && allParts(c).has(comp)) hits.add(c);
+  }));
+  return [...hits];
+}
+
+function select(ch, glyphEl) {
+  selected = ch;
+  document.querySelectorAll('.glyph.sel').forEach(g => g.classList.remove('sel'));
+  if (glyphEl) glyphEl.classList.add('sel');
+  const c = D.chars[ch] || {};
+  const e = c.etymology || {};
+  const typeName = t('types')[e.type] || '';
+  const isKnown = known.has(ch);
+  const def = pick(c, 'definition'), hint = pick(e, 'hint');
+  let h = `<h2>${hz(ch)}<small>${(c.pinyin || []).join(', ')}</small></h2>`;
+  if (def) h += `<p>${def}${c.definition_source && c.definition_source !== 'mmh' ? ` <span class="tag">${t('derived')}</span>` : ''}</p>`;
+  if (hint) h += `<p>${typeName ? `<span class="tag">${typeName}</span> ` : ''}${hint}</p>`;
+  if (e.type === 'pictophonetic') h += `<p>${t('phonetic')} <b class="serif">${e.phonetic}</b>, ${t('semantic')} <b class="serif">${e.semantic}</b>.</p>`;
+  if (!def && !hint) h += `<p class="hint">${t('nodesc')}</p>`;
+  const rootParts = rootCh && rootCh !== ch ? seenInPhrase(ch, rootCh) : [];
+  if (rootParts.length) h += `<div class="seen">${t('seen')} ${rootParts.map(x => `<b class="serif">${x}</b>`).join(', ')}.</div>`;
+  const u = D.usage[ch];
+  h += `<div class="actions">
+    <button class="btn ${isKnown ? 'on' : ''}" id="knownBtn">${isKnown ? ICON.check : ICON.star}${isKnown ? t('known') : t('add')}</button>
+    ${u ? `<button class="btn" id="usageBtn">${ICON.list}${t('where')}</button>` : ''}
+    <a class="btn" target="_blank" rel="noopener" href="https://${lang === 'ru' ? 'ru' : 'en'}.wiktionary.org/wiki/${encodeURIComponent(ch)}">${ICON.ext}Wiktionary</a>
+  </div>`;
+  if (u) {
+    h += `<div class="usage" id="usage">`;
+    if (u.words.length) h += `<h3>${t('words')}</h3><ul class="wl">${u.words.map(w => `<li><span class="w serif">${w.w}</span><span class="p">${w.pinyin}</span>${pick(w, 'def')}</li>`).join('')}</ul>`;
+    if (u.chars.length) h += `<h3>${t('chars')}</h3><div class="chips">${u.chars.map(x => `<button class="chip ${known.has(x) ? 'known' : ''}" data-ch="${x}" title="${short(defOf(x))}">${hz(x)}</button>`).join('')}</div>`;
+    h += `</div>`;
+  }
+  $('#info').innerHTML = h;
+  $('#knownBtn').onclick = () => { known.has(ch) ? known.delete(ch) : known.add(ch); saveKnown(); refresh(); };
+  const ub = $('#usageBtn'); if (ub) ub.onclick = () => $('#usage').classList.toggle('open');
+  document.querySelectorAll('.chip').forEach(b => b.onclick = () => {
+    $('#card').scrollIntoView({ behavior: 'smooth', block: 'start' }); openRoot(b.dataset.ch);
+  });
+}
+function refresh() {
+  document.querySelectorAll('.ch').forEach(b => b.classList.toggle('known', known.has(b.dataset.ch)));
+  document.querySelectorAll('.glyph').forEach(g => g.classList.toggle('known', known.has(g.parentElement.dataset.ch)));
+  if (selected) select(selected, document.querySelector(`.node[data-ch="${selected}"] > .glyph`));
+  $('#stats').textContent = known.size ? `${t('known_n')} ${known.size} (${[...known].join(' ')})` : '';
+}
+
+/* ---------- язык ---------- */
+function applyLang() {
+  document.documentElement.lang = lang;
+  document.querySelectorAll('.lang button').forEach(b => b.classList.toggle('on', b.dataset.lang === lang));
+  $('#hint').textContent = t('hint');
+  $('#crumbs').textContent = t('crumbs');
+  $('#explodeAll').innerHTML = ICON.burst + t('all');
+  if (!D) return;
+  // подписи узлов дерева (без пересборки: сохраняем раскрытое состояние)
+  document.querySelectorAll('.node').forEach(n => {
+    const m = n.querySelector(':scope > .glyph .m'); if (m) m.textContent = short(defOf(n.dataset.ch)) || ' ';
+  });
+  refresh();
+}
+document.querySelectorAll('.lang button').forEach(b => b.onclick = () => {
+  lang = b.dataset.lang; try { localStorage.setItem('hanzi-lang', lang); } catch (e) {}
+  applyLang();
+});
+
+applyLang();
+Promise.all([fetch('phrase.json').then(r => r.json()), fetch('glyphs.json').then(r => r.json())])
+  .then(([d, g]) => {
+    D = d; G = g; renderPhrase(); applyLang();
+    // ссылка вида ?open=想&explode=1&lang=en открывает иероглиф сразу
+    const q = new URLSearchParams(location.search);
+    if (q.get('lang')) { lang = q.get('lang'); applyLang(); }
+    if (q.get('open') && D.chars[q.get('open')]) {
+      openRoot(q.get('open'));
+      if (q.get('explode')) { explodeAll($('#tree > .node')); }
+    }
+  });
+</script>
+</body>
+</html>

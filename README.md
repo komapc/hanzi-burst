@@ -14,4 +14,27 @@
 
 ## Статус
 
-Идея, кода пока нет.
+Локальный прототип на одной фразе (我想学汉字).
+
+## Запуск
+
+```bash
+# 1. Сырые данные (в гит не кладутся) -> data/raw/{mmh,cedict,unicode,unihan}
+#    Make Me a Hanzi: dictionary.txt, graphics.txt (github.com/skishore/makemeahanzi)
+#    CC-CEDICT: cedict_ts.u8, Unicode: CJKRadicals.txt, Unihan.zip (распаковать)
+# 2. Разбор фразы -> site/phrase.json + site/glyphs.json
+python3 -I scripts/breakdown.py "我想学汉字" site/phrase.json
+# 3. Сайт
+cd site && python3 -m http.server 8765   # http://127.0.0.1:8765/?open=想&explode=1&lang=ru
+```
+
+## Устройство
+
+- `scripts/breakdown.py`: сегментация фразы (CC-CEDICT), рекурсивная разбивка на компоненты и этимология (Make Me a Hanzi),
+  запасные описания для вариантов радикалов (Unicode, Unihan), контуры черт для SVG.
+- `data/translations/ru.json`: переводы определений, подсказок и слов {en: ru} (черновик, переведено вручную).
+- `site/`: статическая страница, иероглифы рисуются SVG по контурам, язык RU/EN, «известные» в localStorage.
+
+## Данные и лицензии
+
+Make Me a Hanzi (LGPL/Arphic), CC-CEDICT (CC BY-SA), Unicode/Unihan (Unicode License). Атрибуцию добавить перед публикацией.
