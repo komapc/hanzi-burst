@@ -28,6 +28,22 @@
   #howDlg::backdrop { background:rgba(0,0,0,.55); }
   #howDlg h2 { margin:0 0 10px; font-size:1.15rem; }
   #howDlg p { line-height:1.5; }
+  .foot { margin-top:48px; padding-top:28px; border-top:1px solid var(--soft); color:var(--muted); font-size:.9rem; }
+  .fgrid { display:grid; grid-template-columns:minmax(0,1.4fr) repeat(3,minmax(0,1fr)); gap:28px 32px; }
+  .fbrand b { color:var(--fg); font-size:1.05rem; }
+  .fbrand p { margin:6px 0 0; line-height:1.45; max-width:28ch; }
+  .foot h3 { margin:0 0 10px; font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; font-weight:600; color:var(--muted); }
+  .foot ul { list-style:none; margin:0; padding:0; display:grid; gap:7px; }
+  .foot a { color:var(--fg); text-decoration:none; opacity:.85; }
+  .foot a:hover { color:var(--accent); opacity:1; }
+  .foot a.ext::after { content:" ↗"; font-size:.8em; opacity:.6; }
+  .fdata { margin-top:26px; padding-top:16px; border-top:1px solid var(--soft); font-size:.8rem; }
+  .fdata summary { cursor:pointer; list-style:none; }
+  .fdata summary::before { content:"▸ "; }
+  .fdata[open] summary::before { content:"▾ "; }
+  .fdata p { line-height:1.6; margin:10px 0 0; }
+  .fdata a { color:inherit; text-decoration:underline; text-decoration-color:var(--soft); }
+  @media (max-width:640px) { .fgrid { grid-template-columns:1fr 1fr; } .fbrand { grid-column:1 / -1; } }
   .about { margin-top:28px; max-width:70ch; }
   .about h2 { font-size:15px; margin:0 0 6px; color:var(--fg); }
   .about p { margin:0 0 8px; line-height:1.5; }
@@ -47,7 +63,8 @@
   .lang button { background:none; border:0; color:var(--muted); padding:5px 12px; font:inherit; font-size:.8rem; cursor:pointer; }
   .lang button.on { background:var(--accent); color:#fff; }
 
-  #picker { display:flex; align-items:center; gap:8px; margin-bottom:14px; }
+  #picker { display:flex; align-items:center; gap:8px; margin-bottom:14px; flex-wrap:wrap; }
+  #picker .pk, #picker .hint { white-space:nowrap; }
   #picker .hint { margin:0; }
   #own { margin:-4px 0 14px; } #own summary { cursor:pointer; color:var(--muted); font-size:.9rem; }
   #own textarea { width:100%; box-sizing:border-box; margin:8px 0; padding:8px; font:inherit; font-size:1.2rem; background:var(--card); color:var(--fg); border:1px solid var(--soft); border-radius:10px; }
@@ -161,16 +178,20 @@
     <div id="info"></div>
   </section>
   <p class="stats" id="stats"></p>
-  <section class="about hint">
-    <p id="flinks"><a href="/c/">Все иероглифы</a> · <a href="/p/">Все фразы</a> · <a href="/about">О проекте</a> · <a href="/privacy">Конфиденциальность</a></p>
-    <p id="fother"></p>
-  </section>
+  <footer class="foot">
+    <div class="fgrid">
+      <div class="fbrand"><b>hanzi-burst</b><p id="ftag"></p></div>
+      <nav><h3 id="fh1"></h3><ul id="fl1"><li><a href="/c/">Все иероглифы</a></li><li><a href="/p/">Все фразы</a></li></ul></nav>
+      <nav><h3 id="fh2"></h3><ul id="fl2"><li><a href="/about">О проекте</a></li><li><a href="/privacy">Конфиденциальность</a></li></ul></nav>
+      <nav><h3 id="fh3"></h3><ul id="fl3"></ul></nav>
+    </div>
+    <details class="fdata"><summary id="fdata"></summary><p><a href="https://github.com/skishore/makemeahanzi">Make Me a Hanzi</a> (LGPL, Arphic) · <a href="https://cc-cedict.org/">CC-CEDICT</a> (CC BY-SA) · <a href="https://tatoeba.org/">Tatoeba</a> (CC BY 2.0 FR) · <a href="https://en.wiktionary.org/">Wiktionary</a> via <a href="https://kaikki.org/">kaikki.org</a> (CC BY-SA) · <a href="https://commonvoice.mozilla.org/">Mozilla Common Voice</a> (CC0, machine translation) · Unicode / Unihan</p></details>
+  </footer>
   <dialog id="howDlg" aria-labelledby="howTitle">
     <h2 id="howTitle"></h2>
     <div id="howBody"></div>
     <p><button class="btn" id="howClose"></button></p>
   </dialog>
-  <p class="hint credits"><span id="fdata">Данные</span>: <a href="https://github.com/skishore/makemeahanzi">Make Me a Hanzi</a> (LGPL, Arphic) · <a href="https://cc-cedict.org/">CC-CEDICT</a> (CC BY-SA) · <a href="https://tatoeba.org/">Tatoeba</a> (CC BY 2.0 FR) · <a href="https://en.wiktionary.org/">Wiktionary</a> via <a href="https://kaikki.org/">kaikki.org</a> (CC BY-SA) · <a href="https://commonvoice.mozilla.org/">Mozilla Common Voice</a> (CC0, machine translation) · Unicode / Unihan</p>
 </main>
 <div id="consent" hidden role="dialog" aria-live="polite">
   <span id="consentText"></span>
@@ -203,12 +224,12 @@ const ICON = {
 };
 const T = {
   ru: { hint:'Нажми на иероглиф.', crumbs:'Нажимай на части, чтобы разбирать дальше',
-        all:'Взорвать всё', fAll:'Все иероглифы', fPhrases:'Все фразы', fAbout:'О проекте', fPrivacy:'Конфиденциальность', fHow:'Как это работает', fOther:'Другие проекты', fData:'Данные', howTitle:'Как это работает', close:'Закрыть', howBody:'<p>Выбери фразу и нажми на иероглиф: он «разлетится» на радикалы и фонетики, пока не станет неделимым. У каждой части есть значение, пиньинь, слова и иероглифы, где она встречается.</p><p>«＋ Новая фраза» подбирает фразу с минимумом незнакомых тебе иероглифов, а «Своя фраза» разбирает любой вставленный китайский текст.</p><p>Фразы взяты из открытых корпусов: Tatoeba, Wiktionary, Common Voice.</p>', newPhrase:'Новая фраза', incompl:'В словаре у этого знака не хватает одной части разбора, поэтому дерево неполное.', ownTitle:'Своя фраза', ownGo:'Разобрать', ownPh:'Вставьте китайский текст (до 100 иероглифов)', ownBusy:'Загружаю словарь…', ownEmpty:'Не нашёл иероглифов в тексте', ownErr:'Не удалось загрузить данные', ownNote:'Текст остаётся в вашем браузере. Значения слов из словаря CC-CEDICT, перевода всей фразы нет.', ownTrad:'Традиционные знаки заменены упрощёнными.', noMore:'Фразы в пуле закончились', known:'Знаю', add:'Добавить в известные', where:'Где ещё встречается', words:'Слова', chars:'Иероглифы с этой частью',
+        all:'Взорвать всё', ftag:'Учим китайские иероглифы через радикалы', fExplore:'Разделы', fProject:'Проект', fAll:'Все иероглифы', fPhrases:'Все фразы', fAbout:'О проекте', fPrivacy:'Конфиденциальность', fHow:'Как это работает', fOther:'Другие проекты', fData:'Источники данных', howTitle:'Как это работает', close:'Закрыть', howBody:'<p>Выбери фразу и нажми на иероглиф: он «разлетится» на радикалы и фонетики, пока не станет неделимым. У каждой части есть значение, пиньинь, слова и иероглифы, где она встречается.</p><p>«＋ Новая фраза» подбирает фразу с минимумом незнакомых тебе иероглифов, а «Своя фраза» разбирает любой вставленный китайский текст.</p><p>Фразы взяты из открытых корпусов: Tatoeba, Wiktionary, Common Voice.</p>', newPhrase:'Новая фраза', incompl:'В словаре у этого знака не хватает одной части разбора, поэтому дерево неполное.', ownTitle:'Своя фраза', ownGo:'Разобрать', ownPh:'Вставьте китайский текст (до 100 иероглифов)', ownBusy:'Загружаю словарь…', ownEmpty:'Не нашёл иероглифов в тексте', ownErr:'Не удалось загрузить данные', ownNote:'Текст остаётся в вашем браузере. Значения слов из словаря CC-CEDICT, перевода всей фразы нет.', ownTrad:'Традиционные знаки заменены упрощёнными.', noMore:'Фразы в пуле закончились', known:'Знаю', add:'Добавить в известные', where:'Где ещё встречается', words:'Слова', chars:'Иероглифы с этой частью',
         seen:'Уже встречалось в этой фразе:', nodesc:'Для этой части в словаре нет описания.', derived:'выведено автоматически', mnemo:'Придумать запоминалку', mnemoMore:'Ещё вариант', mnemoLimit:'Лимит на сегодня исчерпан', mnemoLogin:'Войди через Google, чтобы получать запоминалки', mnemoBusy:'Думаю…', mnemoErr:'Не получилось, попробуй позже', mnemoNote:'Выдумка для запоминания, не настоящая этимология', logout:'Выйти', atomic:'неделимая часть: радикал или цельный рисунок',
         phonetic:'Звук подсказывает', semantic:'смысл —', word:'Слово', known_n:'Известно:',
         types:{ pictophonetic:'смысл + звук', ideographic:'смысловая комбинация', pictographic:'рисунок' } },
   en: { hint:'Click a character.', crumbs:'Click parts to break them down',
-        all:'Explode all', fAll:'All characters', fPhrases:'All phrases', fAbout:'About', fPrivacy:'Privacy', fHow:'How it works', fOther:'Other projects', fData:'Data', howTitle:'How it works', close:'Close', howBody:'<p>Pick a phrase and click a character: it breaks into radicals and phonetic parts until it can\'t be split further. Each part has a meaning, pinyin, words and characters that use it.</p><p>“＋ New phrase” picks a phrase with the fewest characters you don\'t know yet, and “Your own phrase” breaks down any Chinese text you paste.</p><p>Phrases come from open corpora: Tatoeba, Wiktionary, Common Voice.</p>', newPhrase:'New phrase', incompl:'The dictionary is missing one part of this character\'s breakdown, so the tree is incomplete.', ownTitle:'Your own phrase', ownGo:'Break down', ownPh:'Paste Chinese text (up to 100 characters)', ownBusy:'Loading dictionary…', ownEmpty:'No Chinese characters found', ownErr:'Could not load data', ownNote:'Your text stays in your browser. Word meanings come from CC-CEDICT; there is no translation of the whole phrase.', ownTrad:'Traditional characters were converted to simplified.', noMore:'No more phrases in the pool', known:'Known', add:'Add to known', where:'Where else it appears', words:'Words', chars:'Characters with this part',
+        all:'Explode all', ftag:'Learn Chinese characters by radicals', fExplore:'Explore', fProject:'Project', fAll:'All characters', fPhrases:'All phrases', fAbout:'About', fPrivacy:'Privacy', fHow:'How it works', fOther:'Other projects', fData:'Data sources', howTitle:'How it works', close:'Close', howBody:'<p>Pick a phrase and click a character: it breaks into radicals and phonetic parts until it can\'t be split further. Each part has a meaning, pinyin, words and characters that use it.</p><p>“＋ New phrase” picks a phrase with the fewest characters you don\'t know yet, and “Your own phrase” breaks down any Chinese text you paste.</p><p>Phrases come from open corpora: Tatoeba, Wiktionary, Common Voice.</p>', newPhrase:'New phrase', incompl:'The dictionary is missing one part of this character\'s breakdown, so the tree is incomplete.', ownTitle:'Your own phrase', ownGo:'Break down', ownPh:'Paste Chinese text (up to 100 characters)', ownBusy:'Loading dictionary…', ownEmpty:'No Chinese characters found', ownErr:'Could not load data', ownNote:'Your text stays in your browser. Word meanings come from CC-CEDICT; there is no translation of the whole phrase.', ownTrad:'Traditional characters were converted to simplified.', noMore:'No more phrases in the pool', known:'Known', add:'Add to known', where:'Where else it appears', words:'Words', chars:'Characters with this part',
         seen:'Already seen in this phrase:', nodesc:'No description for this part in the dictionary.', derived:'derived automatically', mnemo:'Make a mnemonic', mnemoMore:'Another one', mnemoLimit:'Daily limit reached', mnemoLogin:'Sign in with Google to get mnemonics', mnemoBusy:'Thinking…', mnemoErr:'Failed, try again later', mnemoNote:'An invention to aid memory, not real etymology', logout:'Sign out', atomic:'indivisible part: a radical or a whole picture',
         phonetic:'Sound hint:', semantic:'meaning:', word:'Word', known_n:'Known:',
         types:{ pictophonetic:'meaning + sound', ideographic:'meaning combination', pictographic:'picture' } },
@@ -620,11 +641,16 @@ $('#ownGo').onclick = async () => {
     track('own_phrase', { len: ph.zh.length });
   } catch (e) { say('ownErr'); }
 };
-const OTHER = '<a href="https://echodrift.pages.dev/">EchoDrift</a> · <a href="https://ido-tradukilo.pages.dev/">Ido-tradukilo</a> · <a href="https://ido-vortaro.pages.dev/">Vortaro</a> · <a href="https://komapc.github.io/contlang/">min-co</a> · <a href="https://komapc.github.io/ideon/ru/">Ideonology</a>';
+const OTHER = [['EchoDrift', 'https://echodrift.pages.dev/'], ['Ido-tradukilo', 'https://ido-tradukilo.pages.dev/'], ['Vortaro', 'https://ido-vortaro.pages.dev/'],
+  ['min-co', 'https://komapc.github.io/contlang/'], ['Ideonology', 'https://komapc.github.io/ideon/ru/']];
 function renderFooter() {
-  $('#flinks').innerHTML = `<a href="/c/">${t('fAll')}</a> · <a href="/p/">${t('fPhrases')}</a> · <a href="/about">${t('fAbout')}</a> · <a href="/privacy">${t('fPrivacy')}</a> · <a href="#" id="howLink">${t('fHow')}</a>`;
+  const li = (h, txt, ext) => `<li><a href="${h}"${ext ? ' class="ext" target="_blank" rel="noopener"' : ''}>${txt}</a></li>`;
+  $('#ftag').textContent = t('ftag');
+  $('#fh1').textContent = t('fExplore'); $('#fh2').textContent = t('fProject'); $('#fh3').textContent = t('fOther');
+  $('#fl1').innerHTML = li('/c/', t('fAll')) + li('/p/', t('fPhrases')) + `<li><a href="#" id="howLink">${t('fHow')}</a></li>`;
+  $('#fl2').innerHTML = li('/about', t('fAbout')) + li('/privacy', t('fPrivacy'));
+  $('#fl3').innerHTML = OTHER.map(([n, h]) => li(h, n, true)).join('');
   $('#howLink').onclick = e => { e.preventDefault(); const d = $('#howDlg'); d.showModal ? d.showModal() : d.setAttribute('open', ''); track('how_open'); };
-  $('#fother').innerHTML = `${t('fOther')}: ${OTHER}`;
   $('#fdata').textContent = t('fData');
   $('#howTitle').textContent = t('howTitle'); $('#howBody').innerHTML = t('howBody'); $('#howClose').textContent = t('close');
 }
