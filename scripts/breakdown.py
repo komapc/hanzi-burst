@@ -248,8 +248,8 @@ def fallback_definition(ch, mmh, num2char, char2num):
         g = mmh[base]["definition"]
         if extra == 0:
             return f"variant of radical {base}: {g}", f"вариант радикала {base}: {{{{{g}}}}}", "unihan-radical"
-        return (f"form based on radical {base} ({g}) + {extra} stroke(s)",
-                f"форма на основе радикала {base} ({{{{{g}}}}}) + {extra} шт.", "unihan-radical")
+        return (f"variant of {base} ({g}) with {extra} extra stroke{'s' if extra != 1 else ''}",
+                f"вариант {base} ({{{{{g}}}}}), доп. черт: {extra}", "unihan-radical")
     rad = mmh.get(ch, {}).get("radical")
     if rad and rad != ch and mmh.get(rad, {}).get("definition"):
         g = mmh[rad]["definition"]
@@ -264,8 +264,16 @@ DEFINITION_OVERRIDES = {
 }
 
 
+# английские определения MMH, для которых нет русского перевода
+TRANSLATION_FIXES = {
+    "death, destruction; to lose, to perish": "смерть, гибель; терять, погибать",
+}
+
+
 def info(ch, mmh, maps=None, tr=None):
-    tr = tr or {}
+    tr = dict(tr or {})
+    for k, v in TRANSLATION_FIXES.items():
+        tr.setdefault(k, v)
     d = mmh.get(ch, {})
     if ch in DEFINITION_OVERRIDES:
         d = dict(d, definition=DEFINITION_OVERRIDES[ch][0])

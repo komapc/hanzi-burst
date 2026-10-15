@@ -3,6 +3,7 @@
 site/data/chars/<hh>.json  — как D.chars (hh = кодпоинт >> 8, hex)
 site/data/glyphs/<hh>.json — контуры черт
 site/data/words/<hh>.json  — слова CC-CEDICT по первому иероглифу: {слово: [pinyin, en, ru]}
+site/data/s2t.json       — упрощённый -> традиционный (самый частый вариант)
 site/data/trad.json        — традиционный -> упрощённый (однознаковые записи CEDICT)
 
 Запуск: python3 -I scripts/build_shards.py
@@ -73,6 +74,18 @@ def main():
         if m and len(m.group(1)) == 1 and m.group(1) != m.group(2):
             trad.setdefault(m.group(1), m.group(2))
     dump(OUT / "trad.json", trad)
+
+    # упрощённый -> традиционный: самая частая пара по словам CEDICT одинаковой длины
+    from collections import Counter, defaultdict
+    cnt = defaultdict(Counter)
+    for line in bd.CEDICT.read_text(encoding="utf-8").splitlines():
+        m = pat.match(line)
+        if m and len(m.group(1)) == len(m.group(2)):
+            for t, sm in zip(m.group(1), m.group(2)):
+                cnt[sm][t] += 1   # t == sm тоже голос: знак одинаков в обеих системах
+    s2t = {sm: c.most_common(1)[0][0] for sm, c in cnt.items() if c.most_common(1)[0][0] != sm}
+    s2t["里"] = "裡"   # 里 как «внутри» (иначе побеждает 里 = ли, мера длины)
+    dump(OUT / "s2t.json", s2t)
     n = sum(1 for _ in OUT.rglob("*.json"))
     size = sum(p.stat().st_size for p in OUT.rglob("*.json"))
     print(f"shards={n} bytes={size} trad={len(trad)}")

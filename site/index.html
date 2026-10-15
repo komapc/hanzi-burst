@@ -61,6 +61,12 @@
   .mn small { color:var(--muted); display:block; margin-top:4px; }
   .lang { display:inline-flex; border:1px solid var(--soft); border-radius:999px; overflow:hidden; }
   .lang button { background:none; border:0; color:var(--muted); padding:5px 12px; font:inherit; font-size:.8rem; cursor:pointer; }
+  .scr { display:inline-flex; border:1px solid var(--soft); border-radius:999px; overflow:hidden; margin-right:6px; }
+  .scr label { cursor:pointer; }
+  .scr input { position:absolute; opacity:0; pointer-events:none; }
+  .scr span { display:block; padding:5px 12px; font-size:.8rem; color:var(--muted); }
+  .scr input:checked + span { background:var(--accent); color:#fff; }
+  .scr input:focus-visible + span { outline:2px solid var(--accent); outline-offset:-2px; }
   .lang button.on { background:var(--accent); color:#fff; }
 
   #picker { display:flex; align-items:center; gap:8px; margin-bottom:14px; flex-wrap:wrap; }
@@ -174,6 +180,9 @@
     <h1>hanzi-burst</h1>
     <span class="right">
       <span id="auth"></span>
+      <span class="scr" role="radiogroup" aria-label="Script / 字体">
+        <label title="简体 — упрощённые / simplified"><input type="radio" name="script" value="s"><span>简</span></label><label title="繁體 — традиционные / traditional"><input type="radio" name="script" value="t"><span>繁</span></label>
+      </span>
       <span class="lang" role="group" aria-label="Language">
         <button data-lang="ru">RU</button><button data-lang="en">EN</button>
       </span>
@@ -218,6 +227,7 @@
   <button class="btn" id="consentYes"></button><button class="btn" id="consentNo"></button>
   <a href="/privacy" id="consentMore"></a>
 </div>
+<script src="script.js"></script>
 <script>
 /* Google Analytics 4: вставь Measurement ID (G-XXXXXXXXXX) — пока пусто, ничего не грузится */
 const GA_ID = 'G-G4GHN6WZ7B';
@@ -268,11 +278,33 @@ const py = ch => ((D.chars[ch] || {}).pinyin || [])[0] || '';
 const defOf = ch => pick(D.chars[ch], 'definition');
 
 /* Иероглиф рисуется по контурам черт (Make Me a Hanzi), а не шрифтом: шрифты теряют черты. */
+/* традиционная запись: данные остаются упрощёнными, подменяется только начертание */
+let S2T = null;
+const disp = ch => (window.hanziScript && hanziScript.get() === 't' && S2T && S2T[ch]) || ch;
+const glyphPaths = ch => (disp(ch) !== ch && G[disp(ch)]) || G[ch];
 function hz(ch, cls = '') {
-  const s = G[ch];
-  if (!s) return `<span class="serif">${ch}</span>`;
-  return `<svg class="hz ${cls}" viewBox="0 0 1024 1024" role="img" aria-label="${ch}"><g transform="scale(1,-1) translate(0,-900)">${s.map(d => `<path d="${d}"/>`).join('')}</g></svg>`;
+  const s = glyphPaths(ch);
+  if (!s) return `<span class="serif">${disp(ch)}</span>`;
+  return `<svg class="hz ${cls}" data-c="${ch}" viewBox="0 0 1024 1024" role="img" aria-label="${ch}"><g transform="scale(1,-1) translate(0,-900)">${s.map(d => `<path d="${d}"/>`).join('')}</g></svg>`;
 }
+let scriptBusy = false;
+async function syncScript() {
+  if (scriptBusy) return; scriptBusy = true;
+  try {
+    if (hanziScript.get() === 't') {
+      S2T = S2T || await hanziScript.map();
+      const chars = new Set(Object.keys((D && D.chars) || {}));
+      ((D && D.phrase) || []).forEach(w => (w.chars || []).forEach(c => chars.add(c)));
+      const need = [...chars].map(disp).filter(c => c && !G[c] && HAN.test(c));
+      await Promise.all([...new Set(need.map(shardKey))].map(async k => Object.assign(G, await loadShard('glyphs', k))));
+    }
+    document.querySelectorAll('svg.hz[data-c]').forEach(v => {
+      const s = glyphPaths(v.dataset.c); if (!s) return;
+      v.firstElementChild.innerHTML = s.map(d => `<path d="${d}"/>`).join('');
+    });
+  } catch (e) {} finally { scriptBusy = false; }
+}
+window.addEventListener('hanzi-script', syncScript);
 
 let rootCh = null, selected = null;
 
@@ -373,6 +405,7 @@ function switchPhrase(i) {
   rootCh = null; selected = null;
   $('#card').classList.remove('open'); $('#hint').style.display = '';
   renderPicker(); renderPhrase(); renderTrans(); refresh();
+  syncScript();
 }
 
 /* ---------- фраза ---------- */
@@ -777,7 +810,7 @@ Promise.all([fetch('phrase.json').then(r => r.json()), fetch('glyphs.json').then
     if (q0.get('z')) { const zi = L.findIndex(p => p.zh === q0.get('z')); if (zi >= 0) q0.set('p', String(zi)); }
     cur = Math.min(Math.max(q0.has('p') ? parseInt(q0.get('p'), 10) || 0 : saved, 0), L.length - 1);
     D.phrase = L[cur].words;
-    renderPicker(); renderPhrase(); applyLang();
+    renderPicker(); renderPhrase(); applyLang(); syncScript();
     // ссылка вида ?open=想&explode=1&lang=en открывает иероглиф сразу
     const q = new URLSearchParams(location.search);
     if (q.get('lang')) { lang = q.get('lang'); applyLang(); }
