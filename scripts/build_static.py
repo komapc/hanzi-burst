@@ -41,7 +41,7 @@ ul{padding-left:20px}.cta{display:inline-block;margin:12px 0;padding:8px 14px;bo
 
 
 def page(title, desc, canon, body, ld=()):
-    return f"""<!doctype html><html lang="ru"><head><meta charset="utf-8">
+    return f"""<!doctype html><html lang="ru"><head><meta charset="utf-8"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{E(title)}</title><meta name="description" content="{E(desc)}">
 <link rel="canonical" href="{BASE}{canon}"><meta name="robots" content="index,follow">
