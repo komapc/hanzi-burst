@@ -1,0 +1,122 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Мои иероглифы — hanzi-burst</title>
+<style>
+:root{--bg:#faf7f2;--fg:#1f1b16;--muted:#7a7166;--accent:#c8402a;--line:#cfc6b6;--soft:#e6dfd3;--card:#fff;--ok:#2f8f5b;--info:#2f6fd0;--warn:#d09a1f}
+@media(prefers-color-scheme:dark){:root{--bg:#17140f;--fg:#f1ebe0;--muted:#9d9486;--accent:#ff7a5c;--line:#5a5144;--soft:#352f25;--card:#221e17;--ok:#5fcf93;--info:#6aa6ff;--warn:#e8b84a}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,sans-serif}
+main{max-width:860px;margin:0 auto;padding:20px 16px 60px}
+a{color:var(--accent)}h1{font-size:26px;margin:.4em 0 .2em}h2{font-size:16px;margin:1.8em 0 .6em;display:flex;align-items:baseline;gap:8px}
+h2 small{color:var(--muted);font-weight:400}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.lang button{background:none;border:1px solid var(--soft);color:var(--muted);padding:3px 10px;font:inherit;font-size:.85rem;cursor:pointer}
+.lang button:first-child{border-radius:999px 0 0 999px}.lang button:last-child{border-radius:0 999px 999px 0}
+.lang button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.m{color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
+.c{display:block;text-align:center;padding:8px 6px 6px;border:1px solid var(--soft);border-radius:12px;background:var(--card);color:var(--fg);text-decoration:none;position:relative}
+.c:hover{border-color:var(--accent)}
+.c svg{width:44px;height:44px;display:block;margin:0 auto}
+.c .p{font-size:.72rem;color:var(--muted)}.c .d{font-size:.7rem;color:var(--muted);line-height:1.2;max-height:2.4em;overflow:hidden}
+.c.k::after,.c.a::after,.c.s::after{content:"";position:absolute;top:5px;right:5px;width:9px;height:9px;border-radius:50%;background:var(--ok)}
+.c.a::after{background:var(--info)}.c.s::after{background:var(--warn)}
+.empty{padding:20px;border:1px dashed var(--line);border-radius:12px;color:var(--muted)}
+</style></head><body><main>
+<div class="top"><a href="/" id="back"></a>
+<span class="lang"><button data-lang="ru">RU</button><button data-lang="en">EN</button></span></div>
+<h1 id="h1"></h1><p class="m" id="sum"></p>
+<div id="out"></div>
+</main>
+<script>
+const T = {
+  ru:{title:'Мои иероглифы',back:'← hanzi-burst',known:'Известные иероглифы',parts:'Части (радикалы) в известных иероглифах',ready:'Готовы к изучению: все части известны',some:'Знаю часть частей',
+      empty:'Пока ничего не отмечено. Открой иероглиф на главной и нажми «Добавить в известные».',loading:'Загружаю…',
+      sum:(n,p,r)=>`Известно иероглифов: ${n}. Частей в них: ${p}. Готово к изучению: ${r}.`,
+      hint:'Список хранится только в этом браузере.', partKnown:'отмечена', partMet:'встречается'},
+  en:{title:'My characters',back:'← hanzi-burst',known:'Known characters',parts:'Parts (radicals) inside known characters',ready:'Ready to learn: all parts known',some:'Some parts known',
+      empty:'Nothing marked yet. Open a character on the main page and press “Add to known”.',loading:'Loading…',
+      sum:(n,p,r)=>`Known characters: ${n}. Parts inside them: ${p}. Ready to learn: ${r}.`,
+      hint:'The list is stored only in this browser.', partKnown:'marked', partMet:'seen'},
+};
+let lang = 'ru', known = [];
+try { lang = localStorage.getItem('hanzi-lang') || (navigator.language.startsWith('ru') ? 'ru' : 'en'); } catch (e) {}
+try { known = JSON.parse(localStorage.getItem('hanzi-known') || '[]'); } catch (e) {}
+const t = k => T[lang][k];
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let D = { chars: {} }, G = {}, ready = false;
+const shardKey = ch => ch.codePointAt(0).toString(16).slice(0, -2);
+const cache = {};
+const shard = (kind, k) => cache[kind + k] || (cache[kind + k] = fetch(`data/${kind}/${k}.json`).then(r => r.ok ? r.json() : {}).catch(() => ({})));
+async function load(chars) {
+  let need = [...chars];
+  const done = new Set();
+  while (need.length) {
+    const batch = need.filter(c => !done.has(c)); need = [];
+    batch.forEach(c => done.add(c));
+    await Promise.all([...new Set(batch.map(shardKey))].map(async k => {
+      const [cd, gl] = await Promise.all([shard('chars', k), shard('glyphs', k)]);
+      Object.assign(G, gl);
+      batch.filter(c => shardKey(c) === k).forEach(c => {
+        if (!cd[c]) return;
+        D.chars[c] = cd[c];
+        (cd[c].components || []).forEach(x => { if (!done.has(x)) need.push(x); });
+      });
+    }));
+  }
+}
+const hz = ch => G[ch] ? `<svg viewBox="0 0 1024 1024" role="img" aria-label="${esc(ch)}"><g transform="scale(1,-1) translate(0,-900)">${G[ch].map(d => `<path d="${d}" fill="currentColor"/>`).join('')}</g></svg>` : `<div style="font-size:34px;line-height:44px">${esc(ch)}</div>`;
+const def = ch => { const c = D.chars[ch] || {}; return (lang === 'ru' && c.definition_ru) || c.definition || ''; };
+const short = d => (d || '').split(/[;,]/)[0].trim();
+const cardHtml = (ch, cls) => `<a class="c ${cls || ''}" href="/?open=${encodeURIComponent(ch)}&lang=${lang}"><span class="p">${esc(((D.chars[ch] || {}).pinyin || [])[0] || '')}</span>${hz(ch)}<span class="d">${esc(short(def(ch)))}</span></a>`;
+const kset = () => new Set(known);
+function leaves(ch, ks) {   // {total, got} по листовым частям
+  let total = 0, got = 0;
+  const walk = (c, cov, depth) => {
+    const comps = (D.chars[c] || {}).components || [];
+    if (!comps.length || depth > 6) { total++; if (cov || ks.has(c)) got++; return; }
+    comps.forEach(x => walk(x, cov || ks.has(x), depth + 1));
+  };
+  ((D.chars[ch] || {}).components || []).forEach(x => walk(x, ks.has(x), 1));
+  return { total, got };
+}
+function leafSet(ch, acc, depth = 0) {
+  const comps = (D.chars[ch] || {}).components || [];
+  if (!comps.length || depth > 6) { if (depth) acc.add(ch); return acc; }
+  comps.forEach(x => leafSet(x, acc, depth + 1));
+  return acc;
+}
+function render() {
+  document.documentElement.lang = lang;
+  document.title = t('title') + ' — hanzi-burst';
+  $h1.textContent = t('title'); $back.textContent = t('back');
+  document.querySelectorAll('.lang button').forEach(b => b.classList.toggle('on', b.dataset.lang === lang));
+  if (!known.length) { $out.innerHTML = `<div class="empty">${t('empty')}</div>`; $sum.textContent = ''; return; }
+  if (!ready) { $out.innerHTML = `<p class="m">${t('loading')}</p>`; return; }
+  const ks = kset();
+  const parts = new Set();
+  known.forEach(c => leafSet(c, parts));
+  // кандидаты: иероглифы, которые мы знаем по данным (ядро + части известных), но ещё не отмечены
+  const cand = Object.keys(D.chars).filter(c => !ks.has(c) && (D.chars[c].components || []).length);
+  const rdy = [], som = [];
+  cand.forEach(c => { const r = leaves(c, ks); if (r.total && r.got === r.total) rdy.push(c); else if (r.got) som.push(c); });
+  $sum.textContent = T[lang].sum(known.length, parts.size, rdy.length) + ' ' + t('hint');
+  const sec = (title, arr, cls) => arr.length ? `<h2>${title} <small>${arr.length}</small></h2><div class="grid">${arr.map(c => cardHtml(c, cls)).join('')}</div>` : '';
+  $out.innerHTML = sec(t('known'), known, 'k') +
+    sec(t('parts'), [...parts].sort(), '') +
+    sec(t('ready'), rdy.slice(0, 60), 'a') +
+    sec(t('some'), som.slice(0, 60), 's');
+}
+const $h1 = document.getElementById('h1'), $back = document.getElementById('back'), $sum = document.getElementById('sum'), $out = document.getElementById('out');
+document.querySelectorAll('.lang button').forEach(b => b.onclick = () => { lang = b.dataset.lang; try { localStorage.setItem('hanzi-lang', lang); } catch (e) {} render(); });
+render();
+(async () => {
+  try {
+    const [core, gl] = await Promise.all([fetch('phrase.json').then(r => r.json()), fetch('glyphs.json').then(r => r.json())]);
+    D.chars = core.chars; Object.assign(G, gl);
+  } catch (e) { window.__err = String(e); }
+  await load(known.filter(c => !D.chars[c]));
+  ready = true; render();
+})();
+</script></body></html>
