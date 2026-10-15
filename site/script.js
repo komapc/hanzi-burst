@@ -35,7 +35,7 @@
     return loading = loading || fetch('data/s2t.json').then(r => r.json()).then(m => { map = m; }).catch(() => { map = {}; });
   }
   function sync() {
-    document.querySelectorAll('.scr input').forEach(i => { i.checked = i.value === script; });
+    document.querySelectorAll('.scr:not(.ph) input').forEach(i => { i.checked = i.value === script; });
   }
   function set(v) {
     script = v; try { localStorage.setItem(KEY, v); } catch (e) {}
@@ -49,7 +49,7 @@
   }).observe(document.documentElement, { childList: true, subtree: true, characterData: true });
 
   document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.scr input').forEach(i => i.onchange = () => { if (i.checked) set(i.value); });
+    document.querySelectorAll('.scr:not(.ph) input').forEach(i => i.onchange = () => { if (i.checked) set(i.value); });
     sync();
     if (script === 't') load().then(() => { apply(); window.dispatchEvent(new Event('hanzi-script')); });
   });

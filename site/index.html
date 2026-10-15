@@ -181,6 +181,9 @@
     <h1>hanzi-burst</h1>
     <span class="right">
       <span id="auth"></span>
+      <span class="scr ph" role="radiogroup" aria-label="Pinyin / Bopomofo">
+        <label title="Pinyin"><input type="radio" name="phon" value="p"><span>abc</span></label><label title="Bopomofo / 注音"><input type="radio" name="phon" value="b"><span>ㄅㄆ</span></label>
+      </span>
       <span class="scr" role="radiogroup" aria-label="Script / 字体">
         <label title="简体 — упрощённые / simplified"><input type="radio" name="script" value="s"><span>简</span></label><label title="繁體 — традиционные / traditional"><input type="radio" name="script" value="t"><span>繁</span></label>
       </span>
@@ -276,6 +279,52 @@ const pick = (o, base) => (lang === 'ru' && o && o[base + '_ru']) || (o && o[bas
 
 const short = d => d ? d.split(/[;,]/)[0].trim() : '';
 const py = ch => ((D.chars[ch] || {}).pinyin || [])[0] || '';
+/* бопомофо (注音) вместо пиньиня; по умолчанию выключено */
+let phon = 'p'; try { phon = localStorage.getItem('hanzi-phon') === 'b' ? 'b' : 'p'; } catch (e) {}
+const ZY = (() => {
+  const TONE = {}; 'aāáǎà eēéěè iīíǐì oōóǒò uūúǔù üǖǘǚǜ'.split(' ').forEach(r => [...r].slice(1).forEach((c, i) => TONE[c] = [r[0], i + 1]));
+  const INI = { b:'ㄅ', p:'ㄆ', m:'ㄇ', f:'ㄈ', d:'ㄉ', t:'ㄊ', n:'ㄋ', l:'ㄌ', g:'ㄍ', k:'ㄎ', h:'ㄏ', j:'ㄐ', q:'ㄑ', x:'ㄒ', zh:'ㄓ', ch:'ㄔ', sh:'ㄕ', r:'ㄖ', z:'ㄗ', c:'ㄘ', s:'ㄙ' };
+  const FIN = { a:'ㄚ', o:'ㄛ', e:'ㄜ', ê:'ㄝ', ai:'ㄞ', ei:'ㄟ', ao:'ㄠ', ou:'ㄡ', an:'ㄢ', en:'ㄣ', ang:'ㄤ', eng:'ㄥ', er:'ㄦ',
+    i:'ㄧ', ia:'ㄧㄚ', io:'ㄧㄛ', ie:'ㄧㄝ', iao:'ㄧㄠ', iu:'ㄧㄡ', iou:'ㄧㄡ', ian:'ㄧㄢ', in:'ㄧㄣ', iang:'ㄧㄤ', ing:'ㄧㄥ', iong:'ㄩㄥ',
+    u:'ㄨ', ua:'ㄨㄚ', uo:'ㄨㄛ', uai:'ㄨㄞ', ui:'ㄨㄟ', uei:'ㄨㄟ', uan:'ㄨㄢ', un:'ㄨㄣ', uen:'ㄨㄣ', uang:'ㄨㄤ', ueng:'ㄨㄥ', ong:'ㄨㄥ',
+    v:'ㄩ', ve:'ㄩㄝ', van:'ㄩㄢ', vn:'ㄩㄣ' };
+  const MARK = ['', '', 'ˊ', 'ˇ', 'ˋ', '˙'];
+  function syl(tok) {
+    let tone = 1, b = '';
+    for (const c of tok.toLowerCase()) {
+      if (TONE[c]) { b += TONE[c][0] === 'ü' ? 'v' : TONE[c][0]; tone = TONE[c][1]; }
+      else if (/[1-5]/.test(c)) tone = +c;
+      else b += c === 'ü' ? 'v' : c;
+    }
+    if (!/^[a-zê]+$/.test(b)) return null;
+    let er = '';
+    if (b.length > 2 && b.endsWith('r') && b !== 'er' && !INI[b.slice(0, -1)] ) { er = 'ㄦ'; b = b.slice(0, -1); }
+    let ini = '', fin = b;
+    if (/^[yw]/.test(b)) {
+      const r = b.slice(1);
+      if (b[0] === 'y') fin = /^(u|ue|uan|un)$/.test(r) ? 'v' + r.slice(1) : /^i/.test(r) ? r : 'i' + r;
+      else fin = r === 'u' ? 'u' : 'u' + r;
+      if (fin === 'iv') fin = 'v';
+    } else {
+      const m = b.match(/^(zh|ch|sh|[bpmfdtnlgkhjqxrzcs])/);
+      if (m) {
+        ini = m[1]; fin = b.slice(ini.length);
+        if (/^[jqx]$/.test(ini)) fin = fin.replace(/^u/, 'v');
+        if (/^(zh|ch|sh|r|z|c|s)$/.test(ini) && fin === 'i') fin = '';
+        if (fin === 'ng' || fin === 'n' || fin === 'm') return null;
+      }
+    }
+    if (fin === 'ue') fin = 've';
+    if (fin === 'ui' ) fin = 'uei'; if (fin === 'un') fin = 'uen'; if (fin === 'iu') fin = 'iou';
+    const f = fin === '' ? '' : FIN[fin];
+    if (f === undefined) return null;
+    const body = (INI[ini] || '') + f + er;
+    return tone === 5 ? '˙' + body : body + MARK[tone];
+  }
+  return s => s.replace(/[A-Za-zÀ-ɏüÜ1-5]+/g, tok => syl(tok) || tok);
+})();
+const PY = s => (phon === 'b' && s) ? ZY(String(s)) : s;
+
 const defOf = ch => pick(D.chars[ch], 'definition');
 
 /* Иероглиф рисуется по контурам черт (Make Me a Hanzi), а не шрифтом: шрифты теряют черты. */
@@ -384,7 +433,7 @@ function renderTrans() {
     $('#trans').append(document.createElement('br'), b);
   }
   $('#gloss').innerHTML = ph.custom ? ph.words.filter(w => w.gloss).map(w =>
-    `<li><span class="w serif">${w.word}</span><span class="p">${(w.pinyin || w.chars.map(py)).join(' ')}</span>${lang === 'ru' && w.gloss_ru ? w.gloss_ru : w.gloss}</li>`).join('') : '';
+    `<li><span class="w serif">${w.word}</span><span class="p">${PY((w.pinyin || w.chars.map(py)).join(' '))}</span>${lang === 'ru' && w.gloss_ru ? w.gloss_ru : w.gloss}</li>`).join('') : '';
 }
 async function translatePhrase(ph, btn) {
   btn.disabled = true; btn.textContent = t('trBusy');
@@ -421,7 +470,7 @@ function renderPhrase() {
       b.className = 'ch' + (partState(c) ? ' ' + partState(c) : '') + (c === rootCh ? ' sel' : '');
       b.dataset.ch = c;
       const tip = tipFor(w, i); if (tip) b.dataset.tip = tip;
-      b.innerHTML = `<span class="py">${(w.pinyin && w.pinyin[i]) || py(c)}</span>${hz(c)}`;
+      b.innerHTML = `<span class="py">${PY((w.pinyin && w.pinyin[i]) || py(c))}</span>${hz(c)}`;
       b.onclick = () => openRoot(c);
       el.append(b);
     });
@@ -507,7 +556,7 @@ function select(ch, glyphEl) {
   const typeName = t('types')[e.type] || '';
   const isKnown = known.has(ch);
   const def = pick(c, 'definition'), hint = pick(e, 'hint');
-  let h = `<h2>${hz(ch)}<small>${(c.pinyin || []).join(', ')}</small></h2>`;
+  let h = `<h2>${hz(ch)}<small>${PY((c.pinyin || []).join(', '))}</small></h2>`;
   if (def) h += `<p>${def}${c.definition_source && c.definition_source !== 'mmh' ? ` <span class="tag">${t('derived')}</span>` : ''}</p>`;
   if (c.incomplete) h += `<p class="hint">${t('incompl')}</p>`;
   if (c.atomic) h += `<p><span class="tag">${t('atomic')}</span></p>`;
@@ -538,9 +587,9 @@ function select(ch, glyphEl) {
   h += `<div id="mnemo"></div>`;
   if (u || inPh.length) {
     h += `<div class="usage" id="usage">`;
-    if (inPh.length) h += `<h3>${t('inPhrase')}</h3><ul class="wl">${inPh.map(w => `<li><span class="w serif">${w.word}</span><span class="p">${(w.pinyin || w.chars.map(py)).join(' ')}</span>${phGloss(w)}</li>`).join('')}</ul>`;
-    if (u && u.words.length) h += `<h3>${t('words')}</h3><ul class="wl">${u.words.map(w => `<li><span class="w serif">${w.w}</span><span class="p">${w.pinyin}</span>${pick(w, 'def')}</li>`).join('')}</ul>`;
-    if (via.length) h += `<h3>${t('viaParents')}</h3><ul class="wl">${via.slice(0, 8).map(w => `<li><span class="w serif">${w.w}</span><span class="p">${w.pinyin}</span>${pick(w, 'def')}</li>`).join('')}</ul>`;
+    if (inPh.length) h += `<h3>${t('inPhrase')}</h3><ul class="wl">${inPh.map(w => `<li><span class="w serif">${w.word}</span><span class="p">${PY((w.pinyin || w.chars.map(py)).join(' '))}</span>${phGloss(w)}</li>`).join('')}</ul>`;
+    if (u && u.words.length) h += `<h3>${t('words')}</h3><ul class="wl">${u.words.map(w => `<li><span class="w serif">${w.w}</span><span class="p">${PY(w.pinyin)}</span>${pick(w, 'def')}</li>`).join('')}</ul>`;
+    if (via.length) h += `<h3>${t('viaParents')}</h3><ul class="wl">${via.slice(0, 8).map(w => `<li><span class="w serif">${w.w}</span><span class="p">${PY(w.pinyin)}</span>${pick(w, 'def')}</li>`).join('')}</ul>`;
     if (u && u.chars.length) h += `<h3>${t('chars')}</h3><div class="chips">${u.chars.map(x => `<button class="chip ${known.has(x) ? 'known' : ''}" data-ch="${x}" title="${short(defOf(x))}">${hz(x)}</button>`).join('')}</div>`;
     h += `</div>`;
   }
@@ -795,6 +844,10 @@ const ownLabels = () => {
   $('#ownText').placeholder = t('ownPh'); $('#ownMsg').textContent = t($('#ownMsg').dataset.k || 'ownNote');
 };
 
+document.querySelectorAll('.scr.ph input').forEach(i => {
+  i.checked = i.value === phon;
+  i.onchange = () => { if (!i.checked) return; phon = i.value; try { localStorage.setItem('hanzi-phon', phon); } catch (e) {} if (D && D.phrase) { renderPhrase(); renderTrans(); refresh(); } };
+});
 applyLang();
 Promise.all([fetch('phrase.json').then(r => r.json()), fetch('glyphs.json').then(r => r.json())])
   .then(([d, g]) => {
