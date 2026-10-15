@@ -73,7 +73,7 @@
   .pk { background:none; border:1px solid var(--soft); border-radius:999px; padding:4px 12px; color:var(--muted); font:inherit; font-size:.95rem; cursor:pointer; font-family:"Noto Serif SC","Songti SC",serif; }
   .pk:hover { border-color:var(--accent); color:var(--accent); }
   .pk.on { background:var(--accent); border-color:var(--accent); color:#fff; }
-  .trans { margin:6px 0 0; font-size:1.05rem; }
+  .trans { margin:6px 0 0; font-size:1.05rem; white-space:pre-line; }
   #phrase { display:flex; flex-wrap:wrap; gap:8px 20px; }
   .word { display:flex; gap:2px; padding:4px 6px; border-radius:10px; }
   .word.active { background:color-mix(in srgb, var(--accent) 12%, transparent); }
@@ -229,12 +229,12 @@ const ICON = {
 };
 const T = {
   ru: { hint:'Нажми на иероглиф.', crumbs:'Нажимай на части, чтобы разбирать дальше',
-        all:'Взорвать всё', ftag:'Учим китайские иероглифы через радикалы', fExplore:'Разделы', fProject:'Проект', fAll:'Все иероглифы', fPhrases:'Все фразы', fAbout:'О проекте', fPrivacy:'Конфиденциальность', fHow:'Как это работает', fOther:'Другие проекты', fData:'Источники данных', howTitle:'Как это работает', close:'Закрыть', howBody:'<p>Выбери фразу и нажми на иероглиф: он «разлетится» на радикалы и фонетики, пока не станет неделимым. У каждой части есть значение, пиньинь, слова и иероглифы, где она встречается.</p><p>«＋ Новая фраза» подбирает фразу с минимумом незнакомых тебе иероглифов, а «Своя фраза» разбирает любой вставленный китайский текст.</p><p>Фразы взяты из открытых корпусов: Tatoeba, Wiktionary, Common Voice.</p>', newPhrase:'Новая фраза', incompl:'В словаре у этого знака не хватает одной части разбора, поэтому дерево неполное.', ownTitle:'Своя фраза', ownGo:'Разобрать', ownRand:'Случайная из Википедии', ownRandBusy:'Ищу фразу в Википедии…', ownRandErr:'Не удалось получить фразу из Википедии', ownRandSrc:'Википедия', ownPh:'Вставьте китайский текст (до 100 иероглифов)', ownBusy:'Загружаю словарь…', ownEmpty:'Не нашёл иероглифов в тексте', ownErr:'Не удалось загрузить данные', ownNote:'Текст остаётся в вашем браузере. Значения слов из словаря CC-CEDICT, перевода всей фразы нет.', ownTrad:'Традиционные знаки заменены упрощёнными.', noMore:'Фразы в пуле закончились', known:'Знаю', add:'Добавить в известные', where:'Где ещё встречается', words:'Слова', chars:'Иероглифы с этой частью',
+        all:'Взорвать всё', ftag:'Учим китайские иероглифы через радикалы', fExplore:'Разделы', fProject:'Проект', fAll:'Все иероглифы', fPhrases:'Все фразы', fAbout:'О проекте', fPrivacy:'Конфиденциальность', fHow:'Как это работает', fOther:'Другие проекты', fData:'Источники данных', howTitle:'Как это работает', close:'Закрыть', howBody:'<p>Выбери фразу и нажми на иероглиф: он «разлетится» на радикалы и фонетики, пока не станет неделимым. У каждой части есть значение, пиньинь, слова и иероглифы, где она встречается.</p><p>«＋ Новая фраза» подбирает фразу с минимумом незнакомых тебе иероглифов, а «Своя фраза» разбирает любой вставленный китайский текст.</p><p>Фразы взяты из открытых корпусов: Tatoeba, Wiktionary, Common Voice.</p>', newPhrase:'Новая фраза', incompl:'В словаре у этого знака не хватает одной части разбора, поэтому дерево неполное.', ownTitle:'Своя фраза', ownGo:'Разобрать', ownRand:'Случайная из Википедии', trBtn:'Перевести фразу', trBusy:'Перевожу…', trErr:'Не удалось перевести', trLimit:'Лимит переводов на сегодня исчерпан', trMt:'машинный перевод', ownRandBusy:'Ищу фразу в Википедии…', ownRandErr:'Не удалось получить фразу из Википедии', ownRandSrc:'Википедия', ownPh:'Вставьте китайский текст (до 100 иероглифов)', ownBusy:'Загружаю словарь…', ownEmpty:'Не нашёл иероглифов в тексте', ownErr:'Не удалось загрузить данные', ownNote:'Разбор идёт в вашем браузере. Значения слов из словаря CC-CEDICT. Перевод всей фразы — по кнопке (текст уходит на сервер и в Gemini).', ownTrad:'Традиционные знаки заменены упрощёнными.', noMore:'Фразы в пуле закончились', known:'Знаю', add:'Добавить в известные', where:'Где ещё встречается', words:'Слова', chars:'Иероглифы с этой частью',
         seen:'Уже встречалось в этой фразе:', nodesc:'Для этой части в словаре нет описания.', derived:'выведено автоматически', mnemo:'Придумать запоминалку', mnemoMore:'Ещё вариант', mnemoLimit:'Лимит на сегодня исчерпан', mnemoLogin:'Войди через Google, чтобы получать запоминалки', mnemoBusy:'Думаю…', mnemoErr:'Не получилось, попробуй позже', mnemoNote:'Выдумка для запоминания, не настоящая этимология', logout:'Выйти', atomic:'неделимая часть: радикал или цельный рисунок',
         phonetic:'Звук подсказывает', semantic:'смысл —', word:'Слово', known_n:'Известно:',
         types:{ pictophonetic:'смысл + звук', ideographic:'смысловая комбинация', pictographic:'рисунок' } },
   en: { hint:'Click a character.', crumbs:'Click parts to break them down',
-        all:'Explode all', ftag:'Learn Chinese characters by radicals', fExplore:'Explore', fProject:'Project', fAll:'All characters', fPhrases:'All phrases', fAbout:'About', fPrivacy:'Privacy', fHow:'How it works', fOther:'Other projects', fData:'Data sources', howTitle:'How it works', close:'Close', howBody:'<p>Pick a phrase and click a character: it breaks into radicals and phonetic parts until it can\'t be split further. Each part has a meaning, pinyin, words and characters that use it.</p><p>“＋ New phrase” picks a phrase with the fewest characters you don\'t know yet, and “Your own phrase” breaks down any Chinese text you paste.</p><p>Phrases come from open corpora: Tatoeba, Wiktionary, Common Voice.</p>', newPhrase:'New phrase', incompl:'The dictionary is missing one part of this character\'s breakdown, so the tree is incomplete.', ownTitle:'Your own phrase', ownGo:'Break down', ownRand:'Random from Wikipedia', ownRandBusy:'Fetching a phrase from Wikipedia…', ownRandErr:'Could not get a phrase from Wikipedia', ownRandSrc:'Wikipedia', ownPh:'Paste Chinese text (up to 100 characters)', ownBusy:'Loading dictionary…', ownEmpty:'No Chinese characters found', ownErr:'Could not load data', ownNote:'Your text stays in your browser. Word meanings come from CC-CEDICT; there is no translation of the whole phrase.', ownTrad:'Traditional characters were converted to simplified.', noMore:'No more phrases in the pool', known:'Known', add:'Add to known', where:'Where else it appears', words:'Words', chars:'Characters with this part',
+        all:'Explode all', ftag:'Learn Chinese characters by radicals', fExplore:'Explore', fProject:'Project', fAll:'All characters', fPhrases:'All phrases', fAbout:'About', fPrivacy:'Privacy', fHow:'How it works', fOther:'Other projects', fData:'Data sources', howTitle:'How it works', close:'Close', howBody:'<p>Pick a phrase and click a character: it breaks into radicals and phonetic parts until it can\'t be split further. Each part has a meaning, pinyin, words and characters that use it.</p><p>“＋ New phrase” picks a phrase with the fewest characters you don\'t know yet, and “Your own phrase” breaks down any Chinese text you paste.</p><p>Phrases come from open corpora: Tatoeba, Wiktionary, Common Voice.</p>', newPhrase:'New phrase', incompl:'The dictionary is missing one part of this character\'s breakdown, so the tree is incomplete.', ownTitle:'Your own phrase', ownGo:'Break down', ownRand:'Random from Wikipedia', trBtn:'Translate phrase', trBusy:'Translating…', trErr:'Could not translate', trLimit:'Daily translation limit reached', trMt:'machine translation', ownRandBusy:'Fetching a phrase from Wikipedia…', ownRandErr:'Could not get a phrase from Wikipedia', ownRandSrc:'Wikipedia', ownPh:'Paste Chinese text (up to 100 characters)', ownBusy:'Loading dictionary…', ownEmpty:'No Chinese characters found', ownErr:'Could not load data', ownNote:'Breakdown runs in your browser. Word meanings come from CC-CEDICT. Whole-phrase translation is on request (the text is sent to our server and Gemini).', ownTrad:'Traditional characters were converted to simplified.', noMore:'No more phrases in the pool', known:'Known', add:'Add to known', where:'Where else it appears', words:'Words', chars:'Characters with this part',
         seen:'Already seen in this phrase:', nodesc:'No description for this part in the dictionary.', derived:'derived automatically', mnemo:'Make a mnemonic', mnemoMore:'Another one', mnemoLimit:'Daily limit reached', mnemoLogin:'Sign in with Google to get mnemonics', mnemoBusy:'Thinking…', mnemoErr:'Failed, try again later', mnemoNote:'An invention to aid memory, not real etymology', logout:'Sign out', atomic:'indivisible part: a radical or a whole picture',
         phonetic:'Sound hint:', semantic:'meaning:', word:'Word', known_n:'Known:',
         types:{ pictophonetic:'meaning + sound', ideographic:'meaning combination', pictographic:'picture' } },
@@ -265,10 +265,15 @@ let rootCh = null, selected = null;
 function tipFor(w, i) {
   const top = (defs, n) => (defs || []).slice(0, n).join('; ');
   const e = (w.cedict || [])[0] || {};
-  const word = (lang === 'ru' && e.defs_ru && e.defs_ru.length) ? top(e.defs_ru, 3) : top(e.defs, 3);
+  let word = (lang === 'ru' && e.defs_ru && e.defs_ru.length) ? top(e.defs_ru, 3) : top(e.defs, 3);
+  if (!word) {                                   // свои фразы: gloss из словаря слов
+    const g = (lang === 'ru' && w.gloss_ru) || w.gloss || '';
+    word = g.split(/\s*[\/;]\s*/).filter(Boolean).slice(0, 3).join('; ');
+  }
   if (w.chars.length === 1) return word || short(defOf(w.chars[0]));
   const own = short(defOf(w.chars[i]));
-  return [own && `${w.chars[i]} — ${own}`, word && `${w.word} — ${word}`].filter(Boolean).join('\n');
+  // для многознакового слова сначала значение СЛОВА, затем отдельного иероглифа
+  return [word && `${w.word} — ${word}`, own && `${w.chars[i]} — ${own}`].filter(Boolean).join('\n');
 }
 
 /* ---------- выбор фразы ---------- */
@@ -315,14 +320,33 @@ function renderPicker() {   // 50+ фраз: стрелки и выпадающ�
   next.onclick = () => switchPhrase((cur + 1) % n);
   const count = document.createElement('span'); count.className = 'hint'; count.textContent = `${cur + 1} / ${n}`;
   const nb = document.createElement('button'); nb.className = 'pk'; nb.textContent = '＋ ' + t('newPhrase'); nb.onclick = newPhrase;
-  el.append(prev, sel, next, count, nb);
+  const wb = document.createElement('button'); wb.className = 'pk'; wb.textContent = '🎲 ' + t('ownRand'); wb.onclick = randomWiki;
+  el.append(prev, sel, next, count, nb, wb);
 }
 function renderTrans() {
   const ph = L[cur];
-  $('#trans').textContent = ph.custom ? (ph.trad ? t('ownTrad') : '') :
+  const tr = ph.custom && ph.tr && ph.tr[lang];
+  $('#trans').textContent = ph.custom ? [tr && `${tr}  (${t('trMt')})`, ph.trad && t('ownTrad')].filter(Boolean).join('\n') :
     ((lang === 'ru' ? ph.ru : ph.en) || ph.en || '') + (ph.mt ? (lang === 'ru' ? '  (машинный перевод)' : '  (machine translation)') : '');
+  if (ph.custom && !tr && backend) {
+    const b = document.createElement('button'); b.className = 'btn'; b.textContent = t('trBtn');
+    b.onclick = () => translatePhrase(ph, b);
+    $('#trans').append(document.createElement('br'), b);
+  }
   $('#gloss').innerHTML = ph.custom ? ph.words.filter(w => w.gloss).map(w =>
     `<li><span class="w serif">${w.word}</span><span class="p">${(w.pinyin || w.chars.map(py)).join(' ')}</span>${lang === 'ru' && w.gloss_ru ? w.gloss_ru : w.gloss}</li>`).join('') : '';
+}
+async function translatePhrase(ph, btn) {
+  btn.disabled = true; btn.textContent = t('trBusy');
+  const l = lang;
+  const r = await api('/api/translate', { method: 'POST', body: { zh: ph.zh, lang: l } });
+  if (r.ok && r.data && r.data.translation) {
+    (ph.tr = ph.tr || {})[l] = r.data.translation;
+    track('translate_phrase', { len: ph.zh.length });
+    if (L[cur] === ph) renderTrans();
+  } else {
+    btn.disabled = false; btn.textContent = r.status === 429 ? t('trLimit') : t('trErr');
+  }
 }
 function switchPhrase(i) {
   cur = i;
@@ -673,7 +697,8 @@ async function randomWikiPhrase() {
   }
   return null;
 }
-$('#ownRand').onclick = async () => {
+async function randomWiki() {
+  $('#own').open = true;                        // статус и ссылка на источник показываются в этом блоке
   const msg = $('#ownMsg'), btn = $('#ownRand'); btn.disabled = true;
   msg.dataset.k = 'ownRandBusy'; msg.textContent = t('ownRandBusy');
   try {
@@ -689,7 +714,8 @@ $('#ownRand').onclick = async () => {
     }
   } catch (e) { msg.dataset.k = 'ownRandErr'; msg.textContent = t('ownRandErr'); }
   btn.disabled = false;
-};
+}
+$('#ownRand').onclick = randomWiki;
 const OTHER = [['EchoDrift', 'https://echodrift.pages.dev/'], ['Ido-tradukilo', 'https://ido-tradukilo.pages.dev/'], ['Vortaro', 'https://ido-vortaro.pages.dev/'],
   ['min-co', 'https://komapc.github.io/contlang/'], ['Ideonology', 'https://komapc.github.io/ideon/ru/']];
 function renderFooter() {

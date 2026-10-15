@@ -30,6 +30,10 @@ button{font:inherit;padding:6px 12px;border:1px solid var(--accent);border-radiu
 <p>Когда ты нажимаешь «Придумать запоминалку», на наш сервер уходят иероглиф, его пиньинь, значение, состав и язык интерфейса. Они передаются в Google Gemini API, чтобы получить текст. Готовые тексты кэшируются и показываются всем. Для лимитов на запросы мы храним в базе дневной счётчик, привязанный к хэшу IP-адреса (сам адрес не сохраняется), и этот же хэш помечает созданный текст. Счётчики пока не удаляются автоматически.</p>
 <p class="m">When you request a mnemonic, the character, its pinyin, meaning, components and interface language are sent to our server and to the Google Gemini API. Results are cached and shared. For rate limits we keep a daily counter tied to a hash of your IP address (the address itself is not stored); the same hash tags the generated text. Counters are not purged automatically yet.</p>
 
+<h2>Перевод фразы / Phrase translation</h2>
+<p>Когда ты нажимаешь «Перевести фразу», на наш сервер и в Google Gemini API уходит сама китайская фраза (до 120 знаков) и язык интерфейса. Перевод не сохраняется; для лимитов хранится только счётчик запросов.</p>
+<p class="m">When you press “Translate phrase”, the Chinese phrase itself (up to 120 characters) and the interface language are sent to our server and to the Google Gemini API. The translation is not stored; only a request counter is kept for rate limits.</p>
+
 <h2>Хостинг / Hosting</h2>
 <p>Сайт работает на Cloudflare (Workers, D1). Как и любой хостинг, Cloudflare видит технические данные запроса (IP, User-Agent) в своих логах.</p>
 <p class="m">The site runs on Cloudflare (Workers, D1), which sees standard request data in its logs.</p>

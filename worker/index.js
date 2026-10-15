@@ -87,7 +87,7 @@ ${data}
 Ответ строго JSON / Reply strictly as JSON: {"mnemonic": "..."}`;
 }
 
-async function askGemini(env, prompt) {
+async function askGemini(env, prompt, { field = 'mnemonic', temperature = 0.9, maxOutputTokens = 600 } = {}) {
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${env.GEMINI_MODEL}:generateContent`;
   const r = await fetch(url, {
     method: 'POST',
@@ -95,13 +95,13 @@ async function askGemini(env, prompt) {
     body: JSON.stringify({
       contents: [{ parts: [{ text: prompt }] }],
       // thinkingBudget 0: иначе «размышления» 2.5-flash съедают maxOutputTokens и ответ приходит пустым
-      generationConfig: { responseMimeType: 'application/json', temperature: 0.9, maxOutputTokens: 600, thinkingConfig: { thinkingBudget: 0 } },
+      generationConfig: { responseMimeType: 'application/json', temperature, maxOutputTokens, thinkingConfig: { thinkingBudget: 0 } },
     }),
   });
   if (!r.ok) throw new Error('llm http ' + r.status + ' ' + (await r.text()).slice(0, 200));
   const data = await r.json();
   const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-  try { return JSON.parse(text).mnemonic; } catch { throw new Error('llm bad json: ' + JSON.stringify(data).slice(0, 300)); }
+  try { return JSON.parse(text)[field]; } catch { throw new Error('llm bad json: ' + JSON.stringify(data).slice(0, 300)); }
 }
 
 /* ---------- маршруты ---------- */
@@ -212,6 +212,41 @@ export default {
       } catch (e) {
         console.error('explain failed', e.message);
         return json({ error: 'llm_failed', variants: have }, 502);
+      }
+    }
+
+    // Перевод всей фразы (по кнопке). Не кэшируется: фразы свои/случайные. Лимиты те же, что у запоминалок.
+    if (path === '/api/translate' && method === 'POST') {
+      const b = await request.json().catch(() => ({}));
+      const lang = b.lang === 'en' ? 'en' : 'ru';
+      const zh = typeof b.zh === 'string' ? b.zh.trim() : '';
+      if (!zh || zh.length > 120 || !/\p{Script=Han}/u.test(zh)) return json({ error: 'bad_text' }, 400);
+
+      const day = new Date().toISOString().slice(0, 10);
+      const limit = parseInt(env.EXPLAIN_DAILY_LIMIT || '30', 10);
+      const row = await env.DB.prepare(
+        'INSERT INTO usage (user_id, day, n) VALUES (?1, ?2, 1) ON CONFLICT(user_id, day) DO UPDATE SET n = n + 1 RETURNING n'
+      ).bind('t:' + uid, day).first();
+      if (row.n > limit) return json({ error: 'rate_limited' }, 429);
+      const globalLimit = parseInt(env.GLOBAL_DAILY_LIMIT || '300', 10);
+      const g = await env.DB.prepare(
+        "INSERT INTO usage (user_id, day, n) VALUES ('*', ?1, 1) ON CONFLICT(user_id, day) DO UPDATE SET n = n + 1 RETURNING n"
+      ).bind(day).first();
+      if (g.n > globalLimit) return json({ error: 'rate_limited' }, 429);
+
+      const target = lang === 'ru' ? 'русский / Russian' : 'English';
+      const prompt = `Переведи китайскую фразу на ${target}. Только перевод, без пояснений, пиньиня и комментариев. / Translate the Chinese phrase into ${target}. Output the translation only, no explanations or pinyin.
+
+Фраза / Phrase: ${zh}
+
+Ответ строго JSON / Reply strictly as JSON: {"translation": "..."}`;
+      try {
+        const text = String(await askGemini(env, prompt, { field: 'translation', temperature: 0.2, maxOutputTokens: 300 }) || '').slice(0, 400);
+        if (!text) throw new Error('empty');
+        return json({ translation: text });
+      } catch (e) {
+        console.error('translate failed', e.message);
+        return json({ error: 'llm_failed' }, 502);
       }
     }
 
