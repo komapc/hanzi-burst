@@ -97,6 +97,7 @@
   .punct { font-size:3.2rem; align-self:flex-end; }
 
   #card { margin-top:24px; background:var(--card); border:1px solid var(--soft); border-radius:16px; padding:20px; display:none; }
+  #card.open { display:block; }
   .toolbar { display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:8px; flex-wrap:wrap; }
   .crumbs { color:var(--muted); font-size:.85rem; }
   .btn { display:inline-flex; align-items:center; gap:6px; background:none; color:var(--fg); border:1px solid var(--soft); border-radius:999px;
@@ -156,6 +157,15 @@
     background: var(--card); color: var(--fg); border: 1px solid var(--line); border-radius: 10px; font-size: 14px;
     display: flex; flex-wrap: wrap; gap: 8px 10px; align-items: center; box-shadow: 0 4px 18px rgba(0,0,0,.18); z-index: 50; }
   #consent[hidden] { display: none; }
+  /* широкий экран: панель описания слева, дерево справа */
+  @media (min-width: 960px) {
+    main { max-width:1180px; }
+    #card.open { display:grid; grid-template-columns:minmax(300px,390px) minmax(0,1fr); grid-template-areas:"bar bar" "info tree"; gap:0 28px; align-items:start; }
+    #card .toolbar { grid-area:bar; }
+    #tree { grid-area:tree; padding-top:4px; }
+    #info { grid-area:info; margin-top:0; padding-top:0; border-top:0; padding-right:22px; border-right:1px solid var(--soft);
+            position:sticky; top:12px; max-height:calc(100vh - 40px); overflow-y:auto; }
+  }
 </style>
 </head>
 <body>
@@ -361,7 +371,7 @@ function switchPhrase(i) {
   D.phrase = L[i].words;
   $('#own').hidden = true;
   rootCh = null; selected = null;
-  $('#card').style.display = 'none'; $('#hint').style.display = '';
+  $('#card').classList.remove('open'); $('#hint').style.display = '';
   renderPicker(); renderPhrase(); renderTrans(); refresh();
 }
 
@@ -429,7 +439,7 @@ function explodeAll(node) {
 
 function openRoot(ch) {
   rootCh = ch;
-  $('#card').style.display = 'block'; $('#hint').style.display = 'none';
+  $('#card').classList.add('open'); $('#hint').style.display = 'none';
   const tree = $('#tree'); tree.innerHTML = '';
   const node = makeNode(ch, [], false);
   tree.append(node);
