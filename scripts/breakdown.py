@@ -257,9 +257,19 @@ def fallback_definition(ch, mmh, num2char, char2num):
     return None
 
 
+# в MMH у этих частей бесполезное определение (丷 и 乛 = «kwukyel», корейская пометка к тексту)
+DEFINITION_OVERRIDES = {
+    "丷": ("two short strokes on top (like a small 八)", "две короткие черты сверху (как маленькое 八)"),
+    "乛": ("short stroke with a hook (a stroke component)", "короткая черта с изгибом (элемент-черта)"),
+}
+
+
 def info(ch, mmh, maps=None, tr=None):
     tr = tr or {}
     d = mmh.get(ch, {})
+    if ch in DEFINITION_OVERRIDES:
+        d = dict(d, definition=DEFINITION_OVERRIDES[ch][0])
+        tr = dict(tr, **{DEFINITION_OVERRIDES[ch][0]: DEFINITION_OVERRIDES[ch][1]})
     definition, source = d.get("definition"), "mmh" if d.get("definition") else None
     definition_ru = tr.get(definition) if definition else None
     if not definition and maps:
