@@ -60,19 +60,19 @@
   #auth { font-size:.85rem; color:var(--muted); display:flex; align-items:center; gap:8px; }
   .mn { margin:8px 0; padding:10px 12px; border-radius:10px; background:color-mix(in srgb, var(--accent) 8%, transparent); }
   .mn small { color:var(--muted); display:block; margin-top:4px; }
-  .lang { display:inline-flex; border:1px solid var(--soft); border-radius:999px; overflow:hidden; }
-  .lang button { background:none; border:0; color:var(--muted); padding:5px 12px; font:inherit; font-size:.8rem; cursor:pointer; }
-  .opts { display:inline-flex; align-items:stretch; border:1px solid var(--soft); border-radius:999px; overflow:hidden; }
-  .opts > * { border:0 !important; margin:0 !important; border-radius:0 !important; }
-  .opts > * + * { border-left:1px solid var(--soft) !important; }
-  .opts .lang button, .opts .scr span { font-family:"Noto Sans SC","Noto Sans CJK SC",system-ui,sans-serif; font-size:.8rem; line-height:1.4; padding:6px 12px; }
-  .scr { display:inline-flex; border:1px solid var(--soft); border-radius:999px; overflow:hidden; margin-right:6px; }
-  .scr label { cursor:pointer; }
+  /* переключатели в шапке: одна «таблетка», внутри группы 拼音/注音 · 简/繁 · RU/EN */
+  .opts { display:inline-flex; align-items:center; gap:2px; padding:3px; border-radius:999px;
+          background:color-mix(in srgb, var(--soft) 45%, transparent); }
+  .opts > * { display:inline-flex; gap:1px; position:relative; }
+  .opts > * + *::before { content:""; position:absolute; left:-2px; top:22%; bottom:22%; width:1px; background:var(--soft); }
+  .scr label { cursor:pointer; display:block; }
   .scr input { position:absolute; opacity:0; pointer-events:none; }
-  .scr span { display:block; padding:5px 12px; font-size:.8rem; color:var(--muted); }
-  .scr input:checked + span { background:var(--accent); color:#fff; }
-  .scr input:focus-visible + span { outline:2px solid var(--accent); outline-offset:-2px; }
-  .lang button.on { background:var(--accent); color:#fff; }
+  .opts .scr span, .opts .lang button { display:block; background:none; border:0; border-radius:999px; cursor:pointer;
+          font-family:"Noto Sans SC","Noto Sans CJK SC",system-ui,sans-serif; font-size:.8rem; line-height:1.4; padding:5px 12px;
+          color:var(--muted); transition:background .15s, color .15s, box-shadow .15s; }
+  .opts .scr label:hover span, .opts .lang button:hover { color:var(--fg); }
+  .opts .scr input:checked + span, .opts .lang button.on { background:var(--accent); color:#fff; box-shadow:0 1px 3px rgba(0,0,0,.25); }
+  .opts .scr input:focus-visible + span, .opts .lang button:focus-visible { outline:2px solid var(--accent); outline-offset:1px; }
 
   #picker { display:flex; align-items:center; gap:8px; margin-bottom:14px; flex-wrap:wrap; }
   #picker .pk, #picker .hint { white-space:nowrap; }
