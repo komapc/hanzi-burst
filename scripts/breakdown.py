@@ -188,7 +188,10 @@ def components(ch, mmh):
     d = mmh.get(ch)
     if not d:
         return []
-    comps = [c for c in d.get("decomposition", "") if c not in IDS_OPS and c != "？" and c != ch]
+    dec = d.get("decomposition", "")
+    if "？" in dec and dec.strip("？"):  # неполный разбор (书 = ⿻？丨): одну найденную часть не показываем как весь состав
+        return []
+    comps = [c for c in dec if c not in IDS_OPS and c != "？" and c != ch]
     seen, out = set(), []
     for c in comps:
         if c not in seen:
@@ -264,6 +267,7 @@ def fallback_definition(ch, mmh, num2char, char2num):
 DEFINITION_OVERRIDES = {
     "丷": ("two short strokes on top (like a small 八)", "две короткие черты сверху (как маленькое 八)"),
     "乛": ("short stroke with a hook (a stroke component)", "короткая черта с изгибом (элемент-черта)"),
+    "丨": ("vertical stroke (a stroke component)", "вертикальная черта (элемент-черта)"),   # в MMH «number one; line»: «один» это 一
 }
 
 
