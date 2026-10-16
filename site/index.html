@@ -402,7 +402,7 @@ async function newPhrase() {
     if (have.has(p.zh)) continue;
     const fresh = new Set();
     p.words.forEach(w => (w.chars || []).forEach(c => { if (!seenCh.has(c)) fresh.add(c); }));
-    const score = fresh.size * 10 + (p.src === 'commonvoice' ? 2 : p.src === 'wiktionary' ? 1 : 0);   // при равенстве: Tatoeba > Wiktionary > Common Voice
+    const score = fresh.size * 10 + (p.hsk || 7) + (p.src === 'commonvoice' ? 2 : p.src === 'wiktionary' ? 1 : 0);   // новые знаки важнее, при равенстве — ниже уровень HSK   // при равенстве: Tatoeba > Wiktionary > Common Voice
     if (score < bestScore) { best = p; bestScore = score; }
   }
   if (!best) { $('#trans').textContent = t('noMore'); return; }
@@ -433,13 +433,33 @@ function renderTrans() {
   const tr = ph.custom && ph.tr && ph.tr[lang];
   $('#trans').textContent = ph.custom ? [tr && `${tr}  (${t('trMt')})`, ph.trad && t('ownTrad')].filter(Boolean).join('\n') :
     ((lang === 'ru' ? ph.ru : ph.en) || ph.en || '') + (ph.mt ? (lang === 'ru' ? '  (машинный перевод)' : '  (machine translation)') : '');
+  if (ph.hsk) { const lv = document.createElement('span'); lv.className = 'tag'; lv.title = 'HSK 3.0'; lv.textContent = 'HSK ' + (ph.hsk >= 7 ? '7–9' : ph.hsk); $('#trans').append(' ', lv); }
   if (ph.custom && !tr && backend) {
     const b = document.createElement('button'); b.className = 'btn'; b.textContent = t('trBtn');
     b.onclick = () => translatePhrase(ph, b);
     $('#trans').append(document.createElement('br'), b);
   }
-  $('#gloss').innerHTML = ph.custom ? ph.words.filter(w => w.gloss).map(w =>
-    `<li><span class="w serif">${w.word}</span><span class="p">${PY((w.pinyin || w.chars.map(py)).join(' '))}</span>${lang === 'ru' && w.gloss_ru ? w.gloss_ru : w.gloss}</li>`).join('') : '';
+  $('#gloss').innerHTML = ph.words.filter(w => !w.punct && wordMeaning(w)).map(w =>
+    `<li><span class="w serif">${w.word}</span><span class="p">${PY((w.pinyin || w.chars.map(py)).join(' '))}</span>${wordMeaning(w)}</li>`).join('');
+}
+/* значение слова целиком: из CEDICT во фразе, иначе из шарда слов (gloss) */
+function wordMeaning(w) {
+  const e = (w.cedict || [])[0];
+  if (e && e.defs && e.defs.length) return ((lang === 'ru' && e.defs_ru && e.defs_ru.length) ? e.defs_ru : e.defs).slice(0, 3).join('; ');
+  const g = ((lang === 'ru' && w.gloss_ru) || w.gloss || '').split(/\s*[\/;]\s*/).filter(Boolean).slice(0, 3).join('; ');
+  return g || (w.chars && w.chars.length === 1 ? short(defOf(w.chars[0])) : '');
+}
+/* у фраз из пула слова «лёгкие» (без CEDICT): значения подгружаем из шардов слов */
+async function ensureGloss(ph) {
+  if (ph.custom || ph.glossed) return;
+  ph.glossed = true;
+  const need = ph.words.filter(w => !w.punct && !(w.cedict && w.cedict.length) && !w.gloss);
+  if (!need.length) return;
+  const keys = [...new Set(need.map(w => shardKey(w.word)))];
+  const by = {};
+  await Promise.all(keys.map(async k => Object.assign(by, await loadShard('words', k))));
+  need.forEach(w => { const e = by[w.word]; if (e) { w.gloss = e[1]; w.gloss_ru = e[2]; } });
+  if (L[cur] === ph) { renderPhrase(); renderTrans(); refresh(); }
 }
 async function translatePhrase(ph, btn) {
   btn.disabled = true; btn.textContent = t('trBusy');
@@ -461,7 +481,7 @@ function switchPhrase(i) {
   rootCh = null; selected = null;
   $('#card').classList.remove('open'); $('#hint').style.display = '';
   renderPicker(); renderPhrase(); renderTrans(); refresh();
-  syncScript();
+  syncScript(); ensureGloss(L[i]);
 }
 
 /* ---------- фраза ---------- */
@@ -857,7 +877,11 @@ document.querySelectorAll('.scr.ph input').forEach(i => {
 applyLang();
 Promise.all([fetch('phrase.json').then(r => r.json()), fetch('glyphs.json').then(r => r.json())])
   .then(([d, g]) => {
-    D = d; G = g; D.pool = [];
+    D = d; G = g; D.pool = []; D.usage = {};
+    fetch('usage.json').then(r => r.json()).then(u => {   // «где ещё встречается» подгружается после старта
+      D.usage = u;
+      if (selected && $('#usageBtn') && !$('#usage').classList.contains('open')) select(selected, document.querySelector(`.node[data-ch="${selected}"] > .glyph`));
+    }).catch(() => {});
     const q0 = new URLSearchParams(location.search);
     return (getSeen().length || q0.get('z') ? ensurePool() : 0);
   }).then(() => {
@@ -870,7 +894,7 @@ Promise.all([fetch('phrase.json').then(r => r.json()), fetch('glyphs.json').then
     if (q0.get('z')) { const zi = L.findIndex(p => p.zh === q0.get('z')); if (zi >= 0) q0.set('p', String(zi)); }
     cur = Math.min(Math.max(q0.has('p') ? parseInt(q0.get('p'), 10) || 0 : saved, 0), L.length - 1);
     D.phrase = L[cur].words;
-    renderPicker(); renderPhrase(); applyLang(); syncScript();
+    renderPicker(); renderPhrase(); applyLang(); syncScript(); ensureGloss(L[cur]);
     // ссылка вида ?open=想&explode=1&lang=en открывает иероглиф сразу
     const q = new URLSearchParams(location.search);
     if (q.get('lang')) { lang = q.get('lang'); applyLang(); }

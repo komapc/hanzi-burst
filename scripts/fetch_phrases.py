@@ -136,4 +136,5 @@ def main():
         print(f"записано в {out}: {len(new)}")
 
 
-main()
+if __name__ == "__main__":
+    main()

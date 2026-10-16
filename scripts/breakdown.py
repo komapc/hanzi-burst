@@ -10,7 +10,7 @@
 Формат результата:
   phrases: [{zh, ru, en, words: [{word, punct?, cedict?, chars?: [ch, ...], pinyin?: [слог на иероглиф]}]}]
   chars:  {ch: {pinyin, definition, radical, decomposition, etymology, components: [ch, ...]}}
-  usage:  {ch: {words: [{w, pinyin, def}], chars: [ch, ...]}}  # только для иероглифов и компонентов фразы
+  usage:  (отдельный файл usage.json, грузится после старта) {ch: {words: [{w, pinyin, def}], chars: [ch, ...]}}  # только для иероглифов и компонентов фразы
 """
 import json
 import re
@@ -29,6 +29,9 @@ IDS_OPS = set("⿰⿱⿲⿳⿴⿵⿶⿷⿸⿹⿺⿻")
 TOP_WORDS, TOP_CHARS = 8, 10
 
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import hsk  # noqa: E402
+HSK_LEVELS = hsk.load_levels()
 ATOMIC = set()  # части, которые не делим дальше (заполняется в main)
 
 
@@ -350,6 +353,8 @@ def main():
                 parsed.append(entry)
                 seed.extend(w)
             item = {"zh": pd["zh"], "ru": pd.get("ru"), "en": pd.get("en"), "words": parsed}
+            if HSK_LEVELS:
+                item["hsk"] = hsk.sentence_level([w["word"] for w in parsed if not w.get("punct")], HSK_LEVELS)
             if pd.get("mt"):
                 item["mt"] = True   # машинный перевод (Common Voice)
             src = (pd.get("source") or "").split(" ")[0]
@@ -391,11 +396,12 @@ def main():
         }
 
     # пул (~0,9 МБ) лежит отдельным файлом: клиент грузит его лениво
-    result = {"phrases": phrases, "chars": chars, "usage": usage}
+    result = {"phrases": phrases, "chars": chars}
     text = json.dumps(result, ensure_ascii=False, separators=(",", ":"))
     if len(sys.argv) > 2:
         out = Path(sys.argv[2])
         out.write_text(text, encoding="utf-8")
+        (out.parent / "usage.json").write_text(json.dumps(usage, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
         (out.parent / "pool.json").write_text(json.dumps(pool, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
         glyphs = load_glyphs(set(chars))
         (out.parent / "glyphs.json").write_text(json.dumps(glyphs, ensure_ascii=False), encoding="utf-8")

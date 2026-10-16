@@ -53,7 +53,7 @@ def page(title, desc, canon, body, ld=()):
 
 def main():
     D = json.load(open(SITE / "phrase.json", encoding="utf-8"))
-    chars, usage = D["chars"], D["usage"]
+    chars, usage = D["chars"], json.load(open(SITE / "usage.json", encoding="utf-8"))
     phrases = D["phrases"] + json.load(open(SITE / "pool.json", encoding="utf-8"))
     seen, uniq = set(), []
     for p in phrases:
