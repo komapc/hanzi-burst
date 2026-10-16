@@ -12,7 +12,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 SITE = ROOT / "site"
-BASE = "https://hanzi-burst.komapc.workers.dev"
+BASE = "https://hanzi.lipu.dev"
 E = html.escape
 IS_HAN = lambda c: '一' <= c <= '鿿'
 cid = lambda ch: f"{ord(ch):x}"

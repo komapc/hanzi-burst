@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /api/
 
-Sitemap: https://hanzi-burst.komapc.workers.dev/sitemap.xml
+Sitemap: https://hanzi.lipu.dev/sitemap.xml

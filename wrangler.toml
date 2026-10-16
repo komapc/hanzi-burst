@@ -2,6 +2,9 @@ name = "hanzi-burst"
 main = "worker/index.js"
 compatibility_date = "2025-01-01"
 
+routes = [{ pattern = "hanzi.lipu.dev", custom_domain = true }]   # workers.dev остаётся рабочим
+workers_dev = true
+
 # Статика сайта и API живут на одном домене: куки работают без CORS.
 [build]
 command = "python3 -I scripts/build_shards.py && python3 -I scripts/build_static.py"   # шарды для вставки текста, страницы /c/, /p/ и sitemap.xml
