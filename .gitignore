@@ -5,3 +5,4 @@ site/p/
 site/sitemap.xml
 site/data/
 site/comps.json
+__pycache__/
