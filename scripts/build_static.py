@@ -36,7 +36,11 @@ main{max-width:760px;margin:0 auto;padding:20px 16px 60px}
 a{color:var(--accent)}h1{font-size:28px;margin:.4em 0}h2{font-size:17px;margin:1.4em 0 .4em}
 .big{font:96px/1.1 'Noto Serif SC',serif;color:var(--accent)}.m{color:var(--muted)}
 ul{padding-left:20px}.cta{display:inline-block;margin:12px 0;padding:8px 14px;border:1px solid var(--accent);border-radius:8px;text-decoration:none}
-.chs a{display:inline-block;margin:0 6px 6px 0;font-size:22px;text-decoration:none}
+.chs a{display:inline-block;position:relative;margin:0 6px 6px 0;font-size:22px;text-decoration:none}
+:root{--ok:#2f8f5b;--info:#2f6fd0;--warn:#d09a1f}@media(prefers-color-scheme:dark){:root{--ok:#5fcf93;--info:#6aa6ff;--warn:#e8b84a}}
+a.known::after,a.allp::after,a.somep::after{content:"";position:absolute;top:2px;right:-3px;width:7px;height:7px;border-radius:50%;background:var(--ok)}
+a.allp::after{background:var(--info)}a.somep::after{background:var(--warn)}
+.legend{font-size:14px}.legend .k{color:var(--ok)}.legend .a{color:var(--info);margin-left:10px}.legend .s{color:var(--warn);margin-left:10px}
 </style>"""
 
 
@@ -48,7 +52,7 @@ def page(title, desc, canon, body, ld=()):
 <meta property="og:title" content="{E(title)}"><meta property="og:description" content="{E(desc)}">
 <meta property="og:image" content="{BASE}/og.png"><meta property="og:url" content="{BASE}{canon}">
 {ld_script(ld)}{CSS}</head><body><main><p><a href="/">hanzi-burst</a> · <a href="/c/">Иероглифы / Characters</a> · <a href="/p/">Фразы / Phrases</a> · <a href="/about">О проекте / About</a> · <a href="/privacy">Privacy</a></p>
-{body}</main></body></html>"""
+{body}</main><script src="/static.js" defer></script></body></html>"""
 
 
 def main():
@@ -68,7 +72,7 @@ def main():
     for d in ("c", "p"):
         shutil.rmtree(SITE / d, ignore_errors=True); (SITE / d).mkdir()
     urls = [f"{BASE}/", f"{BASE}/about", f"{BASE}/privacy", f"{BASE}/c/", f"{BASE}/p/"]
-    link = lambda ch: f'<a href="/c/{cid(ch)}">{ch}</a>' if ch in chars else ch
+    link = lambda ch: f'<a href="/c/{cid(ch)}" data-c="{ch}">{ch}</a>' if ch in chars else ch
 
     for ch, c in chars.items():
         py = ", ".join(c.get("pinyin") or [])
@@ -137,6 +141,8 @@ def main():
         (SITE / "p" / f"{pid(zh)}.html").write_text(page(title, desc[:300], f"/p/{pid(zh)}", "\n".join(body), ld), encoding="utf-8")
         urls.append(f"{BASE}/p/{pid(zh)}")
 
+    comps = {c: "".join(v.get("components") or []) for c, v in chars.items() if v.get("components")}
+    (SITE / "comps.json").write_text(json.dumps(comps, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     hub_c = "".join(link(ch) for ch in sorted(chars))
     (SITE / "c" / "index.html").write_text(page("Иероглифы / Characters | hanzi-burst",
         "Список иероглифов с разбором на радикалы / Characters broken down into radicals.", "/c/",
