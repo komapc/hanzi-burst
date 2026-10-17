@@ -128,6 +128,9 @@
   .glyph.sel { border-color:var(--accent); box-shadow:0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent); }
   .glyph.leaf { border-style:dashed; }
   .glyph svg.hz { width:52px; height:52px; margin:0 auto; }
+  /* пока контуры не загрузились, иероглиф-текст занимает тот же квадрат, что и SVG: без сдвигов (CLS) */
+  .ch span.serif[data-c] { display:block; width:3.2rem; height:3.2rem; line-height:3.2rem; font-size:2.6rem; text-align:center; }
+  .glyph span.serif[data-c] { display:block; width:52px; height:52px; line-height:52px; font-size:42px; text-align:center; margin:0 auto; }
   .glyph .m { display:block; font-size:.72rem; color:var(--muted); max-width:100px; line-height:1.2; }
   .kids { display:flex; padding-top:24px; position:relative; }
   .kids::before { content:""; position:absolute; top:0; left:50%; height:24px; border-left:2px solid var(--line); }
