@@ -1,7 +1,8 @@
 <!doctype html><meta charset="utf-8">
-<style>body{font:14px system-ui,sans-serif;width:260px;margin:12px}label{display:flex;gap:8px;align-items:center;margin:8px 0}small{color:#777}</style>
+<style>body{font:14px system-ui,sans-serif;width:270px;margin:12px}label{display:flex;gap:8px;align-items:center;margin:8px 0}small{color:#777}select{font:inherit}</style>
 <strong>Hanzi Burst</strong>
-<label><input type="checkbox" id="on"> Show card on selection</label>
+<label><input type="checkbox" id="on"> Enabled</label>
+<label>Show card on <select id="mode"><option value="select">selection</option><option value="hover">mouse hover</option></select></label>
 <label><input type="checkbox" id="site"> <span id="host"></span>: disabled</label>
 <small>Everything runs locally. No data leaves your browser.</small>
 <script src="popup.js"></script>
