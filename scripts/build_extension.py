@@ -3,6 +3,7 @@
 
 Usage: python3 scripts/build_extension.py [--zip]
 """
+import json
 import shutil
 import sys
 import zipfile
@@ -21,6 +22,8 @@ def main():
     for kind in ("chars", "words"):          # glyphs (stroke SVG, 24 MB) are not needed for text cards
         shutil.copytree(SITE / "data" / kind, data / kind)
     shutil.copy(SITE / "data" / "trad.json", data / "trad.json")
+    core = json.loads((SITE / "phrase.json").read_text(encoding="utf-8"))["chars"]   # the same core set the site offers
+    (data / "core.json").write_text(json.dumps(sorted(core), ensure_ascii=False), encoding="utf-8")
     icons = EXT / "icons"
     icons.mkdir(exist_ok=True)
     src = Image.open(SITE / "apple-touch-icon.png").convert("RGBA")

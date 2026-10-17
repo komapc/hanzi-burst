@@ -12,7 +12,8 @@ chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
   let h = ''; try { h = new URL(tab.url).hostname; } catch (e) {}
   const key = 'off:' + h;
   if (h) $('host').textContent = h; else $('site').disabled = true;
-  store.get(['enabled', 'mode', 'lang', key], v => {
+  store.get(['enabled', 'mode', 'lang', 'known', key], v => {
+    $('mine').textContent = '★ My characters · ' + (v.known || []).length;
     $('on').checked = v.enabled !== false;
     $('site').checked = !!v[key];
     seg('mode', v.mode === 'hover' ? 'hover' : 'select', x => store.set({ mode: x }));
@@ -21,3 +22,4 @@ chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
   $('on').onchange = () => store.set({ enabled: $('on').checked });
   $('site').onchange = () => h && store.set({ [key]: $('site').checked });
 });
+$('mine').onclick = () => { chrome.tabs.create({ url: chrome.runtime.getURL('learned.html') }); window.close(); };

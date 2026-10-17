@@ -1,0 +1,23 @@
+:root{--bg:#faf7f2;--fg:#1f1b16;--muted:#7a7166;--accent:#c8402a;--line:#cfc6b6;--soft:#e6dfd3;--card:#fff;--ok:#2f8f5b;--info:#2f6fd0;--warn:#d09a1f}
+@media(prefers-color-scheme:dark){:root{--bg:#17140f;--fg:#f1ebe0;--muted:#9d9486;--accent:#ff7a5c;--line:#5a5144;--soft:#352f25;--card:#221e17;--ok:#5fcf93;--info:#6aa6ff;--warn:#e8b84a}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,"Noto Sans SC",sans-serif}
+main{max-width:900px;margin:0 auto;padding:24px 16px 70px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+h1{font-size:26px;margin:0}
+h2{font-size:16px;margin:1.8em 0 .6em;display:flex;align-items:baseline;gap:8px}h2 small{color:var(--muted);font-weight:400}
+.m{color:var(--muted);margin:.4em 0 0}
+.tools{display:flex;gap:8px}
+button{font:inherit;font-size:13px;background:none;color:var(--fg);border:1px solid var(--soft);border-radius:999px;padding:5px 14px;cursor:pointer}
+button:hover{border-color:var(--accent);color:var(--accent)}
+#io{margin-top:12px}#io textarea{width:100%;background:var(--card);color:var(--fg);border:1px solid var(--soft);border-radius:12px;padding:10px;font:16px/1.4 "Noto Serif SC",serif}
+#io .tools{margin-top:8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
+.c{display:block;width:100%;text-align:center;padding:8px 6px 6px;border:1px solid var(--soft);border-radius:12px;background:var(--card);color:var(--fg);position:relative}
+.c:hover{border-color:var(--accent);color:var(--fg)}
+.c .z{display:block;font:34px/44px "Noto Serif SC","Songti SC",serif}
+.c .p{display:block;font-size:.72rem;color:var(--muted)}.c .d{display:block;font-size:.7rem;color:var(--muted);line-height:1.2;max-height:2.4em;overflow:hidden}
+.c.k,.c.a,.c.s{border-width:1px}
+.c.k::after,.c.a::after,.c.s::after{content:"";position:absolute;top:5px;right:5px;width:9px;height:9px;border-radius:50%;background:var(--ok)}
+.c.a::after{background:var(--info)}.c.s::after{background:var(--warn)}
+.empty{margin-top:20px;padding:20px;border:1px dashed var(--line);border-radius:12px;color:var(--muted)}

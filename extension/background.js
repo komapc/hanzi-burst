@@ -1,22 +1,9 @@
+importScripts('common.js');
 // Offline lookup. Data shards are copied from site/data by scripts/build_extension.py.
 const HAN = /[㐀-鿿]/;
-const IDS_OP = /[⿰-⿻]/;
 const MAX_DEPTH = 3;
-const shardKey = ch => ch.codePointAt(0).toString(16).slice(0, -2);
-const cache = {};
-const shard = (kind, k) => cache[kind + k] || (cache[kind + k] =
-  fetch(chrome.runtime.getURL(`data/${kind}/${k}.json`)).then(r => (r.ok ? r.json() : {})).catch(() => ({})));
 let trad = null;
 const tradMap = () => trad || (trad = fetch(chrome.runtime.getURL('data/trad.json')).then(r => r.json()).catch(() => ({})));
-
-// Direct parts of a character from its IDS string; null when unknown or incomplete (a "？" hole).
-function partsOf(ch, c) {
-  if (!c || c.incomplete || c.radical === ch) return null;       // radicals are never split
-  const d = c.decomposition || '';
-  if (!d || /[？①-⑳]/.test(d)) return null;
-  const p = [...d].filter(x => !IDS_OP.test(x));
-  return p.length && !p.includes(ch) ? p : null;
-}
 
 async function lookup(raw, lang, hover) {
   const map = await tradMap();
@@ -62,5 +49,6 @@ async function lookup(raw, lang, hover) {
 }
 
 chrome.runtime.onMessage.addListener((msg, _s, send) => {
+  if (msg && msg.type === 'open-learned') { chrome.tabs.create({ url: chrome.runtime.getURL('learned.html') }); return; }
   if (msg && msg.type === 'lookup') { lookup(msg.text, msg.lang, !!msg.hover).then(send, () => send(null)); return true; }
 });
