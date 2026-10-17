@@ -32,11 +32,13 @@
   .st-known{border-color:var(--ok)!important;background:color-mix(in srgb,var(--ok) 16%,var(--bg))!important}
   .st-known:after,.st-allp:after,.st-somep:after{content:"";position:absolute;top:-4px;right:-4px;width:10px;height:10px;border-radius:50%;background:var(--ok);border:2px solid var(--card)}
   .st-allp:after{background:var(--info)}.st-somep:after{background:var(--warn)}
-  .tile{display:inline-flex;align-items:center;justify-content:center;min-width:44px;height:44px;padding:0 6px;background:var(--bg);
+  .tile{flex:none;white-space:nowrap;display:inline-flex;align-items:center;justify-content:center;min-width:44px;height:44px;padding:0 6px;background:var(--bg);
     border:2px solid var(--line);border-radius:12px;font:28px/1 "Noto Serif SC","Songti SC",serif;letter-spacing:.04em}
   .word .tile{border-color:var(--accent)}
+  .tile.l3{font-size:22px}.tile.l5{font-size:17px}
+  .head>div{min-width:0}
   .py{font-weight:700;font-size:16px;color:var(--accent)}
-  .def{color:var(--muted);margin-top:1px}
+  .def{color:var(--muted);margin-top:1px;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
   .tree{margin:8px 0 0 22px}
   .node{position:relative;padding-left:18px;margin-top:6px}
   .node:before{content:"";position:absolute;left:0;top:-6px;bottom:0;border-left:1.5px solid var(--line)}
@@ -53,6 +55,7 @@
   .legend{display:flex;gap:10px;padding:4px 16px 0;font-size:11px;color:var(--muted)}.legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}
   @media(prefers-color-scheme:dark){.card{--bg:#17140f;--fg:#f1ebe0;--muted:#9d9486;--card:#221e17;--accent:#ff7a5c;--line:#5a5144;--soft:#352f25;--ok:#5fcf93;--info:#6aa6ff;--warn:#e8b84a;
     box-shadow:0 12px 40px rgba(0,0,0,.6),0 2px 6px rgba(0,0,0,.4)}}`;
+  const clean = s => String(s == null ? '' : s).replace(/\s*\[[^\]]*\d[^\]]*\]/g, '').trim();   // drop CC-CEDICT numeric-pinyin cross references
   const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const lbl = { en: { mark: 'Click: mark as known', unmark: 'Click: unmark', mine: 'My characters', known: 'known', all: 'all parts known', some: 'some parts known' },
                 ru: { mark: 'Клик: отметить как известный', unmark: 'Клик: снять отметку', mine: 'Мои иероглифы', known: 'знаю', all: 'знаю все части', some: 'знаю часть частей' } };
@@ -67,7 +70,7 @@
     if (host) { host.remove(); host = null; }
     host = document.createElement('div');
     const root = host.attachShadow({ mode: 'closed' });
-    const head = (big, py, def, c) => { const st = c ? stateOf(c, known) : ''; return `<div class="head">${c ? `<button class="tile${st ? ' st-' + st : ''}" data-ch="${esc(big)}" title="${esc(tip(big))}">${esc(big)}</button>` : `<span class="tile">${esc(big)}</span>`}<div><div class="py">${esc(py)}</div><div class="def">${esc(def)}</div></div></div>`; };
+    const head = (big, py, def, c) => { const st = c ? stateOf(c, known) : ''; return `<div class="head">${c ? `<button class="tile${st ? ' st-' + st : ''}" data-ch="${esc(big)}" title="${esc(tip(big))}">${esc(big)}</button>` : `<span class="tile${[...big].length > 4 ? ' l5' : [...big].length > 2 ? ' l3' : ''}">${esc(big)}</span>`}<div><div class="py">${esc(py)}</div><div class="def" title="${esc(clean(def))}">${esc(clean(def))}</div></div></div>`; };
     let h = '';
     if (r.word) h += `<div class="row word">${head(r.word.w, r.word.pinyin, r.word.def)}</div>`;
     r.chars.forEach(c => { h += `<div class="row">${head(c.ch, c.pinyin, c.def, c)}${tree(c.parts)}</div>`; });
