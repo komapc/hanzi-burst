@@ -10,7 +10,6 @@
 <link rel="canonical" href="https://hanzi.lipu.dev/">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="phrase.json" as="fetch" crossorigin>
-<link rel="preload" href="glyphs.json" as="fetch" crossorigin>
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="theme-color" content="#faf7f2">
 <meta property="og:type" content="website">
@@ -343,9 +342,13 @@ const defOf = ch => pick(D.chars[ch], 'definition');
 let S2T = null;
 const disp = ch => (window.hanziScript && hanziScript.get() === 't' && S2T && S2T[ch]) || ch;
 const glyphPaths = ch => (disp(ch) !== ch && G[disp(ch)]) || G[ch];
+/* glyphs.json (~1 МБ) не блокирует первый показ: пока его нет, иероглиф рисуется текстом, потом заменяется контурами */
+function upgradeGlyphs(root = document) {
+  root.querySelectorAll('span.serif[data-c]').forEach(sp => { if (glyphPaths(sp.dataset.c)) sp.outerHTML = hz(sp.dataset.c, sp.dataset.cls || ''); });
+}
 function hz(ch, cls = '') {
   const s = glyphPaths(ch);
-  if (!s) return `<span class="serif">${disp(ch)}</span>`;
+  if (!s) return `<span class="serif" data-c="${ch}" data-cls="${cls}">${disp(ch)}</span>`;   // контуры (glyphs.json) подгружаются позже: см. upgradeGlyphs
   return `<svg class="hz ${cls}" data-c="${ch}" viewBox="0 0 1024 1024" role="img" aria-label="${ch}"><g transform="scale(1,-1) translate(0,-900)">${s.map(d => `<path d="${d}"/>`).join('')}</g></svg>`;
 }
 let scriptBusy = false;
@@ -880,13 +883,9 @@ document.querySelectorAll('.scr.ph input').forEach(i => {
   i.onchange = () => { if (!i.checked) return; phon = i.value; try { localStorage.setItem('hanzi-phon', phon); } catch (e) {} if (D && D.phrase) { renderPhrase(); renderTrans(); refresh(); } };
 });
 applyLang();
-Promise.all([fetch('phrase.json').then(r => r.json()), fetch('glyphs.json').then(r => r.json())])
-  .then(([d, g]) => {
-    D = d; G = g; D.pool = []; D.usage = {};
-    fetch('usage.json').then(r => r.json()).then(u => {   // «где ещё встречается» подгружается после старта
-      D.usage = u;
-      if (selected && $('#usageBtn') && !$('#usage').classList.contains('open')) select(selected, document.querySelector(`.node[data-ch="${selected}"] > .glyph`));
-    }).catch(() => {});
+fetch('phrase.json').then(r => r.json())
+  .then(d => {
+    D = d; D.pool = []; D.usage = {};
     const q0 = new URLSearchParams(location.search);
     return (getSeen().length || q0.get('z') ? ensurePool() : 0);
   }).then(() => {
@@ -912,7 +911,15 @@ Promise.all([fetch('phrase.json').then(r => r.json()), fetch('glyphs.json').then
       $('#ownGo').click();
     }
     initBackend();
-  }).finally(() => document.documentElement.classList.add('ready'));
+  }).finally(() => {
+    document.documentElement.classList.add('ready');
+    // тяжёлое грузим после показа: сначала контуры иероглифов, потом «где ещё встречается»
+    fetch('glyphs.json').then(r => r.json()).then(g => { Object.assign(G, g); upgradeGlyphs(); })
+      .then(() => fetch('usage.json')).then(r => r.json()).then(u => {
+        D.usage = u;
+        if (selected && $('#usageBtn') && !$('#usage').classList.contains('open')) select(selected, document.querySelector(`.node[data-ch="${selected}"] > .glyph`));
+      }).catch(() => {});
+  });
 </script>
 </body>
 </html>
