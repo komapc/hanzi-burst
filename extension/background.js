@@ -35,7 +35,7 @@ async function lookup(raw, lang, hover) {
   const tree = (ch, depth, path) => {
     const c = chars[ch];
     const kids = depth < MAX_DEPTH && !path.includes(ch) ? partsOf(ch, c) : null;
-    return { ch, def: pick(c), parts: kids ? kids.map(k => tree(k, depth + 1, path.concat(ch))) : [] };
+    return { ch, def: pick(c), py: ((c && c.pinyin) || []).slice(0, 2).join(' / '), parts: kids ? kids.map(k => tree(k, depth + 1, path.concat(ch))) : [] };
   };
   const view = ch => {
     const c = chars[ch]; if (!c) return { ch, parts: [] };

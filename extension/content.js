@@ -49,6 +49,7 @@
     border:1.5px solid var(--line);border-radius:8px;font:18px/1 "Noto Serif SC","Songti SC",serif}
   .nt.leaf{border-style:dashed}
   .nd{color:var(--muted);font-size:13px}
+  .npy{color:var(--accent);font-weight:700;margin-right:6px}
   .foot{display:flex;justify-content:space-between;align-items:center;padding:8px 16px 6px;font-size:12px}
   .foot a{color:var(--accent);text-decoration:none;font-weight:600}.foot a:hover{text-decoration:underline}
   .foot button{all:unset;cursor:pointer;color:var(--muted);font-size:12px}.foot button:hover{color:var(--accent)}
@@ -60,7 +61,7 @@
   const lbl = { en: { mark: 'Click: mark as known', unmark: 'Click: unmark', mine: 'My characters', known: 'known', all: 'all parts known', some: 'some parts known' },
                 ru: { mark: 'Клик: отметить как известный', unmark: 'Клик: снять отметку', mine: 'Мои иероглифы', known: 'знаю', all: 'знаю все части', some: 'знаю часть частей' } };
   const tip = ch => lbl[lang()][known.has(ch) ? 'unmark' : 'mark'];
-  const tree = parts => (parts && parts.length ? `<div class="tree">${parts.map(p => { const st = stateOf(p, known); return `<div class="node"><div class="nrow"><button class="nt${p.parts.length ? '' : ' leaf'}${st ? ' st-' + st : ''}" data-ch="${esc(p.ch)}" title="${esc(tip(p.ch))}">${esc(p.ch)}</button><span class="nd">${esc(p.def)}</span></div>${tree(p.parts)}</div>`; }).join('')}</div>` : '');
+  const tree = parts => (parts && parts.length ? `<div class="tree">${parts.map(p => { const st = stateOf(p, known); return `<div class="node"><div class="nrow"><button class="nt${p.parts.length ? '' : ' leaf'}${st ? ' st-' + st : ''}" data-ch="${esc(p.ch)}" title="${esc(tip(p.ch))}">${esc(p.ch)}</button><span class="nd">${p.py ? `<b class="npy">${esc(p.py)}</b>` : ''}${esc(p.def)}</span></div>${tree(p.parts)}</div>`; }).join('')}</div>` : '');
 
   function hide() { if (host) { host.remove(); host = null; } shown = ''; }
   let shown = '';
