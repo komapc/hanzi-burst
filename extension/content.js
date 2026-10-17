@@ -34,7 +34,6 @@
     r.chars.forEach(c => {
       h += `<div class="row"><span class="big">${esc(c.ch)}</span><span class="py">${esc(c.pinyin)}</span><div class="def">${esc(c.def)}</div>`;
       if (c.parts && c.parts.length && !c.atomic) c.parts.forEach(p => { h += `<div class="sub"><b>${esc(p.ch)}</b>${esc(p.def)}</div>`; });
-      else if (c.radical && c.radical !== c.ch) h += `<div class="sub"><b>${esc(c.radical)}</b>${lang === 'ru' ? 'ключ' : 'radical'}</div>`;
       h += `</div>`;
     });
     h += `<div class="row"><a href="https://hanzi.lipu.dev/" target="_blank" rel="noopener">hanzi.lipu.dev</a></div>`;
