@@ -9,6 +9,8 @@
 <meta name="msvalidate.01" content="CAFA7BE0D5D83695993D635831499022">
 <link rel="canonical" href="https://hanzi.lipu.dev/">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="phrase.json" as="fetch" crossorigin>
+<link rel="preload" href="glyphs.json" as="fetch" crossorigin>
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="theme-color" content="#faf7f2">
 <meta property="og:type" content="website">
@@ -30,6 +32,7 @@
   #howDlg::backdrop { background:rgba(0,0,0,.55); }
   #howDlg h2 { margin:0 0 10px; font-size:1.15rem; }
   #howDlg p { line-height:1.5; }
+  html:not(.ready) .foot { display:none; }   /* футер появляется после контента, иначе он «прыгает» (CLS) */
   .foot { margin-top:48px; padding-top:28px; border-top:1px solid var(--soft); color:var(--muted); font-size:.9rem; }
   .fgrid { display:grid; grid-template-columns:minmax(0,1.4fr) repeat(3,minmax(0,1fr)); gap:28px 32px; }
   .fbrand b { color:var(--fg); font-size:1.05rem; }
@@ -199,6 +202,7 @@
       </span>
     </span>
   </header>
+  <noscript><style>.foot{display:block!important}</style></noscript>
   <noscript><p>hanzi-burst: учи китайские иероглифы, разбирая их на радикалы. Нужен JavaScript. / Learn Chinese characters by breaking them into radicals. JavaScript required.</p></noscript>
   <div id="picker" role="tablist"></div>
   <details id="own" hidden><summary id="ownSum"></summary>
@@ -908,7 +912,7 @@ Promise.all([fetch('phrase.json').then(r => r.json()), fetch('glyphs.json').then
       $('#ownGo').click();
     }
     initBackend();
-  });
+  }).finally(() => document.documentElement.classList.add('ready'));
 </script>
 </body>
 </html>
