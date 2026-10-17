@@ -32,7 +32,7 @@ def main():
     size = sum(f.stat().st_size for f in data.rglob("*.json")) / 1e6
     print(f"data copied: {size:.1f} MB")
     if "--zip" in sys.argv:
-        out = ROOT / "hanzi-burst-extension.zip"
+        out = SITE / "hanzi-burst-extension.zip"      # served from hanzi.lipu.dev/hanzi-burst-extension.zip
         with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
             for f in sorted(EXT.rglob("*")):
                 if f.is_file():

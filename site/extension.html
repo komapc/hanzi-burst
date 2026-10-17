@@ -1,0 +1,89 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Расширение для Chrome / Chrome extension — hanzi-burst</title>
+<meta name="description" content="Расширение Hanzi Burst: наведите курсор на китайский иероглиф на любой странице и увидите значение, пиньинь и полный разбор на части. Работает офлайн. / Hover any Chinese character on any page to see its meaning, pinyin and full component breakdown. Works offline.">
+<link rel="canonical" href="https://hanzi.lipu.dev/extension">
+<meta property="og:title" content="Hanzi Burst — расширение для Chrome / Chrome extension"><meta property="og:image" content="https://hanzi.lipu.dev/og.png">
+<style>
+:root{--bg:#faf7f2;--fg:#1f1b16;--muted:#7a7166;--accent:#c8402a;--line:#cfc6b6;--soft:#e6dfd3;--card:#fff}
+@media(prefers-color-scheme:dark){:root{--bg:#17140f;--fg:#f1ebe0;--muted:#9d9486;--accent:#ff7a5c;--line:#5a5144;--soft:#352f25;--card:#221e17}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,"Noto Sans SC",sans-serif}
+main{max-width:760px;margin:0 auto;padding:20px 16px 70px}
+a{color:var(--accent)}h1{font-size:30px;margin:.5em 0 .2em}h2{font-size:19px;margin:1.9em 0 .5em}
+.m{color:var(--muted)}ul,ol{padding-left:22px}li{margin:.35em 0}
+.lead{font-size:18px;margin:.3em 0}
+.dl{display:inline-flex;align-items:center;gap:10px;margin:14px 0 4px;padding:12px 22px;border-radius:999px;background:var(--accent);color:#fff;font-weight:700;text-decoration:none}
+.dl:hover{filter:brightness(1.08)}
+.shots{display:grid;grid-template-columns:1fr;gap:16px;margin:18px 0}
+.shots img{display:block;max-width:100%;height:auto;border:1px solid var(--soft);border-radius:14px;background:var(--card)}
+.row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}.row img{flex:0 1 auto}
+.step{background:var(--card);border:1px solid var(--soft);border-radius:12px;padding:6px 16px 6px 36px;margin:10px 0}
+code{background:var(--soft);padding:1px 6px;border-radius:6px;font-size:.92em;overflow-wrap:anywhere;white-space:nowrap}code{white-space:normal}
+.note{border-left:3px solid var(--accent);padding:2px 12px;color:var(--muted);margin:12px 0}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin:0 4px 0 2px;vertical-align:baseline}
+</style><link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+</head><body><main>
+<p><a href="/">← hanzi-burst</a> · <a href="/about">О проекте / About</a> · <a href="/privacy">Конфиденциальность / Privacy</a></p>
+
+<h1>Hanzi Burst для Chrome / for Chrome</h1>
+<p class="lead">Наведите курсор на китайский иероглиф на любой странице: значение, пиньинь и полный разбор на части. Без интернета и без слежки.</p>
+<p class="lead m">Hover any Chinese character on any page: meaning, pinyin and a full component breakdown. Offline, no tracking.</p>
+
+<a class="dl" href="/hanzi-burst-extension.zip" download>⬇ hanzi-burst-extension.zip · v0.1.0 · ~4 MB</a>
+<p class="m">Для компьютера: Chrome, Edge, Brave, Opera, Vivaldi. / Desktop Chromium browsers.</p>
+
+<div class="shots">
+<img src="/ext/card.png" width="640" height="505" alt="Карточка иероглифа с деревом частей / Character card with the component tree">
+</div>
+
+<h2>Что умеет / What it does</h2>
+<ul>
+<li>Карточка при наведении курсора или при выделении текста (переключается в настройках). Слово целиком и каждый иероглиф отдельно.</li>
+<li>Полное дерево частей: иероглиф → компоненты → радикалы. Радикалы дальше не делятся.</li>
+<li>Отметка выученного: клик по плитке. <span class="dot" style="background:#2f8f5b"></span>знаю, <span class="dot" style="background:#2f6fd0"></span>знаю все части, <span class="dot" style="background:#d09a1f"></span>знаю часть частей. Страница «Мои иероглифы» подсказывает, что учить дальше.</li>
+<li>Традиционные знаки приводятся к упрощённым. Переводы на русском и английском.</li>
+<li>Всё работает локально: словари лежат внутри расширения, никаких запросов в сеть.</li>
+</ul>
+<p class="m">Card on hover or on selection (switch it in the popup). Whole word plus every character. Full tree down to radicals, which are never split further. Mark what you know with a click (green: known, blue: all parts known, amber: some parts known); the “My characters” page suggests what to learn next. Traditional characters are converted to simplified. Russian and English glosses. Everything runs locally: dictionaries ship inside the extension and nothing is sent anywhere.</p>
+
+<div class="row">
+<img src="/ext/popup.png" width="300" height="380" alt="Настройки / Popup settings">
+<img src="/ext/learned.png" width="380" height="310" alt="Мои иероглифы / My characters" style="max-width:min(100%,380px)">
+</div>
+
+<h2>Как установить / How to install</h2>
+<p>Расширения пока нет в магазине Chrome, поэтому ставим вручную. Это занимает минуту.</p>
+<p class="m">It is not in the Chrome Web Store yet, so you install it by hand. It takes a minute.</p>
+<ol class="step">
+<li><b>Скачайте</b> <a href="/hanzi-burst-extension.zip" download>hanzi-burst-extension.zip</a> и <b>распакуйте</b> в постоянную папку (например <code>~/Documents/hanzi-burst-extension</code>). Не удаляйте и не переносите её потом. <span class="m">/ Download the zip and unzip it into a permanent folder; don't move or delete it later.</span></li>
+<li>Откройте в браузере <code>chrome://extensions</code> (в Edge <code>edge://extensions</code>, в Brave <code>brave://extensions</code>). <span class="m">/ Open the extensions page.</span></li>
+<li>Включите <b>«Режим разработчика»</b> (переключатель справа вверху). <span class="m">/ Turn on <b>Developer mode</b> (top right).</span></li>
+<li>Нажмите <b>«Загрузить распакованное расширение»</b> (Load unpacked) и выберите папку, где лежит файл <code>manifest.json</code>. Если после распаковки получилась папка внутри папки, выбирайте ту, где виден <code>manifest.json</code>. <span class="m">/ Click <b>Load unpacked</b> and pick the folder that contains <code>manifest.json</code>.</span></li>
+<li>Закрепите значок: иконка пазла справа от адресной строки → булавка рядом с Hanzi Burst. <span class="m">/ Pin it via the puzzle-piece icon.</span></li>
+<li>Откройте любую страницу с китайским текстом (например <a href="https://zh.wikipedia.org/wiki/汉字">zh.wikipedia.org</a>), <b>обновите её (F5)</b>, нажмите на значок расширения и выберите <b>«Mouse hover»</b> или оставьте <b>«Selection»</b>. <span class="m">/ Open a page with Chinese text, press F5, choose the trigger in the popup.</span></li>
+</ol>
+
+<div class="note">Chrome может при запуске напоминать о расширениях в режиме разработчика: просто закройте напоминание, расширение продолжит работать. Список выученных иероглифов хранится в браузере; если переносите или переустанавливаете расширение, сначала нажмите «Копировать список» на странице «Мои иероглифы» и потом вставьте его обратно.<br>
+<span>Chrome may show a reminder about developer-mode extensions at startup: just dismiss it. Your known-characters list lives in the browser; before moving or reinstalling the extension, press “Copy list” on the “My characters” page and paste it back afterwards.</span></div>
+
+<h2>Обновление / Updating</h2>
+<p>Скачайте новый zip, распакуйте <b>поверх той же папки</b> (замените файлы), затем на <code>chrome://extensions</code> нажмите круговую стрелку у Hanzi Burst и обновите открытые страницы. Список выученного сохранится.</p>
+<p class="m">Download the new zip, unzip it over the same folder, then press the reload arrow on the extensions page and refresh your tabs. Your list is kept.</p>
+
+<h2>Если не работает / Troubleshooting</h2>
+<ul>
+<li>Нет карточки: обновите страницу (F5); проверьте в попапе, что расширение включено и выбран нужный режим («Mouse hover» или «Selection»).</li>
+<li>Мешают другие расширения для перевода или китайского: отключите их на время проверки.</li>
+<li>На служебных страницах браузера (<code>chrome://…</code>), в магазине расширений и в PDF-просмотрщике расширения не работают: это ограничение Chrome.</li>
+</ul>
+<p class="m">No card: refresh the page (F5) and check the popup (enabled, trigger mode). Other translation / Chinese extensions may interfere. Extensions cannot run on browser-internal pages, the extension store or the PDF viewer.</p>
+
+<h2>Конфиденциальность / Privacy</h2>
+<p>Расширение ничего не отправляет и не собирает. Словари лежат внутри него. В настройках браузера хранятся только ваши выборы (режим, язык) и список выученных иероглифов. Права: <code>storage</code> (эти настройки), <code>activeTab</code> (показать адрес сайта в окне настроек) и запуск скрипта на страницах <code>http/https</code>, чтобы показывать карточку.</p>
+<p class="m">The extension sends and collects nothing; dictionaries are bundled. Only your preferences and your known-characters list are stored in the browser. Permissions: <code>storage</code> (those settings), <code>activeTab</code> (show the site name in the popup) and a content script on <code>http/https</code> pages to render the card.</p>
+
+<h2>Данные / Data</h2>
+<p>Разбор — Make Me a Hanzi и cjkvi-ids, словарь — CC-CEDICT и данные Wiktionary; подробности и лицензии на странице <a href="/about">О проекте</a>. <span class="m">/ Breakdowns, dictionary and licenses: see <a href="/about">About</a>.</span></p>
+</main></body></html>
