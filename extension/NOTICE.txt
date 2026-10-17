@@ -1,0 +1,24 @@
+Hanzi Burst — third-party data and licenses
+
+The offline dictionary data bundled in data/ is derived from the following sources.
+
+1. Make Me a Hanzi — https://github.com/skishore/makemeahanzi
+   Character decompositions, definitions, pinyin, etymology (dictionary.txt).
+   Licensed under the GNU Lesser General Public License (LGPL) v3,
+   https://www.gnu.org/licenses/lgpl-3.0.html . Stroke data derives from
+   Arphic PL KaiTi / Arphic PL UKai, under the Arphic Public License.
+   (Stroke outlines are not bundled in this extension.)
+
+2. CC-CEDICT — https://cc-cedict.org/
+   Chinese-English word dictionary. Copyright MDBG and CC-CEDICT contributors,
+   licensed under Creative Commons Attribution-ShareAlike 4.0,
+   https://creativecommons.org/licenses/by-sa/4.0/ .
+   Entries were reformatted and split into per-character-range JSON shards.
+   The resulting data files are distributed under the same CC BY-SA license.
+
+3. Unicode / Unihan — https://www.unicode.org/
+   Radical names and fallback definitions, under the Unicode License,
+   https://www.unicode.org/license.txt .
+
+Russian-language definitions are original translations by the Hanzi Burst project.
+Extension code (c) Hanzi Burst, https://hanzi.lipu.dev
