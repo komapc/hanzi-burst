@@ -106,6 +106,16 @@
     { content:""; position:absolute; top:4px; right:4px; width:10px; height:10px; border-radius:50%; background:var(--ok); }
   .ch.allp::after, .glyph.allp::after { background:var(--info); }
   .ch.somep::after, .glyph.somep::after { background:var(--warn); }
+  /* отметка «знаю» прямо на узле дерева */
+  .gw { position:relative; display:flex; }
+  .glyph.known::after { display:none; }
+  .glyph.allp::after, .glyph.somep::after { right:auto; left:5px; }
+  .kbtn { position:absolute; top:-10px; right:-10px; z-index:2; width:26px; height:26px; padding:0; display:grid; place-items:center;
+          border-radius:50%; border:2px solid var(--line); background:var(--card); color:var(--muted); cursor:pointer;
+          font:700 16px/1 system-ui,sans-serif; transition:background .15s, border-color .15s, color .15s, transform .15s; }
+  .kbtn:hover, .kbtn:focus-visible { border-color:var(--ok); color:var(--ok); transform:scale(1.12); }
+  .kbtn.on { background:var(--ok); border-color:var(--ok); color:#fff; }
+  .kbtn svg.i { width:15px; height:15px; fill:none; stroke:currentColor; stroke-width:3.2; stroke-linecap:round; stroke-linejoin:round; }
   .legend { display:flex; flex-wrap:wrap; gap:6px 16px; margin:6px 0 0; }
   .legend i { display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:5px; }
   .punct { font-size:3.2rem; align-self:flex-end; }
@@ -120,7 +130,7 @@
   .btn.on { background:var(--ok); border-color:var(--ok); color:#fff; }
 
   /* дерево: линии соединяют родителя с каждым потомком */
-  #tree { display:flex; justify-content:safe center; overflow-x:auto; padding:12px 8px 8px; }
+  #tree { display:flex; justify-content:safe center; overflow-x:auto; padding:18px 14px 8px; }
   .node { display:flex; flex-direction:column; align-items:center; position:relative; }
   .glyph { position:relative; background:var(--bg); border:2px solid var(--line); border-radius:14px; cursor:pointer; color:var(--fg);
            min-width:72px; padding:6px 10px 4px; text-align:center; font:inherit; transition:border-color .2s, transform .2s; z-index:1; }
@@ -533,11 +543,29 @@ function makeNode(ch, ancestors, animate) {
   g.className = 'glyph' + (comps.length ? '' : ' leaf') + (partState(ch) ? ' ' + partState(ch) : '');
   g.innerHTML = `${hz(ch)}<span class="m">${short(defOf(ch)) || '&nbsp;'}</span>`;
   g.onclick = () => { select(ch, g); if (comps.length) toggle(node, ancestors.concat(ch)); };
-  node.append(g);
+  const kb = document.createElement('button');
+  kb.className = 'kbtn';
+  kb.onclick = e => { e.stopPropagation(); toggleKnown(ch); };
+  setKbtn(kb, ch);
+  const gw = document.createElement('div'); gw.className = 'gw'; gw.append(g, kb);
+  node.append(gw);
   node._ancestors = ancestors.concat(ch);
   node._comps = comps;
   if (animate) requestAnimationFrame(() => requestAnimationFrame(() => node.classList.remove('enter')));
   return node;
+}
+function setKbtn(b, ch) {
+  const on = known.has(ch);
+  b.classList.toggle('on', on);
+  b.setAttribute('aria-pressed', on);
+  b.title = b.ariaLabel = on ? t('known') : t('add');
+  b.innerHTML = on ? ICON.check : '+';
+}
+function toggleKnown(ch) {
+  const add = !known.has(ch);
+  add ? known.add(ch) : known.delete(ch);
+  saveKnown(); refresh();
+  if (user) api('/api/known', { method: 'PUT', body: add ? { add: [ch] } : { remove: [ch] } });
 }
 function toggle(node, anc, forceOpen) {
   let kids = node.querySelector(':scope > .kids');
@@ -631,12 +659,7 @@ function select(ch, glyphEl) {
     h += `</div>`;
   }
   $('#info').innerHTML = h;
-  $('#knownBtn').onclick = () => {
-    const add = !known.has(ch);
-    add ? known.add(ch) : known.delete(ch);
-    saveKnown(); refresh();
-    if (user) api('/api/known', { method: 'PUT', body: add ? { add: [ch] } : { remove: [ch] } });
-  };
+  $('#knownBtn').onclick = () => toggleKnown(ch);
   const mb = $('#mnemoBtn'); if (mb) mb.onclick = () => mnemonic(ch);
   loadMnemonics(ch);
   const ub = $('#usageBtn'); if (ub) ub.onclick = () => $('#usage').classList.toggle('open');
@@ -661,8 +684,9 @@ function mark(el, ch) {
 }
 function refresh() {
   document.querySelectorAll('.ch').forEach(b => mark(b, b.dataset.ch));
-  document.querySelectorAll('.glyph').forEach(g => mark(g, g.parentElement.dataset.ch));
-  if (selected) select(selected, document.querySelector(`.node[data-ch="${selected}"] > .glyph`));
+  document.querySelectorAll('.glyph').forEach(g => mark(g, g.closest('.node').dataset.ch));
+  document.querySelectorAll('.kbtn').forEach(b => setKbtn(b, b.closest('.node').dataset.ch));
+  if (selected) select(selected, document.querySelector(`.node[data-ch="${selected}"] > .gw > .glyph`));
   $('#stats').innerHTML = `<span class="legend"><span><i style="background:var(--ok)"></i>${t('lgKnown')}</span><span><i style="background:var(--info)"></i>${t('lgAll')}</span><span><i style="background:var(--warn)"></i>${t('lgSome')}</span></span>` +
     (known.size ? `<br><a href="/learned">${t('statsLink')}: ${known.size}</a>` : '');
 }
@@ -771,7 +795,7 @@ function applyLang() {
   renderPicker(); renderTrans();
   // подписи узлов дерева (без пересборки: сохраняем раскрытое состояние)
   document.querySelectorAll('.node').forEach(n => {
-    const m = n.querySelector(':scope > .glyph .m'); if (m) m.textContent = short(defOf(n.dataset.ch)) || ' ';
+    const m = n.querySelector(':scope > .gw > .glyph .m'); if (m) m.textContent = short(defOf(n.dataset.ch)) || ' ';
   });
   refresh();
 }
@@ -920,7 +944,7 @@ fetch('phrase.json').then(r => r.json())
     fetch('glyphs.json').then(r => r.json()).then(g => { Object.assign(G, g); upgradeGlyphs(); })
       .then(() => fetch('usage.json')).then(r => r.json()).then(u => {
         D.usage = u;
-        if (selected && $('#usageBtn') && !$('#usage').classList.contains('open')) select(selected, document.querySelector(`.node[data-ch="${selected}"] > .glyph`));
+        if (selected && $('#usageBtn') && !$('#usage').classList.contains('open')) select(selected, document.querySelector(`.node[data-ch="${selected}"] > .gw > .glyph`));
       }).catch(() => {});
   });
 </script>
