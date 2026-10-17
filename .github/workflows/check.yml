@@ -1,0 +1,50 @@
+name: check
+
+# Deploy is manual (`npx wrangler deploy`): the build needs data/raw/ (gitignored dictionaries).
+# This only guards against shipping something that cannot load.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Python scripts compile
+        run: python -m compileall -q scripts
+      - name: Worker syntax
+        run: node --check worker/index.js
+      - name: Committed JSON parses
+        run: |
+          python - <<'PY'
+          import json, pathlib, sys
+          bad = []
+          for p in list(pathlib.Path("site").glob("*.json")) + list(pathlib.Path("data").glob("*.json")):
+              try:
+                  json.loads(p.read_text(encoding="utf-8"))
+              except Exception as e:
+                  bad.append(f"{p}: {e}")
+          print("\n".join(bad) or "all JSON ok")
+          sys.exit(1 if bad else 0)
+          PY
+      - name: Home page has what the app needs
+        run: |
+          grep -q 'id="phrase"' site/index.html
+          grep -q "fetch('phrase.json')" site/index.html
+          test -s site/phrase.json && test -s site/glyphs.json
