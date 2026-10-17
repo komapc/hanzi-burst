@@ -15,11 +15,12 @@
   .card{position:fixed;z-index:2147483647;max-width:340px;max-height:60vh;overflow:auto;background:#fff;color:#1b1b1f;
     border:1px solid #d0d0d8;border-radius:12px;box-shadow:0 8px 28px rgba(0,0,0,.25);padding:12px 14px;
     font:14px/1.45 system-ui,sans-serif}
-  @media(prefers-color-scheme:dark){.card{background:#1d1e24;color:#ececf1;border-color:#3a3b44}.def,.sub{color:#a6a8b3}}
   .row+.row{margin-top:10px;padding-top:10px;border-top:1px solid #8883}
   .big{font-size:30px;line-height:1.1;margin-right:8px}.py{font-weight:600}.def{color:#555}
   .sub{margin:4px 0 0 12px;color:#666;font-size:13px}.sub b{font-size:17px;margin-right:6px}
-  a{color:#2b6cb0;text-decoration:none;font-size:12px}`;
+  a{color:#2b6cb0;text-decoration:none;font-size:12px}
+  @media(prefers-color-scheme:dark){.card{background:#1d1e24;color:#ececf1;border-color:#3a3b44}.def,.sub{color:#a6a8b3}}
+  @media(prefers-color-scheme:dark){a{color:#7db3ff}}`;
   const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
   function hide() { if (host) { host.remove(); host = null; } }
@@ -33,6 +34,7 @@
     r.chars.forEach(c => {
       h += `<div class="row"><span class="big">${esc(c.ch)}</span><span class="py">${esc(c.pinyin)}</span><div class="def">${esc(c.def)}</div>`;
       if (c.parts && c.parts.length && !c.atomic) c.parts.forEach(p => { h += `<div class="sub"><b>${esc(p.ch)}</b>${esc(p.def)}</div>`; });
+      else if (c.radical && c.radical !== c.ch) h += `<div class="sub"><b>${esc(c.radical)}</b>${lang === 'ru' ? 'ключ' : 'radical'}</div>`;
       h += `</div>`;
     });
     h += `<div class="row"><a href="https://hanzi.lipu.dev/" target="_blank" rel="noopener">hanzi.lipu.dev</a></div>`;
