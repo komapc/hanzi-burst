@@ -1,0 +1,65 @@
+name: extension-release
+
+# The extension package is built locally (it needs data/raw/, which is gitignored) and shipped
+# with the site deploy, so CI takes the zip from hanzi.lipu.dev instead of building it.
+#
+# Release flow:
+#   1. bump "version" in extension/manifest.json
+#   2. python3 scripts/build_extension.py --zip && npx wrangler deploy
+#   3. git tag v<version> && git push origin v<version>      (or run this workflow by hand)
+#
+# Needs repository secrets: CWS_EXTENSION_ID, CWS_CLIENT_ID, CWS_CLIENT_SECRET, CWS_REFRESH_TOKEN
+# (Chrome Web Store API OAuth, see https://github.com/fregante/chrome-webstore-upload-keys).
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: "Submit for review (and auto-publish) after upload"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 20
+      - name: Check secrets are set
+        env:
+          CWS_EXTENSION_ID: ${{ secrets.CWS_EXTENSION_ID }}
+          CWS_CLIENT_ID: ${{ secrets.CWS_CLIENT_ID }}
+          CWS_CLIENT_SECRET: ${{ secrets.CWS_CLIENT_SECRET }}
+          CWS_REFRESH_TOKEN: ${{ secrets.CWS_REFRESH_TOKEN }}
+        run: |
+          for v in CWS_EXTENSION_ID CWS_CLIENT_ID CWS_CLIENT_SECRET CWS_REFRESH_TOKEN; do
+            [ -n "${!v}" ] || { echo "::error::secret $v is not set"; exit 1; }
+          done
+      - name: Download the deployed package
+        run: curl -fsSL -o extension.zip https://hanzi.lipu.dev/hanzi-burst-extension.zip
+      - name: Package version matches manifest (and tag)
+        run: |
+          zipv=$(unzip -p extension.zip manifest.json | python3 -c 'import json,sys; print(json.load(sys.stdin)["version"])')
+          repov=$(python3 -c 'import json; print(json.load(open("extension/manifest.json"))["version"])')
+          echo "zip=$zipv repo=$repov ref=$GITHUB_REF_NAME"
+          [ "$zipv" = "$repov" ] || { echo "::error::deployed zip is $zipv but manifest.json is $repov: run build_extension.py --zip and wrangler deploy first"; exit 1; }
+          if [ "$GITHUB_REF_TYPE" = tag ] && [ "$GITHUB_REF_NAME" != "v$repov" ]; then
+            echo "::error::tag $GITHUB_REF_NAME does not match manifest version $repov"; exit 1
+          fi
+      - name: Upload to the Chrome Web Store
+        env:
+          EXTENSION_ID: ${{ secrets.CWS_EXTENSION_ID }}
+          CLIENT_ID: ${{ secrets.CWS_CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.CWS_CLIENT_SECRET }}
+          REFRESH_TOKEN: ${{ secrets.CWS_REFRESH_TOKEN }}
+          PUBLISH: ${{ github.event_name == 'push' || inputs.publish }}
+        run: |
+          flags=""
+          [ "$PUBLISH" = true ] && flags="--auto-publish"
+          npx --yes chrome-webstore-upload-cli@3 upload --source extension.zip $flags
