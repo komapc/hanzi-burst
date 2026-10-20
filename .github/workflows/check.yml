@@ -1,7 +1,6 @@
 name: check
 
-# Deploy is manual (`npx wrangler deploy`): the build needs data/raw/ (gitignored dictionaries).
-# This only guards against shipping something that cannot load.
+# Fast sanity checks without data/raw/. The full build + deploy is deploy.yml.
 on:
   push:
     branches: [main]

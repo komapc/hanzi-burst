@@ -1,0 +1,92 @@
+name: deploy
+
+# Builds the site + extension zip and deploys the Worker to hanzi.lipu.dev.
+#   push to main    -> deploy
+#   push of tag v*  -> deploy, then upload the extension to the Chrome Web Store (extension-release.yml)
+#   pull_request    -> same build, `wrangler deploy --dry-run` (nothing is published)
+#
+# The build reads data/raw/ (dictionaries, gitignored). CI takes a pinned snapshot of the files it
+# needs from the GitHub release RAW_DATA_TAG; see README "Деплой" for how to refresh it.
+#
+# Needs repository secret CLOUDFLARE_API_TOKEN (template "Edit Cloudflare Workers" + D1 edit).
+# Worker secrets (GOOGLE_CLIENT_ID, SESSION_SECRET, GEMINI_API_KEY) live in Cloudflare and are kept on deploy.
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  RAW_DATA_TAG: raw-data-2026-10-20
+  RAW_DATA_SHA256: 2ee981c844d04f97e7c86f109a85594202913d325b952f5fda4d76dd23eb1377
+  CLOUDFLARE_ACCOUNT_ID: a4f85dfdebcf5fa0a516297f9c6dc029
+  WRANGLER_VERSION: 4.151.3
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    # Never cancel a deploy halfway; PR dry-runs may cancel each other.
+    concurrency:
+      group: ${{ github.event_name == 'pull_request' && format('deploy-pr-{0}', github.ref) || 'deploy' }}
+      cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Python build deps
+        run: python -m pip install --quiet Pillow
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 20
+      - name: Cache raw data snapshot
+        id: raw-cache
+        uses: actions/cache@v6
+        with:
+          path: raw-data.tar.xz
+          key: ${{ env.RAW_DATA_TAG }}
+      - name: Download raw data snapshot
+        if: steps.raw-cache.outputs.cache-hit != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release download "$RAW_DATA_TAG" -R "$GITHUB_REPOSITORY" -p raw-data.tar.xz
+      - name: Unpack into data/raw/
+        run: |
+          echo "$RAW_DATA_SHA256  raw-data.tar.xz" | sha256sum -c -
+          mkdir -p data/raw
+          tar -xJf raw-data.tar.xz -C data/raw
+      # wrangler.toml [build] runs build_shards + build_static + build_extension --zip.
+      - name: Deploy (dry run)
+        if: github.event_name == 'pull_request'
+        run: |
+          npx --yes "wrangler@$WRANGLER_VERSION" deploy --dry-run --outdir dist
+          unzip -l site/hanzi-burst-extension.zip | tail -1
+      - name: Deploy
+        if: github.event_name != 'pull_request'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          [ -n "$CLOUDFLARE_API_TOKEN" ] || { echo "::error::secret CLOUDFLARE_API_TOKEN is not set"; exit 1; }
+          npx --yes "wrangler@$WRANGLER_VERSION" deploy
+      - name: Live site serves this build's extension zip
+        if: github.event_name != 'pull_request'
+        run: |
+          want=$(python3 -c 'import json; print(json.load(open("extension/manifest.json"))["version"])')
+          for i in 1 2 3 4 5 6; do
+            got=$(curl -fsSL https://hanzi.lipu.dev/hanzi-burst-extension.zip -o live.zip && unzip -p live.zip manifest.json | python3 -c 'import json,sys; print(json.load(sys.stdin)["version"])') || got=none
+            [ "$got" = "$want" ] && { echo "live zip is $got"; exit 0; }
+            sleep 10
+          done
+          echo "::error::hanzi.lipu.dev serves extension $got, expected $want"; exit 1
+
+  extension-release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: deploy
+    uses: ./.github/workflows/extension-release.yml
+    with:
+      publish: true
+    secrets: inherit

@@ -7,7 +7,8 @@ workers_dev = true
 
 # Статика сайта и API живут на одном домене: куки работают без CORS.
 [build]
-command = "python3 -I scripts/build_shards.py && python3 -I scripts/build_static.py"   # шарды для вставки текста, страницы /c/, /p/ и sitemap.xml
+# шарды для вставки текста, страницы /c/, /p/ и sitemap.xml, zip расширения (нужны data/raw/ и Pillow)
+command = "python3 -I scripts/build_shards.py && python3 -I scripts/build_static.py && python3 -I scripts/build_extension.py --zip"
 
 [assets]
 directory = "./site"

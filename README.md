@@ -56,6 +56,8 @@ Make Me a Hanzi (LGPL/Arphic), CC-CEDICT (CC BY-SA), Unicode/Unihan (Unicode Lic
 Один Worker отдаёт статику из `site/` и `/api/*` (`worker/index.js`): вход через Google, список «известных», запоминалки через Gemini (кэш в D1, лимит в сутки).
 Без бэкенда (обычный статический сервер) страница работает, кнопки входа и запоминалок просто не показываются.
 
+Первоначальная настройка (один раз, уже сделана):
+
 ```bash
 npm i -g wrangler && wrangler login
 wrangler d1 create hanzi-burst            # id вписать в wrangler.toml
@@ -63,8 +65,48 @@ wrangler d1 execute hanzi-burst --remote --file worker/schema.sql
 wrangler secret put GOOGLE_CLIENT_ID      # Google Cloud Console -> OAuth client (Web), origin = домен сайта
 wrangler secret put SESSION_SECRET        # openssl rand -base64 32
 wrangler secret put GEMINI_API_KEY
-wrangler deploy
 ```
+
+Секреты Worker хранятся в Cloudflare и при деплое не трогаются. Изменения схемы D1 (`worker/schema.sql`) применяются вручную, деплой их не накатывает.
+
+## Деплой
+
+Деплой делает CI (`.github/workflows/deploy.yml`):
+
+| Событие | Что происходит |
+|---|---|
+| PR | полная сборка + `wrangler deploy --dry-run`, ничего не публикуется |
+| push в `main` | сборка + деплой на hanzi.lipu.dev, проверка, что сайт отдаёт zip расширения нужной версии |
+| push тега `v*` | то же + загрузка расширения в Chrome Web Store с отправкой на проверку (`extension-release.yml`) |
+| Actions → deploy → Run workflow | передеплой текущего `main` |
+
+Сборка — команда `[build]` в `wrangler.toml`: `build_shards.py` → `build_static.py` → `build_extension.py --zip`. Ей нужны `data/raw/` (в гит не кладутся) и Pillow. CI берёт `data/raw/` из закреплённого снимка — ассет `raw-data.tar.xz` релиза `raw-data-YYYY-MM-DD` (тег и sha256 — в `env` у `deploy.yml`). В снимке только то, что читает сборка: `mmh/{dictionary,graphics}.txt`, `cedict/cedict_ts.u8`, `unicode/CJKRadicals.txt`, `unihan/Unihan_*.txt`, `ids/ids.txt`, `hsk/complete.json`.
+
+Секреты репозитория (Settings → Secrets → Actions):
+
+- `CLOUDFLARE_API_TOKEN` — https://dash.cloudflare.com/profile/api-tokens, шаблон «Edit Cloudflare Workers» + Account → D1 → Edit.
+- `CWS_EXTENSION_ID`, `CWS_CLIENT_ID`, `CWS_CLIENT_SECRET`, `CWS_REFRESH_TOKEN` — Chrome Web Store API (OAuth-клиент `hanzi-burst-ci-desktop` в Google Cloud, проект hanzi-burst-ci).
+
+### Выпуск новой версии расширения
+
+1. Поднять `version` в `extension/manifest.json`, смёржить в `main` (сайт задеплоится сам).
+2. `git tag v<версия> && git push origin v<версия>` — CI задеплоит этот коммит и загрузит расширение в Web Store на проверку.
+3. Если предыдущая версия ещё на проверке, Web Store ответит `ITEM_NOT_UPDATABLE`: шаг завершится предупреждением, а не ошибкой. Дождаться проверки (или отменить её в https://chrome.google.com/webstore/devconsole) и перезапустить Actions → extension-release.
+
+### Обновление снимка data/raw/
+
+```bash
+cd data/raw && tar -cJf /tmp/raw-data.tar.xz mmh/dictionary.txt mmh/graphics.txt cedict/cedict_ts.u8 \
+  unicode/CJKRadicals.txt unihan/Unihan_*.txt ids/ids.txt hsk/complete.json
+sha256sum /tmp/raw-data.tar.xz
+gh release create raw-data-$(date +%F) /tmp/raw-data.tar.xz --prerelease --title "raw-data-$(date +%F) (build inputs)" --notes "data/raw/ snapshot for deploy.yml"
+```
+
+Затем вписать новый тег и sha256 в `RAW_DATA_TAG` / `RAW_DATA_SHA256` в `deploy.yml`. Имя тега не должно начинаться с `v` (такие теги запускают выпуск расширения).
+
+### Ручной деплой (запасной вариант)
+
+При наличии `data/raw/` и Pillow: `npx wrangler deploy` из корня репозитория — та же сборка, что в CI.
 
 ## Пул фраз и кнопка «Новая фраза»
 
