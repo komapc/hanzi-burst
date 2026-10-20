@@ -57,7 +57,7 @@ Hanzi Burst помогает читать по-китайски и учить и
 Данные словаря: Make Me a Hanzi (LGPL), CC-CEDICT (CC BY-SA 4.0), Unicode/Unihan. См. NOTICE.txt в пакете.
 
 ## Assets (in this folder)
-- shot1.png, shot2.png, shot3.png: screenshots 1280x800 (up to 5 allowed)
+- shot1.png, shot2.png, shot3.png, shot4.png: screenshots 1280x800 (up to 5 allowed); shot4 = card for 战略 on zh.wikipedia
 - tile_440x280.png: small promo tile (required)
 - Icon 128x128: taken from the package (icons/128.png)
 - Optional: marquee 1400x560 (not made)
