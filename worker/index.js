@@ -112,6 +112,11 @@ export default {
     // Google Search Console: файл подтверждения должен отдаваться по точному адресу, без редиректа на путь без .html
     const gv = path === '/googled1d667f41fecd0d0.html' ? [null, 'googled1d667f41fecd0d0.html'] : null;
     if (gv) return new Response('google-site-verification: ' + gv[1], { headers: { 'content-type': 'text/html; charset=utf-8' } });
+    // Старый адрес *.workers.dev: страницы навсегда переезжают на основной домен, API продолжает работать
+    if (url.hostname.endsWith('.workers.dev') && !path.startsWith('/api/')) {
+      return Response.redirect('https://hanzi.lipu.dev' + path + url.search, 301);
+    }
+    if (!path.startsWith('/api/')) return env.ASSETS.fetch(request);
     const method = request.method;
 
     if (path === '/api/config') return json({ googleClientId: env.GOOGLE_CLIENT_ID || null });

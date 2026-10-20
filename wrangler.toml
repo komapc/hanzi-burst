@@ -2,7 +2,7 @@ name = "hanzi-burst"
 main = "worker/index.js"
 compatibility_date = "2025-01-01"
 
-routes = [{ pattern = "hanzi.lipu.dev", custom_domain = true }]   # workers.dev остаётся рабочим
+routes = [{ pattern = "hanzi.lipu.dev", custom_domain = true }]   # workers.dev отвечает 301 на hanzi.lipu.dev (кроме /api/* и файла Google)
 workers_dev = true
 
 # Статика сайта и API живут на одном домене: куки работают без CORS.
@@ -12,8 +12,9 @@ command = "python3 -I scripts/build_shards.py && python3 -I scripts/build_static
 [assets]
 directory = "./site"
 binding = "ASSETS"
-# /api/* и файл подтверждения Google уходят в Worker, остальное отдаётся из site/
-run_worker_first = ["/api/*", "/googled1d667f41fecd0d0.html"]
+# Все запросы сначала идут в Worker: он редиректит workers.dev на hanzi.lipu.dev,
+# обслуживает /api/* и файл подтверждения Google, остальное отдаёт из site/ через ASSETS.
+run_worker_first = true
 
 [[d1_databases]]
 binding = "DB"
