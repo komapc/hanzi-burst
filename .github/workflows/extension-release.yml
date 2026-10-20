@@ -62,4 +62,17 @@ jobs:
         run: |
           flags=""
           [ "$PUBLISH" = true ] && flags="--auto-publish"
-          npx --yes chrome-webstore-upload-cli@3 upload --source extension.zip $flags
+          set +e
+          npx --yes chrome-webstore-upload-cli@3 upload --source extension.zip $flags 2>&1 | tee upload.log
+          status=${PIPESTATUS[0]}
+          set -e
+          # A previous version still in review (or approved but unpublished) blocks uploads: that's
+          # a wait-and-retry, not a broken release, so warn instead of failing the run.
+          if [ "$status" -ne 0 ] && grep -q ITEM_NOT_UPDATABLE upload.log; then
+            msg="Chrome Web Store is not accepting uploads: the previous version is pending review or ready to publish. Publish or cancel it in the Developer Dashboard, then re-run this workflow."
+            echo "::warning::$msg"
+            echo "### ⚠️ Upload skipped" >> "$GITHUB_STEP_SUMMARY"
+            echo "$msg" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          exit "$status"
