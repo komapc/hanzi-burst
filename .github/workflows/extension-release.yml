@@ -1,18 +1,22 @@
 name: extension-release
 
-# The extension package is built locally (it needs data/raw/, which is gitignored) and shipped
-# with the site deploy, so CI takes the zip from hanzi.lipu.dev instead of building it.
+# Uploads the extension zip that is live on hanzi.lipu.dev to the Chrome Web Store.
+# The zip is built and deployed by deploy.yml (wrangler.toml [build] runs build_extension.py --zip).
 #
-# Release flow:
-#   1. bump "version" in extension/manifest.json
-#   2. python3 scripts/build_extension.py --zip && npx wrangler deploy
-#   3. git tag v<version> && git push origin v<version>      (or run this workflow by hand)
+# Release flow (see README "Деплой"):
+#   1. bump "version" in extension/manifest.json, merge to main (deploy.yml deploys it)
+#   2. git tag v<version> && git push origin v<version>
+#      -> deploy.yml deploys that commit, then calls this workflow with publish=true
+# Run by hand (Actions -> extension-release -> Run workflow) to re-upload the live zip.
 #
 # Needs repository secrets: CWS_EXTENSION_ID, CWS_CLIENT_ID, CWS_CLIENT_SECRET, CWS_REFRESH_TOKEN
 # (Chrome Web Store API OAuth, see https://github.com/fregante/chrome-webstore-upload-keys).
 on:
-  push:
-    tags: ["v*"]
+  workflow_call:
+    inputs:
+      publish:
+        type: boolean
+        default: false
   workflow_dispatch:
     inputs:
       publish:
@@ -58,7 +62,7 @@ jobs:
           CLIENT_ID: ${{ secrets.CWS_CLIENT_ID }}
           CLIENT_SECRET: ${{ secrets.CWS_CLIENT_SECRET }}
           REFRESH_TOKEN: ${{ secrets.CWS_REFRESH_TOKEN }}
-          PUBLISH: ${{ github.event_name == 'push' || inputs.publish }}
+          PUBLISH: ${{ inputs.publish }}
         run: |
           flags=""
           [ "$PUBLISH" = true ] && flags="--auto-publish"
