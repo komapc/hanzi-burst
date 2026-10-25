@@ -22,6 +22,13 @@ h2 small{color:var(--muted);font-weight:400}
 .c .p{font-size:.72rem;color:var(--muted)}.c .d{font-size:.7rem;color:var(--muted);line-height:1.2;max-height:2.4em;overflow:hidden}
 .c.k::after,.c.a::after,.c.s::after{content:"";position:absolute;top:5px;right:5px;width:9px;height:9px;border-radius:50%;background:var(--ok)}
 .c.a::after{background:var(--info)}.c.s::after{background:var(--warn)}
+.hsk{display:grid;gap:6px;margin:14px 0 4px}
+.lv{display:grid;grid-template-columns:4.2em 1fr 6.5em;align-items:center;gap:10px;width:100%;padding:4px 6px;border:0;border-radius:8px;background:none;color:var(--fg);font:inherit;font-size:.9rem;text-align:left;cursor:pointer}
+.lv:hover,.lv.on{background:var(--soft)}
+.lv b{font-weight:600}.lv small{color:var(--muted);text-align:right;font-variant-numeric:tabular-nums}
+.bar{height:8px;border-radius:999px;background:var(--soft);overflow:hidden}.lv:hover .bar,.lv.on .bar{background:var(--card)}
+.bar i{display:block;height:100%;background:var(--ok);border-radius:inherit}
+.todo{margin:6px 0 14px}.todo h2{margin-top:.8em}
 .empty{padding:20px;border:1px dashed var(--line);border-radius:12px;color:var(--muted)}
 </style><link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -29,6 +36,7 @@ h2 small{color:var(--muted);font-weight:400}
 <div class="top"><a href="/" id="back"></a>
 <span class="lang"><button data-lang="ru">RU</button><button data-lang="en">EN</button></span></div>
 <h1 id="h1"></h1><p class="m" id="sum"></p>
+<h2 id="hskH"></h2><div class="hsk" id="hsk"></div><div class="todo" id="todo"></div>
 <div id="out"></div>
 <div id="sitefoot"></div><script src="/footer.js" defer></script>
 </main>
@@ -38,11 +46,13 @@ const T = {
   ru:{title:'Мои иероглифы',back:'← hanzi-burst',known:'Известные иероглифы',parts:'Части (радикалы) в известных иероглифах',ready:'Готовы к изучению: все части известны',some:'Знаю часть частей',
       empty:'Пока ничего не отмечено. Открой иероглиф на главной и нажми «Знаю».',loading:'Загружаю…',
       sum:(n,p,r)=>`Известно иероглифов: ${n}. Частей в них: ${p}. Готово к изучению: ${r}.`,
-      hint:'Список хранится только в этом браузере.', partKnown:'отмечена', partMet:'встречается'},
+      hint:'Список хранится только в этом браузере.', partKnown:'отмечена', partMet:'встречается',
+      hsk:'Прогресс по уровням HSK 3.0', todo:n=>`HSK ${n}: ещё не знаю`, all:'Все знаки этого уровня отмечены 🎉'},
   en:{title:'My characters',back:'← hanzi-burst',known:'Known characters',parts:'Parts (radicals) inside known characters',ready:'Ready to learn: all parts known',some:'Some parts known',
       empty:'Nothing marked yet. Open a character on the main page and press “Know it”.',loading:'Loading…',
       sum:(n,p,r)=>`Known characters: ${n}. Parts inside them: ${p}. Ready to learn: ${r}.`,
-      hint:'The list is stored only in this browser.', partKnown:'marked', partMet:'seen'},
+      hint:'The list is stored only in this browser.', partKnown:'marked', partMet:'seen',
+      hsk:'Progress by HSK 3.0 level', todo:n=>`HSK ${n}: not yet known`, all:'Every character of this level is marked 🎉'},
 };
 let lang = 'ru', known = [];
 try { lang = localStorage.getItem('hanzi-lang') || (navigator.language.startsWith('ru') ? 'ru' : 'en'); } catch (e) {}
@@ -91,7 +101,24 @@ function leafSet(ch, acc, depth = 0) {
   comps.forEach(x => leafSet(x, acc, depth + 1));
   return acc;
 }
+/* прогресс по HSK: data/hsk.json — знаки каждого уровня (частые первыми); клик по уровню — неотмеченные знаки */
+let HSK = null, openLv = 0;
+const lvName = n => n === '7' ? '7–9' : n;
+function renderHsk() {
+  $hskH.textContent = t('hsk');
+  if (!HSK) return;
+  const ks = kset();
+  $hsk.innerHTML = Object.entries(HSK).map(([n, cs]) => {
+    const got = [...cs].filter(c => ks.has(c)).length, all = [...cs].length;
+    return `<button class="lv${openLv === n ? ' on' : ''}" data-lv="${n}" aria-expanded="${openLv === n}"><b>HSK ${lvName(n)}</b><span class="bar"><i style="width:${(100 * got / all).toFixed(1)}%"></i></span><small>${got} / ${all}</small></button>`;
+  }).join('');
+  if (!openLv) { $todo.innerHTML = ''; return; }
+  const rest = [...HSK[openLv]].filter(c => !ks.has(c));
+  $todo.innerHTML = `<h2>${t('todo')(lvName(openLv))} <small>${rest.length}</small></h2>` +
+    (rest.length ? `<div class="grid">${rest.map(c => cardHtml(c, '')).join('')}</div>` : `<p class="m">${t('all')}</p>`);
+}
 function render() {
+  renderHsk();
   document.documentElement.lang = lang;
   document.title = t('title') + ' — hanzi-burst';
   $h1.textContent = t('title'); $back.textContent = t('back');
@@ -112,6 +139,12 @@ function render() {
     sec(t('ready'), rdy.slice(0, 60), 'a') +
     sec(t('some'), som.slice(0, 60), 's');
 }
+const $hskH = document.getElementById('hskH'), $hsk = document.getElementById('hsk'), $todo = document.getElementById('todo');
+$hsk.onclick = async e => {
+  const b = e.target.closest('.lv'); if (!b) return;
+  openLv = openLv === b.dataset.lv ? 0 : b.dataset.lv; renderHsk();
+  if (openLv) { const lv = openLv; await load([...HSK[lv]].filter(c => !D.chars[c] || !G[c])); if (openLv === lv) renderHsk(); }
+};
 const $h1 = document.getElementById('h1'), $back = document.getElementById('back'), $sum = document.getElementById('sum'), $out = document.getElementById('out');
 document.querySelectorAll('.lang button').forEach(b => b.onclick = () => { lang = b.dataset.lang; try { localStorage.setItem('hanzi-lang', lang); } catch (e) {} render(); });
 render();
@@ -120,6 +153,7 @@ render();
     const [core, gl] = await Promise.all([fetch('phrase.json').then(r => r.json()), fetch('glyphs.json').then(r => r.json())]);
     D.chars = core.chars; Object.assign(G, gl);
   } catch (e) { window.__err = String(e); }
+  HSK = await fetch('data/hsk.json').then(r => r.json()).catch(() => null);
   await load(known.filter(c => !D.chars[c]));
   ready = true; render();
 })();
