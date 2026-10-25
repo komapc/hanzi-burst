@@ -3,13 +3,16 @@ const T = {
   ru: { title: 'Мои иероглифы', known: 'Известные иероглифы', parts: 'Части (радикалы) в известных иероглифах', ready: 'Готовы к изучению: все части известны', some: 'Знаю часть частей',
     empty: 'Пока ничего не отмечено. Наведите на иероглиф на любой странице и нажмите на его плитку в карточке.', loading: 'Загружаю…',
     sum: (n, p, r) => `Известно иероглифов: ${n}. Частей в них: ${p}. Готово к изучению: ${r}.`, hint: 'Список хранится только в этом браузере. Клик по иероглифу переключает отметку.',
+    hsk: 'Прогресс по уровням HSK 3.0', todo: n => `HSK ${n}: ещё не знаю`, all: 'Все знаки этого уровня отмечены 🎉',
     exp: 'Копировать список', imp: 'Вставить список', go: 'Добавить', x: 'Отмена', copied: 'Скопировано', ph: 'Вставьте иероглифы или JSON-список (как на hanzi.lipu.dev)' },
   en: { title: 'My characters', known: 'Known characters', parts: 'Parts (radicals) inside known characters', ready: 'Ready to learn: all parts known', some: 'Some parts known',
     empty: 'Nothing marked yet. Hover a character on any page and click its tile in the card.', loading: 'Loading…',
     sum: (n, p, r) => `Known characters: ${n}. Parts inside them: ${p}. Ready to learn: ${r}.`, hint: 'The list is stored only in this browser. Click a character to toggle it.',
+    hsk: 'Progress by HSK 3.0 level', todo: n => `HSK ${n}: not yet known`, all: 'Every character of this level is marked 🎉',
     exp: 'Copy list', imp: 'Paste list', go: 'Add', x: 'Cancel', copied: 'Copied', ph: 'Paste characters or a JSON list (as on hanzi.lipu.dev)' },
 };
 let lang = (navigator.language || '').startsWith('ru') ? 'ru' : 'en', known = [], chars = {}, ready = false, core = [];
+let HSK = null, openLv = '';   // data/hsk.json: знаки каждого уровня HSK 3.0, частые первыми
 const t = k => T[lang][k];
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const HAN = /[㐀-鿿]/;
@@ -31,7 +34,23 @@ const def = ch => { const c = chars[ch] || {}; return (lang === 'ru' && c.defini
 const short = d => (d || '').split(/[;,]/)[0].trim();
 const card = (ch, cls) => `<button class="c ${cls}" data-ch="${esc(ch)}"><span class="p">${esc(((chars[ch] || {}).pinyin || [])[0] || '')}</span><span class="z">${esc(ch)}</span><span class="d">${esc(short(def(ch)))}</span></button>`;
 
+const lvName = n => n === '7' ? '7–9' : n;
+function renderHsk() {
+  $('hskH').textContent = HSK ? t('hsk') : '';
+  if (!HSK) return;
+  const ks = new Set(known);
+  setHTML($('hsk'), Object.entries(HSK).map(([n, cs]) => {
+    const all = [...cs], got = all.filter(c => ks.has(c)).length;
+    return `<button class="lv${openLv === n ? ' on' : ''}" data-lv="${n}" aria-expanded="${openLv === n}"><b>HSK ${lvName(n)}</b><span class="bar"><i style="width:${(100 * got / all.length).toFixed(1)}%"></i></span><small>${got} / ${all.length}</small></button>`;
+  }).join(''));
+  if (!openLv) { setHTML($('todo'), ''); return; }
+  const rest = [...HSK[openLv]].filter(c => !ks.has(c));
+  setHTML($('todo'), `<h2>${t('todo')(lvName(openLv))} <small>${rest.length}</small></h2>` +
+    (rest.length ? `<div class="grid">${rest.map(c => card(c, '')).join('')}</div>` : `<p class="m">${t('all')}</p>`));
+}
+
 function render() {
+  renderHsk();
   document.documentElement.lang = lang; document.title = t('title') + ' — Hanzi Burst';
   $('h1').textContent = t('title'); $('exp').textContent = t('exp'); $('imp').textContent = t('imp'); $('ioGo').textContent = t('go'); $('ioX').textContent = t('x'); $('ta').placeholder = t('ph');
   if (!known.length) { setHTML($('out'), `<div class="empty">${t('empty')}</div>`); $('sum').textContent = ''; return; }
@@ -46,6 +65,12 @@ function render() {
 }
 
 const save = list => { known = [...new Set(list)]; chrome.storage.local.set({ known }); };
+$('hsk').onclick = async e => {
+  const b = e.target.closest('.lv'); if (!b) return;
+  openLv = openLv === b.dataset.lv ? '' : b.dataset.lv; renderHsk();
+  if (openLv) { const lv = openLv; await load([...HSK[lv]].filter(c => !chars[c])); if (openLv === lv) renderHsk(); }
+};
+$('todo').onclick = e => $('out').onclick(e);
 $('out').onclick = e => { const b = e.target.closest('button[data-ch]'); if (!b) return; const c = b.dataset.ch; save(known.includes(c) ? known.filter(x => x !== c) : [...known, c]); };
 $('exp').onclick = async () => { await navigator.clipboard.writeText(JSON.stringify(known)); $('exp').textContent = t('copied'); setTimeout(render, 1200); };
 $('imp').onclick = () => { $('io').hidden = false; $('ta').focus(); };
@@ -64,7 +89,9 @@ chrome.storage.onChanged.addListener(async ch => {
 chrome.storage.local.get(['known', 'lang'], async v => {
   known = v.known || []; if (v.lang === 'ru' || v.lang === 'en') lang = v.lang;
   render();
-  core = await fetch(chrome.runtime.getURL('data/core.json')).then(r => r.json()).catch(() => []);
+  [core, HSK] = await Promise.all(['core', 'hsk'].map(f => fetch(chrome.runtime.getURL(`data/${f}.json`)).then(r => r.json()).catch(() => null)));
+  core = core || [];
+  renderHsk();
   await load([...known, ...core]);
   ready = true; render();
 });

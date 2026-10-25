@@ -26,7 +26,7 @@
 
   const CSS = `:host{all:initial}
   *{box-sizing:border-box}
-  .card{--bg:#faf7f2;--fg:#1f1b16;--muted:#7a7166;--card:#fff;--accent:#c8402a;--line:#cfc6b6;--soft:#e6dfd3;--ok:#2f8f5b;--info:#2f6fd0;--warn:#d09a1f;
+  .card{--bg:#faf7f2;--fg:#1f1b16;--muted:#6b6257;--card:#fff;--accent:#c8402a;--line:#cfc6b6;--soft:#e6dfd3;--ok:#2a7f51;--info:#2f6fd0;--warn:#d09a1f;
     position:fixed;z-index:2147483647;width:max-content;max-width:360px;max-height:min(80vh,640px);overflow:auto;
     background:var(--card);color:var(--fg);border:1px solid var(--soft);border-radius:16px;padding:6px 0 4px;
     box-shadow:0 12px 40px rgba(31,27,22,.22),0 2px 6px rgba(31,27,22,.1);
@@ -65,7 +65,7 @@
   .foot button{all:unset;cursor:pointer;color:var(--muted);font-size:12px}.foot button:hover{color:var(--accent)}
   .card.ja .tile,.card.ja .nt{font-family:"Noto Serif JP","Hiragino Mincho ProN","Yu Mincho",serif}
   .legend{display:flex;gap:10px;padding:4px 16px 0;font-size:11px;color:var(--muted)}.legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}
-  @media(prefers-color-scheme:dark){.card{--bg:#17140f;--fg:#f1ebe0;--muted:#9d9486;--card:#221e17;--accent:#ff7a5c;--line:#5a5144;--soft:#352f25;--ok:#5fcf93;--info:#6aa6ff;--warn:#e8b84a;
+  @media(prefers-color-scheme:dark){.card{--bg:#17140f;--fg:#f1ebe0;--muted:#a59c8e;--card:#221e17;--accent:#ff7a5c;--line:#5a5144;--soft:#352f25;--ok:#5fcf93;--info:#6aa6ff;--warn:#e8b84a;
     box-shadow:0 12px 40px rgba(0,0,0,.6),0 2px 6px rgba(0,0,0,.4)}}`;
   const clean = s => String(s == null ? '' : s).replace(/\s*\[[^\]]*\d[^\]]*\]/g, '').trim();   // drop CC-CEDICT numeric-pinyin cross references
   const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -184,7 +184,7 @@
   }
 
   // ---- pinyin over text: <ruby> per character, words split by the dictionary in the background ----
-  // On for every page (popup switch, storage "ruby") or for this tab only (context menu). Japanese text is skipped.
+  // On for every page (popup switch, storage "ruby") or for this tab only (context menu). Japanese text gets furigana (ja.js).
   const RUBY = new Map();                                            // our <span data-hb> -> original text
   let rubyTab = null, rubyObs = null, rubyCount = 0, rubyBusy = false;
   const RUBY_MAX = 5000;                                             // text nodes per page: long feeds stop here
@@ -201,16 +201,16 @@
     })();
     for (const n of list) {
       const el = n.parentElement;
-      if (!el || !HAN.test(n.data) || el.closest(NO_RUBY) || el.isContentEditable || (host && host.contains(n)) || isJa(n.data, n)) continue;
+      if (!el || !HAN.test(n.data) || el.closest(NO_RUBY) || el.isContentEditable || (host && host.contains(n))) continue;
       out.push(n);
     }
     return out;
   }
   async function rubify(nodes) {
     for (let i = 0; i < nodes.length && rubyOn() && rubyCount < RUBY_MAX; i += 200) {
-      const batch = nodes.slice(i, i + 200), texts = batch.map(n => n.data);
+      const batch = nodes.slice(i, i + 200), texts = batch.map(n => n.data), ja = batch.map(n => isJa(n.data, n));
       let res;
-      try { res = await chrome.runtime.sendMessage({ type: 'annotate', texts }); } catch (err) { return; }
+      try { res = await chrome.runtime.sendMessage({ type: 'annotate', texts, ja }); } catch (err) { return; }
       if (!res || !rubyOn()) return;
       rubyBusy = true;
       batch.forEach((n, j) => {
