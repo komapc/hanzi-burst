@@ -297,6 +297,32 @@ DEFINITION_OVERRIDES = {
     "丷": ("two short strokes on top (like a small 八)", "две короткие черты сверху (как маленькое 八)"),
     "乛": ("short stroke with a hook (a stroke component)", "короткая черта с изгибом (элемент-черта)"),
     "丨": ("vertical stroke (a stroke component)", "вертикальная черта (элемент-черта)"),   # в MMH «number one; line»: «один» это 一
+    # HSK 1–2: в MMH первым идёт редкое или неверное значение
+    "机": ("machine; opportunity, chance; aircraft", "машина, механизм; случай, шанс; самолёт"),   # в MMH «desk»
+    "着": ("aspect particle: ongoing action or state (-ing); to touch; to wear", "частица длительного действия или состояния; касаться; носить (одежду)"),
+    "眼": ("eye; eyelet, hole, opening", "глаз; ушко, дырка, отверстие"),
+    "离": ("to leave, to part from; away from, distant from", "покидать, расставаться; от (о расстоянии), вдали от"),   # в MMH «rare beast»
+    "干": ("dry; to do, to work; trunk, main part", "сухой; делать, работать; ствол, основа"),
+    "会": ("can, to know how to; to meet; meeting; association", "уметь, мочь; встречаться; собрание; общество"),
+    "要": ("to want; to need; must, should; important, essential", "хотеть; нуждаться; надо, следует; важный, главный"),
+    "想": ("to think; to want, would like to; to miss", "думать; хотеть; скучать по"),
+    "他": ("he, him; other, another", "он, его; другой, иной"),
+    "的": ("possessive or attributive particle; of; aim, target", "частица принадлежности или определения; цель, мишень"),
+    "了": ("particle of completed action or change; to finish; clear", "частица завершённого действия или изменения; заканчивать; ясный"),
+    "呢": ("interrogative or emphatic final particle; wool fabric", "вопросительная или усилительная конечная частица; шерстяная ткань"),
+    "几": ("how many; a few, some; small table", "сколько; несколько; столик"),
+    "教": ("to teach; teaching, religion", "учить, преподавать; учение, религия"),
+    "觉": ("to feel, to sense; to wake up; sleep, nap", "чувствовать, ощущать; просыпаться; сон"),
+    "兴": ("interest, excitement; to thrive, to prosper", "интерес, увлечение; процветать, расцветать"),
+    "生": ("to be born, to give birth; life; raw; student", "рождаться, рожать; жизнь; сырой; ученик"),
+    "放": ("to put, to place; to release, to let go; to set off", "класть, ставить; отпускать, освобождать; запускать"),
+    "为": ("for, because of; to do, to act; to be, to become", "для, ради; делать, действовать; быть, становиться"),
+    "当": ("to serve as, to act as; when, at the time; appropriate", "быть в качестве, служить; когда, в то время; подходящий"),
+    "长": ("long; to grow; chief, head", "длинный; расти; начальник, глава"),
+    "占": ("to occupy, to take up; to divine", "занимать; гадать"),
+    "周": ("week; circumference, around; Zhou dynasty", "неделя; окружность, вокруг; династия Чжоу"),
+    "春": ("spring (season); vitality; love", "весна; жизненная сила; любовь"),
+    "适": ("suitable, fitting; comfortable", "подходящий, уместный; удобный"),
 }
 
 
