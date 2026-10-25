@@ -8,23 +8,25 @@
     return /^ja/i.test(l);
   };
   const autoLang = (navigator.language || '').startsWith('ru') ? 'ru' : 'en';
-  let host = null, enabled = true, off = false, mode = 'select', langPref = 'auto', known = new Set(), last = null;
+  let host = null, enabled = true, off = false, mode = 'select', langPref = 'auto', known = new Set(), last = null, rubyPref = false;
+  const MODES = ['select', 'hover', 'alt'];                         // alt: hover, but only while Alt is held
   const lang = () => (langPref === 'auto' ? autoLang : langPref);
   const key = 'off:' + location.hostname;
   try {
-    chrome.storage.local.get(['enabled', 'mode', 'lang', 'known', key], v => { known = new Set(v.known || []); langPref = v.lang || 'auto'; enabled = v.enabled !== false; mode = v.mode === 'hover' ? 'hover' : 'select'; off = !!v[key]; });
+    chrome.storage.local.get(['enabled', 'mode', 'lang', 'known', 'ruby', key], v => { known = new Set(v.known || []); langPref = v.lang || 'auto'; enabled = v.enabled !== false; mode = MODES.includes(v.mode) ? v.mode : 'select'; off = !!v[key]; rubyPref = !!v.ruby; applyRuby(); });
     chrome.storage.onChanged.addListener(ch => {
-      if (ch.enabled) enabled = ch.enabled.newValue !== false;
+      if (ch.enabled) { enabled = ch.enabled.newValue !== false; applyRuby(); }
+      if (ch.ruby) { rubyPref = !!ch.ruby.newValue; rubyTab = null; applyRuby(); }
       if (ch.known) { known = new Set(ch.known.newValue || []); if (host && last) render(last.r, last.rect, last.scroll); }
       if (ch.lang) langPref = ch.lang.newValue || 'auto';
-      if (ch.mode) { mode = ch.mode.newValue === 'hover' ? 'hover' : 'select'; hide(); }
-      if (ch[key]) off = !!ch[key].newValue;
+      if (ch.mode) { mode = MODES.includes(ch.mode.newValue) ? ch.mode.newValue : 'select'; hide(); }
+      if (ch[key]) { off = !!ch[key].newValue; applyRuby(); }
     });
   } catch (e) {}
 
   const CSS = `:host{all:initial}
   *{box-sizing:border-box}
-  .card{--bg:#faf7f2;--fg:#1f1b16;--muted:#7a7166;--card:#fff;--accent:#c8402a;--line:#cfc6b6;--soft:#e6dfd3;--ok:#2f8f5b;--info:#2f6fd0;--warn:#d09a1f;
+  .card{--bg:#faf7f2;--fg:#1f1b16;--muted:#6b6257;--card:#fff;--accent:#c8402a;--line:#cfc6b6;--soft:#e6dfd3;--ok:#2a7f51;--info:#2f6fd0;--warn:#d09a1f;
     position:fixed;z-index:2147483647;width:max-content;max-width:360px;max-height:min(80vh,640px);overflow:auto;
     background:var(--card);color:var(--fg);border:1px solid var(--soft);border-radius:16px;padding:6px 0 4px;
     box-shadow:0 12px 40px rgba(31,27,22,.22),0 2px 6px rgba(31,27,22,.1);
@@ -63,7 +65,7 @@
   .foot button{all:unset;cursor:pointer;color:var(--muted);font-size:12px}.foot button:hover{color:var(--accent)}
   .card.ja .tile,.card.ja .nt{font-family:"Noto Serif JP","Hiragino Mincho ProN","Yu Mincho",serif}
   .legend{display:flex;gap:10px;padding:4px 16px 0;font-size:11px;color:var(--muted)}.legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}
-  @media(prefers-color-scheme:dark){.card{--bg:#17140f;--fg:#f1ebe0;--muted:#9d9486;--card:#221e17;--accent:#ff7a5c;--line:#5a5144;--soft:#352f25;--ok:#5fcf93;--info:#6aa6ff;--warn:#e8b84a;
+  @media(prefers-color-scheme:dark){.card{--bg:#17140f;--fg:#f1ebe0;--muted:#a59c8e;--card:#221e17;--accent:#ff7a5c;--line:#5a5144;--soft:#352f25;--ok:#5fcf93;--info:#6aa6ff;--warn:#e8b84a;
     box-shadow:0 12px 40px rgba(0,0,0,.6),0 2px 6px rgba(0,0,0,.4)}}`;
   const clean = s => String(s == null ? '' : s).replace(/\s*\[[^\]]*\d[^\]]*\]/g, '').trim();   // drop CC-CEDICT numeric-pinyin cross references
   const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -108,17 +110,23 @@
   }
 
   // ---- mode: select ----
-  async function onSelect(e) {
-    if (!enabled || off || mode !== 'select') return;
+  // selected text without pinyin from <rt> (pinyin over text mode)
+  const selText = sel => {
+    if (!sel || !sel.rangeCount) return '';
+    const f = sel.getRangeAt(0).cloneContents(); f.querySelectorAll('rt').forEach(r => r.remove());
+    return f.textContent.trim();
+  };
+  async function onSelect(e, force) {
+    if (!force && (!enabled || off || mode !== 'select')) return;
     if (host && e && e.composedPath().includes(host)) return;
-    const sel = getSelection(); const text = sel ? sel.toString().trim() : '';
+    const sel = getSelection(); const text = selText(sel);
     if (!text || text.length > 40 || !JP.test(text)) return hide();
     const ja = isJa(text, sel.anchorNode);
     if (!ja && !HAN.test(text)) return hide();
     const rect = sel.getRangeAt(0).getBoundingClientRect();
     try {
       const r = await chrome.runtime.sendMessage({ type: 'lookup', text, lang: lang(), ja });
-      if (r && getSelection().toString().trim() === text) render(r, rect);
+      if (r && selText(getSelection()) === text) render(r, rect);
     } catch (err) { /* extension reloaded */ }
   }
   document.addEventListener('mouseup', e => setTimeout(() => onSelect(e), 10));
@@ -133,21 +141,34 @@
     if (document.caretPositionFromPoint) { const p = document.caretPositionFromPoint(x, y); if (p) { node = p.offsetNode; off = p.offset; } }
     else if (document.caretRangeFromPoint) { const p = document.caretRangeFromPoint(x, y); if (p) { node = p.startContainer; off = p.startOffset; } }
     if (!node || node.nodeType !== 3) return null;
-    const t = node.data;
+    let t = node.data, base = 0;
+    const span = node.parentElement && node.parentElement.closest('[data-hb]');
+    if (span && RUBY.has(span)) {                                   // pinyin over text: read on in the original string
+      for (const ch of span.childNodes) { if (ch === node || ch.firstChild === node) break; base += (ch.nodeType === 3 ? ch.data : ch.firstChild.data).length; }
+      t = RUBY.get(span);
+    }
     for (const o of [off, off - 1]) {                              // caret sits between characters: try both neighbours
-      if (o < 0 || o >= t.length || !JP.test(t[o])) continue;
+      if (o < 0 || o >= node.data.length || !JP.test(node.data[o])) continue;
       const r = document.createRange(); r.setStart(node, o); r.setEnd(node, o + 1);
       const b = r.getBoundingClientRect();
-      if (x >= b.left - 1 && x <= b.right + 1 && y >= b.top - 1 && y <= b.bottom + 1) return { text: t.slice(o, o + 12), rect: b, node, id: o + ':' + t.slice(o, o + 12) };
+      const at = base + o;
+      if (x >= b.left - 1 && x <= b.right + 1 && y >= b.top - 1 && y <= b.bottom + 1) return { text: t.slice(at, at + 12), rect: b, node, id: at + ':' + t.slice(at, at + 12) };
     }
     return null;
   }
-  let timer = 0, seq = 0;
+  let timer = 0, seq = 0, mx = -1, my0 = -1;
   document.addEventListener('mousemove', e => {
-    if (!enabled || off || mode !== 'hover') return;
+    mx = e.clientX; my0 = e.clientY;
+    if (!enabled || off || !(mode === 'hover' || (mode === 'alt' && e.altKey))) return;
     clearTimeout(timer);
     if (host && e.composedPath().includes(host)) return;           // pointer is on the card: keep it
-    const x = e.clientX, y = e.clientY;
+    hoverAt(e.clientX, e.clientY, 250);
+  }, { passive: true });
+  // Alt pressed with the pointer still: look up what is under it now
+  document.addEventListener('keydown', e => { if (e.key === 'Alt' && mode === 'alt' && enabled && !off && mx >= 0) hoverAt(mx, my0, 0); });
+  document.addEventListener('keyup', e => { if (e.key === 'Alt' && mode === 'alt' && host) e.preventDefault(); });   // Firefox: no menu bar
+  function hoverAt(x, y, delay) {
+    clearTimeout(timer);
     timer = setTimeout(async () => {
       const hit = charAt(x, y);
       if (!hit) return hide();
@@ -159,6 +180,79 @@
         const r = await chrome.runtime.sendMessage({ type: 'lookup', text: hit.text, lang: lang(), hover: true, ja });
         if (my === seq && r) { render(r, hit.rect); shown = hit.id; }
       } catch (err) {}
-    }, 250);
-  }, { passive: true });
+    }, delay);
+  }
+
+  // ---- pinyin over text: <ruby> per character, words split by the dictionary in the background ----
+  // On for every page (popup switch, storage "ruby") or for this tab only (context menu). Japanese text gets furigana (ja.js).
+  const RUBY = new Map();                                            // our <span data-hb> -> original text
+  let rubyTab = null, rubyObs = null, rubyCount = 0, rubyBusy = false;
+  const RUBY_MAX = 5000;                                             // text nodes per page: long feeds stop here
+  const rubyOn = () => enabled && !off && (rubyTab == null ? rubyPref : rubyTab);
+  const NO_RUBY = 'script,style,noscript,textarea,select,option,svg,ruby,rt,[data-hb]';
+  function rubyNodes(root) {
+    const out = [];
+    if (root.nodeType === 3) root = root.parentNode && { nodes: [root] };
+    if (!root) return out;
+    const list = root.nodes || (() => {
+      const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT), a = [];
+      for (let n; (n = w.nextNode()) && a.length < 2000;) a.push(n);
+      return a;
+    })();
+    for (const n of list) {
+      const el = n.parentElement;
+      if (!el || !HAN.test(n.data) || el.closest(NO_RUBY) || el.isContentEditable || (host && host.contains(n))) continue;
+      out.push(n);
+    }
+    return out;
+  }
+  async function rubify(nodes) {
+    for (let i = 0; i < nodes.length && rubyOn() && rubyCount < RUBY_MAX; i += 200) {
+      const batch = nodes.slice(i, i + 200), texts = batch.map(n => n.data), ja = batch.map(n => isJa(n.data, n));
+      let res;
+      try { res = await chrome.runtime.sendMessage({ type: 'annotate', texts, ja }); } catch (err) { return; }
+      if (!res || !rubyOn()) return;
+      rubyBusy = true;
+      batch.forEach((n, j) => {
+        const segs = res[j];
+        if (!segs || !n.isConnected || n.data !== texts[j] || !segs.some(x => x[1])) return;
+        const span = document.createElement('span'); span.dataset.hb = 'ruby';
+        for (const [txt, py] of segs) {
+          if (!py) { span.append(txt); continue; }
+          const r = document.createElement('ruby'), rt = document.createElement('rt');
+          rt.textContent = py;
+          rt.style.cssText = 'font-size:.55em;font-weight:400;font-style:normal;letter-spacing:0;text-transform:none;opacity:.8;user-select:none;-webkit-user-select:none';
+          r.append(txt, rt); span.append(r);
+        }
+        n.replaceWith(span); RUBY.set(span, texts[j]); rubyCount++;
+      });
+      rubyBusy = false;
+    }
+  }
+  function applyRuby() {
+    if (!document.body) return;
+    if (rubyOn()) {
+      rubify(rubyNodes(document.body));
+      if (!rubyObs) {
+        let pend = [], t = 0;
+        rubyObs = new MutationObserver(ms => {
+          if (rubyBusy) return;
+          ms.forEach(m => m.addedNodes.forEach(n => { if (!(n.dataset && n.dataset.hb)) pend.push(n); }));
+          clearTimeout(t); t = setTimeout(() => { const p = pend; pend = []; rubify(p.flatMap(rubyNodes)); }, 400);
+        });
+        rubyObs.observe(document.body, { childList: true, subtree: true });
+      }
+    } else {
+      if (rubyObs) { rubyObs.disconnect(); rubyObs = null; }
+      for (const [span, text] of RUBY) if (span.isConnected) span.replaceWith(document.createTextNode(text));
+      RUBY.clear(); rubyCount = 0;
+    }
+  }
+
+  // ---- context menu (background.js): look up the selection / pinyin on this page ----
+  chrome.runtime.onMessage.addListener(msg => {
+    if (!msg) return;
+    if (msg.type === 'ctx-look') onSelect(null, true);
+    if (msg.type === 'ctx-ruby') { rubyTab = !rubyOn(); if (!enabled || off) rubyTab = false; applyRuby(); }
+  });
 })();

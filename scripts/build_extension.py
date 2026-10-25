@@ -24,6 +24,8 @@ def main():
     for kind in ("chars", "words"):          # glyphs (stroke SVG, 24 MB) are not needed for text cards
         shutil.copytree(SITE / "data" / kind, data / kind)
     shutil.copy(SITE / "data" / "trad.json", data / "trad.json")
+    if (SITE / "data" / "hsk.json").exists():                # HSK 3.0 levels for "My characters" (from build_shards.py)
+        shutil.copy(SITE / "data" / "hsk.json", data / "hsk.json")
     shutil.copytree(SITE / "data" / "ja", data / "ja")       # Japanese: JMdict words for site/ja.js
     shutil.copy(SITE / "ja.js", EXT / "ja.js")
     for f in (SITE / "data" / "kanji").glob("*.json"):       # kanji readings and meanings, without stroke paths

@@ -50,6 +50,83 @@ async function lookup(raw, lang, hover) {
   };
 }
 
+// Pinyin over page text: per text, segments [text, pinyin|''] — longest CC-CEDICT word first (up to 6 characters),
+// its syllables spread over its characters; a lone character gets its main reading. Traditional text is looked up
+// through trad.json but shown as is.
+// Furigana: the word's reading split over its kanji runs (見せて + みせて -> 見: み); a kanji run is not split
+// (勉強 gets べんきょう as a whole); if the kana around it don't match, the reading goes over the whole word.
+const KJ = /[㐀-鿿々〆ヶ]/;
+function furi(chars, reading) {
+  const runs = [];
+  chars.forEach((c, i) => { const k = KJ.test(c), l = runs[runs.length - 1]; if (l && l.k === k) l.n++; else runs.push({ k, i, n: 1 }); });
+  const re = new RegExp('^' + runs.map(r => r.k ? '(.+?)' : JA.toHira(chars.slice(r.i, r.i + r.n).join('')).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('') + '$');
+  const m = JA.toHira(reading).match(re);
+  if (!m) return [[chars.join(''), reading]];
+  let g = 1;
+  return runs.map(r => [chars.slice(r.i, r.i + r.n).join(''), r.k ? m[g++] : '']);
+}
+async function annotateJa(text) {
+  const cs = [...text], out = [];
+  const push = (txt, rt) => { const l = out[out.length - 1]; if (!rt && l && !l[1]) l[0] += txt; else out.push([txt, rt]); };
+  for (let a = 0; a < cs.length; a += 100) {                         // JA.analyze reads 100 characters at a time
+    const chunk = cs.slice(a, a + 100).join('');
+    const r = await JA.analyze(chunk, shard);
+    let pos = 0;
+    for (const w of r.words) {                                      // punctuation parts come back trimmed: keep the original gaps
+      const at = chunk.indexOf(w.word, pos);
+      if (at < 0) continue;
+      if (at > pos) push(chunk.slice(pos, at), '');
+      if (!w.punct && w.reading && w.chars.some(c => KJ.test(c))) furi(w.chars, w.reading).forEach(([t, rt]) => push(t, rt));
+      else push(w.word, '');
+      pos = at + w.word.length;
+    }
+    if (pos < chunk.length) push(chunk.slice(pos), '');
+  }
+  return out;
+}
+
+async function annotate(texts, ja = []) {
+  const jaOut = await Promise.all(texts.map((t, i) => ja[i] ? annotateJa(t).catch(() => null) : null));
+  texts = texts.map((t, i) => ja[i] ? '' : t);
+  const map = await tradMap();
+  const simp = s => [...s].map(c => map[c] || c);
+  const han = [...new Set(texts.flatMap(t => simp(t).filter(c => HAN.test(c))))];
+  const words = {}, chars = {};
+  await Promise.all([...new Set(han.map(shardKey))].map(async k => {
+    const [w, c] = await Promise.all([shard('words', k), shard('chars', k)]);
+    Object.assign(words, w); Object.assign(chars, c);
+  }));
+  const one = c => (((chars[c] || {}).pinyin || [])[0] || '');
+  return texts.map(t => {
+    const cs = [...t], ss = simp(t), out = [];
+    const push = (txt, py) => { const l = out[out.length - 1]; if (!py && l && !l[1]) l[0] += txt; else out.push([txt, py]); };
+    for (let i = 0; i < cs.length;) {
+      if (!HAN.test(ss[i])) { push(cs[i], ''); i++; continue; }
+      let m = Math.min(6, cs.length - i);
+      for (; m > 1; m--) {
+        const w = ss.slice(i, i + m);
+        if (w.every(c => HAN.test(c)) && words[w.join('')] && words[w.join('')][0].split(' ').length === m) break;
+      }
+      if (m > 1) words[ss.slice(i, i + m).join('')][0].split(' ').forEach((p, j) => push(cs[i + j], p.toLowerCase()));
+      else push(cs[i], one(ss[i]));
+      i += m;
+    }
+    return out;
+  }).map((r, i) => jaOut[i] || r);
+}
+
+// Context menu: look up the selection; pinyin over this page.
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.contextMenus.removeAll(() => {
+    chrome.contextMenus.create({ id: 'hb-look', title: 'Hanzi Burst: “%s”', contexts: ['selection'] });
+    chrome.contextMenus.create({ id: 'hb-ruby', title: 'Hanzi Burst: pinyin / furigana on this page (on/off)', contexts: ['page'] });
+  });
+});
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+  if (!tab || tab.id < 0) return;
+  try { chrome.tabs.sendMessage(tab.id, { type: info.menuItemId === 'hb-ruby' ? 'ctx-ruby' : 'ctx-look' }, { frameId: info.frameId || 0 }); } catch (e) {}
+});
+
 // Japanese: words by site/ja.js (JMdict shards data/ja), kanji readings and meanings from data/kanji.
 async function lookupJa(raw, lang, hover) {
   const r = await JA.analyze([...raw].slice(0, hover ? 12 : 30).join(''), shard);
@@ -78,6 +155,7 @@ async function lookupJa(raw, lang, hover) {
 
 chrome.runtime.onMessage.addListener((msg, _s, send) => {
   if (msg && msg.type === 'open-learned') { chrome.tabs.create({ url: chrome.runtime.getURL('learned.html') }); return; }
+  if (msg && msg.type === 'annotate') { annotate(msg.texts || [], msg.ja || []).then(send, () => send(null)); return true; }
   if (msg && msg.type === 'lookup' && msg.ja) { lookupJa(msg.text, msg.lang, !!msg.hover).then(send, () => send(null)); return true; }
   if (msg && msg.type === 'lookup') { lookup(msg.text, msg.lang, !!msg.hover).then(send, () => send(null)); return true; }
 });
