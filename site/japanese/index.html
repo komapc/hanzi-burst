@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kana — hiragana &amp; katakana and where they came from</title>
+<link rel="canonical" href="https://hanzi.lipu.dev/japanese/">
+<meta name="description" content="Interactive gojūon table of hiragana and katakana: romaji, sound, and the kanji each kana grew out of.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Klee+One:wght@600&family=Noto+Sans+JP:wght@400;600&family=Noto+Serif+JP:wght@500&display=swap">
+<style>
+  :root { --bg:#faf7f2; --fg:#1f1b16; --muted:#7a7166; --card:#fff; --accent:#c8402a; --line:#cfc6b6; --soft:#e6dfd3; --info:#2f6fd0; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#17140f; --fg:#f1ebe0; --muted:#9d9486; --card:#221e17; --accent:#ff7a5c; --line:#5a5144; --soft:#352f25; --info:#6aa6ff; }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font-family:system-ui,"Noto Sans JP",sans-serif; }
+  .wrap { max-width:1100px; margin:0 auto; padding:24px 16px 48px; }
+  header h1 { margin:0; font-size:1.6rem; }
+  header h1 span { font-family:"Klee One","Noto Sans JP",serif; color:var(--accent); }
+  header p { margin:6px 0 0; color:var(--muted); line-height:1.45; max-width:62ch; }
+  .bar { display:flex; flex-wrap:wrap; gap:10px 18px; align-items:center; margin:20px 0 16px; }
+  .seg { display:inline-flex; border:1px solid var(--line); border-radius:999px; overflow:hidden; }
+  .seg button { border:0; background:transparent; color:var(--fg); padding:7px 14px; font:inherit; cursor:pointer; }
+  .seg button[aria-pressed="true"] { background:var(--fg); color:var(--bg); }
+  label.chk { display:inline-flex; gap:6px; align-items:center; cursor:pointer; color:var(--muted); }
+  .layout { display:grid; grid-template-columns:minmax(0,1fr) 320px; gap:24px; align-items:start; }
+  h2 { font-size:.78rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); font-weight:600; margin:28px 0 10px; }
+  h2:first-child { margin-top:0; }
+  table.kana { border-collapse:separate; border-spacing:5px; width:100%; table-layout:fixed; }
+  table.kana th { font-weight:500; color:var(--muted); font-size:.8rem; }
+  table.kana th.row { width:2.6em; text-align:right; padding-right:4px; }
+  .cell { width:100%; min-height:64px; border:1px solid var(--soft); background:var(--card); color:var(--fg); border-radius:10px;
+          display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; cursor:pointer; font:inherit; padding:6px 2px; }
+  .cell:hover { border-color:var(--line); }
+  .cell[aria-pressed="true"] { border-color:var(--accent); box-shadow:0 0 0 1px var(--accent); }
+  .cell .g { font-family:"Klee One","Noto Sans JP",sans-serif; font-size:1.7rem; line-height:1.1; white-space:nowrap; }
+  .cell .g .k { color:var(--muted); margin-left:.15em; }
+  .cell .r { font-size:.75rem; color:var(--muted); }
+  .cell.old .g { opacity:.55; }
+  .both .cell .g { font-size:1.35rem; }
+  .noromaji .cell .r { display:none; }
+  td.empty { }
+  aside { position:sticky; top:16px; max-height:calc(100vh - 32px); overflow-y:auto; background:var(--card); border:1px solid var(--soft); border-radius:16px; padding:20px; }
+  aside .big { display:flex; gap:18px; align-items:baseline; justify-content:center; font-family:"Klee One","Noto Sans JP",sans-serif; font-size:4.5rem; line-height:1; }
+  aside .rom { text-align:center; font-size:1.25rem; margin:8px 0 4px; }
+  aside .rom button { margin-left:8px; border:1px solid var(--line); background:transparent; color:var(--fg); border-radius:999px; width:2em; height:2em; cursor:pointer; font-size:.8rem; vertical-align:middle; }
+  aside .note { color:var(--muted); font-size:.9rem; line-height:1.45; text-align:center; margin:0 0 6px; }
+  .origin { border-top:1px solid var(--soft); margin-top:16px; padding-top:14px; }
+  .origin h3 { margin:0 0 8px; font-size:.78rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); font-weight:600; }
+  .flow { display:flex; flex-wrap:wrap; align-items:center; gap:4px 12px; margin:6px 0 2px; }
+  .flow .kj { font-family:"Noto Serif JP",serif; font-size:2.6rem; line-height:1; }
+  .flow .ar { color:var(--muted); }
+  .flow .kn { font-family:"Klee One","Noto Sans JP",sans-serif; font-size:2.6rem; line-height:1; color:var(--accent); }
+  .origin p { margin:2px 0 12px; font-size:.88rem; color:var(--muted); line-height:1.4; }
+  .flow .how { font-size:.8rem; color:var(--muted); line-height:1.3; }
+  dl.src { display:grid; grid-template-columns:auto 1fr; gap:4px 10px; margin:8px 0 16px; font-size:.88rem; line-height:1.4; }
+  dl.src dt { color:var(--muted); font-size:.75rem; text-transform:uppercase; letter-spacing:.06em; padding-top:2px; }
+  dl.src dd { margin:0; }
+  dl.src .sub { color:var(--muted); font-size:.82rem; }
+  .use { font-size:.72rem; padding:1px 7px; border-radius:999px; border:1px solid var(--line); color:var(--muted); white-space:nowrap; }
+  .use-kun { border-color:var(--info); color:var(--info); }
+  .use-q { border-color:var(--accent); color:var(--accent); }
+  details.why { margin:0 0 4px; color:var(--muted); line-height:1.5; max-width:70ch; }
+  details.why summary { cursor:pointer; color:var(--fg); }
+  details.why p { margin:8px 0; }
+  .yoon td { }
+  .foot { margin-top:48px; padding-top:20px; border-top:1px solid var(--soft); color:var(--muted); font-size:.85rem; line-height:1.5; }
+  .foot a { color:var(--fg); }
+  @media (max-width:820px) {
+    .layout { grid-template-columns:1fr; }
+    aside { position:static; order:-1; max-height:none; }
+    aside .big { font-size:3.5rem; }
+    .cell { min-height:54px; }
+    .cell .g { font-size:1.35rem; }
+    .both .cell .g { font-size:1.05rem; }
+    table.kana { border-spacing:3px; }
+    table.kana th.row { width:2em; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1><span>かな</span> Kana</h1>
+    <p>Japanese has two syllabaries, hiragana and katakana, with the same sounds. Both grew out of kanji used for their sound: hiragana are cursive forms of a whole character, katakana keep one piece of it. Pick a kana to see where it came from.</p>
+  </header>
+
+  <details class="why" style="margin-top:14px">
+    <summary>Where does a kana's sound come from?</summary>
+    <p>Japanese had no writing until it borrowed Chinese characters. To spell Japanese words, scribes (by the 8th century, in the <i>Man'yōshū</i> poetry anthology) used kanji purely for their sound and ignored the meaning — so 安 "peaceful" just stood for <i>a</i>. These sound-only kanji are called <i>man'yōgana</i>; kana are simplified forms of them.</p>
+    <p>Most were picked for their <b>Chinese-derived reading</b> (<i>on'yomi</i>): Japan's approximation of how Chinese sounded in the 5th–8th centuries. Readings longer than one syllable were cut down: 安 <i>an</i> → あ <i>a</i>, 末 <i>matsu</i> → ま <i>ma</i>. A few used a <b>native Japanese word</b> written with the kanji (<i>kun'yomi</i>): 女 "woman" is Japanese <i>me</i>, giving め.</p>
+    <p>For comparison each kanji also shows a reconstruction of Tang-dynasty Chinese (around the time kana formed) and modern Mandarin, which has drifted much further: 波 was <i>*bɑ</i>, is <i>bō</i> today, and gave Japanese <i>ha</i> (then pronounced <i>pa</i>).</p>
+  </details>
+
+  <div class="bar">
+    <div class="seg" role="group" aria-label="Script">
+      <button data-script="hira" aria-pressed="true">Hiragana</button>
+      <button data-script="kata" aria-pressed="false">Katakana</button>
+      <button data-script="both" aria-pressed="false">Both</button>
+    </div>
+    <label class="chk"><input type="checkbox" id="romaji" checked> Romaji</label>
+  </div>
+
+  <div class="layout">
+    <main id="tables">
+      <h2>Gojūon — the basic table</h2>
+      <table class="kana" id="gojuon"></table>
+      <h2>Dakuon — voiced sounds (゛ and ゜)</h2>
+      <table class="kana" id="dakuon"></table>
+      <h2>Yōon — contracted sounds</h2>
+      <table class="kana" id="yoon"></table>
+    </main>
+    <aside id="detail" aria-live="polite"></aside>
+  </div>
+
+  <footer class="foot">
+    Romaji follow the Hepburn system. Kana origins follow the standard man'yōgana derivations; the source of ン is disputed.
+    Mandarin and Tang readings: <a href="https://www.unicode.org/charts/unihan.html">Unicode Unihan</a> (kMandarin, kTang).
+    ゐ/ヰ and ゑ/ヱ are no longer used in modern Japanese. Sound uses your browser's Japanese voice, if it has one.
+  </footer>
+</div>
+<script src="kana.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

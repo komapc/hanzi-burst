@@ -71,7 +71,7 @@ def main():
 
     for d in ("c", "p"):
         shutil.rmtree(SITE / d, ignore_errors=True); (SITE / d).mkdir()
-    urls = [f"{BASE}/", f"{BASE}/about", f"{BASE}/privacy", f"{BASE}/extension", f"{BASE}/c/", f"{BASE}/p/"]
+    urls = [f"{BASE}/", f"{BASE}/about", f"{BASE}/privacy", f"{BASE}/extension", f"{BASE}/c/", f"{BASE}/p/", f"{BASE}/japanese/"]
     link = lambda ch: f'<a href="/c/{cid(ch)}" data-c="{ch}">{ch}</a>' if ch in chars else ch
 
     for ch, c in chars.items():
