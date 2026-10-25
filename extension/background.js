@@ -1,4 +1,5 @@
-importScripts('common.js');
+// Chrome: service worker loads the helpers itself; Firefox: manifest background.scripts lists them.
+if (typeof importScripts === 'function') { self.window = self; importScripts('common.js', 'ja.js'); }
 // Offline lookup. Data shards are copied from site/data by scripts/build_extension.py.
 const HAN = /[㐀-鿿]/;
 const MAX_DEPTH = 3;
@@ -49,7 +50,34 @@ async function lookup(raw, lang, hover) {
   };
 }
 
+// Japanese: words by site/ja.js (JMdict shards data/ja), kanji readings and meanings from data/kanji.
+async function lookupJa(raw, lang, hover) {
+  const r = await JA.analyze([...raw].slice(0, hover ? 12 : 30).join(''), shard);
+  let words = r.words.filter(w => !w.punct);
+  if (hover) words = words.slice(0, 1);
+  if (!words.length) return null;
+  const K = {};
+  const load = async list => Promise.all([...new Set(list.map(shardKey))].map(async k => {
+    const d = await shard('kanji', k); list.forEach(c => { if (d[c]) K[c] = d[c]; });
+  }));
+  const kan = [...new Set(words.flatMap(w => w.chars).filter(c => HAN.test(c)))].slice(0, hover ? 4 : 8);
+  await load(kan);
+  const parts = c => (K[c] && K[c].components || []).map((p, i) => ((K[c].orig || [])[i]) || p);
+  await load([...new Set(kan.flatMap(parts))].filter(c => !K[c]));
+  const mean = k => (k && ((lang === 'ru' && k.ru) || (k.en || []).slice(0, 4).join(', '))) || '';
+  return {
+    ja: true, text: r.zh,
+    words: words.filter(w => w.reading || w.gloss).map(w => ({
+      w: w.word, reading: w.reading, tr: lang === 'ru' ? w.cyr : w.lat, lemma: w.lemma,
+      def: (lang === 'ru' && w.gloss_ru) || w.gloss || '' })),
+    chars: kan.filter(c => K[c]).map(c => ({
+      ch: c, def: mean(K[c]), on: (K[c].on || []).slice(0, 3).join('、'), kun: (K[c].kun || []).slice(0, 3).join('、'),
+      parts: (K[c].components || []).map((p, i) => ({ ch: p, def: mean(K[p] || K[(K[c].orig || [])[i]]), parts: [] })) })),
+  };
+}
+
 chrome.runtime.onMessage.addListener((msg, _s, send) => {
   if (msg && msg.type === 'open-learned') { chrome.tabs.create({ url: chrome.runtime.getURL('learned.html') }); return; }
+  if (msg && msg.type === 'lookup' && msg.ja) { lookupJa(msg.text, msg.lang, !!msg.hover).then(send, () => send(null)); return true; }
   if (msg && msg.type === 'lookup') { lookup(msg.text, msg.lang, !!msg.hover).then(send, () => send(null)); return true; }
 });
