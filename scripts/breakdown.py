@@ -128,6 +128,9 @@ def fill_holes(mmh):
     return filled
 
 
+READINGS = {}   # иероглиф -> [(пиньинь, [значения])], если чтений несколько (多音字: 着 zhe/zháo/zhāo/zhuó); заполняет load_cedict
+
+
 def load_cedict():
     words = {}
     pat = re.compile(r"^(\S+) (\S+) \[([^\]]+)\] /(.+)/$")
@@ -147,12 +150,24 @@ def load_cedict():
         if d.get("pinyin"):
             main_py[d["character"]] = d["pinyin"][0]
     main_py.update({"长": "cháng", "得": "de"})   # во фразах чаще «длинный» и служебное 得, чем первое чтение MMH
-    variant = re.compile(r"^(old |archaic |Japanese |erroneous )?variant of ")
+    variant = re.compile(r"^(old |archaic |Japanese |erroneous |unofficial )?variant of |^used in ")
     for simp, es in words.items():
         if len(es) > 1:
             es.sort(key=lambda e: (all(variant.match(x) for x in e["defs"]),
                                    len(simp) == 1 and e["pinyin"].lower() != main_py.get(simp, e["pinyin"]).lower(),
                                    e["pinyin"][:1].isupper()))
+    for ch, es in words.items():
+        if len(ch) != 1:
+            continue
+        by_py = {}
+        for e in es:
+            defs = [d for d in e["defs"] if not d.startswith("CL:")]
+            if e["pinyin"][:1].isupper() or not defs or all(variant.match(d) for d in defs):
+                continue
+            defs = [re.sub(r"\s*\((Taiwan |also )?pr\. \[[^\]]*\]\)|\|[^\[\s]*\[[^\]]*\]|\[[a-zA-Z]+\d[^\]]*\]", "", d).strip() for d in defs]
+            by_py.setdefault(e["pinyin"].lower(), [d for d in defs if d and len(d) <= 70][:2] or [defs[0][:70].rsplit(" ", 1)[0] + "…"])
+        if len(by_py) > 1:
+            READINGS[ch] = list(by_py.items())
     return words
 
 
@@ -310,7 +325,11 @@ def info(ch, mmh, maps=None, tr=None):
     etymology = dict(d["etymology"]) if d.get("etymology") else None
     if etymology and hint and tr.get(hint):
         etymology["hint_ru"] = tr[hint]
+    # русский — только если переведены все значения (иначе смесь «chief; голова; elder»)
+    readings = [[py, "; ".join(defs)] + (["; ".join(tr[x] for x in defs)] if all(x in tr for x in defs) else [])
+                for py, defs in READINGS.get(ch, [])]
     return {
+        **({"readings": readings} if readings else {}),
         "pinyin": d.get("pinyin") or [],
         "definition": definition,
         "definition_ru": definition_ru,
