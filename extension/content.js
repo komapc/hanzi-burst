@@ -1,5 +1,12 @@
 (() => {
-  const HAN = /[㐀-鿿]/;
+  const HAN = /[㐀-鿿]/, KANA = /[぀-ヿ]/, JP = /[぀-ヿ㐀-鿿]/;
+  // Japanese: the text has kana, or the page / element is marked lang="ja" (kanji-only text otherwise counts as Chinese)
+  const isJa = (text, node) => {
+    if (KANA.test(text)) return true;
+    const el = node && (node.nodeType === 1 ? node : node.parentElement);
+    const l = (el && el.closest && el.closest('[lang]') || document.documentElement).getAttribute('lang') || '';
+    return /^ja/i.test(l);
+  };
   const autoLang = (navigator.language || '').startsWith('ru') ? 'ru' : 'en';
   let host = null, enabled = true, off = false, mode = 'select', langPref = 'auto', known = new Set(), last = null;
   const lang = () => (langPref === 'auto' ? autoLang : langPref);
@@ -54,6 +61,7 @@
   .foot{display:flex;justify-content:space-between;align-items:center;padding:8px 16px 6px;font-size:12px}
   .foot a{color:var(--accent);text-decoration:none;font-weight:600}.foot a:hover{text-decoration:underline}
   .foot button{all:unset;cursor:pointer;color:var(--muted);font-size:12px}.foot button:hover{color:var(--accent)}
+  .card.ja .tile,.card.ja .nt{font-family:"Noto Serif JP","Hiragino Mincho ProN","Yu Mincho",serif}
   .legend{display:flex;gap:10px;padding:4px 16px 0;font-size:11px;color:var(--muted)}.legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}
   @media(prefers-color-scheme:dark){.card{--bg:#17140f;--fg:#f1ebe0;--muted:#9d9486;--card:#221e17;--accent:#ff7a5c;--line:#5a5144;--soft:#352f25;--ok:#5fcf93;--info:#6aa6ff;--warn:#e8b84a;
     box-shadow:0 12px 40px rgba(0,0,0,.6),0 2px 6px rgba(0,0,0,.4)}}`;
@@ -74,11 +82,15 @@
     const root = host.attachShadow({ mode: 'closed' });
     const head = (big, py, def, c) => { const st = c ? stateOf(c, known) : ''; return `<div class="head">${c ? `<button class="tile${st ? ' st-' + st : ''}" data-ch="${esc(big)}" title="${esc(tip(big))}">${esc(big)}</button>` : `<span class="tile${[...big].length > 4 ? ' l5' : [...big].length > 2 ? ' l3' : ''}">${esc(big)}</span>`}<div><div class="py">${esc(py)}</div><div class="def" title="${esc(clean(def))}">${esc(clean(def))}</div>${c && c.hint ? `<div class="hint">💡 ${esc(c.hint.replace(/\u00a0/g, ' '))}</div>` : ''}</div></div>`; };
     let h = '';
+    if (r.ja) {
+      r.words.forEach(w => { h += `<div class="row word">${head(w.w, [w.reading !== w.w ? w.reading : '', w.tr].filter(Boolean).join(' · '), (w.lemma ? w.lemma + ' — ' : '') + w.def)}</div>`; });
+      r.chars.forEach(c => { h += `<div class="row">${head(c.ch, [c.on, c.kun].filter(Boolean).join(' · '), c.def, c)}${tree(c.parts)}</div>`; });   // он (катакана) · кун
+    }
     if (r.word) h += `<div class="row word">${head(r.word.w, r.word.pinyin, r.word.def)}</div>`;
-    r.chars.forEach(c => { h += `<div class="row">${head(c.ch, c.pinyin, c.def, c)}${tree(c.parts)}</div>`; });
+    if (!r.ja) r.chars.forEach(c => { h += `<div class="row">${head(c.ch, c.pinyin, c.def, c)}${tree(c.parts)}</div>`; });
     h += `<div class="legend"><span><i style="background:var(--ok)"></i>${lbl[lang()].known}</span><span><i style="background:var(--info)"></i>${lbl[lang()].all}</span><span><i style="background:var(--warn)"></i>${lbl[lang()].some}</span></div>`;
     h += `<div class="foot"><button id="mine">★ ${lbl[lang()].mine} · ${known.size}</button><a href="https://hanzi.lipu.dev/" target="_blank" rel="noopener">hanzi.lipu.dev ↗</a></div>`;
-    root.innerHTML = `<style>${CSS}</style><div class="card">${h}</div>`;
+    root.innerHTML = `<style>${CSS}</style><div class="card${r.ja ? ' ja' : ''}" lang="${r.ja ? 'ja' : 'zh'}">${h}</div>`;
     document.documentElement.appendChild(host);
     const card = root.querySelector('.card');
     if (scrollTo != null) card.scrollTop = scrollTo;
@@ -98,10 +110,12 @@
     if (!enabled || off || mode !== 'select') return;
     if (host && e && e.composedPath().includes(host)) return;
     const sel = getSelection(); const text = sel ? sel.toString().trim() : '';
-    if (!text || text.length > 40 || !HAN.test(text)) return hide();
+    if (!text || text.length > 40 || !JP.test(text)) return hide();
+    const ja = isJa(text, sel.anchorNode);
+    if (!ja && !HAN.test(text)) return hide();
     const rect = sel.getRangeAt(0).getBoundingClientRect();
     try {
-      const r = await chrome.runtime.sendMessage({ type: 'lookup', text, lang: lang() });
+      const r = await chrome.runtime.sendMessage({ type: 'lookup', text, lang: lang(), ja });
       if (r && getSelection().toString().trim() === text) render(r, rect);
     } catch (err) { /* extension reloaded */ }
   }
@@ -119,10 +133,10 @@
     if (!node || node.nodeType !== 3) return null;
     const t = node.data;
     for (const o of [off, off - 1]) {                              // caret sits between characters: try both neighbours
-      if (o < 0 || o >= t.length || !HAN.test(t[o])) continue;
+      if (o < 0 || o >= t.length || !JP.test(t[o])) continue;
       const r = document.createRange(); r.setStart(node, o); r.setEnd(node, o + 1);
       const b = r.getBoundingClientRect();
-      if (x >= b.left - 1 && x <= b.right + 1 && y >= b.top - 1 && y <= b.bottom + 1) return { text: t.slice(o, o + 8), rect: b, id: o + ':' + t.slice(o, o + 8) };
+      if (x >= b.left - 1 && x <= b.right + 1 && y >= b.top - 1 && y <= b.bottom + 1) return { text: t.slice(o, o + 12), rect: b, node, id: o + ':' + t.slice(o, o + 12) };
     }
     return null;
   }
@@ -136,9 +150,11 @@
       const hit = charAt(x, y);
       if (!hit) return hide();
       if (hit.id === shown) return;
+      const ja = isJa(hit.text, hit.node);
+      if (!ja && !HAN.test(hit.text[0])) return hide();
       const my = ++seq;
       try {
-        const r = await chrome.runtime.sendMessage({ type: 'lookup', text: hit.text, lang: lang(), hover: true });
+        const r = await chrome.runtime.sendMessage({ type: 'lookup', text: hit.text, lang: lang(), hover: true, ja });
         if (my === seq && r) { render(r, hit.rect); shown = hit.id; }
       } catch (err) {}
     }, 250);
