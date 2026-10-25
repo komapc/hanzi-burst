@@ -52,7 +52,7 @@ def page(title, desc, canon, body, ld=()):
 <meta property="og:title" content="{E(title)}"><meta property="og:description" content="{E(desc)}">
 <meta property="og:image" content="{BASE}/og.png"><meta property="og:url" content="{BASE}{canon}">
 {ld_script(ld)}{CSS}</head><body><main><p><a href="/">hanzi-burst</a> · <a href="/c/">Иероглифы / Characters</a> · <a href="/p/">Фразы / Phrases</a> · <a href="/about">О проекте / About</a> · <a href="/privacy">Privacy</a></p>
-{body}</main><script src="/static.js" defer></script></body></html>"""
+{body}<div id="sitefoot"></div><script src="/footer.js" defer></script></main><script src="/static.js" defer></script></body></html>"""
 
 
 def main():
