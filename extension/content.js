@@ -90,7 +90,9 @@
     if (!r.ja) r.chars.forEach(c => { h += `<div class="row">${head(c.ch, c.pinyin, c.def, c)}${tree(c.parts)}</div>`; });
     h += `<div class="legend"><span><i style="background:var(--ok)"></i>${lbl[lang()].known}</span><span><i style="background:var(--info)"></i>${lbl[lang()].all}</span><span><i style="background:var(--warn)"></i>${lbl[lang()].some}</span></div>`;
     h += `<div class="foot"><button id="mine">★ ${lbl[lang()].mine} · ${known.size}</button><a href="https://hanzi.lipu.dev/" target="_blank" rel="noopener">hanzi.lipu.dev ↗</a></div>`;
-    root.innerHTML = `<style>${CSS}</style><div class="card${r.ja ? ' ja' : ''}" lang="${r.ja ? 'ja' : 'zh'}">${h}</div>`;
+    const style = document.createElement('style'); style.textContent = CSS;
+    const wrap = document.createElement('div'); wrap.className = 'card' + (r.ja ? ' ja' : ''); wrap.lang = r.ja ? 'ja' : 'zh';
+    setHTML(wrap, h); root.append(style, wrap);
     document.documentElement.appendChild(host);
     const card = root.querySelector('.card');
     if (scrollTo != null) card.scrollTop = scrollTo;

@@ -5,6 +5,13 @@ const _shards = {};
 const shard = (kind, k) => _shards[kind + k] || (_shards[kind + k] =
   fetch(chrome.runtime.getURL(`data/${kind}/${k}.json`)).then(r => (r.ok ? r.json() : {})).catch(() => ({})));
 
+// Replace the children of el with markup built from escaped strings. DOMParser, not innerHTML: parsed nodes are inert
+// (no scripts, no handlers run while parsing), which is what addons.mozilla.org review asks for.
+function setHTML(el, html) {
+  const body = new DOMParser().parseFromString(`<body>${html}</body>`, 'text/html').body;
+  el.replaceChildren(...body.childNodes);
+}
+
 // Direct parts of a character from its IDS string; null when unknown or incomplete (a "？" hole).
 function partsOf(ch, c) {
   if (!c || c.incomplete || c.radical === ch) return null;       // radicals are never split
