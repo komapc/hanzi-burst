@@ -104,6 +104,18 @@
   #view button[aria-pressed="false"] { text-decoration:line-through; opacity:.75; }
   #view svg.i { width:1em; height:1em; }
   html.jm #view [data-v="tn"] { display:none; }
+  /* поиск знака: иероглиф или пиньинь (xiang, xiang3, xiǎng) */
+  .srch { position:relative; margin-left:auto; }
+  #q { width:11rem; max-width:46vw; padding:3px 10px; border:1px solid var(--soft); border-radius:999px; background:var(--card); color:var(--fg); font:inherit; font-size:.85rem; }
+  #q:focus { outline:none; border-color:var(--accent); }
+  #qres { position:absolute; right:0; top:calc(100% + 4px); z-index:30; display:flex; flex-wrap:wrap; gap:4px; width:max-content; max-width:min(19rem, 90vw);
+          padding:8px; background:var(--card); border:1px solid var(--soft); border-radius:12px; box-shadow:0 6px 20px rgba(0,0,0,.18); }
+  #qres[hidden] { display:none; }
+  #qres button { display:flex; flex-direction:column; align-items:center; min-width:3rem; padding:4px; border:1px solid var(--soft); border-radius:8px;
+                 background:none; color:var(--fg); cursor:pointer; font:inherit; }
+  #qres button:hover { border-color:var(--accent); }
+  #qres .serif { font-size:1.6rem; line-height:1.2; } #qres small { font-size:.7rem; color:var(--muted); }
+  #qres p { margin:0; font-size:.85rem; color:var(--muted); }
   html.tn:not(.jm) .t1 { color:var(--t1); } html.tn:not(.jm) .t2 { color:var(--t2); } html.tn:not(.jm) .t3 { color:var(--t3); }
   html.tn:not(.jm) .t4 { color:var(--t4); } html.tn:not(.jm) .t5 { color:var(--t5); }
   html.hpy .word:not(.rv) .py, html.hpy .word:not(.rv) .jr, html.hpy .word:not(.rv) .fg { color:transparent !important; background:var(--soft); border-radius:4px; cursor:pointer; }
@@ -278,7 +290,8 @@
     <div><span class="seg" id="ownLang" role="group"><button data-tl="auto"></button><button data-tl="zh" lang="zh">中文</button><button data-tl="ja" lang="ja">日本語</button></span>
       <button class="btn" id="ownGo"></button> <span class="hint" id="ownMsg"></span></div>
   </details>
-  <div id="view" role="group"><button data-v="py"></button><button data-v="tr"></button><button data-v="tn"></button></div>
+  <div id="view" role="group"><button data-v="py"></button><button data-v="tr"></button><button data-v="tn"></button>
+    <span class="srch"><input type="search" id="q" autocomplete="off" spellcheck="false" enterkeyhint="search"><div id="qres" hidden></div></span></div>
   <div id="phrase"></div>
   <p class="trans" id="trans"></p>
   <ul class="wl" id="gloss"></ul>
@@ -342,14 +355,14 @@ const ICON = {
   burst: '<svg class="i" viewBox="0 0 24 24"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M18.4 5.6l-2.8 2.8M8.4 15.6l-2.8 2.8"/></svg>',
 };
 const T = {
-  ru: { kReadings:'Чтения', kHere:'во фразе', vPy:'Пиньинь', vRd:'Чтение', vTr:'Перевод', vTn:'Тоны', vHid:'скрыто: нажми, чтобы показать', tour1:'Нажми на любой иероглиф — он разлетится на части.', tour2:'Нажимай на части — они тоже разлетаются. «+» в углу отмечает знакомые знаки.', tourOk:'Понятно', hint:'Нажми на иероглиф.', crumbs:'Нажимай на части',
+  ru: { qPh:'Найти знак: 想 или xiang', qPhJa:'Найти кандзи: 見', qNone:'Не нашёл', daily:'Фраза дня', kReadings:'Чтения', kHere:'во фразе', vPy:'Пиньинь', vRd:'Чтение', vTr:'Перевод', vTn:'Тоны', vHid:'скрыто: нажми, чтобы показать', tour1:'Нажми на любой иероглиф — он разлетится на части.', tour2:'Нажимай на части — они тоже разлетаются. «+» в углу отмечает знакомые знаки.', tourOk:'Понятно', hint:'Нажми на иероглиф.', crumbs:'Нажимай на части',
         all:'Взорвать всё', ftag:'Учим китайские иероглифы через радикалы', fExplore:'Разделы', fProject:'Проект', fAll:'Все иероглифы', fPhrases:'Все фразы', fAbout:'О проекте', fPrivacy:'Конфиденциальность', fHow:'Как это работает', fOther:'Другие проекты', fData:'Источники данных', howTitle:'Как это работает', close:'Закрыть', howBody:'<p>Выбери фразу и нажми на иероглиф: он «разлетится» на радикалы и фонетики, пока не станет неделимым. У каждой части есть значение, пиньинь, слова и иероглифы, где она встречается.</p><p>«＋ Новая фраза» подбирает фразу с минимумом незнакомых тебе иероглифов, а «Своя фраза» разбирает любой вставленный китайский текст.</p><p>Переключатель 中 / 日 в шапке включает японский режим: японские фразы с чтениями, а кандзи — с онными и кунными чтениями и разбором по чертам KanjiVG.</p><p>Кнопки над фразой скрывают пиньинь (чтение) и перевод, чтобы проверить себя: нажми на серую полоску или размытый перевод, и он откроется. «Тоны» раскрашивают пиньинь по тону: 1 красный, 2 зелёный, 3 синий, 4 фиолетовый.</p><p>Фразы взяты из открытых корпусов: Tatoeba, Wiktionary, Common Voice.</p>', newPhrase:'Новая фраза', inPhrase:'В этой фразе', viaParents:'Ещё слова с этой частью', incompl:'В словаре у этого знака не хватает одной части разбора, поэтому дерево неполное.', ownTitle:'Своя фраза', ownGo:'Разобрать', ownRand:'Случайная', lgKnown:'знаю', lgAll:'знаю все части', lgSome:'знаю часть частей', fLearned:'Мои иероглифы', fExt:'Расширение для Chrome', fKana:'Кана (японская азбука)', statsLink:'Что я выучил', trBtn:'Перевести', trBusy:'Перевожу…', trErr:'Не удалось перевести', trLimit:'Лимит переводов на сегодня', trMt:'машинный перевод', ownPh:'Вставьте китайский или японский текст (до 100 знаков)', ownBusy:'Загружаю словарь…', ownEmpty:'Нет иероглифов или каны', tlAuto:'Авто', jaNote:'Японский: разбор в браузере, слова и чтения из словаря JMdict. Нажмите на кану — её чтение и происхождение.', kanaRead:'Чтение', kanaOrigin:'Происхождение', kanaHira:'хирагана', kanaKata:'катакана', jaLemma:'словарная форма', ownErr:'Не удалось загрузить данные', ownNote:'Разбор идёт в вашем браузере. Значения слов из словаря CC-CEDICT. Перевод всей фразы — по кнопке (текст уходит на сервер и в Gemini).', ownTrad:'Традиционные знаки заменены упрощёнными.', noMore:'Фразы в пуле закончились', known:'Знаю', add:'Знаю', where:'Где ещё', words:'Слова', chars:'Иероглифы с этой частью',
         seen:'Уже было во фразе:', nodesc:'В словаре нет описания.', derived:'выведено автоматически', mnemo:'Запоминалка', mnemoMore:'Ещё', mnemoLimit:'Лимит на сегодня исчерпан', mnemoLogin:'Запоминалки — после входа через Google', mnemoBusy:'Думаю…', mnemoErr:'Не получилось, попробуй позже', mnemoNote:'Выдумка для памяти, не этимология', logout:'Выйти', atomic:'неделимая часть: радикал или цельный рисунок',
         kOn:'Он', kKun:'Кун', kOnT:'онное чтение (китайское по происхождению)', kKunT:'кунное чтение (японское слово)', kGrade:'класс', kSecondary:'средняя школа', kStrokes:'черт', kParts:'Части', kWordRu:'как слово', kEn:'по-английски',
         lvN:'кандзи до {n} класса', lv7:'кандзи средней школы', lv0:'только кана', jaLoading:'Разбираю фразу…',
         phonetic:'Звук подсказывает', semantic:'смысл —', word:'Слово', known_n:'Известно:',
         types:{ pictophonetic:'смысл + звук', ideographic:'смысловая комбинация', pictographic:'рисунок' } },
-  en: { kReadings:'Readings', kHere:'in this phrase', vPy:'Pinyin', vRd:'Reading', vTr:'Translation', vTn:'Tones', vHid:'hidden: click to show', tour1:'Click any character — it bursts into its parts.', tour2:'Click the parts — they burst too. The “+” in the corner marks characters you know.', tourOk:'Got it', hint:'Click a character.', crumbs:'Click the parts',
+  en: { qPh:'Find a character: 想 or xiang', qPhJa:'Find a kanji: 見', qNone:'Nothing found', daily:'Phrase of the day', kReadings:'Readings', kHere:'in this phrase', vPy:'Pinyin', vRd:'Reading', vTr:'Translation', vTn:'Tones', vHid:'hidden: click to show', tour1:'Click any character — it bursts into its parts.', tour2:'Click the parts — they burst too. The “+” in the corner marks characters you know.', tourOk:'Got it', hint:'Click a character.', crumbs:'Click the parts',
         all:'Explode all', ftag:'Learn Chinese characters by radicals', fExplore:'Explore', fProject:'Project', fAll:'All characters', fPhrases:'All phrases', fAbout:'About', fPrivacy:'Privacy', fHow:'How it works', fOther:'Other projects', fData:'Data sources', howTitle:'How it works', close:'Close', howBody:'<p>Pick a phrase and click a character: it breaks into radicals and phonetic parts until it can\'t be split further. Each part has a meaning, pinyin, words and characters that use it.</p><p>“＋ New phrase” picks a phrase with the fewest characters you don\'t know yet, and “Your own phrase” breaks down any Chinese text you paste.</p><p>The 中 / 日 switch in the header turns on Japanese mode: Japanese phrases with readings, and kanji with on/kun readings and KanjiVG stroke breakdowns.</p><p>The buttons above the phrase hide pinyin (reading) and the translation so you can test yourself: click a grey bar or the blurred translation to reveal it. “Tones” colours pinyin by tone: 1 red, 2 green, 3 blue, 4 purple.</p><p>Phrases come from open corpora: Tatoeba, Wiktionary, Common Voice.</p>', newPhrase:'New phrase', inPhrase:'In this phrase', viaParents:'More words with this part', incompl:'The dictionary is missing one part of this character\'s breakdown, so the tree is incomplete.', ownTitle:'Your own phrase', ownGo:'Break down', ownRand:'Random', lgKnown:'known', lgAll:'all parts known', lgSome:'some parts known', fLearned:'My characters', fExt:'Chrome extension', fKana:'Kana (Japanese syllabaries)', statsLink:'What I\'ve learned', trBtn:'Translate', trBusy:'Translating…', trErr:'Could not translate', trLimit:'Daily translation limit reached', trMt:'machine translation', ownPh:'Paste Chinese or Japanese text (up to 100 characters)', ownBusy:'Loading dictionary…', ownEmpty:'No characters or kana found', tlAuto:'Auto', jaNote:'Japanese: breakdown runs in your browser; words and readings come from JMdict. Click a kana to see its reading and origin.', kanaRead:'Reading', kanaOrigin:'Origin', kanaHira:'hiragana', kanaKata:'katakana', jaLemma:'dictionary form', ownErr:'Could not load data', ownNote:'Breakdown runs in your browser. Word meanings come from CC-CEDICT. Whole-phrase translation is on request (the text is sent to our server and Gemini).', ownTrad:'Traditional characters were converted to simplified.', noMore:'No more phrases in the pool', known:'Known', add:'Know it', where:'Where else', words:'Words', chars:'Characters with this part',
         seen:'Seen in this phrase:', nodesc:'No dictionary description.', derived:'derived automatically', mnemo:'Mnemonic', mnemoMore:'Another', mnemoLimit:'Daily limit reached', mnemoLogin:'Sign in with Google for mnemonics', mnemoBusy:'Thinking…', mnemoErr:'Failed, try again later', mnemoNote:'A memory aid, not etymology', logout:'Sign out', atomic:'indivisible part: a radical or a whole picture',
         kOn:'On', kKun:'Kun', kOnT:'on\'yomi (Chinese-derived reading)', kKunT:'kun\'yomi (native Japanese reading)', kGrade:'grade', kSecondary:'secondary school', kStrokes:'strokes', kParts:'Parts', kWordRu:'as a word', kEn:'in English',
@@ -501,6 +514,7 @@ function syncView() {
     b.innerHTML = (v === 'tn' ? '' : ICON.eye) + label;
   });
   ['#trans', '#gloss'].forEach(q => { $(q).title = view.tr ? '' : t('vHid'); });
+  $('#q').placeholder = mode === 'ja' ? t('qPhJa') : t('qPh'); $('#q').lang = mode === 'ja' ? 'ja' : 'zh';
 }
 document.querySelectorAll('#view button').forEach(b => b.onclick = () => {
   view[b.dataset.v] = !view[b.dataset.v];
@@ -514,6 +528,58 @@ document.querySelectorAll('#view button').forEach(b => b.onclick = () => {
   const h = document.documentElement;
   if (!view.tr && !h.classList.contains('trv')) { e.preventDefault(); e.stopPropagation(); h.classList.add('trv'); }
 }, true));
+
+/* ---------- поиск знака: иероглиф открывается сразу, пиньинь — список (data/pyindex.json: слог+тон -> знаки) ---------- */
+let pyIndexP = null;
+const pyIndex = () => pyIndexP || (pyIndexP = fetch('data/pyindex.json').then(r => r.json()).catch(() => { pyIndexP = null; return {}; }));
+async function openSearched(ch) {
+  await (mode === 'ja' ? loadKanji([ch]) : loadChars([ch]));
+  if (!(mode === 'ja' ? K[ch] || D.chars[ch] : D.chars[ch])) return false;
+  $('#qres').hidden = true; openRoot(ch); track('search', { hit: 1 });
+  if (!matchMedia('(max-width:640px)').matches) $('#card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  return true;
+}
+async function search(go) {
+  const q = $('#q').value.trim().toLowerCase(), box = $('#qres');
+  if (!q || !D) { box.hidden = true; return; }
+  const han = [...q].find(c => HAN.test(c));
+  if (han) { box.hidden = true; if (go && !(await openSearched(han))) { box.innerHTML = `<p>${t('qNone')}</p>`; box.hidden = false; } return; }
+  if (mode === 'ja') { box.hidden = true; return; }
+  const n = q.normalize('NFD').replace(/u\u0308|ü/g, 'v');
+  const tone = (n.match(/[1-5]$/) || [])[0] || ({ '\u0304': '1', '\u0301': '2', '\u030c': '3', '\u0300': '4' })[[...n].find(c => /[\u0300-\u030c]/.test(c))] || '';
+  const base = n.replace(/[^a-z]/g, '');
+  if (!base) { box.hidden = true; return; }
+  const idx = await pyIndex();
+  if ($('#q').value.trim().toLowerCase() !== q) return;   // пока грузился индекс, запрос поменяли
+  const top = [...(idx[base + tone] || '')];               // без тона — ключ без цифры, частые первыми
+  if (!top.length) { box.innerHTML = `<p>${t('qNone')}</p>`; box.hidden = false; return; }
+  await loadChars(top);
+  // под знаком — чтение, по которому он найден (率 по lv — lǜ, а не shuài)
+  const readOf = c => (D.chars[c].pinyin || []).find(p => p.normalize('NFD').toLowerCase().replace(/u\u0308|ü/g, 'v').replace(/[^a-z]/g, '') === base) || py(c);
+  box.innerHTML = top.map(c => `<button data-ch="${c}" title="${short(defOf(c))}"><span class="serif">${c}</span><small>${PYH(readOf(c))}</small></button>`).join('');
+  box.hidden = false;
+  box.querySelectorAll('button').forEach(b => b.onclick = () => openSearched(b.dataset.ch));
+  if (go && top.length === 1) openSearched(top[0]);
+}
+{
+  let tm = 0;
+  $('#q').addEventListener('input', () => { clearTimeout(tm); tm = setTimeout(() => search(false), 200); });
+  $('#q').addEventListener('keydown', e => { if (e.key === 'Enter') { clearTimeout(tm); search(true); } if (e.key === 'Escape') { $('#qres').hidden = true; $('#q').blur(); } });
+  document.addEventListener('click', e => { if (!e.target.closest('.srch')) $('#qres').hidden = true; });
+}
+
+/* ---------- фраза дня: одна на день для всех (по дате), простая и с русским переводом; ?day — открыть её ---------- */
+const today = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
+async function dailyPhrase() {
+  await ensurePool();
+  const pool = mode === 'ja' ? (D.poolJa || []).filter(p => p.ru && p.lv >= 1 && p.lv <= 2) : (D.pool || []).filter(p => p.ru && p.hsk && p.hsk <= 3);
+  if (!pool.length) return;
+  let h = 0; for (const c of today() + mode) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  const ph = pool[h % pool.length];
+  if (!L.some(p => p.zh === ph.zh)) { const seen = getSeen(); seen.push(ph.zh); saveSeen(seen); buildList(); }
+  track('daily_phrase', { mode });
+  await switchPhrase(L.findIndex(p => p.zh === ph.zh));
+}
 
 /* ---------- выбор фразы ---------- */
 let cur = 0, L = [], customPhrase = null;
@@ -597,9 +663,10 @@ function renderPicker() {   // 50+ фраз: стрелки и выпадающ�
   const count = document.createElement('span'); count.className = 'hint'; count.textContent = `${cur + 1} / ${n}`;
   const nb = document.createElement('button'); nb.className = 'pk'; nb.textContent = '＋ ' + t('newPhrase'); nb.onclick = newPhrase;
   const wb = document.createElement('button'); wb.className = 'pk'; wb.textContent = '🎲 ' + t('ownRand'); wb.onclick = randomPhrase;
+  const db = document.createElement('button'); db.className = 'pk'; db.textContent = '☀ ' + t('daily'); db.onclick = dailyPhrase;
   const ob = document.createElement('button'); ob.className = 'pk'; ob.textContent = '✎ ' + t('ownTitle');
   ob.onclick = () => { const o = $('#own'); o.hidden = !o.hidden; if (!o.hidden) { o.open = true; $('#ownText').focus(); } };
-  el.append(prev, sel, next, count, nb, wb, ob);
+  el.append(prev, sel, next, count, nb, wb, db, ob);
 }
 function renderTrans() {
   const ph = L[cur];
@@ -1291,6 +1358,7 @@ fetch('phrase.json').then(r => r.json())
       openRoot(q.get('open'));
       if (q.get('explode')) { explodeAll($('#tree > .node')); }
     }
+    if (q.has('day')) await dailyPhrase();
     if (q.get('t')) {
       $('#own').open = true; $('#ownText').value = q.get('t');
       $('#ownGo').click();

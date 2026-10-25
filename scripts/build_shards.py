@@ -9,6 +9,8 @@ site/data/trad.json        — традиционный -> упрощённый 
 Запуск: python3 -I scripts/build_shards.py
 """
 import json
+import unicodedata
+from collections import Counter, defaultdict
 import re
 import shutil
 import sys
@@ -45,6 +47,30 @@ def main():
     for k, v in chars.items():
         dump(OUT / "chars" / f"{k}.json", v)
 
+    # поиск по пиньиню: слог с номером тона -> знаки, частые первыми (частота = в скольких словах CEDICT есть знак)
+    freq = Counter(c for w in words for c in set(w))
+    marks = {"\u0304": "1", "\u0301": "2", "\u030c": "3", "\u0300": "4"}
+    trad_only = set()                      # традиционные формы (響 при 响) в выдачу не берём: данные сайта упрощённые
+    for line in bd.CEDICT.read_text(encoding="utf-8").splitlines():
+        t, sm = (line.split(" ", 2) + ["", ""])[:2]
+        if len(t) == len(sm):
+            trad_only.update(a for a, b in zip(t, sm) if a != b)
+    trad_only -= {c for line in bd.CEDICT.read_text(encoding="utf-8").splitlines() for c in (line.split(" ", 2) + ["", ""])[1]}
+    pyidx = defaultdict(list)
+    for ch, d in mmh.items():
+        if len(ch) != 1 or not HAN.match(ch) or ch in trad_only:
+            continue
+        for p in d.get("pinyin") or []:
+            n = unicodedata.normalize("NFD", p.lower()).replace("u\u0308", "v")
+            tone = next((marks[c] for c in n if c in marks), "5")
+            base = "".join(c for c in n if c.isascii() and c.isalpha())
+            if base and ch not in pyidx[base + tone]:
+                pyidx[base + tone].append(ch)
+    for k in list(pyidx):                  # без тона: все тоны вместе (xiang -> 想 像 向 相…)
+        pyidx.setdefault(k[:-1], []).extend(c for c in pyidx[k] if c not in pyidx[k[:-1]])
+    pyidx = {k: "".join(sorted(v, key=lambda c: -freq[c])[:24]) for k, v in pyidx.items()}
+    dump(OUT / "pyindex.json", pyidx)
+
     glyphs = {}
     with bd.GRAPHICS.open(encoding="utf-8") as f:
         for line in f:
@@ -76,7 +102,6 @@ def main():
     dump(OUT / "trad.json", trad)
 
     # упрощённый -> традиционный: самая частая пара по словам CEDICT одинаковой длины
-    from collections import Counter, defaultdict
     cnt = defaultdict(Counter)
     for line in bd.CEDICT.read_text(encoding="utf-8").splitlines():
         m = pat.match(line)
