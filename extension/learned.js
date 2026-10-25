@@ -34,15 +34,15 @@ const card = (ch, cls) => `<button class="c ${cls}" data-ch="${esc(ch)}"><span c
 function render() {
   document.documentElement.lang = lang; document.title = t('title') + ' — Hanzi Burst';
   $('h1').textContent = t('title'); $('exp').textContent = t('exp'); $('imp').textContent = t('imp'); $('ioGo').textContent = t('go'); $('ioX').textContent = t('x'); $('ta').placeholder = t('ph');
-  if (!known.length) { $('out').innerHTML = `<div class="empty">${t('empty')}</div>`; $('sum').textContent = ''; return; }
-  if (!ready) { $('out').innerHTML = `<p class="m">${t('loading')}</p>`; return; }
+  if (!known.length) { setHTML($('out'), `<div class="empty">${t('empty')}</div>`); $('sum').textContent = ''; return; }
+  if (!ready) { setHTML($('out'), `<p class="m">${t('loading')}</p>`); return; }
   const ks = new Set(known), parts = new Set();
   known.forEach(c => leavesOf(treeOf(c), parts));
   const rdy = [], som = [];
   core.filter(c => !ks.has(c) && chars[c] && partsOf(c, chars[c])).forEach(c => { const s = stateOf(treeOf(c), ks); if (s === 'allp') rdy.push(c); else if (s === 'somep') som.push(c); });
   $('sum').textContent = T[lang].sum(known.length, parts.size, rdy.length) + ' ' + t('hint');
   const sec = (title, arr, cls) => arr.length ? `<h2>${title} <small>${arr.length}</small></h2><div class="grid">${arr.map(c => card(c, cls)).join('')}</div>` : '';
-  $('out').innerHTML = sec(t('known'), known, 'k') + sec(t('parts'), [...parts].sort().filter(c => !ks.has(c)), '') + sec(t('ready'), rdy.slice(0, 60), 'a') + sec(t('some'), som.slice(0, 60), 's');
+  setHTML($('out'), sec(t('known'), known, 'k') + sec(t('parts'), [...parts].sort().filter(c => !ks.has(c)), '') + sec(t('ready'), rdy.slice(0, 60), 'a') + sec(t('some'), som.slice(0, 60), 's'));
 }
 
 const save = list => { known = [...new Set(list)]; chrome.storage.local.set({ known }); };
