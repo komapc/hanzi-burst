@@ -225,7 +225,7 @@ export default {
       const b = await request.json().catch(() => ({}));
       const lang = b.lang === 'en' ? 'en' : 'ru';
       const zh = typeof b.zh === 'string' ? b.zh.trim() : '';
-      if (!zh || zh.length > 120 || !/\p{Script=Han}/u.test(zh)) return json({ error: 'bad_text' }, 400);
+      if (!zh || zh.length > 120 || !/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}]/u.test(zh)) return json({ error: 'bad_text' }, 400);
 
       const day = new Date().toISOString().slice(0, 10);
       const limit = parseInt(env.EXPLAIN_DAILY_LIMIT || '30', 10);
@@ -240,7 +240,7 @@ export default {
       if (g.n > globalLimit) return json({ error: 'rate_limited' }, 429);
 
       const target = lang === 'ru' ? 'русский / Russian' : 'English';
-      const prompt = `Переведи китайскую фразу на ${target}. Только перевод, без пояснений, пиньиня и комментариев. / Translate the Chinese phrase into ${target}. Output the translation only, no explanations or pinyin.
+      const prompt = `Переведи китайскую или японскую фразу на ${target}. Только перевод, без пояснений, транскрипции и комментариев. / Translate the Chinese or Japanese phrase into ${target}. Output the translation only, no explanations or romanization.
 
 Фраза / Phrase: ${zh}
 
