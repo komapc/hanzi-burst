@@ -139,6 +139,20 @@ def load_cedict():
             continue
         _, simp, pinyin, defs = m.groups()
         words.setdefault(simp, []).append({"pinyin": numeric_to_marks(pinyin), "defs": defs.split("/")})
+    # порядок статей: первая даёт пиньинь и значение слова во фразе. Для одного иероглифа сначала основное чтение
+    # (первое в MMH/Unihan: 着 zhe, 要 yào, а не zhāo, yāo по алфавиту); «variant of …» и фамилии — в конец
+    main_py = {}
+    for line in MMH.read_text(encoding="utf-8").splitlines():
+        d = json.loads(line)
+        if d.get("pinyin"):
+            main_py[d["character"]] = d["pinyin"][0]
+    main_py.update({"长": "cháng", "得": "de"})   # во фразах чаще «длинный» и служебное 得, чем первое чтение MMH
+    variant = re.compile(r"^(old |archaic |Japanese |erroneous )?variant of ")
+    for simp, es in words.items():
+        if len(es) > 1:
+            es.sort(key=lambda e: (all(variant.match(x) for x in e["defs"]),
+                                   len(simp) == 1 and e["pinyin"].lower() != main_py.get(simp, e["pinyin"]).lower(),
+                                   e["pinyin"][:1].isupper()))
     return words
 
 
