@@ -29,7 +29,7 @@ button{font:inherit;padding:6px 12px;border:1px solid var(--accent);border-radiu
 <p><button id="yes">Разрешить / Allow</button><button id="no">Отказаться / Decline</button><span id="st" class="m"></span></p>
 
 <h2>Запоминалки / Mnemonics</h2>
-<p>Когда ты нажимаешь «Придумать запоминалку», на наш сервер уходят иероглиф, его пиньинь, значение, состав и язык интерфейса. Они передаются в Google Gemini API, чтобы получить текст. Готовые тексты кэшируются и показываются всем. Для лимитов на запросы мы храним в базе дневной счётчик, привязанный к хэшу IP-адреса (сам адрес не сохраняется), и этот же хэш помечает созданный текст. Счётчики пока не удаляются автоматически.</p>
+<p>Когда ты нажимаешь «Запоминалка», на наш сервер уходят иероглиф, его пиньинь, значение, состав и язык интерфейса. Они передаются в Google Gemini API, чтобы получить текст. Готовые тексты кэшируются и показываются всем. Для лимитов на запросы мы храним в базе дневной счётчик, привязанный к хэшу IP-адреса (сам адрес не сохраняется), и этот же хэш помечает созданный текст. Счётчики пока не удаляются автоматически.</p>
 <p class="m">When you request a mnemonic, the character, its pinyin, meaning, components and interface language are sent to our server and to the Google Gemini API. Results are cached and shared. For rate limits we keep a daily counter tied to a hash of your IP address (the address itself is not stored); the same hash tags the generated text. Counters are not purged automatically yet.</p>
 
 <h2>Перевод фразы / Phrase translation</h2>
