@@ -21,8 +21,8 @@ permissions:
   contents: read
 
 env:
-  RAW_DATA_TAG: raw-data-2026-10-20
-  RAW_DATA_SHA256: 2ee981c844d04f97e7c86f109a85594202913d325b952f5fda4d76dd23eb1377
+  RAW_DATA_TAG: raw-data-2026-10-25
+  RAW_DATA_SHA256: 6dba59f4bc85d414d80979cb7267160c8e98926d4864bd6af08e15ee7c0a216c
   CLOUDFLARE_ACCOUNT_ID: a4f85dfdebcf5fa0a516297f9c6dc029
   WRANGLER_VERSION: 4.151.3
 
@@ -59,7 +59,7 @@ jobs:
           echo "$RAW_DATA_SHA256  raw-data.tar.xz" | sha256sum -c -
           mkdir -p data/raw
           tar -xJf raw-data.tar.xz -C data/raw
-      # wrangler.toml [build] runs build_shards + build_static + build_extension --zip.
+      # wrangler.toml [build] runs build_shards + build_ja_shards + build_static + build_extension --zip.
       - name: Deploy (dry run)
         if: github.event_name == 'pull_request'
         run: |
