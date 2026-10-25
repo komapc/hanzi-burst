@@ -49,7 +49,7 @@ python3 -I scripts/breakdown.py data/phrases.json site/phrase.json
 
 ## Данные и лицензии
 
-Make Me a Hanzi (LGPL/Arphic), CC-CEDICT (CC BY-SA), Unicode/Unihan (Unicode License), фразы и их переводы: Tatoeba (CC BY 2.0 FR, авторы указаны на tatoeba.org по номеру в `source`). Атрибуцию добавить перед публикацией.
+Make Me a Hanzi (LGPL/Arphic), CC-CEDICT (CC BY-SA), Unicode/Unihan (Unicode License), JMdict и KANJIDIC2 (EDRDG, CC BY-SA 4.0), KanjiVG (Ulrich Apel, CC BY-SA 3.0), фразы и их переводы: Tatoeba (CC BY 2.0 FR, авторы указаны на tatoeba.org по номеру в `source`). Атрибуцию добавить перед публикацией.
 
 ## Бэкенд и деплой (Cloudflare Workers + D1)
 
@@ -80,7 +80,7 @@ wrangler secret put GEMINI_API_KEY
 | push тега `v*` | то же + загрузка расширения в Chrome Web Store с отправкой на проверку (`extension-release.yml`) |
 | Actions → deploy → Run workflow | передеплой текущего `main` |
 
-Сборка — команда `[build]` в `wrangler.toml`: `build_shards.py` → `build_ja_shards.py` → `build_static.py` → `build_extension.py --zip`. Ей нужны `data/raw/` (в гит не кладутся) и Pillow. CI берёт `data/raw/` из закреплённого снимка — ассет `raw-data.tar.xz` релиза `raw-data-YYYY-MM-DD` (тег и sha256 — в `env` у `deploy.yml`). В снимке только то, что читает сборка: `mmh/{dictionary,graphics}.txt`, `cedict/cedict_ts.u8`, `unicode/CJKRadicals.txt`, `unihan/Unihan_*.txt`, `ids/ids.txt`, `hsk/complete.json`, `jmdict/jmdict-{eng,rus}-*.json` (японский словарь, [jmdict-simplified](https://github.com/scriptin/jmdict-simplified/releases)).
+Сборка — команда `[build]` в `wrangler.toml`: `build_shards.py` → `build_ja_shards.py` → `build_kanji_shards.py` → `build_static.py` → `build_extension.py --zip`. Ей нужны `data/raw/` (в гит не кладутся) и Pillow. CI берёт `data/raw/` из закреплённого снимка — ассет `raw-data.tar.xz` релиза `raw-data-YYYY-MM-DD` (тег и sha256 — в `env` у `deploy.yml`). В снимке только то, что читает сборка: `mmh/{dictionary,graphics}.txt`, `cedict/cedict_ts.u8`, `unicode/CJKRadicals.txt`, `unihan/Unihan_*.txt`, `ids/ids.txt`, `hsk/complete.json`, `jmdict/jmdict-{eng,rus}-*.json` (японский словарь, [jmdict-simplified](https://github.com/scriptin/jmdict-simplified/releases)).
 
 Секреты репозитория (Settings → Secrets → Actions):
 
@@ -97,7 +97,8 @@ wrangler secret put GEMINI_API_KEY
 
 ```bash
 cd data/raw && tar -cJf /tmp/raw-data.tar.xz mmh/dictionary.txt mmh/graphics.txt cedict/cedict_ts.u8 \
-  unicode/CJKRadicals.txt unihan/Unihan_*.txt ids/ids.txt hsk/complete.json jmdict/jmdict-eng-*.json jmdict/jmdict-rus-*.json
+  unicode/CJKRadicals.txt unihan/Unihan_*.txt ids/ids.txt hsk/complete.json jmdict/jmdict-eng-*.json jmdict/jmdict-rus-*.json \
+  kanjidic/kanjidic2.xml.gz kanjivg/kanjivg-*.xml.gz
 sha256sum /tmp/raw-data.tar.xz
 gh release create raw-data-$(date +%F) /tmp/raw-data.tar.xz --prerelease --title "raw-data-$(date +%F) (build inputs)" --notes "data/raw/ snapshot for deploy.yml"
 ```
@@ -111,6 +112,16 @@ gh release create raw-data-$(date +%F) /tmp/raw-data.tar.xz --prerelease --title
 ## Пул фраз и кнопка «Новая фраза»
 
 `data/pool.json` — пул из 1000 фраз Tatoeba (`fetch_phrases.py --count 1000 --max-new 3 --out data/pool.json`), собирается в `site/pool.json` (грузится лениво). После `fetch_*.py` запускайте `python3 -I scripts/clean_pool.py`: он убирает именные группы и обрывки, оставляя только предложения. Кнопка «Новая фраза» выбирает фразу с минимумом ещё не виденных иероглифов (известные + уже показанные); полученные фразы запоминаются в localStorage (`hanzi-seen-pool`) и попадают в выпадающий список. Данные Tatoeba — CC BY 2.0 FR.
+
+## Японский режим (中 / 日)
+
+Переключатель 中 / 日 в шапке (`localStorage hanzi-mode`, ссылка `/?mode=ja`). В режиме 日:
+
+- фразы берутся из `site/pool-ja.json` (≈2700 предложений японского Tatoeba с переводами; `python3 -I scripts/build_ja_pool.py`, результат коммитится, как `site/pool.json`; сырые файлы `data/raw/tatoeba/jpn*` в снимок не входят). Слова и чтения считает клиент (`site/ja.js`, JMdict) при первом показе фразы. «Новая фраза» берёт фразу с минимумом новых кандзи и младшим школьным классом; полученные фразы — `hanzi-seen-ja`;
+- кандзи и кана рисуются чертами KanjiVG, разбор на части — по группам KanjiVG, чтения (он/кун) и английские значения — KANJIDIC2, русское значение — значение однознакового слова JMdict с кун-чтением (это значение слова, оно помечено). Шарды `site/data/kanji/` строит `build_kanji_shards.py` при деплое;
+- переключатели 拼音/注音 и 简/繁 скрыты; японский текст (`lang="ja"`) не переводится в традиционные знаки.
+
+Своя фраза с каной включает режим 日 сама, китайская — режим 中.
 
 ## Предзаполненные запоминалки
 

@@ -11,7 +11,7 @@ window.JA = (() => {
      Классы: v1 (ichidan), v5 (godan), vs (する), vk (来る), adj-i. Производные формы (могу/заставляю/меня...)
      сами спрягаются как v1, поэтому снимаются в два шага: 食べられない → 食べられる → 食べる. */
   const RULES = [];
-  const add = (from, to, cls, inCls = '') => RULES.push([from, to, cls, inCls]);
+  const add = (from, to, cls, inCls = '', imp = false) => RULES.push([from, to, cls, inCls, imp]);
   const MASU = ['ます', 'ました', 'ません', 'ませんでした', 'ましょう', 'まして', 'たい', 'たかった', 'たくない', 'たくなかった', 'たくて', 'ながら', 'なさい'];
   const NAI = ['ない', 'なかった', 'なくて', 'なければ', 'ず', 'ずに'];
   // godan: словарное окончание → [i-основа, a-основа, e-основа, o-основа, て, た]
@@ -26,13 +26,13 @@ window.JA = (() => {
     MASU.forEach(s => add(i + s, u, 'v5'));
     NAI.forEach(s => add(a + s, u, 'v5'));
     [te, ta, ta + 'ら', ta + 'り', te + 'も'].forEach(s => add(s, u, 'v5'));
-    add(e + 'ば', u, 'v5'); add(o + 'う', u, 'v5'); add(e, u, 'v5');               // 書けば, 書こう, 書け
-    add(e + 'る', u, 'v5', 'v1');                                                    // потенциал 書ける
-    add(a + 'れる', u, 'v5', 'v1'); add(a + 'せる', u, 'v5', 'v1');                 // пассив, каузатив
+    add(e + 'ば', u, 'v5'); add(o + 'う', u, 'v5'); add(e, u, 'v5', '', true);               // 書けば, 書こう, 書け
+    // потенциал 書ける, пассив, каузатив: и сами по себе (泳げる), и как основа дальнейших форм (泳げない)
+    for (const inCls of ['', 'v1']) { add(e + 'る', u, 'v5', inCls); add(a + 'れる', u, 'v5', inCls); add(a + 'せる', u, 'v5', inCls); }
   }
   // ichidan: основа = словарная форма без る
   [...MASU, ...NAI, 'て', 'た', 'たら', 'たり', 'ても', 'れば', 'よう', 'ろ'].forEach(s => add(s, 'る', 'v1'));
-  add('られる', 'る', 'v1', 'v1'); add('させる', 'る', 'v1', 'v1');
+  for (const inCls of ['', 'v1']) { add('られる', 'る', 'v1', inCls); add('させる', 'る', 'v1', inCls); }
   // する и 来る
   for (const [stem, base, cls] of [['し', 'する', 'vs'], ['き', 'くる', 'vk'], ['来', '来る', 'vk']]) {
     MASU.forEach(s => add(stem + s, base, cls));
@@ -44,7 +44,7 @@ window.JA = (() => {
     .forEach(r => add(...r));
   // i-прилагательные
   ['く', 'くない', 'くなかった', 'かった', 'くて', 'ければ', 'さ', 'そう', 'くありません'].forEach(s => add(s, 'い', 'adj-i'));
-  [['でした', 'です'], ['でしょう', 'です'], ['だった', 'だ'], ['でしたら', 'です']].forEach(([f, t]) => add(f, t, 'cop'));
+  [['でした', 'です'], ['でしょう', 'です'], ['だった', 'だ'], ['だろう', 'だ'], ['でしたら', 'です']].forEach(([f, t]) => add(f, t, 'cop'));
   add('なかった', 'ない', 'adj-i'); add('なくて', 'ない', 'adj-i');                 // ない как прилагательное
 
   const posMatch = (pos, cls) => pos.split(' ').some(p =>
@@ -56,12 +56,12 @@ window.JA = (() => {
     let level = [{ base: s, cls: '' }];
     for (let depth = 0; depth < 3 && level.length; depth++) {
       const next = [];
-      for (const c of level) for (const [from, to, cls, inCls] of RULES) {
+      for (const c of level) for (const [from, to, cls, inCls, imp] of RULES) {
         if (!c.base.endsWith(from) || c.base.length - from.length + to.length < 1) continue;
         if (inCls !== c.cls) continue;                                              // производные формы — только с шага v1
         const base = c.base.slice(0, c.base.length - from.length) + to, k = base + '|' + cls;
         if (seen.has(k) || !base) continue;
-        seen.add(k); const r = { base, cls }; out.push(r); next.push(r);
+        seen.add(k); const r = { base, cls, imp }; out.push(r); next.push(r);
       }
       level = next;
     }
@@ -161,6 +161,8 @@ window.JA = (() => {
     const PARTICLE = /^[はがをにとものへやかねよ]$/;
     // служебные глаголы: их формы (して, いた, なって) почти всегда спряжение, а не омоним
     const AUX = new Set(['する', 'くる', 'いる', 'ある', 'なる', 'いく', 'くれる', 'もらう', 'あげる', 'しまう', 'おく', 'みる']);
+    // устойчивые выражения, которые и есть слово (иначе штраф exp разбивает ください на でく + ださい)
+    const EXP_OK = new Set(['ください', '下さい', 'ありがとう', 'ございます', 'おはよう', 'すみません', 'いただきます', 'ごちそうさま', 'おやすみ', 'さようなら', 'よろしく', 'ちょっと']);
     const matches = (i, b) => {
       const out = [];
       for (let m = Math.min(12, b - i); m >= 1; m--) {
@@ -170,13 +172,14 @@ window.JA = (() => {
         if (dict[s]) cands.push({ base: s, e: dict[s][0], extra: 0 });
         for (const d of deinflect(s)) {
           const f = (dict[d.base] || []).find(x => posMatch(x[1], d.cls));
-          if (f) cands.push({ base: d.base, e: f, extra: AUX.has(d.base) ? -1 : 1 });
+          // повелительное служебного глагола (あれ ← ある) — без бонуса: обычно это другое слово (あれ «то»)
+          if (f) cands.push({ base: d.base, e: f, extra: AUX.has(d.base) && !d.imp ? -1 : 1 });
         }
         let best = null;
         for (const c of cands) {
           // стоимость слова: меньше слов — лучше; редкие слова, кана вместо обычных кандзи и устойчивые выражения
           // дороже (выражения вроде 雨が降る лучше показать по словам); частица после кандзи/катаканы дешевле
-          let cost = 10 + c.extra + (c.e[4] ? 0 : 5) + (c.e[5] === 0 ? 4 : 0) + (/\bexp\b/.test(c.e[1]) ? 18 : 0);
+          let cost = 10 + c.extra + (c.e[4] ? 0 : 5) + (c.e[5] === 0 ? 4 : 0) + (/\bexp\b/.test(c.e[1]) && !EXP_OK.has(c.base) ? 10 + 4 * m : 0);   // длинное выражение дороже: お元気ですか → お元気 です か
           const afterContent = i > 0 && /[㐀-鿿\u30a0-\u30ffー]/.test(cs[i - 1]);
           if (m === 1 && PARTICLE.test(s)) cost -= afterContent ? 4 : 3;
           if (m === 1 && s === 'で' && afterContent) cost -= 4;                       // で иначе отбирает слог у です
