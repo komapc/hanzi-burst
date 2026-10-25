@@ -3,8 +3,8 @@
 <meta name="robots" content="noindex">
 <title>Мои иероглифы — hanzi-burst</title>
 <style>
-:root{--bg:#faf7f2;--fg:#1f1b16;--muted:#7a7166;--accent:#c8402a;--line:#cfc6b6;--soft:#e6dfd3;--card:#fff;--ok:#2f8f5b;--info:#2f6fd0;--warn:#d09a1f}
-@media(prefers-color-scheme:dark){:root{--bg:#17140f;--fg:#f1ebe0;--muted:#9d9486;--accent:#ff7a5c;--line:#5a5144;--soft:#352f25;--card:#221e17;--ok:#5fcf93;--info:#6aa6ff;--warn:#e8b84a}}
+:root{--bg:#faf7f2;--fg:#1f1b16;--muted:#6b6257;--accent:#c8402a;--line:#cfc6b6;--soft:#e6dfd3;--card:#fff;--ok:#2a7f51;--info:#2f6fd0;--warn:#d09a1f}
+@media(prefers-color-scheme:dark){:root{--bg:#17140f;--on:#17140f;--fg:#f1ebe0;--muted:#a59c8e;--accent:#ff7a5c;--line:#5a5144;--soft:#352f25;--card:#221e17;--ok:#5fcf93;--info:#6aa6ff;--warn:#e8b84a}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,sans-serif}
 main{max-width:860px;margin:0 auto;padding:20px 16px 60px}
@@ -13,7 +13,7 @@ h2 small{color:var(--muted);font-weight:400}
 .top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
 .lang button{background:none;border:1px solid var(--soft);color:var(--muted);padding:3px 10px;font:inherit;font-size:.85rem;cursor:pointer}
 .lang button:first-child{border-radius:999px 0 0 999px}.lang button:last-child{border-radius:0 999px 999px 0}
-.lang button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.lang button.on{background:var(--accent);border-color:var(--accent);color:var(--on,#fff)}
 .m{color:var(--muted)}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
 .c{display:block;text-align:center;padding:8px 6px 6px;border:1px solid var(--soft);border-radius:12px;background:var(--card);color:var(--fg);text-decoration:none;position:relative}
@@ -22,6 +22,13 @@ h2 small{color:var(--muted);font-weight:400}
 .c .p{font-size:.72rem;color:var(--muted)}.c .d{font-size:.7rem;color:var(--muted);line-height:1.2;max-height:2.4em;overflow:hidden}
 .c.k::after,.c.a::after,.c.s::after{content:"";position:absolute;top:5px;right:5px;width:9px;height:9px;border-radius:50%;background:var(--ok)}
 .c.a::after{background:var(--info)}.c.s::after{background:var(--warn)}
+.hsk{display:grid;gap:6px;margin:14px 0 4px}
+.lv{display:grid;grid-template-columns:4.2em 1fr 6.5em;align-items:center;gap:10px;width:100%;padding:4px 6px;border:0;border-radius:8px;background:none;color:var(--fg);font:inherit;font-size:.9rem;text-align:left;cursor:pointer}
+.lv:hover,.lv.on{background:var(--soft)}
+.lv b{font-weight:600}.lv small{color:var(--muted);text-align:right;font-variant-numeric:tabular-nums}
+.bar{height:8px;border-radius:999px;background:var(--soft);overflow:hidden}.lv:hover .bar,.lv.on .bar{background:var(--card)}
+.bar i{display:block;height:100%;background:var(--ok);border-radius:inherit}
+.todo{margin:6px 0 14px}.todo h2{margin-top:.8em}
 .empty{padding:20px;border:1px dashed var(--line);border-radius:12px;color:var(--muted)}
 </style><link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -29,6 +36,7 @@ h2 small{color:var(--muted);font-weight:400}
 <div class="top"><a href="/" id="back"></a>
 <span class="lang"><button data-lang="ru">RU</button><button data-lang="en">EN</button></span></div>
 <h1 id="h1"></h1><p class="m" id="sum"></p>
+<h2 id="hskH"></h2><div class="hsk" id="hsk"></div><div class="todo" id="todo"></div>
 <div id="out"></div>
 <div id="sitefoot"></div><script src="/footer.js" defer></script>
 </main>
@@ -38,11 +46,13 @@ const T = {
   ru:{title:'Мои иероглифы',back:'← hanzi-burst',known:'Известные иероглифы',parts:'Части (радикалы) в известных иероглифах',ready:'Готовы к изучению: все части известны',some:'Знаю часть частей',
       empty:'Пока ничего не отмечено. Открой иероглиф на главной и нажми «Знаю».',loading:'Загружаю…',
       sum:(n,p,r)=>`Известно иероглифов: ${n}. Частей в них: ${p}. Готово к изучению: ${r}.`,
-      hint:'Список хранится только в этом браузере.', partKnown:'отмечена', partMet:'встречается'},
+      hint:'Список хранится только в этом браузере.', partKnown:'отмечена', partMet:'встречается',
+      hsk:'Прогресс по уровням HSK 3.0', todo:n=>`HSK ${n}: ещё не знаю`, all:'Все знаки этого уровня отмечены 🎉'},
   en:{title:'My characters',back:'← hanzi-burst',known:'Known characters',parts:'Parts (radicals) inside known characters',ready:'Ready to learn: all parts known',some:'Some parts known',
       empty:'Nothing marked yet. Open a character on the main page and press “Know it”.',loading:'Loading…',
       sum:(n,p,r)=>`Known characters: ${n}. Parts inside them: ${p}. Ready to learn: ${r}.`,
-      hint:'The list is stored only in this browser.', partKnown:'marked', partMet:'seen'},
+      hint:'The list is stored only in this browser.', partKnown:'marked', partMet:'seen',
+      hsk:'Progress by HSK 3.0 level', todo:n=>`HSK ${n}: not yet known`, all:'Every character of this level is marked 🎉'},
 };
 let lang = 'ru', known = [];
 try { lang = localStorage.getItem('hanzi-lang') || (navigator.language.startsWith('ru') ? 'ru' : 'en'); } catch (e) {}
@@ -60,8 +70,7 @@ async function load(chars) {
     const batch = need.filter(c => !done.has(c)); need = [];
     batch.forEach(c => done.add(c));
     await Promise.all([...new Set(batch.map(shardKey))].map(async k => {
-      const [cd, gl] = await Promise.all([shard('chars', k), shard('glyphs', k)]);
-      Object.assign(G, gl);
+      const cd = await shard('chars', k);
       batch.filter(c => shardKey(c) === k).forEach(c => {
         if (!cd[c]) return;
         D.chars[c] = cd[c];
@@ -70,7 +79,14 @@ async function load(chars) {
     }));
   }
 }
-const hz = ch => G[ch] ? `<svg viewBox="0 0 1024 1024" role="img" aria-label="${esc(ch)}"><g transform="scale(1,-1) translate(0,-900)">${G[ch].map(d => `<path d="${d}" fill="currentColor"/>`).join('')}</g></svg>` : `<div style="font-size:34px;line-height:44px">${esc(ch)}</div>`;
+const hz = ch => G[ch] ? `<svg viewBox="0 0 1024 1024" role="img" aria-label="${esc(ch)}"><g transform="scale(1,-1) translate(0,-900)">${G[ch].map(d => `<path d="${d}" fill="currentColor"/>`).join('')}</g></svg>` : `<div class="fz" data-c="${esc(ch)}" style="font-size:34px;line-height:44px">${esc(ch)}</div>`;
+/* контуры: data/g/<кодпоинт >> 4>.json (по 16 знаков) — только для показанных карточек */
+async function fillGlyphs() {
+  const els = [...document.querySelectorAll('.fz[data-c]')];
+  const keys = [...new Set(els.map(e => e.dataset.c).filter(c => !G[c]).map(c => (c.codePointAt(0) >> 4).toString(16)))];
+  await Promise.all(keys.map(async k => Object.assign(G, await shard('g', k))));
+  els.forEach(e => { if (e.isConnected && G[e.dataset.c]) e.outerHTML = hz(e.dataset.c); });
+}
 const def = ch => { const c = D.chars[ch] || {}; return (lang === 'ru' && c.definition_ru) || c.definition || ''; };
 const short = d => (d || '').split(/[;,]/)[0].trim();
 const cardHtml = (ch, cls) => `<a class="c ${cls || ''}" href="/?open=${encodeURIComponent(ch)}&lang=${lang}"><span class="p">${esc(((D.chars[ch] || {}).pinyin || [])[0] || '')}</span>${hz(ch)}<span class="d">${esc(short(def(ch)))}</span></a>`;
@@ -91,7 +107,25 @@ function leafSet(ch, acc, depth = 0) {
   comps.forEach(x => leafSet(x, acc, depth + 1));
   return acc;
 }
+/* прогресс по HSK: data/hsk.json — знаки каждого уровня (частые первыми); клик по уровню — неотмеченные знаки */
+let HSK = null, openLv = 0;
+const lvName = n => n === '7' ? '7–9' : n;
+function renderHsk() {
+  $hskH.textContent = t('hsk');
+  if (!HSK) return;
+  const ks = kset();
+  $hsk.innerHTML = Object.entries(HSK).map(([n, cs]) => {
+    const got = [...cs].filter(c => ks.has(c)).length, all = [...cs].length;
+    return `<button class="lv${openLv === n ? ' on' : ''}" data-lv="${n}" aria-expanded="${openLv === n}"><b>HSK ${lvName(n)}</b><span class="bar"><i style="width:${(100 * got / all).toFixed(1)}%"></i></span><small>${got} / ${all}</small></button>`;
+  }).join('');
+  if (!openLv) { $todo.innerHTML = ''; return; }
+  const rest = [...HSK[openLv]].filter(c => !ks.has(c));
+  $todo.innerHTML = `<h2>${t('todo')(lvName(openLv))} <small>${rest.length}</small></h2>` +
+    (rest.length ? `<div class="grid">${rest.map(c => cardHtml(c, '')).join('')}</div>` : `<p class="m">${t('all')}</p>`);
+  fillGlyphs();
+}
 function render() {
+  renderHsk();
   document.documentElement.lang = lang;
   document.title = t('title') + ' — hanzi-burst';
   $h1.textContent = t('title'); $back.textContent = t('back');
@@ -111,15 +145,22 @@ function render() {
     sec(t('parts'), [...parts].sort(), '') +
     sec(t('ready'), rdy.slice(0, 60), 'a') +
     sec(t('some'), som.slice(0, 60), 's');
+  fillGlyphs();
 }
+const $hskH = document.getElementById('hskH'), $hsk = document.getElementById('hsk'), $todo = document.getElementById('todo');
+$hsk.onclick = async e => {
+  const b = e.target.closest('.lv'); if (!b) return;
+  openLv = openLv === b.dataset.lv ? 0 : b.dataset.lv; renderHsk();
+  if (openLv) { const lv = openLv; await load([...HSK[lv]].filter(c => !D.chars[c])); if (openLv === lv) renderHsk(); }
+};
 const $h1 = document.getElementById('h1'), $back = document.getElementById('back'), $sum = document.getElementById('sum'), $out = document.getElementById('out');
 document.querySelectorAll('.lang button').forEach(b => b.onclick = () => { lang = b.dataset.lang; try { localStorage.setItem('hanzi-lang', lang); } catch (e) {} render(); });
 render();
 (async () => {
   try {
-    const [core, gl] = await Promise.all([fetch('phrase.json').then(r => r.json()), fetch('glyphs.json').then(r => r.json())]);
-    D.chars = core.chars; Object.assign(G, gl);
+    D.chars = (await fetch('phrase.json').then(r => r.json())).chars;
   } catch (e) { window.__err = String(e); }
+  HSK = await fetch('data/hsk.json').then(r => r.json()).catch(() => null);
   await load(known.filter(c => !D.chars[c]));
   ready = true; render();
 })();

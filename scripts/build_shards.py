@@ -1,10 +1,12 @@
 """Шарды данных для анализа вставленного текста (клиент грузит их лениво).
 
 site/data/chars/<hh>.json  — как D.chars (hh = кодпоинт >> 8, hex)
-site/data/glyphs/<hh>.json — контуры черт
+site/data/g/<hhh>.json    — контуры черт, по 16 знаков (кодпоинт >> 4, hex)
 site/data/words/<hh>.json  — слова CC-CEDICT по первому иероглифу: {слово: [pinyin, en, ru]}
 site/data/s2t.json       — упрощённый -> традиционный (самый частый вариант)
 site/data/trad.json        — традиционный -> упрощённый (однознаковые записи CEDICT)
+site/data/pyindex.json     — поиск по пиньиню: слог(+тон) -> знаки
+site/data/hsk.json         — знаки по уровням HSK 3.0: {"1": "爱八爸…", …, "7": …}
 
 Запуск: python3 -I scripts/build_shards.py
 """
@@ -18,6 +20,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import breakdown as bd
+import hsk
 
 OUT = bd.ROOT / "site/data"
 HAN = re.compile(r"[㐀-鿿]")
@@ -71,13 +74,23 @@ def main():
     pyidx = {k: "".join(sorted(v, key=lambda c: -freq[c])[:24]) for k, v in pyidx.items()}
     dump(OUT / "pyindex.json", pyidx)
 
+    # знаки по уровням HSK 3.0: уровень знака = самый низкий уровень слова, где он встречается (1–6, 7 = 7–9);
+    # так выходит почти ровно официальный список знаков (по 300 на уровни 1–5). Частые первыми.
+    clv = {}
+    for w, lv in hsk.load_levels().items():
+        for c in w:
+            if HAN.match(c):
+                clv[c] = min(clv.get(c, 9), lv)
+    dump(OUT / "hsk.json", {str(lv): "".join(sorted((c for c, l in clv.items() if l == lv), key=lambda c: -freq[c])) for lv in range(1, 8)})
+
+    # контуры мелкими шардами по 16 знаков (кодпоинт >> 4): страница грузит только то, что показывает (~7 КБ на шард)
     glyphs = {}
     with bd.GRAPHICS.open(encoding="utf-8") as f:
         for line in f:
             d = json.loads(line)
-            glyphs.setdefault(shard(d["character"]), {})[d["character"]] = d["strokes"]
+            glyphs.setdefault(format(ord(d["character"]) >> 4, "x"), {})[d["character"]] = d["strokes"]
     for k, v in glyphs.items():
-        dump(OUT / "glyphs" / f"{k}.json", v)
+        dump(OUT / "g" / f"{k}.json", v)
 
     ws = {}
     for w, entries in words.items():

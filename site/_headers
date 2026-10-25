@@ -1,2 +1,7 @@
 /*.json
   Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+
+# словарные шарды меняются только при обновлении данных: сутки свежие, неделю можно отдавать старые
+/data/*
+  ! Cache-Control
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800

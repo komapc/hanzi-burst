@@ -5,15 +5,15 @@
 <link rel="canonical" href="https://hanzi.lipu.dev/extension">
 <meta property="og:title" content="Hanzi Burst — расширение для Chrome"><meta property="og:image" content="https://hanzi.lipu.dev/og.png">
 <style>
-:root{--bg:#faf7f2;--fg:#1f1b16;--muted:#7a7166;--accent:#c8402a;--line:#cfc6b6;--soft:#e6dfd3;--card:#fff}
-@media(prefers-color-scheme:dark){:root{--bg:#17140f;--fg:#f1ebe0;--muted:#9d9486;--accent:#ff7a5c;--line:#5a5144;--soft:#352f25;--card:#221e17}}
+:root{--bg:#faf7f2;--fg:#1f1b16;--muted:#6b6257;--accent:#c8402a;--line:#cfc6b6;--soft:#e6dfd3;--card:#fff}
+@media(prefers-color-scheme:dark){:root{--bg:#17140f;--on:#17140f;--fg:#f1ebe0;--muted:#a59c8e;--accent:#ff7a5c;--line:#5a5144;--soft:#352f25;--card:#221e17}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,"Noto Sans SC",sans-serif}
 main{max-width:760px;margin:0 auto;padding:20px 16px 70px}
 a{color:var(--accent)}h1{font-size:30px;margin:.5em 0 .2em}h2{font-size:19px;margin:1.9em 0 .5em}
 .m{color:var(--muted)}ul,ol{padding-left:22px}li{margin:.35em 0}
 .lead{font-size:18px;margin:.3em 0}
-.dl{display:inline-flex;align-items:center;gap:10px;margin:14px 0 4px;padding:12px 22px;border-radius:999px;background:var(--accent);color:#fff;font-weight:700;text-decoration:none}
+.dl{display:inline-flex;align-items:center;gap:10px;margin:14px 0 4px;padding:12px 22px;border-radius:999px;background:var(--accent);color:var(--on,#fff);font-weight:700;text-decoration:none}
 .dl:hover{filter:brightness(1.08)}
 .shots{display:grid;grid-template-columns:1fr;gap:16px;margin:18px 0}
 .shots img{display:block;max-width:100%;height:auto;border:1px solid var(--soft);border-radius:14px;background:var(--card)}
@@ -24,7 +24,7 @@ code{background:var(--soft);padding:1px 6px;border-radius:6px;font-size:.92em;ov
 .top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
 .lang{display:inline-flex}.lang button{background:none;border:1px solid var(--soft);color:var(--muted);padding:3px 12px;font:inherit;font-size:.85rem;cursor:pointer}
 .lang button:first-child{border-radius:999px 0 0 999px}.lang button:last-child{border-radius:0 999px 999px 0;border-left:0}
-.lang button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.lang button.on{background:var(--accent);border-color:var(--accent);color:var(--on,#fff)}
 html[data-l="ru"] [lang="en"],html[data-l="en"] [lang="ru"]{display:none}
 .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin:0 4px 0 2px;vertical-align:baseline}
 </style><link rel="icon" href="/favicon.svg" type="image/svg+xml">

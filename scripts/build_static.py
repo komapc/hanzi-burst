@@ -2,12 +2,13 @@
 """Генерирует статические страницы для поисковиков из site/phrase.json:
   site/c/<hex кодпоинта>.html — иероглиф (разбор, слова, где встречается, фразы)
   site/p/<sha1(zh)[:8]>.html  — фраза (перевод, иероглифы)
-  site/c/index.html, site/p/index.html — хабы со ссылками
+  site/hsk/<1–7>.html          — знаки уровня HSK 3.0 (7 = уровни 7–9) с чтением и значением
+  site/c/index.html, site/p/index.html, site/hsk/index.html — хабы со ссылками
   site/sitemap.xml
 Интерактивная версия: /?open=<иероглиф> и /?z=<фраза>. Запускается из wrangler.toml [build].
 Сгенерированное не коммитится (см. .gitignore).
 """
-import datetime, hashlib, html, json, re, shutil
+import datetime, glob, hashlib, html, json, re, shutil
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -29,8 +30,8 @@ def breadcrumbs(*pairs):
         {"@type": "ListItem", "position": i + 1, "name": n, "item": f"{BASE}{u}"} for i, (n, u) in enumerate(pairs)]}
 
 CSS = """<style>
-:root{--bg:#faf7f2;--fg:#1f1b16;--muted:#7a7166;--accent:#c8402a;--line:#cfc6b6}
-@media(prefers-color-scheme:dark){:root{--bg:#17140f;--fg:#f1ebe0;--muted:#9d9486;--accent:#ff7a5c;--line:#5a5144}}
+:root{--bg:#faf7f2;--fg:#1f1b16;--muted:#6b6257;--accent:#c8402a;--line:#cfc6b6}
+@media(prefers-color-scheme:dark){:root{--bg:#17140f;--fg:#f1ebe0;--muted:#a59c8e;--accent:#ff7a5c;--line:#5a5144}}
 body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 system-ui,sans-serif}
 main{max-width:760px;margin:0 auto;padding:20px 16px 60px}
 a{color:var(--accent)}h1{font-size:28px;margin:.4em 0}h2{font-size:17px;margin:1.4em 0 .4em}
@@ -40,6 +41,7 @@ ul{padding-left:20px}.cta{display:inline-block;margin:12px 0;padding:8px 14px;bo
 :root{--ok:#2f8f5b;--info:#2f6fd0;--warn:#d09a1f}@media(prefers-color-scheme:dark){:root{--ok:#5fcf93;--info:#6aa6ff;--warn:#e8b84a}}
 a.known::after,a.allp::after,a.somep::after{content:"";position:absolute;top:2px;right:-3px;width:7px;height:7px;border-radius:50%;background:var(--ok)}
 a.allp::after{background:var(--info)}a.somep::after{background:var(--warn)}
+.hl{list-style:none;padding:0}.hl li{margin:2px 0}.hl a{font:24px/1.3 'Noto Serif SC',serif;text-decoration:none;margin-right:6px}
 .legend{font-size:14px}.legend .k{color:var(--ok)}.legend .a{color:var(--info);margin-left:10px}.legend .s{color:var(--warn);margin-left:10px}
 </style>"""
 
@@ -51,7 +53,7 @@ def page(title, desc, canon, body, ld=()):
 <link rel="canonical" href="{BASE}{canon}"><meta name="robots" content="index,follow">
 <meta property="og:title" content="{E(title)}"><meta property="og:description" content="{E(desc)}">
 <meta property="og:image" content="{BASE}/og.png"><meta property="og:url" content="{BASE}{canon}">
-{ld_script(ld)}{CSS}</head><body><main><p><a href="/">hanzi-burst</a> · <a href="/c/">Иероглифы / Characters</a> · <a href="/p/">Фразы / Phrases</a> · <a href="/about">О проекте / About</a> · <a href="/privacy">Privacy</a></p>
+{ld_script(ld)}{CSS}</head><body><main><p><a href="/">hanzi-burst</a> · <a href="/c/">Иероглифы / Characters</a> · <a href="/p/">Фразы / Phrases</a> · <a href="/hsk/">HSK</a> · <a href="/about">О проекте / About</a> · <a href="/privacy">Privacy</a></p>
 {body}<div id="sitefoot"></div><script src="/footer.js" defer></script></main><script src="/static.js" defer></script></body></html>"""
 
 
@@ -69,9 +71,9 @@ def main():
         for ch in {c for w in p["words"] for c in (w.get("chars") or [])}:
             by_char.setdefault(ch, []).append(p)
 
-    for d in ("c", "p"):
+    for d in ("c", "p", "hsk"):
         shutil.rmtree(SITE / d, ignore_errors=True); (SITE / d).mkdir()
-    urls = [f"{BASE}/", f"{BASE}/about", f"{BASE}/privacy", f"{BASE}/extension", f"{BASE}/c/", f"{BASE}/p/", f"{BASE}/japanese/"]
+    urls = [f"{BASE}/", f"{BASE}/about", f"{BASE}/privacy", f"{BASE}/extension", f"{BASE}/c/", f"{BASE}/p/", f"{BASE}/hsk/", f"{BASE}/japanese/"]
     link = lambda ch: f'<a href="/c/{cid(ch)}" data-c="{ch}">{ch}</a>' if ch in chars else ch
 
     for ch, c in chars.items():
@@ -153,6 +155,36 @@ def main():
         "Простые китайские фразы с переводом и разбором / Simple Chinese phrases with translations.", "/p/",
         f"<h1>Фразы / Phrases</h1><ul>{li}</ul>",
         [breadcrumbs(("hanzi-burst", "/"), ("Фразы", "/p/"))]), encoding="utf-8")
+    # HSK: значения всех знаков уровня из словарных шардов (в phrase.json только знаки фраз)
+    allc = {}
+    for f in glob.glob(str(SITE / "data" / "chars" / "*.json")):
+        allc.update(json.load(open(f, encoding="utf-8")))
+    hsk = json.load(open(SITE / "data" / "hsk.json", encoding="utf-8"))
+    lvname = lambda lv: "7–9" if lv == "7" else lv
+    nav = " · ".join(f'<a href="/hsk/{lv}">HSK {lvname(lv)}</a>' for lv in hsk)
+    for lv, cs in hsk.items():
+        rows = []
+        for ch in cs:
+            cx = allc.get(ch) or {}
+            href = f"/c/{cid(ch)}" if ch in chars else f"/?open={ch}"
+            rows.append(f'<li><a href="{href}" data-c="{ch}">{ch}</a> <span class="m">{E(", ".join(cx.get("pinyin") or []))}</span> — '
+                        f'{E(first(cx.get("definition_ru") or cx.get("definition")))}</li>')
+        title = f"Иероглифы HSK {lvname(lv)} ({len(cs)}) — список с чтением и значением | hanzi-burst"
+        desc = (f"Все {len(cs)} иероглифов уровня HSK {lvname(lv)} (HSK 3.0) с пиньинем и переводом, по частоте. "
+                f"All {len(cs)} HSK {lvname(lv)} characters with pinyin and meaning.")
+        body = (f"<h1>Иероглифы HSK {lvname(lv)} / HSK {lvname(lv)} characters</h1>"
+                f"<p class='m'>{len(cs)} новых знаков уровня по стандарту HSK 3.0, от частых к редким. "
+                f"Нажмите на знак, чтобы разобрать его на части. / New characters of this level, most frequent first.</p>"
+                f"<p>{nav}</p><a class='cta' href='/learned'>Мой прогресс по HSK / My HSK progress →</a><ul class='hl'>{''.join(rows)}</ul>")
+        ld = [breadcrumbs(("hanzi-burst", "/"), ("HSK", "/hsk/"), (f"HSK {lvname(lv)}", f"/hsk/{lv}"))]
+        (SITE / "hsk" / f"{lv}.html").write_text(page(title, desc, f"/hsk/{lv}", body, ld), encoding="utf-8")
+        urls.append(f"{BASE}/hsk/{lv}")
+    li = "".join(f'<li><a href="/hsk/{lv}">HSK {lvname(lv)}</a> — {len(cs)} знаков / characters: '
+                 f'<span lang="zh">{"".join(cs[:12])}…</span></li>' for lv, cs in hsk.items())
+    (SITE / "hsk" / "index.html").write_text(page("Иероглифы HSK 1–9 по уровням / HSK characters by level | hanzi-burst",
+        "Списки иероглифов HSK 3.0 по уровням с пиньинем и переводом / HSK 3.0 characters by level with pinyin and meaning.", "/hsk/",
+        f"<h1>Иероглифы HSK по уровням / HSK characters by level</h1><ul>{li}</ul>",
+        [breadcrumbs(("hanzi-burst", "/"), ("HSK", "/hsk/"))]), encoding="utf-8")
     sm = "".join(f"<url><loc>{u}</loc><lastmod>{TODAY}</lastmod></url>" for u in urls)
     (SITE / "sitemap.xml").write_text(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{sm}</urlset>\n', encoding="utf-8")
     print(f"static: chars={len(chars)} phrases={len(phrases)} urls={len(urls)}")

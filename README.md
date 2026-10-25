@@ -80,7 +80,7 @@ wrangler secret put GEMINI_API_KEY
 | push тега `v*` | то же + загрузка расширения в Chrome Web Store с отправкой на проверку (`extension-release.yml`) |
 | Actions → deploy → Run workflow | передеплой текущего `main` |
 
-Сборка — команда `[build]` в `wrangler.toml`: `build_shards.py` → `build_ja_shards.py` → `build_kanji_shards.py` → `build_static.py` → `build_extension.py --zip`. Ей нужны `data/raw/` (в гит не кладутся) и Pillow. CI берёт `data/raw/` из закреплённого снимка — ассет `raw-data.tar.xz` релиза `raw-data-YYYY-MM-DD` (тег и sha256 — в `env` у `deploy.yml`). В снимке только то, что читает сборка: `mmh/{dictionary,graphics}.txt`, `cedict/cedict_ts.u8`, `unicode/CJKRadicals.txt`, `unihan/Unihan_*.txt`, `ids/ids.txt`, `hsk/complete.json`, `jmdict/jmdict-{eng,rus}-*.json` (японский словарь, [jmdict-simplified](https://github.com/scriptin/jmdict-simplified/releases)).
+Сборка — команда `[build]` в `wrangler.toml`: `build_shards.py` → `build_ja_shards.py` → `build_kanji_shards.py` → `build_static.py` → `build_extension.py --zip` → `minify.py` (terser через npx сжимает `script.js`, `ja.js`, `footer.js` и инлайн-скрипты страниц; только в CI или с `--force DIR`, при ошибке оставляет исходник). Ей нужны `data/raw/` (в гит не кладутся) и Pillow. CI берёт `data/raw/` из закреплённого снимка — ассет `raw-data.tar.xz` релиза `raw-data-YYYY-MM-DD` (тег и sha256 — в `env` у `deploy.yml`). В снимке только то, что читает сборка: `mmh/{dictionary,graphics}.txt`, `cedict/cedict_ts.u8`, `unicode/CJKRadicals.txt`, `unihan/Unihan_*.txt`, `ids/ids.txt`, `hsk/complete.json`, `jmdict/jmdict-{eng,rus}-*.json` (японский словарь, [jmdict-simplified](https://github.com/scriptin/jmdict-simplified/releases)).
 
 Секреты репозитория (Settings → Secrets → Actions):
 
@@ -137,7 +137,7 @@ gh release create raw-data-$(date +%F) /tmp/raw-data.tar.xz --prerelease --title
 
 ## Традиционные / упрощённые
 
-Радио-кнопки 简 / 繁 в шапке `index.html` (выбор в `localStorage hanzi-script`). Данные и ссылки остаются упрощёнными; подменяется только отображение: текстовые узлы (`site/script.js`) и начертания SVG (`syncScript` в `index.html`, глифы традиционных знаков берутся из шардов `data/glyphs`). Карта `site/data/s2t.json` строится в `build_shards.py` по частоте пар в словах CC-CEDICT (омографы вроде 发 → 發/髮 дают самый частый вариант). Статические страницы `/c/`, `/p/` всегда упрощённые.
+Радио-кнопки 简 / 繁 в шапке `index.html` (выбор в `localStorage hanzi-script`). Данные и ссылки остаются упрощёнными; подменяется только отображение: текстовые узлы (`site/script.js`) и начертания SVG (`syncScript` в `index.html`, глифы традиционных знаков берутся из шардов `data/g`). Карта `site/data/s2t.json` строится в `build_shards.py` по частоте пар в словах CC-CEDICT (омографы вроде 发 → 發/髮 дают самый частый вариант). Статические страницы `/c/`, `/p/` всегда упрощённые.
 
 ## Вид фразы: скрыть чтение и перевод, цвет тонов
 
@@ -148,6 +148,28 @@ gh release create raw-data-$(date +%F) /tmp/raw-data.tar.xz --prerelease --title
 - На экранах ≤640px карточка иероглифа выезжает снизу (фраза остаётся видна); закрыть — «×», Esc или потянуть вниз за ручку.
 - В японском режиме над группами кандзи — фуригана (кана), под словом — транскрипция; чтение сопоставляется с окуриганой (`furi`), группа кандзи не делится.
 - Первый вход (`hanzi-tour`): пульсирующий иероглиф фразы, затем подсказка про части и «+». У кого в localStorage уже есть фразы или «известные», тур не показывается.
+
+## Прогресс по HSK
+
+На странице «Мои иероглифы» — полоски по уровням HSK 3.0: сколько знаков уровня отмечено «Знаю». Клик по уровню
+показывает неотмеченные знаки (частые первыми). Знаки по уровням — `site/data/hsk.json` из `build_shards.py`:
+уровень знака = самый низкий уровень слова HSK, где он встречается (выходит 300/299/301/305/310/518/1001,
+почти ровно официальный список знаков).
+
+Для поисковиков — статические списки `/hsk/1` … `/hsk/7` (7 = уровни 7–9) и хаб `/hsk/` из `build_static.py`:
+знак, пиньинь, первое значение; ссылка на `/c/<код>` или `/?open=<знак>`, если своей страницы у знака нет.
+
+## Загрузка и доступность
+
+Контуры черт лежат в шардах `site/data/g/<cp>>4>.json` по 16 знаков (~18 КБ): страница грузит только шарды показанных
+знаков (`loadGlyphs`), а `MutationObserver` заменяет текстовые заглушки `span.serif[data-c]` на SVG, когда контуры пришли.
+Шарды `data/*` кэшируются на сутки (+ неделя stale-while-revalidate), остальной JSON — на час (`site/_headers`).
+Цвета (приглушённый текст, тоны, «Знаю», кнопки) подобраны под контраст WCAG AA в светлой и тёмной теме; проверка — axe-core.
+
+## Русские значения
+
+`data/translations/ru.json` покрывает основные значения всех знаков HSK 1–9 и чтения их 多音字. Неверные или
+редкие первые значения MMH (机 «desk», 离 «rare beast», 着 «to make a move»…) заменяет `DEFINITION_OVERRIDES` в `breakdown.py`.
 
 ## Поиск знака и фраза дня
 
