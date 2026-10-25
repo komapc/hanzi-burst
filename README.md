@@ -80,7 +80,7 @@ wrangler secret put GEMINI_API_KEY
 | push тега `v*` | то же + загрузка расширения в Chrome Web Store с отправкой на проверку (`extension-release.yml`) |
 | Actions → deploy → Run workflow | передеплой текущего `main` |
 
-Сборка — команда `[build]` в `wrangler.toml`: `build_shards.py` → `build_static.py` → `build_extension.py --zip`. Ей нужны `data/raw/` (в гит не кладутся) и Pillow. CI берёт `data/raw/` из закреплённого снимка — ассет `raw-data.tar.xz` релиза `raw-data-YYYY-MM-DD` (тег и sha256 — в `env` у `deploy.yml`). В снимке только то, что читает сборка: `mmh/{dictionary,graphics}.txt`, `cedict/cedict_ts.u8`, `unicode/CJKRadicals.txt`, `unihan/Unihan_*.txt`, `ids/ids.txt`, `hsk/complete.json`.
+Сборка — команда `[build]` в `wrangler.toml`: `build_shards.py` → `build_ja_shards.py` → `build_static.py` → `build_extension.py --zip`. Ей нужны `data/raw/` (в гит не кладутся) и Pillow. CI берёт `data/raw/` из закреплённого снимка — ассет `raw-data.tar.xz` релиза `raw-data-YYYY-MM-DD` (тег и sha256 — в `env` у `deploy.yml`). В снимке только то, что читает сборка: `mmh/{dictionary,graphics}.txt`, `cedict/cedict_ts.u8`, `unicode/CJKRadicals.txt`, `unihan/Unihan_*.txt`, `ids/ids.txt`, `hsk/complete.json`, `jmdict/jmdict-{eng,rus}-*.json` (японский словарь, [jmdict-simplified](https://github.com/scriptin/jmdict-simplified/releases)).
 
 Секреты репозитория (Settings → Secrets → Actions):
 
@@ -97,7 +97,7 @@ wrangler secret put GEMINI_API_KEY
 
 ```bash
 cd data/raw && tar -cJf /tmp/raw-data.tar.xz mmh/dictionary.txt mmh/graphics.txt cedict/cedict_ts.u8 \
-  unicode/CJKRadicals.txt unihan/Unihan_*.txt ids/ids.txt hsk/complete.json
+  unicode/CJKRadicals.txt unihan/Unihan_*.txt ids/ids.txt hsk/complete.json jmdict/jmdict-eng-*.json jmdict/jmdict-rus-*.json
 sha256sum /tmp/raw-data.tar.xz
 gh release create raw-data-$(date +%F) /tmp/raw-data.tar.xz --prerelease --title "raw-data-$(date +%F) (build inputs)" --notes "data/raw/ snapshot for deploy.yml"
 ```

@@ -95,6 +95,14 @@
         cursor:pointer; padding:4px 6px; border-radius:8px; font:inherit; }
   .ch:hover { background:color-mix(in srgb, var(--accent) 15%, transparent); }
   .ch .py { font-size:.8rem; color:var(--muted); }
+  .word.ja { position:relative; padding-top:1.35rem; }
+  .word.ja .jr { position:absolute; top:4px; left:6px; right:6px; text-align:center; font-size:.8rem; color:var(--muted); white-space:nowrap; }
+  .word.ja .ch .py { display:none; }
+  .ch.kana span.serif[data-c] { font-family:"Noto Sans JP","Hiragino Sans",system-ui,sans-serif; }
+  #ownLang { display:inline-flex; border:1px solid var(--line); border-radius:999px; overflow:hidden; vertical-align:middle; margin-right:6px; }
+  #ownLang button { border:0; background:none; color:inherit; padding:4px 10px; font:inherit; font-size:.85rem; cursor:pointer; }
+  #ownLang button[aria-pressed="true"] { background:var(--fg); color:var(--bg); }
+  .kanacard h2 small { font-size:1rem; color:var(--muted); margin-left:10px; }
   .ch[data-tip]::before { content:attr(data-tip); position:absolute; left:50%; bottom:calc(100% + 4px); transform:translateX(-50%);
         z-index:5; width:max-content; max-width:min(18rem, 80vw); white-space:pre-line; text-align:left; font-size:.85rem; line-height:1.35;
         padding:6px 10px; border-radius:8px; background:var(--card); color:var(--fg, inherit); border:1px solid var(--soft);
@@ -219,7 +227,8 @@
   <div id="picker" role="tablist"></div>
   <details id="own" hidden><summary id="ownSum"></summary>
     <textarea id="ownText" rows="2" maxlength="300" lang="zh"></textarea>
-    <div><button class="btn" id="ownGo"></button> <span class="hint" id="ownMsg"></span></div>
+    <div><span class="seg" id="ownLang" role="group"><button data-tl="auto"></button><button data-tl="zh" lang="zh">中文</button><button data-tl="ja" lang="ja">日本語</button></span>
+      <button class="btn" id="ownGo"></button> <span class="hint" id="ownMsg"></span></div>
   </details>
   <div id="phrase"></div>
   <p class="trans" id="trans"></p>
@@ -241,7 +250,7 @@
       <nav><h3 id="fh2"></h3><ul id="fl2"><li><a href="/about">О проекте</a></li><li><a href="/privacy">Конфиденциальность</a></li></ul></nav>
       <nav><h3 id="fh3"></h3><ul id="fl3"></ul></nav>
     </div>
-    <details class="fdata"><summary id="fdata"></summary><p><a href="https://github.com/skishore/makemeahanzi">Make Me a Hanzi</a> (LGPL, Arphic) · <a href="https://cc-cedict.org/">CC-CEDICT</a> (CC BY-SA) · <a href="https://tatoeba.org/">Tatoeba</a> (CC BY 2.0 FR) · <a href="https://en.wiktionary.org/">Wiktionary</a> via <a href="https://kaikki.org/">kaikki.org</a> (CC BY-SA) · <a href="https://commonvoice.mozilla.org/">Mozilla Common Voice</a> (CC0, machine translation) · Unicode / Unihan</p></details>
+    <details class="fdata"><summary id="fdata"></summary><p><a href="https://github.com/skishore/makemeahanzi">Make Me a Hanzi</a> (LGPL, Arphic) · <a href="https://cc-cedict.org/">CC-CEDICT</a> (CC BY-SA) · <a href="https://tatoeba.org/">Tatoeba</a> (CC BY 2.0 FR) · <a href="https://en.wiktionary.org/">Wiktionary</a> via <a href="https://kaikki.org/">kaikki.org</a> (CC BY-SA) · <a href="https://commonvoice.mozilla.org/">Mozilla Common Voice</a> (CC0, machine translation) · Unicode / Unihan · <a href="https://www.edrdg.org/wiki/index.php/JMdict-EDICT_Dictionary_Project">JMdict</a> (EDRDG, CC BY-SA 4.0) via <a href="https://github.com/scriptin/jmdict-simplified">jmdict-simplified</a></p></details>
   </footer>
   <dialog id="howDlg" aria-labelledby="howTitle">
     <h2 id="howTitle"></h2>
@@ -255,6 +264,7 @@
   <a href="/privacy" id="consentMore"></a>
 </div>
 <script src="script.js"></script>
+<script src="ja.js"></script>
 <script>
 /* Google Analytics 4: Measurement ID сайта. */
 const GA_ID = 'G-G4GHN6WZ7B';
@@ -281,12 +291,12 @@ const ICON = {
 };
 const T = {
   ru: { hint:'Нажми на иероглиф.', crumbs:'Нажимай на части, чтобы разбирать дальше',
-        all:'Взорвать всё', ftag:'Учим китайские иероглифы через радикалы', fExplore:'Разделы', fProject:'Проект', fAll:'Все иероглифы', fPhrases:'Все фразы', fAbout:'О проекте', fPrivacy:'Конфиденциальность', fHow:'Как это работает', fOther:'Другие проекты', fData:'Источники данных', howTitle:'Как это работает', close:'Закрыть', howBody:'<p>Выбери фразу и нажми на иероглиф: он «разлетится» на радикалы и фонетики, пока не станет неделимым. У каждой части есть значение, пиньинь, слова и иероглифы, где она встречается.</p><p>«＋ Новая фраза» подбирает фразу с минимумом незнакомых тебе иероглифов, а «Своя фраза» разбирает любой вставленный китайский текст.</p><p>Фразы взяты из открытых корпусов: Tatoeba, Wiktionary, Common Voice.</p>', newPhrase:'Новая фраза', inPhrase:'В этой фразе', viaParents:'Слова с иероглифами, где есть эта часть', incompl:'В словаре у этого знака не хватает одной части разбора, поэтому дерево неполное.', ownTitle:'Своя фраза', ownGo:'Разобрать', ownRand:'Случайная', lgKnown:'знаю', lgAll:'знаю все части', lgSome:'знаю часть частей', fLearned:'Мои иероглифы', fExt:'Расширение для Chrome', statsLink:'Что я выучил', trBtn:'Перевести фразу', trBusy:'Перевожу…', trErr:'Не удалось перевести', trLimit:'Лимит переводов на сегодня исчерпан', trMt:'машинный перевод', ownPh:'Вставьте китайский текст (до 100 иероглифов)', ownBusy:'Загружаю словарь…', ownEmpty:'Не нашёл иероглифов в тексте', ownErr:'Не удалось загрузить данные', ownNote:'Разбор идёт в вашем браузере. Значения слов из словаря CC-CEDICT. Перевод всей фразы — по кнопке (текст уходит на сервер и в Gemini).', ownTrad:'Традиционные знаки заменены упрощёнными.', noMore:'Фразы в пуле закончились', known:'Знаю', add:'Добавить в известные', where:'Где ещё встречается', words:'Слова', chars:'Иероглифы с этой частью',
+        all:'Взорвать всё', ftag:'Учим китайские иероглифы через радикалы', fExplore:'Разделы', fProject:'Проект', fAll:'Все иероглифы', fPhrases:'Все фразы', fAbout:'О проекте', fPrivacy:'Конфиденциальность', fHow:'Как это работает', fOther:'Другие проекты', fData:'Источники данных', howTitle:'Как это работает', close:'Закрыть', howBody:'<p>Выбери фразу и нажми на иероглиф: он «разлетится» на радикалы и фонетики, пока не станет неделимым. У каждой части есть значение, пиньинь, слова и иероглифы, где она встречается.</p><p>«＋ Новая фраза» подбирает фразу с минимумом незнакомых тебе иероглифов, а «Своя фраза» разбирает любой вставленный китайский текст.</p><p>Фразы взяты из открытых корпусов: Tatoeba, Wiktionary, Common Voice.</p>', newPhrase:'Новая фраза', inPhrase:'В этой фразе', viaParents:'Слова с иероглифами, где есть эта часть', incompl:'В словаре у этого знака не хватает одной части разбора, поэтому дерево неполное.', ownTitle:'Своя фраза', ownGo:'Разобрать', ownRand:'Случайная', lgKnown:'знаю', lgAll:'знаю все части', lgSome:'знаю часть частей', fLearned:'Мои иероглифы', fExt:'Расширение для Chrome', statsLink:'Что я выучил', trBtn:'Перевести фразу', trBusy:'Перевожу…', trErr:'Не удалось перевести', trLimit:'Лимит переводов на сегодня исчерпан', trMt:'машинный перевод', ownPh:'Вставьте китайский или японский текст (до 100 знаков)', ownBusy:'Загружаю словарь…', ownEmpty:'Не нашёл иероглифов или каны в тексте', tlAuto:'Авто', jaNote:'Японский: разбор в браузере, слова и чтения из словаря JMdict. Нажмите на кану — её чтение и происхождение.', kanaRead:'Чтение', kanaOrigin:'Откуда этот знак', kanaHira:'хирагана', kanaKata:'катакана', jaLemma:'словарная форма', ownErr:'Не удалось загрузить данные', ownNote:'Разбор идёт в вашем браузере. Значения слов из словаря CC-CEDICT. Перевод всей фразы — по кнопке (текст уходит на сервер и в Gemini).', ownTrad:'Традиционные знаки заменены упрощёнными.', noMore:'Фразы в пуле закончились', known:'Знаю', add:'Добавить в известные', where:'Где ещё встречается', words:'Слова', chars:'Иероглифы с этой частью',
         seen:'Уже встречалось в этой фразе:', nodesc:'Для этой части в словаре нет описания.', derived:'выведено автоматически', mnemo:'Придумать запоминалку', mnemoMore:'Ещё вариант', mnemoLimit:'Лимит на сегодня исчерпан', mnemoLogin:'Войди через Google, чтобы получать запоминалки', mnemoBusy:'Думаю…', mnemoErr:'Не получилось, попробуй позже', mnemoNote:'Выдумка для запоминания, не настоящая этимология', logout:'Выйти', atomic:'неделимая часть: радикал или цельный рисунок',
         phonetic:'Звук подсказывает', semantic:'смысл —', word:'Слово', known_n:'Известно:',
         types:{ pictophonetic:'смысл + звук', ideographic:'смысловая комбинация', pictographic:'рисунок' } },
   en: { hint:'Click a character.', crumbs:'Click parts to break them down',
-        all:'Explode all', ftag:'Learn Chinese characters by radicals', fExplore:'Explore', fProject:'Project', fAll:'All characters', fPhrases:'All phrases', fAbout:'About', fPrivacy:'Privacy', fHow:'How it works', fOther:'Other projects', fData:'Data sources', howTitle:'How it works', close:'Close', howBody:'<p>Pick a phrase and click a character: it breaks into radicals and phonetic parts until it can\'t be split further. Each part has a meaning, pinyin, words and characters that use it.</p><p>“＋ New phrase” picks a phrase with the fewest characters you don\'t know yet, and “Your own phrase” breaks down any Chinese text you paste.</p><p>Phrases come from open corpora: Tatoeba, Wiktionary, Common Voice.</p>', newPhrase:'New phrase', inPhrase:'In this phrase', viaParents:'Words with characters that contain this part', incompl:'The dictionary is missing one part of this character\'s breakdown, so the tree is incomplete.', ownTitle:'Your own phrase', ownGo:'Break down', ownRand:'Random', lgKnown:'known', lgAll:'all parts known', lgSome:'some parts known', fLearned:'My characters', fExt:'Chrome extension', statsLink:'What I\'ve learned', trBtn:'Translate phrase', trBusy:'Translating…', trErr:'Could not translate', trLimit:'Daily translation limit reached', trMt:'machine translation', ownPh:'Paste Chinese text (up to 100 characters)', ownBusy:'Loading dictionary…', ownEmpty:'No Chinese characters found', ownErr:'Could not load data', ownNote:'Breakdown runs in your browser. Word meanings come from CC-CEDICT. Whole-phrase translation is on request (the text is sent to our server and Gemini).', ownTrad:'Traditional characters were converted to simplified.', noMore:'No more phrases in the pool', known:'Known', add:'Add to known', where:'Where else it appears', words:'Words', chars:'Characters with this part',
+        all:'Explode all', ftag:'Learn Chinese characters by radicals', fExplore:'Explore', fProject:'Project', fAll:'All characters', fPhrases:'All phrases', fAbout:'About', fPrivacy:'Privacy', fHow:'How it works', fOther:'Other projects', fData:'Data sources', howTitle:'How it works', close:'Close', howBody:'<p>Pick a phrase and click a character: it breaks into radicals and phonetic parts until it can\'t be split further. Each part has a meaning, pinyin, words and characters that use it.</p><p>“＋ New phrase” picks a phrase with the fewest characters you don\'t know yet, and “Your own phrase” breaks down any Chinese text you paste.</p><p>Phrases come from open corpora: Tatoeba, Wiktionary, Common Voice.</p>', newPhrase:'New phrase', inPhrase:'In this phrase', viaParents:'Words with characters that contain this part', incompl:'The dictionary is missing one part of this character\'s breakdown, so the tree is incomplete.', ownTitle:'Your own phrase', ownGo:'Break down', ownRand:'Random', lgKnown:'known', lgAll:'all parts known', lgSome:'some parts known', fLearned:'My characters', fExt:'Chrome extension', statsLink:'What I\'ve learned', trBtn:'Translate phrase', trBusy:'Translating…', trErr:'Could not translate', trLimit:'Daily translation limit reached', trMt:'machine translation', ownPh:'Paste Chinese or Japanese text (up to 100 characters)', ownBusy:'Loading dictionary…', ownEmpty:'No Chinese characters or kana found', tlAuto:'Auto', jaNote:'Japanese: breakdown runs in your browser; words and readings come from JMdict. Click a kana to see its reading and origin.', kanaRead:'Reading', kanaOrigin:'Where this kana came from', kanaHira:'hiragana', kanaKata:'katakana', jaLemma:'dictionary form', ownErr:'Could not load data', ownNote:'Breakdown runs in your browser. Word meanings come from CC-CEDICT. Whole-phrase translation is on request (the text is sent to our server and Gemini).', ownTrad:'Traditional characters were converted to simplified.', noMore:'No more phrases in the pool', known:'Known', add:'Add to known', where:'Where else it appears', words:'Words', chars:'Characters with this part',
         seen:'Already seen in this phrase:', nodesc:'No description for this part in the dictionary.', derived:'derived automatically', mnemo:'Make a mnemonic', mnemoMore:'Another one', mnemoLimit:'Daily limit reached', mnemoLogin:'Sign in with Google to get mnemonics', mnemoBusy:'Thinking…', mnemoErr:'Failed, try again later', mnemoNote:'An invention to aid memory, not real etymology', logout:'Sign out', atomic:'indivisible part: a radical or a whole picture',
         phonetic:'Sound hint:', semantic:'meaning:', word:'Word', known_n:'Known:',
         types:{ pictophonetic:'meaning + sound', ideographic:'meaning combination', pictographic:'picture' } },
@@ -349,11 +359,13 @@ const ZY = (() => {
 const PY = s => (phon === 'b' && s) ? ZY(String(s)) : s;
 
 const defOf = ch => pick(D.chars[ch], 'definition');
+const jaRead = w => (lang === 'ru' ? w.cyr : w.lat) || w.reading || '';
+const wordRead = w => w.ja ? jaRead(w) : PY((w.pinyin || w.chars.map(py)).join(' '));
 
 /* Иероглиф рисуется по контурам черт (Make Me a Hanzi), а не шрифтом: шрифты теряют черты. */
 /* традиционная запись: данные остаются упрощёнными, подменяется только начертание */
 let S2T = null;
-const disp = ch => (window.hanziScript && hanziScript.get() === 't' && S2T && S2T[ch]) || ch;
+const disp = ch => (!(L[cur] && L[cur].ja) && window.hanziScript && hanziScript.get() === 't' && S2T && S2T[ch]) || ch;
 const glyphPaths = ch => (disp(ch) !== ch && G[disp(ch)]) || G[ch];
 /* glyphs.json (~1 МБ) не блокирует первый показ: пока его нет, иероглиф рисуется текстом, потом заменяется контурами */
 function upgradeGlyphs(root = document) {
@@ -394,6 +406,7 @@ function tipFor(w, i) {
     const g = (lang === 'ru' && w.gloss_ru) || w.gloss || '';
     word = g.split(/\s*[\/;]\s*/).filter(Boolean).slice(0, 3).join('; ');
   }
+  if (w.ja) return [w.lemma ? `${w.word} ← ${w.lemma}` : w.word, word].filter(Boolean).join(' — ') + (HAN.test(w.chars[i]) && defOf(w.chars[i]) ? `\n${w.chars[i]} — ${short(defOf(w.chars[i]))}` : '');
   if (w.chars.length === 1) return word || short(defOf(w.chars[0]));
   const own = short(defOf(w.chars[i]));
   // для многознакового слова сначала значение СЛОВА, затем отдельного иероглифа
@@ -461,7 +474,7 @@ function renderTrans() {
     $('#trans').append(document.createElement('br'), b);
   }
   $('#gloss').innerHTML = ph.words.filter(w => !w.punct && wordMeaning(w)).map(w =>
-    `<li><span class="w serif">${w.word}</span><span class="p">${PY((w.pinyin || w.chars.map(py)).join(' '))}</span>${wordMeaning(w)}</li>`).join('');
+    `<li><span class="w serif">${w.word}</span><span class="p">${wordRead(w)}</span>${w.lemma ? `<span class="tag" title="${t('jaLemma')}">${w.lemma}</span> ` : ''}${wordMeaning(w)}</li>`).join('');
 }
 /* значение слова целиком: из CEDICT во фразе, иначе из шарда слов (gloss) */
 function wordMeaning(w) {
@@ -512,9 +525,15 @@ function renderPhrase() {
     const el = document.createElement('div');
     el.className = 'word'; el.dataset.w = wi;
     if (w.punct) { const sp = document.createElement('span'); sp.className = 'punct'; sp.textContent = w.word; el.append(sp); root.append(el); return; }
+    if (w.ja) {
+      el.classList.add('ja'); el.lang = 'ja';
+      const r = document.createElement('span'); r.className = 'jr'; r.textContent = jaRead(w);
+      r.title = [w.reading, lang === 'ru' ? w.lat : w.cyr].filter(Boolean).join(' · ');
+      el.append(r);
+    }
     w.chars.forEach((c, i) => {
       const b = document.createElement('button');
-      b.className = 'ch' + (partState(c) ? ' ' + partState(c) : '') + (c === rootCh ? ' sel' : '');
+      b.className = 'ch' + (partState(c) ? ' ' + partState(c) : '') + (c === rootCh ? ' sel' : '') + (JA.KANA.test(c) ? ' kana' : '');
       b.dataset.ch = c;
       const tip = tipFor(w, i); if (tip) b.dataset.tip = tip;
       b.innerHTML = `<span class="py">${PY((w.pinyin && w.pinyin[i]) || py(c))}</span>${hz(c)}`;
@@ -585,7 +604,21 @@ function explodeAll(node) {
   node.querySelectorAll(':scope > .kids > .node').forEach(explodeAll);
 }
 
+function openKana(ch) {
+  rootCh = ch; selected = null;
+  $('#card').classList.add('open'); $('#hint').style.display = 'none';
+  const hira = JA.toHira(ch), kata = hira.replace(/[\u3041-\u3096]/g, c => String.fromCharCode(c.charCodeAt(0) + 0x60));
+  const tr = JA.transcribe(ch, { long: false });
+  const big = hira.replace(/[ぁぃぅぇぉっゃゅょゎ]/, c => String.fromCharCode(c.charCodeAt(0) + 1));   // ゃ → や: в таблице только полные знаки
+  $('#tree').innerHTML = `<div class="node"><div class="gw"><span class="glyph leaf"><span class="serif" lang="ja">${ch}</span><span class="m">${tr.lat || '&nbsp;'}</span></span></div></div>`;
+  $('#info').innerHTML = `<div class="kanacard"><h2><span lang="ja">${hira}</span> <span lang="ja">${kata}</span><small>${[tr.lat, tr.cyr].filter(Boolean).join(' · ')}</small></h2>
+    <p>${t('kanaRead')}: <b>${tr.lat || '—'}</b> (Hepburn), <b>${tr.cyr || '—'}</b> (Поливанов). ${ch === hira ? t('kanaHira') : t('kanaKata')}.</p>
+    ${big !== 'ー' ? `<p><a class="btn" href="/japanese/#${encodeURIComponent(big)}" target="_blank" rel="noopener">${ICON.ext}${t('kanaOrigin')}</a></p>` : ''}</div>`;
+  document.querySelectorAll('.ch').forEach(b => b.classList.toggle('sel', b.dataset.ch === ch));
+  markWord();
+}
 function openRoot(ch) {
+  if (JA.KANA.test(ch) && !D.chars[ch]) return openKana(ch);
   rootCh = ch;
   $('#card').classList.add('open'); $('#hint').style.display = 'none';
   const tree = $('#tree'); tree.innerHTML = '';
@@ -652,7 +685,7 @@ function select(ch, glyphEl) {
   h += `<div id="mnemo"></div>`;
   if (u || inPh.length) {
     h += `<div class="usage" id="usage">`;
-    if (inPh.length) h += `<h3>${t('inPhrase')}</h3><ul class="wl">${inPh.map(w => `<li><span class="w serif">${w.word}</span><span class="p">${PY((w.pinyin || w.chars.map(py)).join(' '))}</span>${phGloss(w)}</li>`).join('')}</ul>`;
+    if (inPh.length) h += `<h3>${t('inPhrase')}</h3><ul class="wl">${inPh.map(w => `<li><span class="w serif">${w.word}</span><span class="p">${wordRead(w)}</span>${phGloss(w)}</li>`).join('')}</ul>`;
     if (u && u.words.length) h += `<h3>${t('words')}</h3><ul class="wl">${u.words.map(w => `<li><span class="w serif">${w.w}</span><span class="p">${PY(w.pinyin)}</span>${pick(w, 'def')}</li>`).join('')}</ul>`;
     if (via.length) h += `<h3>${t('viaParents')}</h3><ul class="wl">${via.slice(0, 8).map(w => `<li><span class="w serif">${w.w}</span><span class="p">${PY(w.pinyin)}</span>${pick(w, 'def')}</li>`).join('')}</ul>`;
     if (u && u.chars.length) h += `<h3>${t('chars')}</h3><div class="chips">${u.chars.map(x => `<button class="chip ${known.has(x) ? 'known' : ''}" data-ch="${x}" title="${short(defOf(x))}">${hz(x)}</button>`).join('')}</div>`;
@@ -811,8 +844,35 @@ const shardCache = {};
 const loadShard = (kind, k) => shardCache[kind + k] || (shardCache[kind + k] =
   fetch(`data/${kind}/${k}.json`).then(r => { if (!r.ok) throw 0; return r.json(); })
     .catch(() => { delete shardCache[kind + k]; return {}; }));
+/* данные иероглифов (и всех их компонентов) из шардов: D.chars и контуры G */
+async function loadChars(han) {
+  let need = new Set(han);
+  const done = new Set();
+  while (need.size) {
+    const batch = [...need].filter(c => !done.has(c)); need = new Set();
+    batch.forEach(c => done.add(c));
+    await Promise.all([...new Set(batch.map(shardKey))].map(async k => {
+      const [cd, gl] = await Promise.all([loadShard('chars', k), loadShard('glyphs', k)]);
+      Object.assign(G, gl);
+      batch.filter(c => shardKey(c) === k).forEach(c => {
+        if (!cd[c]) return;
+        D.chars[c] = D.chars[c] || cd[c];
+        (cd[c].components || []).forEach(x => { if (!done.has(x)) need.add(x); });
+      });
+    }));
+  }
+}
 let tradMap = null;
+/* язык своего текста: auto (есть кана — японский), zh, ja */
+let textLang = 'auto';
+try { textLang = localStorage.getItem('hanzi-textlang') || 'auto'; } catch (e) {}
 async function analyzeText(raw) {
+  if (textLang === 'ja' || (textLang === 'auto' && JA.isJapanese(raw))) {
+    const ph = await JA.analyze(raw, loadShard);
+    if (!ph.words.some(w => !w.punct)) return null;
+    await loadChars([...new Set([...ph.zh].filter(c => HAN.test(c)))]);
+    return ph;
+  }
   tradMap = tradMap || await fetch('data/trad.json').then(r => r.json()).catch(() => ({}));
   let converted = false;
   const text = [...raw].slice(0, 100).map(c => { if (tradMap[c]) { converted = true; return tradMap[c]; } return c; }).join('');
@@ -833,22 +893,7 @@ async function analyzeText(raw) {
     parts.push({ word: cs.slice(i, i + n).join(''), chars: cs.slice(i, i + n) });
     i += n;
   }
-  // данные иероглифов и всех их компонентов
-  let need = new Set(han);
-  const done = new Set();
-  while (need.size) {
-    const batch = [...need].filter(c => !done.has(c)); need = new Set();
-    batch.forEach(c => done.add(c));
-    await Promise.all([...new Set(batch.map(shardKey))].map(async k => {
-      const [cd, gl] = await Promise.all([loadShard('chars', k), loadShard('glyphs', k)]);
-      Object.assign(G, gl);
-      batch.filter(c => shardKey(c) === k).forEach(c => {
-        if (!cd[c]) return;
-        D.chars[c] = D.chars[c] || cd[c];
-        (cd[c].components || []).forEach(x => { if (!done.has(x)) need.add(x); });
-      });
-    }));
-  }
+  await loadChars(han);
   parts.forEach(w => {
     if (w.punct) return;
     const e = wordsBy[w.word];
@@ -863,12 +908,21 @@ async function analyzeText(raw) {
   });
   return { zh: text, custom: true, trad: converted, words: parts };
 }
+function syncTextLang() {
+  document.querySelectorAll('#ownLang button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.tl === textLang)));
+  $('#ownText').lang = textLang === 'ja' ? 'ja' : 'zh';
+}
+document.querySelectorAll('#ownLang button').forEach(b => b.onclick = () => {
+  textLang = b.dataset.tl; try { localStorage.setItem('hanzi-textlang', textLang); } catch (e) {}
+  syncTextLang();
+});
+syncTextLang();
 $('#ownGo').onclick = async () => {
   const msg = $('#ownMsg'); const say = k => { msg.dataset.k = k; msg.textContent = t(k); }; say('ownBusy');
   try {
     const ph = await analyzeText($('#ownText').value);
     if (!ph) { say('ownEmpty'); return; }
-    say('ownNote');
+    say(ph.ja ? 'jaNote' : 'ownNote');
     customPhrase = ph; buildList(); switchPhrase(L.length - 1);
     track('own_phrase', { len: ph.zh.length });
   } catch (e) { say('ownErr'); }
@@ -902,6 +956,7 @@ $('#howClose').onclick = () => $('#howDlg').close();
 $('#howDlg').addEventListener('click', e => { if (e.target.id === 'howDlg') e.target.close(); });
 const ownLabels = () => {
   $('#ownSum').textContent = t('ownTitle'); $('#ownGo').textContent = t('ownGo');
+  $('#ownLang [data-tl="auto"]').textContent = t('tlAuto');
   $('#ownText').placeholder = t('ownPh'); $('#ownMsg').textContent = t($('#ownMsg').dataset.k || 'ownNote');
 };
 
