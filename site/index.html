@@ -80,7 +80,9 @@
   .opts .scr label:hover span, .opts .lang button:hover, .opts .md button:hover { color:var(--fg); }
   .opts .scr input:checked + span, .opts .lang button.on, .opts .md button.on { background:var(--accent); color:#fff; box-shadow:0 1px 3px rgba(0,0,0,.25); }
   .opts .scr input:focus-visible + span, .opts .lang button:focus-visible, .opts .md button:focus-visible { outline:2px solid var(--accent); outline-offset:1px; }
+  h1, .opts span, .opts button { white-space:nowrap; }
   @media (max-width:480px) { .right { gap:8px; } .opts .scr span, .opts .lang button, .opts .md button { padding:5px 8px; } }
+  @media (max-width:420px) { h1 { font-size:.85rem; } header { gap:8px; } .opts .scr span, .opts .lang button, .opts .md button { padding:5px 6px; font-size:.75rem; } }
 
   #picker { display:flex; align-items:center; gap:8px; margin-bottom:14px; flex-wrap:wrap; }
   #picker .pk, #picker .hint { white-space:nowrap; }
@@ -104,8 +106,8 @@
   html.jm #view [data-v="tn"] { display:none; }
   html.tn:not(.jm) .t1 { color:var(--t1); } html.tn:not(.jm) .t2 { color:var(--t2); } html.tn:not(.jm) .t3 { color:var(--t3); }
   html.tn:not(.jm) .t4 { color:var(--t4); } html.tn:not(.jm) .t5 { color:var(--t5); }
-  html.hpy .word:not(.rv) .py, html.hpy .word:not(.rv) .jr { color:transparent !important; background:var(--soft); border-radius:4px; cursor:pointer; }
-  html.hpy .word:not(.rv) .py *, html.hpy .word:not(.rv) .jr * { color:transparent !important; }
+  html.hpy .word:not(.rv) .py, html.hpy .word:not(.rv) .jr, html.hpy .word:not(.rv) .fg { color:transparent !important; background:var(--soft); border-radius:4px; cursor:pointer; }
+  html.hpy .word:not(.rv) .py *, html.hpy .word:not(.rv) .jr *, html.hpy .word:not(.rv) .fg * { color:transparent !important; }
   html.htr:not(.trv) #trans, html.htr:not(.trv) #gloss { filter:blur(6px); cursor:pointer; user-select:none; }
   html.htr:not(.trv) .ch[data-tip]::before { display:none; }
   .word { display:flex; gap:2px; padding:4px 6px; border-radius:10px; }
@@ -114,8 +116,11 @@
         cursor:pointer; padding:4px 6px; border-radius:8px; font:inherit; }
   .ch:hover { background:color-mix(in srgb, var(--accent) 15%, transparent); }
   .ch .py { font-size:.8rem; color:var(--muted); }
-  .word.ja { position:relative; padding-top:1.35rem; }
-  .word.ja .jr { position:absolute; top:4px; left:6px; right:6px; text-align:center; font-size:.8rem; color:var(--muted); white-space:nowrap; }
+  /* японское слово: фуригана (кана) над группами кандзи, транскрипция всего слова под ним */
+  .word.ja { position:relative; padding-top:1.1rem; padding-bottom:1.3rem; }
+  .word.ja .jr { position:absolute; bottom:2px; left:6px; right:6px; text-align:center; font-size:.8rem; color:var(--muted); white-space:nowrap; }
+  .run { position:relative; display:flex; gap:2px; }
+  .run .fg { position:absolute; top:-.95rem; left:0; right:0; text-align:center; font-size:.72rem; line-height:1; color:var(--muted); white-space:nowrap; letter-spacing:.02em; }
   .word.ja .ch .py { display:none; }
   .word.ja span.serif[data-c], [lang="ja"] .glyph span.serif[data-c] { font-family:"Noto Sans JP","Hiragino Sans","Noto Sans CJK JP",system-ui,sans-serif; }
   /* японский режим: кандзи и кана рисуются чертами KanjiVG (обводка 109×109), а не заливкой Make Me a Hanzi */
@@ -153,6 +158,21 @@
 
   #card { margin-top:24px; background:var(--card); border:1px solid var(--soft); border-radius:16px; padding:20px; display:none; }
   #card.open { display:block; }
+  #card .grab, #cardClose { display:none; }
+  /* первый вход: пульсирующее кольцо на том, что нажать (см. tour) */
+  @keyframes pulse { 0% { box-shadow:0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent); } 75%, 100% { box-shadow:0 0 0 14px transparent; } }
+  .pulse { animation:pulse 1.6s ease-out infinite; border-radius:12px; }
+  .tourtip { margin:0 0 10px; padding:8px 12px; border-radius:10px; background:color-mix(in srgb, var(--accent) 10%, transparent); font-size:.9rem; }
+  .tourtip button { margin-left:8px; }
+  /* телефон: карточка выезжает снизу, фраза остаётся на экране */
+  @media (max-width:640px) {
+    #card.open { position:fixed; left:0; right:0; bottom:0; z-index:40; margin:0; max-height:72dvh; overflow-y:auto; overscroll-behavior:contain;
+                 border-radius:18px 18px 0 0; border-bottom:0; padding:6px 16px 24px; box-shadow:0 -8px 28px rgba(0,0,0,.28); transition:transform .2s; }
+    #card .grab { display:block; width:44px; height:5px; border-radius:3px; background:var(--line); margin:4px auto 10px; touch-action:none; }
+    #cardClose { display:inline-flex; font-size:1.1rem; line-height:1; padding:4px 11px; }
+    html.sheet main { padding-bottom:74dvh; }
+    html.cs #card.open { padding-bottom:140px; }   /* баннер cookies поверх низа карточки */
+  }
   .toolbar { display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:8px; flex-wrap:wrap; }
   .crumbs { color:var(--muted); font-size:.85rem; }
   .btn { display:inline-flex; align-items:center; gap:6px; background:none; color:var(--fg); border:1px solid var(--soft); border-radius:999px;
@@ -262,9 +282,11 @@
   <ul class="wl" id="gloss"></ul>
   <p class="hint" id="hint"></p>
   <section id="card">
+    <div class="grab"></div>
+    <p class="tourtip" id="tourTip" hidden></p>
     <div class="toolbar">
       <span class="crumbs" id="crumbs"></span>
-      <button class="btn" id="explodeAll"></button>
+      <span><button class="btn" id="explodeAll"></button> <button class="btn" id="cardClose" aria-label="close">×</button></span>
     </div>
     <div id="tree"></div>
     <div id="info"></div>
@@ -318,14 +340,14 @@ const ICON = {
   burst: '<svg class="i" viewBox="0 0 24 24"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M18.4 5.6l-2.8 2.8M8.4 15.6l-2.8 2.8"/></svg>',
 };
 const T = {
-  ru: { vPy:'Пиньинь', vRd:'Чтение', vTr:'Перевод', vTn:'Тоны', vHid:'скрыто: нажми, чтобы показать', hint:'Нажми на иероглиф.', crumbs:'Нажимай на части',
+  ru: { vPy:'Пиньинь', vRd:'Чтение', vTr:'Перевод', vTn:'Тоны', vHid:'скрыто: нажми, чтобы показать', tour1:'Нажми на любой иероглиф — он разлетится на части.', tour2:'Нажимай на части — они тоже разлетаются. «+» в углу отмечает знакомые знаки.', tourOk:'Понятно', hint:'Нажми на иероглиф.', crumbs:'Нажимай на части',
         all:'Взорвать всё', ftag:'Учим китайские иероглифы через радикалы', fExplore:'Разделы', fProject:'Проект', fAll:'Все иероглифы', fPhrases:'Все фразы', fAbout:'О проекте', fPrivacy:'Конфиденциальность', fHow:'Как это работает', fOther:'Другие проекты', fData:'Источники данных', howTitle:'Как это работает', close:'Закрыть', howBody:'<p>Выбери фразу и нажми на иероглиф: он «разлетится» на радикалы и фонетики, пока не станет неделимым. У каждой части есть значение, пиньинь, слова и иероглифы, где она встречается.</p><p>«＋ Новая фраза» подбирает фразу с минимумом незнакомых тебе иероглифов, а «Своя фраза» разбирает любой вставленный китайский текст.</p><p>Переключатель 中 / 日 в шапке включает японский режим: японские фразы с чтениями, а кандзи — с онными и кунными чтениями и разбором по чертам KanjiVG.</p><p>Кнопки над фразой скрывают пиньинь (чтение) и перевод, чтобы проверить себя: нажми на серую полоску или размытый перевод, и он откроется. «Тоны» раскрашивают пиньинь по тону: 1 красный, 2 зелёный, 3 синий, 4 фиолетовый.</p><p>Фразы взяты из открытых корпусов: Tatoeba, Wiktionary, Common Voice.</p>', newPhrase:'Новая фраза', inPhrase:'В этой фразе', viaParents:'Ещё слова с этой частью', incompl:'В словаре у этого знака не хватает одной части разбора, поэтому дерево неполное.', ownTitle:'Своя фраза', ownGo:'Разобрать', ownRand:'Случайная', lgKnown:'знаю', lgAll:'знаю все части', lgSome:'знаю часть частей', fLearned:'Мои иероглифы', fExt:'Расширение для Chrome', fKana:'Кана (японская азбука)', statsLink:'Что я выучил', trBtn:'Перевести', trBusy:'Перевожу…', trErr:'Не удалось перевести', trLimit:'Лимит переводов на сегодня', trMt:'машинный перевод', ownPh:'Вставьте китайский или японский текст (до 100 знаков)', ownBusy:'Загружаю словарь…', ownEmpty:'Нет иероглифов или каны', tlAuto:'Авто', jaNote:'Японский: разбор в браузере, слова и чтения из словаря JMdict. Нажмите на кану — её чтение и происхождение.', kanaRead:'Чтение', kanaOrigin:'Происхождение', kanaHira:'хирагана', kanaKata:'катакана', jaLemma:'словарная форма', ownErr:'Не удалось загрузить данные', ownNote:'Разбор идёт в вашем браузере. Значения слов из словаря CC-CEDICT. Перевод всей фразы — по кнопке (текст уходит на сервер и в Gemini).', ownTrad:'Традиционные знаки заменены упрощёнными.', noMore:'Фразы в пуле закончились', known:'Знаю', add:'Знаю', where:'Где ещё', words:'Слова', chars:'Иероглифы с этой частью',
         seen:'Уже было во фразе:', nodesc:'В словаре нет описания.', derived:'выведено автоматически', mnemo:'Запоминалка', mnemoMore:'Ещё', mnemoLimit:'Лимит на сегодня исчерпан', mnemoLogin:'Запоминалки — после входа через Google', mnemoBusy:'Думаю…', mnemoErr:'Не получилось, попробуй позже', mnemoNote:'Выдумка для памяти, не этимология', logout:'Выйти', atomic:'неделимая часть: радикал или цельный рисунок',
         kOn:'Он', kKun:'Кун', kOnT:'онное чтение (китайское по происхождению)', kKunT:'кунное чтение (японское слово)', kGrade:'класс', kSecondary:'средняя школа', kStrokes:'черт', kParts:'Части', kWordRu:'как слово', kEn:'по-английски',
         lvN:'кандзи до {n} класса', lv7:'кандзи средней школы', lv0:'только кана', jaLoading:'Разбираю фразу…',
         phonetic:'Звук подсказывает', semantic:'смысл —', word:'Слово', known_n:'Известно:',
         types:{ pictophonetic:'смысл + звук', ideographic:'смысловая комбинация', pictographic:'рисунок' } },
-  en: { vPy:'Pinyin', vRd:'Reading', vTr:'Translation', vTn:'Tones', vHid:'hidden: click to show', hint:'Click a character.', crumbs:'Click the parts',
+  en: { vPy:'Pinyin', vRd:'Reading', vTr:'Translation', vTn:'Tones', vHid:'hidden: click to show', tour1:'Click any character — it bursts into its parts.', tour2:'Click the parts — they burst too. The “+” in the corner marks characters you know.', tourOk:'Got it', hint:'Click a character.', crumbs:'Click the parts',
         all:'Explode all', ftag:'Learn Chinese characters by radicals', fExplore:'Explore', fProject:'Project', fAll:'All characters', fPhrases:'All phrases', fAbout:'About', fPrivacy:'Privacy', fHow:'How it works', fOther:'Other projects', fData:'Data sources', howTitle:'How it works', close:'Close', howBody:'<p>Pick a phrase and click a character: it breaks into radicals and phonetic parts until it can\'t be split further. Each part has a meaning, pinyin, words and characters that use it.</p><p>“＋ New phrase” picks a phrase with the fewest characters you don\'t know yet, and “Your own phrase” breaks down any Chinese text you paste.</p><p>The 中 / 日 switch in the header turns on Japanese mode: Japanese phrases with readings, and kanji with on/kun readings and KanjiVG stroke breakdowns.</p><p>The buttons above the phrase hide pinyin (reading) and the translation so you can test yourself: click a grey bar or the blurred translation to reveal it. “Tones” colours pinyin by tone: 1 red, 2 green, 3 blue, 4 purple.</p><p>Phrases come from open corpora: Tatoeba, Wiktionary, Common Voice.</p>', newPhrase:'New phrase', inPhrase:'In this phrase', viaParents:'More words with this part', incompl:'The dictionary is missing one part of this character\'s breakdown, so the tree is incomplete.', ownTitle:'Your own phrase', ownGo:'Break down', ownRand:'Random', lgKnown:'known', lgAll:'all parts known', lgSome:'some parts known', fLearned:'My characters', fExt:'Chrome extension', fKana:'Kana (Japanese syllabaries)', statsLink:'What I\'ve learned', trBtn:'Translate', trBusy:'Translating…', trErr:'Could not translate', trLimit:'Daily translation limit reached', trMt:'machine translation', ownPh:'Paste Chinese or Japanese text (up to 100 characters)', ownBusy:'Loading dictionary…', ownEmpty:'No characters or kana found', tlAuto:'Auto', jaNote:'Japanese: breakdown runs in your browser; words and readings come from JMdict. Click a kana to see its reading and origin.', kanaRead:'Reading', kanaOrigin:'Origin', kanaHira:'hiragana', kanaKata:'katakana', jaLemma:'dictionary form', ownErr:'Could not load data', ownNote:'Breakdown runs in your browser. Word meanings come from CC-CEDICT. Whole-phrase translation is on request (the text is sent to our server and Gemini).', ownTrad:'Traditional characters were converted to simplified.', noMore:'No more phrases in the pool', known:'Known', add:'Know it', where:'Where else', words:'Words', chars:'Characters with this part',
         seen:'Seen in this phrase:', nodesc:'No dictionary description.', derived:'derived automatically', mnemo:'Mnemonic', mnemoMore:'Another', mnemoLimit:'Daily limit reached', mnemoLogin:'Sign in with Google for mnemonics', mnemoBusy:'Thinking…', mnemoErr:'Failed, try again later', mnemoNote:'A memory aid, not etymology', logout:'Sign out', atomic:'indivisible part: a radical or a whole picture',
         kOn:'On', kKun:'Kun', kOnT:'on\'yomi (Chinese-derived reading)', kKunT:'kun\'yomi (native Japanese reading)', kGrade:'grade', kSecondary:'secondary school', kStrokes:'strokes', kParts:'Parts', kWordRu:'as a word', kEn:'in English',
@@ -633,7 +655,7 @@ async function switchPhrase(i) {
   $('#own').hidden = true;
   rootCh = null; selected = null;
   revealed.clear(); document.documentElement.classList.remove('trv');
-  $('#card').classList.remove('open'); $('#hint').style.display = '';
+  $('#card').classList.remove('open'); $('#hint').style.display = ''; document.documentElement.classList.remove('sheet');
   ['#phrase', '#gloss', '#tree'].forEach(q => ph.ja ? $(q).setAttribute('lang', 'ja') : $(q).removeAttribute('lang'));
   if (ph.ja && !ph.words) {                     // фраза из японского пула: разбор при первом показе
     D.phrase = []; renderPicker(); $('#phrase').textContent = t('jaLoading'); $('#trans').textContent = ''; $('#gloss').innerHTML = '';
@@ -647,6 +669,19 @@ async function switchPhrase(i) {
 }
 
 /* ---------- фраза ---------- */
+/* фуригана: делим слово на группы кандзи и каны и сопоставляем с чтением (見せて + みせて → 見: み);
+   группу кандзи не делим (勉強 — べんきょう целиком); не сошлось — чтение над всем словом */
+const KJ = /[㐀-鿿々〆ヶ]/;
+function furi(w) {
+  if (!w.reading || !w.chars.some(c => KJ.test(c))) return null;
+  const runs = [];
+  w.chars.forEach((c, i) => { const k = KJ.test(c); const last = runs[runs.length - 1]; if (last && last.k === k) last.n++; else runs.push({ k, i, n: 1 }); });
+  const re = new RegExp('^' + runs.map(r => r.k ? '(.+?)' : JA.toHira(w.chars.slice(r.i, r.i + r.n).join('')).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('') + '$');
+  const m = JA.toHira(w.reading).match(re);
+  if (!m) return [{ i: 0, n: w.chars.length, rt: w.reading }];
+  let g = 1;
+  return runs.map(r => ({ i: r.i, n: r.n, rt: r.k ? m[g++] : null }));
+}
 function renderPhrase() {
   const root = $('#phrase'); root.innerHTML = '';
   D.phrase.forEach((w, wi) => {
@@ -660,6 +695,7 @@ function renderPhrase() {
       r.title = [w.reading, lang === 'ru' ? w.lat : w.cyr].filter(Boolean).join(' · ');
       el.append(r);
     }
+    const segs = w.ja && furi(w), boxes = [];
     w.chars.forEach((c, i) => {
       const b = document.createElement('button');
       b.className = 'ch' + (partState(c) ? ' ' + partState(c) : '') + (c === rootCh ? ' sel' : '') + (JA.KANA.test(c) ? ' kana' : '');
@@ -667,15 +703,23 @@ function renderPhrase() {
       const tip = tipFor(w, i); if (tip) b.dataset.tip = tip;
       b.innerHTML = `<span class="py">${PYH((w.pinyin && w.pinyin[i]) || py(c))}</span>${hz(c)}`;
       b.onclick = e => {   // скрытое чтение: нажатие на полоску только открывает чтение слова
-        if (view.py === false && !revealed.has(wi) && e.target.closest('.py, .jr')) { revealed.add(wi); el.classList.add('rv'); return; }
+        if (view.py === false && !revealed.has(wi) && e.target.closest('.py, .jr, .fg')) { revealed.add(wi); el.classList.add('rv'); return; }
         if (view.py === false) { revealed.add(wi); el.classList.add('rv'); }
         openRoot(c);
       };
-      el.append(b);
+      boxes.push(b);
+    });
+    if (!segs) el.append(...boxes);
+    else segs.forEach(sg => {
+      if (!sg.rt) return el.append(...boxes.slice(sg.i, sg.i + sg.n));
+      const run = document.createElement('span'); run.className = 'run';
+      const f = document.createElement('span'); f.className = 'fg'; f.textContent = sg.rt;
+      f.onclick = () => { revealed.add(wi); el.classList.add('rv'); };
+      run.append(f, ...boxes.slice(sg.i, sg.i + sg.n)); el.append(run);
     });
     root.append(el);
   });
-  markWord();
+  markWord(); if (tour) tourMark();
 }
 function markWord() {
   document.querySelectorAll('.word').forEach(e => e.classList.remove('active'));
@@ -693,7 +737,7 @@ function makeNode(ch, ancestors, animate) {
   const g = document.createElement('button');
   g.className = 'glyph' + (comps.length ? '' : ' leaf') + (partState(ch) ? ' ' + partState(ch) : '');
   g.innerHTML = `${hz(ch)}<span class="m">${short(defOf(ch)) || '&nbsp;'}</span>`;
-  g.onclick = () => { select(ch, g); if (comps.length) toggle(node, ancestors.concat(ch)); };
+  g.onclick = () => { select(ch, g); if (comps.length) toggle(node, ancestors.concat(ch)); if (tour === 2 && ancestors.length) tourDone(); };
   const kb = document.createElement('button');
   kb.className = 'kbtn';
   kb.onclick = e => { e.stopPropagation(); toggleKnown(ch); };
@@ -713,10 +757,32 @@ function setKbtn(b, ch) {
   b.innerHTML = on ? ICON.check : '+';
 }
 function toggleKnown(ch) {
+  if (tour === 2) setTimeout(tourDone);
   const add = !known.has(ch);
   add ? known.add(ch) : known.delete(ch);
   saveKnown(); refresh();
   if (user) api('/api/known', { method: 'PUT', body: add ? { add: [ch] } : { remove: [ch] } });
+}
+/* первый вход: 1 — нажми на иероглиф фразы, 2 — нажимай на части; у кого уже есть данные в localStorage, тура нет */
+let tour = 0;
+try {
+  if (!localStorage.getItem('hanzi-tour')) {
+    if (['hanzi-known', 'hanzi-seen-pool', 'hanzi-phrase', 'hanzi-seen-ja', 'hanzi-phrase-ja'].some(k => localStorage.getItem(k) !== null)) localStorage.setItem('hanzi-tour', 'done');
+    else tour = 1;
+  }
+} catch (e) {}
+function tourDone() { tour = 0; try { localStorage.setItem('hanzi-tour', 'done'); } catch (e) {} tourMark(); track('tour_done'); }
+function tourMark() {
+  document.querySelectorAll('.pulse').forEach(e => e.classList.remove('pulse'));
+  const tip = $('#tourTip');
+  tip.hidden = tour !== 2;
+  if (tour === 1) { const c = $('#phrase .ch'); if (c) c.classList.add('pulse'); $('#hint').textContent = t('tour1'); }
+  else $('#hint').textContent = t('hint');
+  if (tour === 2) {
+    document.querySelectorAll('#tree > .node > .kids > .node > .gw > .glyph').forEach(g => g.classList.add('pulse'));
+    tip.innerHTML = `${t('tour2')}<button class="btn">${t('tourOk')}</button>`;
+    tip.querySelector('button').onclick = tourDone;
+  }
 }
 function toggle(node, anc, forceOpen) {
   let kids = node.querySelector(':scope > .kids');
@@ -747,7 +813,25 @@ function openKana(ch) {
     <p>${t('kanaRead')}: <b>${tr.lat || '—'}</b> (Hepburn), <b>${tr.cyr || '—'}</b> (Поливанов). ${ch === hira ? t('kanaHira') : t('kanaKata')}.</p>
     ${big !== 'ー' ? `<p><a class="btn" href="/japanese/#${encodeURIComponent(big)}" target="_blank" rel="noopener">${ICON.ext}${t('kanaOrigin')}</a></p>` : ''}</div>`;
   document.querySelectorAll('.ch').forEach(b => b.classList.toggle('sel', b.dataset.ch === ch));
-  markWord();
+  markWord(); sheetOpen();
+}
+function sheetOpen() { document.documentElement.classList.add('sheet'); $('#card').scrollTop = 0; $('#card').style.transform = ''; }
+function closeCard() {
+  if (!$('#card').classList.contains('open')) return;
+  rootCh = null; selected = null;
+  $('#card').classList.remove('open'); $('#card').style.transform = ''; $('#hint').style.display = '';
+  document.documentElement.classList.remove('sheet');
+  document.querySelectorAll('.ch.sel').forEach(b => b.classList.remove('sel'));
+  markWord(); tourMark();
+}
+$('#cardClose').onclick = closeCard;
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !document.querySelector('dialog[open]')) closeCard(); });
+{ // телефон: карточку можно стянуть вниз за ручку или панель
+  let y0 = null, dy = 0;
+  const card = $('#card');
+  card.addEventListener('touchstart', e => { if (e.target.closest('.grab, .toolbar') && !e.target.closest('button')) { y0 = e.touches[0].clientY; dy = 0; card.style.transition = 'none'; } }, { passive: true });
+  card.addEventListener('touchmove', e => { if (y0 === null) return; dy = Math.max(0, e.touches[0].clientY - y0); card.style.transform = `translateY(${dy}px)`; }, { passive: true });
+  card.addEventListener('touchend', () => { if (y0 === null) return; y0 = null; card.style.transition = ''; if (dy > 80) closeCard(); else card.style.transform = ''; });
 }
 function openRoot(ch) {
   if (JA.KANA.test(ch) && !D.chars[ch]) return openKana(ch);
@@ -759,7 +843,9 @@ function openRoot(ch) {
   toggle(node, [ch]);
   select(ch, node.querySelector('.glyph'));
   document.querySelectorAll('.ch').forEach(b => b.classList.toggle('sel', b.dataset.ch === ch));
-  markWord();
+  markWord(); sheetOpen();
+  if (tour === 1) tour = 2;
+  tourMark();
 }
 $('#explodeAll').onclick = () => { const r = $('#tree > .node'); if (r) explodeAll(r); };
 
@@ -872,7 +958,8 @@ function select(ch, glyphEl) {
   loadMnemonics(ch);
   const ub = $('#usageBtn'); if (ub) ub.onclick = () => $('#usage').classList.toggle('open');
   document.querySelectorAll('.chip').forEach(b => b.onclick = () => {
-    $('#card').scrollIntoView({ behavior: 'smooth', block: 'start' }); openRoot(b.dataset.ch);
+    if (!matchMedia('(max-width:640px)').matches) $('#card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    openRoot(b.dataset.ch);
   });
 }
 function partState(ch) {   // known | allp (все листовые части известны) | somep | ''
@@ -988,6 +1075,7 @@ function renderConsent() {
   const c = CONSENT_T[lang] || CONSENT_T.en;
   $('#consentText').textContent = c.text; $('#consentYes').textContent = c.yes; $('#consentNo').textContent = c.no; $('#consentMore').textContent = c.more;
   el.hidden = getConsent() !== null;
+  document.documentElement.classList.toggle('cs', !el.hidden);
 }
 $('#consentYes').onclick = () => { setConsent('yes'); loadGA(); renderConsent(); };
 $('#consentNo').onclick = () => { setConsent('no'); renderConsent(); };
@@ -995,7 +1083,7 @@ function applyLang() {
   renderConsent();
   document.documentElement.lang = lang;
   document.querySelectorAll('.lang button').forEach(b => b.classList.toggle('on', b.dataset.lang === lang));
-  $('#hint').textContent = t('hint');
+  $('#hint').textContent = t(tour === 1 ? 'tour1' : 'hint'); if (tour === 2 && $('#tourTip')) tourMark();
   $('#crumbs').textContent = t('crumbs');
   $('#explodeAll').innerHTML = ICON.burst + t('all');
   renderAuth(); ownLabels(); renderFooter(); syncView();
