@@ -50,6 +50,49 @@ async function lookup(raw, lang, hover) {
   };
 }
 
+// Pinyin over page text: per text, segments [text, pinyin|''] — longest CC-CEDICT word first (up to 6 characters),
+// its syllables spread over its characters; a lone character gets its main reading. Traditional text is looked up
+// through trad.json but shown as is.
+async function annotate(texts) {
+  const map = await tradMap();
+  const simp = s => [...s].map(c => map[c] || c);
+  const han = [...new Set(texts.flatMap(t => simp(t).filter(c => HAN.test(c))))];
+  const words = {}, chars = {};
+  await Promise.all([...new Set(han.map(shardKey))].map(async k => {
+    const [w, c] = await Promise.all([shard('words', k), shard('chars', k)]);
+    Object.assign(words, w); Object.assign(chars, c);
+  }));
+  const one = c => (((chars[c] || {}).pinyin || [])[0] || '');
+  return texts.map(t => {
+    const cs = [...t], ss = simp(t), out = [];
+    const push = (txt, py) => { const l = out[out.length - 1]; if (!py && l && !l[1]) l[0] += txt; else out.push([txt, py]); };
+    for (let i = 0; i < cs.length;) {
+      if (!HAN.test(ss[i])) { push(cs[i], ''); i++; continue; }
+      let m = Math.min(6, cs.length - i);
+      for (; m > 1; m--) {
+        const w = ss.slice(i, i + m);
+        if (w.every(c => HAN.test(c)) && words[w.join('')] && words[w.join('')][0].split(' ').length === m) break;
+      }
+      if (m > 1) words[ss.slice(i, i + m).join('')][0].split(' ').forEach((p, j) => push(cs[i + j], p.toLowerCase()));
+      else push(cs[i], one(ss[i]));
+      i += m;
+    }
+    return out;
+  });
+}
+
+// Context menu: look up the selection; pinyin over this page.
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.contextMenus.removeAll(() => {
+    chrome.contextMenus.create({ id: 'hb-look', title: 'Hanzi Burst: “%s”', contexts: ['selection'] });
+    chrome.contextMenus.create({ id: 'hb-ruby', title: 'Hanzi Burst: pinyin on this page (on/off)', contexts: ['page'] });
+  });
+});
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+  if (!tab || tab.id < 0) return;
+  try { chrome.tabs.sendMessage(tab.id, { type: info.menuItemId === 'hb-ruby' ? 'ctx-ruby' : 'ctx-look' }, { frameId: info.frameId || 0 }); } catch (e) {}
+});
+
 // Japanese: words by site/ja.js (JMdict shards data/ja), kanji readings and meanings from data/kanji.
 async function lookupJa(raw, lang, hover) {
   const r = await JA.analyze([...raw].slice(0, hover ? 12 : 30).join(''), shard);
@@ -78,6 +121,7 @@ async function lookupJa(raw, lang, hover) {
 
 chrome.runtime.onMessage.addListener((msg, _s, send) => {
   if (msg && msg.type === 'open-learned') { chrome.tabs.create({ url: chrome.runtime.getURL('learned.html') }); return; }
+  if (msg && msg.type === 'annotate') { annotate(msg.texts || []).then(send, () => send(null)); return true; }
   if (msg && msg.type === 'lookup' && msg.ja) { lookupJa(msg.text, msg.lang, !!msg.hover).then(send, () => send(null)); return true; }
   if (msg && msg.type === 'lookup') { lookup(msg.text, msg.lang, !!msg.hover).then(send, () => send(null)); return true; }
 });

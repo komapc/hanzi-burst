@@ -4,7 +4,7 @@
   "version": "0.2.0",
   "description": "Select Chinese or Japanese text on any page to see pinyin or kana reading, meaning and how each character breaks down into parts. Works offline.",
   "icons": { "16": "icons/16.png", "48": "icons/48.png", "128": "icons/128.png" },
-  "permissions": ["storage", "activeTab"],
+  "permissions": ["storage", "activeTab", "contextMenus"],
   "background": { "service_worker": "background.js" },
   "content_scripts": [
     { "matches": ["http://*/*", "https://*/*"], "js": ["common.js", "content.js"], "run_at": "document_idle" }
