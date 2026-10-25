@@ -139,7 +139,7 @@ window.JA = (() => {
         else if (nx && /^[mbp]/.test(nx.lat)) c = 'м';
       }
       // Поливанов: い после гласной — й
-      if (c === 'и' && i > 0 && /[аиуэояюё]̄?$/.test(cyr) && !syl[i - 1].sokuon) c = 'й';
+      if (c === 'и' && i > 0 && /[ауэояюё]\u0304?$/.test(cyr) && !syl[i - 1].sokuon) c = 'й';
       lat += l; cyr += c;
     });
     if (long) {

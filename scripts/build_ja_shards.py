@@ -47,7 +47,9 @@ def glosses(entry, n_senses=2, n_glosses=3):
 
 
 def load(lang):
-    path = next(RAW.glob(f"jmdict-{lang}-*.json"))
+    path = next(RAW.glob(f"jmdict-{lang}-*.json"), None)
+    if not path:
+        sys.exit(f"нет data/raw/jmdict/jmdict-{lang}-*.json: обновите снимок raw-data (README, «Обновление снимка»)")
     return json.loads(path.read_text(encoding="utf-8"))["words"]
 
 
