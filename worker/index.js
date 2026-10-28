@@ -54,6 +54,33 @@ async function verifyGoogle(env, credential) {
   return { sub: t.sub, email: t.email, name: t.name };
 }
 
+/* ---------- данные иероглифа из шардов site/data/chars (строит build_shards.py) ---------- */
+// Контекст для промпта берём только отсюда: текст от клиента попадал бы в общий кэш запоминалок.
+const shardKey = ch => ch.codePointAt(0).toString(16).slice(0, -2);
+async function loadChars(env, request, list) {
+  const out = {};
+  await Promise.all([...new Set(list.map(shardKey))].map(async k => {
+    const r = await env.ASSETS.fetch(new URL(`/data/chars/${k}.json`, request.url));
+    if (!r.ok) return;
+    const d = await r.json();
+    list.forEach(c => { if (d[c]) out[c] = d[c]; });
+  }));
+  return out;
+}
+async function charContext(env, request, ch, lang) {
+  const c = (await loadChars(env, request, [ch]))[ch];
+  if (!c) return null;
+  const parts = (c.components || []).slice(0, 8);
+  const pc = await loadChars(env, request, parts);
+  const def = x => (x && ((lang === 'ru' && x.definition_ru) || x.definition)) || '';
+  const et = c.etymology || {};
+  return {
+    pinyin: (c.pinyin || []).join(', '), meaning: def(c),
+    etymology: (lang === 'ru' && et.hint_ru) || et.hint || '',
+    parts: parts.map(p => ({ char: p, meaning: def(pc[p]).split(/[;,]/)[0].trim() })),
+  };
+}
+
 /* ---------- LLM ---------- */
 function promptFor({ ch, pinyin, meaning, parts, etymology, lang, avoid = [] }) {
   const ru = lang === 'ru';
@@ -187,6 +214,8 @@ export default {
       let have = await read();
       // уже есть и новый вариант не просили, либо упёрлись в максимум: LLM не нужен
       if ((have.length && !b.more) || have.length >= MAX_VARIANTS) return json({ variants: have, cached: true });
+      const ctx = await charContext(env, request, b.ch, lang);
+      if (!ctx) return json({ error: 'unknown_char', variants: have }, 400);
 
       const day = new Date().toISOString().slice(0, 10);
       const limit = parseInt(env.EXPLAIN_DAILY_LIMIT || '30', 10);
@@ -202,11 +231,7 @@ export default {
       if (g.n > globalLimit) return json({ error: 'rate_limited', variants: have }, 429);
 
       const clip = (s, n) => String(s || '').slice(0, n);
-      const prompt = promptFor({
-        ch: b.ch, lang, avoid: have.map(v => v.text),
-        pinyin: clip(b.pinyin, 40), meaning: clip(b.meaning, 200), etymology: clip(b.etymology, 300),
-        parts: (Array.isArray(b.parts) ? b.parts : []).slice(0, 8).map(p => ({ char: clip(p.char, 4), meaning: clip(p.meaning, 80) })),
-      });
+      const prompt = promptFor({ ch: b.ch, lang, avoid: have.map(v => v.text), ...ctx });
       try {
         const text = clip(await askGemini(env, prompt), 600);
         // INSERT OR IGNORE: если параллельный запрос успел раньше, остаётся его вариант

@@ -1085,7 +1085,8 @@ function renderAuth() {
   const el = $('#auth');
   if (!backend) { el.innerHTML = ''; return; }
   if (user) {
-    el.innerHTML = `<span>${user.name || user.email}</span><button class="btn" id="logout">${t('logout')}</button>`;
+    el.innerHTML = `<span></span><button class="btn" id="logout">${t('logout')}</button>`;
+    el.firstChild.textContent = user.name || user.email;   // имя из Google-аккаунта: не разметка
     $('#logout').onclick = async () => { await api('/api/auth/logout', { method: 'POST' }); user = null; renderAuth(); if (selected) refresh(); };
   } else if (window.google && window.google.accounts) {
     el.innerHTML = '<span id="gbtn"></span>';
@@ -1109,10 +1110,11 @@ async function onCredential(resp) {
 const MAX_VARIANTS = 3;
 function showMnemonics(ch, variants, note) {
   const box = $('#mnemo'); if (!box || selected !== ch) return;
-  let h = variants.map(v => `<div class="mn">${v.text}</div>`).join('');
-  if (variants.length) h += `<p class="hint">${t('mnemoNote')}</p>`;
-  if (note) h += `<p class="hint">${note}</p>`;
-  box.innerHTML = h;
+  // текст запоминалки пришёл от LLM: только textContent, никакой разметки
+  const el = (cls, text) => { const d = document.createElement(cls === 'mn' ? 'div' : 'p'); d.className = cls; d.textContent = text; return d; };
+  box.replaceChildren(...variants.map(v => el('mn', v.text)));
+  if (variants.length) box.append(el('hint', t('mnemoNote')));
+  if (note) box.append(el('hint', note));
   const btn = $('#mnemoBtn');
   if (btn) {
     btn.style.display = variants.length >= MAX_VARIANTS ? 'none' : '';
@@ -1127,12 +1129,9 @@ async function loadMnemonics(ch) {          // кэш читается без в
 async function mnemonic(ch) {
   const box = $('#mnemo');
   box.insertAdjacentHTML('beforeend', `<p class="hint">${t('mnemoBusy')}</p>`);
-  const c = D.chars[ch] || {};
   const have = box.querySelectorAll('.mn').length;
-  const r = await api('/api/explain', { method: 'POST', body: {
-    ch, lang, more: have > 0, pinyin: (c.pinyin || []).join(', '), meaning: defOf(ch),
-    etymology: pick(c.etymology || {}, 'hint'),
-    parts: (c.components || []).map(x => ({ char: x, meaning: short(defOf(x)) })) } });
+  // значение, части и этимологию Worker берёт из своих шардов, клиенту тут не доверяем
+  const r = await api('/api/explain', { method: 'POST', body: { ch, lang, more: have > 0 } });
   const variants = (r.data && r.data.variants) || [];
   showMnemonics(ch, variants, r.status === 429 ? t('mnemoLimit') : (!r.ok ? t('mnemoErr') : ''));
 }
