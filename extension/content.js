@@ -13,16 +13,40 @@
   const lang = () => (langPref === 'auto' ? autoLang : langPref);
   const key = 'off:' + location.hostname;
   try {
-    chrome.storage.local.get(['enabled', 'mode', 'lang', 'known', 'ruby', key], v => { known = new Set(v.known || []); langPref = v.lang || 'auto'; enabled = v.enabled !== false; mode = MODES.includes(v.mode) ? v.mode : 'select'; off = !!v[key]; rubyPref = !!v.ruby; applyRuby(); });
+    chrome.storage.local.get(['enabled', 'mode', 'lang', 'known', 'ruby', key], v => { known = new Set(v.known || []); langPref = v.lang || 'auto'; enabled = v.enabled !== false; mode = MODES.includes(v.mode) ? v.mode : 'select'; off = !!v[key]; rubyPref = !!v.ruby; applyRuby(); syncSite(); });
     chrome.storage.onChanged.addListener(ch => {
       if (ch.enabled) { enabled = ch.enabled.newValue !== false; applyRuby(); }
       if (ch.ruby) { rubyPref = !!ch.ruby.newValue; rubyTab = null; applyRuby(); }
-      if (ch.known) { known = new Set(ch.known.newValue || []); if (host && last) render(last.r, last.rect, last.scroll); }
+      if (ch.known) { known = new Set(ch.known.newValue || []); if (host && last) render(last.r, last.rect, last.scroll); syncSite(); }
       if (ch.lang) langPref = ch.lang.newValue || 'auto';
       if (ch.mode) { mode = MODES.includes(ch.mode.newValue) ? ch.mode.newValue : 'select'; hide(); }
       if (ch[key]) { off = !!ch[key].newValue; applyRuby(); }
     });
   } catch (e) {}
+
+  // ---- hanzi.lipu.dev: our list and the site's (localStorage hanzi-known) are merged both ways ----
+  // knownBase is the list after the last merge: a character in it that is now missing on one side was unmarked there.
+  // Runs on load, when our list changes, when the site saves its list and, as a fallback, when the tab is hidden.
+  function syncSite() {
+    if (location.hostname !== 'hanzi.lipu.dev') return;
+    let site;
+    try { site = JSON.parse(localStorage.getItem('hanzi-known') || '[]'); } catch (e) { return; }
+    if (!Array.isArray(site)) return;
+    try {
+      chrome.storage.local.get(['known', 'knownBase'], v => {
+        const ext = v.known || [], S = new Set(site), E = new Set(ext), B = v.knownBase ? new Set(v.knownBase) : null;
+        const out = [...new Set([...ext, ...site])].filter(c => !B || !B.has(c) || (S.has(c) && E.has(c)));
+        const O = new Set(out), same = a => a.length === O.size && a.every(c => O.has(c));
+        if (!same(site)) {
+          try { localStorage.setItem('hanzi-known', JSON.stringify(out)); } catch (e) { return; }
+          window.dispatchEvent(new Event('hanzi-known'));            // the site reloads its list (index.html, learned.html)
+        }
+        if (!same(ext) || !B || !same(v.knownBase)) chrome.storage.local.set(same(ext) ? { knownBase: out } : { known: out, knownBase: out });
+      });
+    } catch (e) { /* extension reloaded */ }
+  }
+  window.addEventListener('hanzi-known-saved', syncSite);              // the site saved its list (site/index.html saveKnown)
+  document.addEventListener('visibilitychange', () => { if (document.hidden) syncSite(); });
 
   const CSS = `:host{all:initial}
   *{box-sizing:border-box}
