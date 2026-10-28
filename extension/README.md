@@ -24,3 +24,8 @@ bump `version` in `manifest.json`, merge to `main`, then push tag `v<version>`: 
 
 "My characters" (learned.html) shows progress by HSK 3.0 level from `data/hsk.json` (copied from `site/data`); click a level
 to list the characters of that level not marked yet.
+
+Known characters (`chrome.storage.local` `known`) are merged both ways with the site's list (`localStorage` `hanzi-known`)
+by the content script on hanzi.lipu.dev: on page load, when the extension's list changes, when the site saves its list (`hanzi-known-saved` event) and when the tab is hidden.
+`knownBase` holds the list after the last merge, so a character unmarked on one side is removed on the other too.
+The site listens for the `hanzi-known` window event to reload its list.

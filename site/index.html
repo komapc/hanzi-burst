@@ -376,7 +376,12 @@ let lang = 'ru';
 try { lang = localStorage.getItem('hanzi-lang') || (navigator.language.startsWith('ru') ? 'ru' : 'en'); } catch (e) {}
 let known = new Set();
 try { known = new Set(JSON.parse(localStorage.getItem('hanzi-known') || '[]')); } catch (e) {}
-const saveKnown = () => { try { localStorage.setItem('hanzi-known', JSON.stringify([...known])); } catch (e) {} };
+const saveKnown = () => {
+  try { localStorage.setItem('hanzi-known', JSON.stringify([...known])); } catch (e) {}
+  window.dispatchEvent(new Event('hanzi-known-saved'));   // расширение Hanzi Burst сразу подхватит изменение
+};
+// расширение Hanzi Burst объединило свой список с нашим и записало результат в localStorage
+window.addEventListener('hanzi-known', () => { try { known = new Set(JSON.parse(localStorage.getItem('hanzi-known') || '[]')); } catch (e) { return; } refresh(); });
 const t = k => T[lang][k];
 const pick = (o, base) => (lang === 'ru' && o && o[base + '_ru']) || (o && o[base]) || '';
 
