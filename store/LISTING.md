@@ -1,4 +1,4 @@
-# Chrome Web Store: Hanzi Burst (v0.2.2)
+# Chrome Web Store: Hanzi Burst (v0.2.3)
 
 Notes only: nothing here is published automatically. Paste the texts into the Chrome Web Store
 dashboard (Store listing tab, EN and the RU localization) by hand.
@@ -12,7 +12,7 @@ old description without Japanese); the texts below are the ones to paste.
 **Category:** Education (Productivity is the alternative)
 **Language:** English (add a Russian localization in the Store Listing tab)
 
-**Summary (EN, 121 of 132 chars):**
+**Summary (EN, 121 of 132 chars):** the store takes it from the package (`extension/_locales/en/messages.json` → manifest `description`), not from the dashboard.
 Chinese & Japanese popup dictionary: hover for pinyin or kana, meaning and a radical-by-radical breakdown. Works offline.
 
 **Description (EN):**
@@ -42,7 +42,7 @@ Features
 
 Dictionary data: Make Me a Hanzi (LGPL), CC-CEDICT (CC BY-SA 4.0), Unicode/Unihan, JMdict and KANJIDIC2 (EDRDG, CC BY-SA 4.0), KanjiVG (CC BY-SA 3.0). See NOTICE.txt in the package and hanzi.lipu.dev/about.
 
-**Краткое описание (RU, 121 из 132 знаков):**
+**Краткое описание (RU, 121 из 132 знаков):** берётся из пакета (`extension/_locales/ru/messages.json`).
 Китайско-японский словарь при наведении: пиньинь или кана, значение и разбор иероглифа на ключи и части. Работает офлайн.
 
 **Описание (RU):**
