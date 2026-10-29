@@ -1,9 +1,9 @@
 <!doctype html><html lang="ru"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Hanzi Burst — расширение для Chrome — hanzi-burst</title>
+<title>Hanzi Burst — китайско-японский словарь при наведении, расширение для Chrome</title>
 <meta id="desc" name="description" content="Расширение Hanzi Burst: наведите курсор на китайский иероглиф на любой странице и увидите значение, пиньинь и полный разбор на части. Работает офлайн.">
 <link rel="canonical" href="https://hanzi.lipu.dev/extension">
-<meta property="og:title" content="Hanzi Burst — расширение для Chrome"><meta property="og:image" content="https://hanzi.lipu.dev/og.png">
+<meta property="og:title" content="Hanzi Burst — Chinese &amp; Japanese popup dictionary for Chrome"><meta property="og:image" content="https://hanzi.lipu.dev/og.png">
 <style>
 :root{--bg:#faf7f2;--fg:#1f1b16;--muted:#6b6257;--accent:#c8402a;--line:#cfc6b6;--soft:#e6dfd3;--card:#fff}
 @media(prefers-color-scheme:dark){:root{--bg:#17140f;--on:#17140f;--fg:#f1ebe0;--muted:#a59c8e;--accent:#ff7a5c;--line:#5a5144;--soft:#352f25;--card:#221e17}}
@@ -32,12 +32,12 @@ html[data-l="ru"] [lang="en"],html[data-l="en"] [lang="ru"]{display:none}
 <script>(function(){var l=(navigator.language||'').indexOf('ru')===0?'ru':'en';try{var s=localStorage.getItem('hanzi-lang');if(s==='ru'||s==='en')l=s}catch(e){}var q=/[?&]lang=(ru|en)/.exec(location.search);if(q)l=q[1];document.documentElement.dataset.l=l;document.documentElement.lang=l;window.__l=l})();</script>
 </head><body><main>
 <div class="top">
-<p><a href="/">← hanzi-burst</a> · <a href="/about"><span lang="ru">О проекте</span><span lang="en">About</span></a> · <a href="/privacy"><span lang="ru">Конфиденциальность</span><span lang="en">Privacy</span></a></p>
+<p><a href="/">← Hanzi Burst</a> · <a href="/about"><span lang="ru">О проекте</span><span lang="en">About</span></a> · <a href="/privacy"><span lang="ru">Конфиденциальность</span><span lang="en">Privacy</span></a></p>
 <span class="lang"><button data-lang="ru">RU</button><button data-lang="en">EN</button></span>
 </div>
 <div lang="ru">
 <h1>Hanzi Burst для Chrome</h1>
-<p class="lead">Наведите курсор на китайский иероглиф на любой странице: значение, пиньинь и полный разбор на части. Без интернета и без слежки.</p>
+<p class="lead">Китайско-японский словарь при наведении: наведите курсор на иероглиф на любой странице и увидите пиньинь или кану, значение и полный разбор на ключи и части. Без интернета и без слежки.</p>
 <a class="dl" href="https://chromewebstore.google.com/detail/hfbfpndkjpkfakdaefmebbchapmidahf?utm_source=hanzi&amp;utm_medium=site">Установить из Chrome Web Store</a>
 <p class="m">Или <a href="/hanzi-burst-extension.zip" download>скачайте zip · v0.2.1 · ~21 МБ</a> и поставьте вручную (ниже).</p>
 <p class="m">Firefox: <a href="/hanzi-burst-firefox.zip" download>zip для Firefox</a>. Пока его нет в каталоге дополнений, он ставится на время: <code>about:debugging</code> → «Этот Firefox» → «Загрузить временное дополнение» → выбрать zip (после перезапуска браузера повторить).</p>
@@ -91,7 +91,7 @@ html[data-l="ru"] [lang="en"],html[data-l="en"] [lang="ru"]{display:none}
 </div>
 <div lang="en">
 <h1>Hanzi Burst for Chrome</h1>
-<p class="lead">Hover any Chinese character on any page: meaning, pinyin and a full component breakdown. Works offline, no tracking.</p>
+<p class="lead">A Chinese &amp; Japanese popup dictionary: hover any character on any page to see pinyin or kana, meaning and a full radical-by-radical breakdown. Works offline, no tracking.</p>
 <a class="dl" href="https://chromewebstore.google.com/detail/hfbfpndkjpkfakdaefmebbchapmidahf?utm_source=hanzi&amp;utm_medium=site">Install from Chrome Web Store</a>
 <p class="m">Or <a href="/hanzi-burst-extension.zip" download>download the zip · v0.2.1 · ~21 MB</a> and install it by hand (below).</p>
 <p class="m">Firefox: <a href="/hanzi-burst-firefox.zip" download>Firefox zip</a>. Until it is listed on addons.mozilla.org it installs temporarily: <code>about:debugging</code> → “This Firefox” → “Load Temporary Add-on” → pick the zip (repeat after a browser restart).</p>
@@ -147,8 +147,8 @@ html[data-l="ru"] [lang="en"],html[data-l="en"] [lang="ru"]{display:none}
 </main>
 <script>
 (function () {
-  var T = { ru: ['Hanzi Burst — расширение для Chrome — hanzi-burst', 'Расширение Hanzi Burst: наведите курсор на китайский иероглиф на любой странице и увидите значение, пиньинь и полный разбор на части. Работает офлайн.'],
-            en: ['Hanzi Burst — Chrome extension — hanzi-burst', 'Hanzi Burst extension: hover any Chinese character on any page to see its meaning, pinyin and full component breakdown. Works offline.'] };
+  var T = { ru: ['Hanzi Burst — китайско-японский словарь при наведении, расширение для Chrome', 'Расширение Hanzi Burst: наведите курсор на китайский иероглиф на любой странице и увидите значение, пиньинь и полный разбор на части. Работает офлайн.'],
+            en: ['Hanzi Burst — Chinese & Japanese popup dictionary for Chrome', 'Hanzi Burst: a Chinese & Japanese popup dictionary. Hover any character on any page to see pinyin or kana, meaning and a radical-by-radical breakdown. Works offline.'] };
   var lang = window.__l || 'ru';
   function set(l, save) {
     lang = l; var d = document.documentElement; d.dataset.l = l; d.lang = l;

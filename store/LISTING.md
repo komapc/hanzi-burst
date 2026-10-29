@@ -1,4 +1,10 @@
-# Chrome Web Store: Hanzi Burst (v0.1.0)
+# Chrome Web Store: Hanzi Burst (v0.2.1)
+
+Notes only: nothing here is published automatically. Paste the texts into the Chrome Web Store
+dashboard (Store listing tab, EN and the RU localization) by hand.
+As of 2026-10-29 the live store still shows the pre-0.2 text (summary "Select Chinese text on any
+page to see pinyin, meaning and how each character breaks down into parts. Works offline." and the
+old description without Japanese); the texts below are the ones to paste.
 
 ## Store listing
 
@@ -6,55 +12,67 @@
 **Category:** Education (Productivity is the alternative)
 **Language:** English (add a Russian localization in the Store Listing tab)
 
-**Summary (max 132 chars):**
-Select or hover Chinese text to see pinyin, meaning and how every character breaks into parts. Works offline.
+**Summary (EN, 121 of 132 chars):**
+Chinese & Japanese popup dictionary: hover for pinyin or kana, meaning and a radical-by-radical breakdown. Works offline.
 
 **Description (EN):**
-Hanzi Burst helps you read Chinese and learn characters in context.
+Hanzi Burst is a Chinese & Japanese popup dictionary that helps you read Chinese and learn characters (hanzi) in context.
 
-Select Chinese text on any page, or just hover over it, and a card shows:
-• pinyin and the meaning of the word
-• the full breakdown of every character into its component parts, down to the radicals, with pinyin and meaning for each part
+Hover over Chinese text on any page, hover while holding Alt, or select it, and a card shows:
+• pinyin and the meaning of the whole word, plus every character on its own
+• the full breakdown of every character into its components, down to the radicals, with pinyin and meaning for each part
 • which parts you already know
 
-Mark characters as known with one click. Tiles are painted green (known), blue (all parts known) or amber (some parts known). The "My characters" page lists what you know and what is ready to learn next. The list stays on your device and can be copied to or from hanzi.lipu.dev.
+Pinyin over the whole page: switch it on in the popup, or for the current tab only via right-click → "pinyin on this page". Readings go by words: 银行 is yín háng. On Japanese pages it shows furigana over kanji.
+
+Japanese: when the text has kana or the page is marked as Japanese, the card shows words with their reading (kana and romaji), the dictionary form of verbs (見ました → 見る), and on/kun readings plus parts for each kanji.
+
+Mark characters as known with one click. Tiles are painted green (known), blue (all parts known) or amber (some parts known). The "My characters" page shows your progress by HSK 3.0 level and what is ready to learn next. The list stays on your device and is merged with your list on hanzi.lipu.dev in the same browser.
 
 Features
-• Two modes: selection or mouse hover
+• Three triggers: mouse hover, hover with Alt, or selection; plus a "Hanzi Burst" item in the right-click menu
+• Pinyin (Chinese) or furigana (Japanese) over page text
+• HSK 3.0 progress
 • Simplified and traditional characters
-• Interface in English and Russian
+• Glosses and interface in English and Russian
 • Dark theme
 • Turn off per site in one click
-• Fully offline: the dictionary ships inside the extension, nothing is sent anywhere
+• Fully offline: the dictionaries ship inside the extension, nothing is sent anywhere
 • No ads, no analytics, no account
 
-Dictionary data: Make Me a Hanzi (LGPL), CC-CEDICT (CC BY-SA 4.0), Unicode/Unihan. See NOTICE.txt in the package.
+Dictionary data: Make Me a Hanzi (LGPL), CC-CEDICT (CC BY-SA 4.0), Unicode/Unihan, JMdict and KANJIDIC2 (EDRDG, CC BY-SA 4.0), KanjiVG (CC BY-SA 3.0). See NOTICE.txt in the package and hanzi.lipu.dev/about.
 
-**Краткое описание (RU, 122 из 132 знаков):**
-Выделите или наведите курсор на китайский текст: пиньинь, значение и разбивка каждого иероглифа на части. Работает офлайн.
+**Краткое описание (RU, 121 из 132 знаков):**
+Китайско-японский словарь при наведении: пиньинь или кана, значение и разбор иероглифа на ключи и части. Работает офлайн.
 
 **Описание (RU):**
-(Переводит старый EN-текст выше. 2026-10-20 EN-описание в магазине переписано (ключевые слова: hanzi, radicals, Mandarin, hover dictionary); перед отправкой выровнять RU по нему.)
+(Перевод EN-описания выше, 2026-10-29.)
 
-Hanzi Burst помогает читать по-китайски и учить иероглифы в контексте.
+Hanzi Burst — китайско-японский словарь при наведении: помогает читать по-китайски и учить иероглифы в контексте.
 
-Выделите китайский текст на любой странице или просто наведите на него курсор, и появится карточка:
-• пиньинь и значение слова
-• полная разбивка каждого иероглифа на составные части вплоть до ключей, с пиньинем и значением каждой части
+Наведите курсор на китайский текст на любой странице, наведите с зажатым Alt или выделите его, и появится карточка:
+• пиньинь и значение слова целиком и каждого иероглифа отдельно
+• полный разбор каждого иероглифа на составные части вплоть до ключей (радикалов), с пиньинем и значением каждой части
 • какие части вы уже знаете
 
-Отмечайте известные иероглифы одним кликом. Плитки подсвечиваются зелёным (знаю), синим (знаю все части) или жёлтым (знаю часть). Страница «Мои иероглифы» показывает, что вы уже знаете и что пора учить следующим. Список хранится на вашем устройстве, его можно скопировать на hanzi.lipu.dev и обратно.
+Пиньинь над всей страницей: переключатель в настройках или, только для текущей вкладки, контекстное меню → «pinyin on this page». Чтение берётся по словам: 银行 — yín háng. На японских страницах — фуригана над кандзи.
+
+Японский: если в тексте есть кана или страница помечена как японская, карточка показывает слова с чтением (кана, ромадзи или кириллица по Поливанову), словарную форму глагола (見ました → 見る), а для кандзи — онные и кунные чтения и части.
+
+Отмечайте известные иероглифы одним кликом. Плитки подсвечиваются зелёным (знаю), синим (знаю все части) или жёлтым (знаю часть частей). Страница «Мои иероглифы» показывает прогресс по уровням HSK 3.0 и подсказывает, что учить следующим. Список хранится на вашем устройстве и объединяется со списком на hanzi.lipu.dev в том же браузере.
 
 Возможности
-• Два режима: выделение или наведение курсора
+• Три способа: наведение курсора, наведение с Alt или выделение; плюс пункт «Hanzi Burst» в контекстном меню
+• Пиньинь (китайский) или фуригана (японский) над текстом страницы
+• Прогресс по HSK 3.0
 • Упрощённые и традиционные знаки
-• Интерфейс на английском и русском
+• Переводы и интерфейс на русском и английском
 • Тёмная тема
 • Отключение на отдельном сайте одним кликом
-• Полностью офлайн: словарь внутри расширения, ничего никуда не отправляется
+• Полностью офлайн: словари внутри расширения, ничего никуда не отправляется
 • Без рекламы, аналитики и аккаунтов
 
-Данные словаря: Make Me a Hanzi (LGPL), CC-CEDICT (CC BY-SA 4.0), Unicode/Unihan. См. NOTICE.txt в пакете.
+Данные словарей: Make Me a Hanzi (LGPL), CC-CEDICT (CC BY-SA 4.0), Unicode/Unihan, JMdict и KANJIDIC2 (EDRDG, CC BY-SA 4.0), KanjiVG (CC BY-SA 3.0). См. NOTICE.txt в пакете и hanzi.lipu.dev/about.
 
 ## Assets (in this folder)
 - shot1.png, shot2.png, shot3.png, shot4.png: screenshots 1280x800 (up to 5 allowed); shot4 = card for 战略 on zh.wikipedia

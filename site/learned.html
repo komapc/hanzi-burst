@@ -1,7 +1,7 @@
 <!doctype html><html lang="ru"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>Мои иероглифы — hanzi-burst</title>
+<title>Мои иероглифы — Hanzi Burst</title>
 <style>
 :root{--bg:#faf7f2;--fg:#1f1b16;--muted:#6b6257;--accent:#c8402a;--line:#cfc6b6;--soft:#e6dfd3;--card:#fff;--ok:#2a7f51;--info:#2f6fd0;--warn:#d09a1f}
 @media(prefers-color-scheme:dark){:root{--bg:#17140f;--on:#17140f;--fg:#f1ebe0;--muted:#a59c8e;--accent:#ff7a5c;--line:#5a5144;--soft:#352f25;--card:#221e17;--ok:#5fcf93;--info:#6aa6ff;--warn:#e8b84a}}
@@ -43,12 +43,12 @@ h2 small{color:var(--muted);font-weight:400}
 <script src="script.js"></script>
 <script>
 const T = {
-  ru:{title:'Мои иероглифы',back:'← hanzi-burst',known:'Известные иероглифы',parts:'Части (радикалы) в известных иероглифах',ready:'Готовы к изучению: все части известны',some:'Знаю часть частей',
+  ru:{title:'Мои иероглифы',back:'← Hanzi Burst',known:'Известные иероглифы',parts:'Части (радикалы) в известных иероглифах',ready:'Готовы к изучению: все части известны',some:'Знаю часть частей',
       empty:'Пока ничего не отмечено. Открой иероглиф на главной и нажми «Знаю».',loading:'Загружаю…',
       sum:(n,p,r)=>`Известно иероглифов: ${n}. Частей в них: ${p}. Готово к изучению: ${r}.`,
       hint:'Список хранится только в этом браузере.', partKnown:'отмечена', partMet:'встречается',
       hsk:'Прогресс по уровням HSK 3.0', todo:n=>`HSK ${n}: ещё не знаю`, all:'Все знаки этого уровня отмечены 🎉'},
-  en:{title:'My characters',back:'← hanzi-burst',known:'Known characters',parts:'Parts (radicals) inside known characters',ready:'Ready to learn: all parts known',some:'Some parts known',
+  en:{title:'My characters',back:'← Hanzi Burst',known:'Known characters',parts:'Parts (radicals) inside known characters',ready:'Ready to learn: all parts known',some:'Some parts known',
       empty:'Nothing marked yet. Open a character on the main page and press “Know it”.',loading:'Loading…',
       sum:(n,p,r)=>`Known characters: ${n}. Parts inside them: ${p}. Ready to learn: ${r}.`,
       hint:'The list is stored only in this browser.', partKnown:'marked', partMet:'seen',
@@ -127,7 +127,7 @@ function renderHsk() {
 function render() {
   renderHsk();
   document.documentElement.lang = lang;
-  document.title = t('title') + ' — hanzi-burst';
+  document.title = t('title') + ' — Hanzi Burst';
   $h1.textContent = t('title'); $back.textContent = t('back');
   document.querySelectorAll('.lang button').forEach(b => b.classList.toggle('on', b.dataset.lang === lang));
   if (!known.length) { $out.innerHTML = `<div class="empty">${t('empty')}</div>`; $sum.textContent = ''; return; }
