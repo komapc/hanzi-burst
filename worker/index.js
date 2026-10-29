@@ -143,7 +143,21 @@ export default {
     if (url.hostname.endsWith('.workers.dev') && !path.startsWith('/api/')) {
       return Response.redirect('https://hanzi.lipu.dev' + path + url.search, 301);
     }
-    if (!path.startsWith('/api/')) return env.ASSETS.fetch(request);
+    // http:// на основном домене: навсегда на https (на случай, если «Always Use HTTPS» в зоне выключен).
+    // Схему посетителя берём из CF-Visitor, который ставит край Cloudflare: в wrangler dev его нет, и URL там всегда http.
+    if (url.hostname === 'hanzi.lipu.dev' && /"scheme":"http"/.test(request.headers.get('CF-Visitor') || '')) {
+      url.protocol = 'https:';
+      return Response.redirect(url.toString(), 301);
+    }
+    if (!path.startsWith('/api/')) {
+      // ASSETS отвечает 307 на /japanese -> /japanese/ и /c/x.html -> /c/x; для поисковиков это постоянный адрес: 301
+      // Несуществующие пути: 404 со страницей site/404.html (not_found_handling в wrangler.toml)
+      const r = await env.ASSETS.fetch(request);
+      if (r.status === 307 && r.headers.get('Location')) {
+        return Response.redirect(new URL(r.headers.get('Location'), url).toString(), 301);
+      }
+      return r;
+    }
     const method = request.method;
 
     if (path === '/api/config') return json({ googleClientId: env.GOOGLE_CLIENT_ID || null });
