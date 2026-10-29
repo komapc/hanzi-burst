@@ -40,7 +40,7 @@
   const render = () => {
     const T = (html.dataset.l || html.lang || 'ru').startsWith('ru') ? RU : EN;
     foot.innerHTML = `<div class="sgrid">
-<div class="sbrand"><b>hanzi-burst</b><p>${T.tag}</p><p><a href="https://lipu.dev/">lipu.dev</a></p></div>
+<div class="sbrand"><b>Hanzi Burst</b><p>${T.tag}</p><p><a href="https://lipu.dev/">lipu.dev</a></p></div>
 <nav><h2>${T.explore}</h2><ul>${li('/', T.home) + li('/c/', T.all) + li('/p/', T.phrases) + li('/hsk/', T.hsk) + li('/learned', T.learned) + li('/extension', T.ext) + li('/japanese/', T.kana)}</ul></nav>
 <nav><h2>${T.project}</h2><ul>${li('/about', T.about) + li('/privacy', T.privacy)}</ul></nav>
 <nav><h2>${T.other}</h2><ul>${OTHER.map(([n, h]) => li(h, n, true)).join('')}</ul></nav>
