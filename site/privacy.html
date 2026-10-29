@@ -17,36 +17,36 @@ button{font:inherit;padding:6px 12px;border:1px solid var(--accent);border-radiu
 <p><a href="/">← hanzi-burst</a> · <a href="/about">О проекте / About</a></p>
 <h1>Конфиденциальность / Privacy</h1>
 <p>Сайт бесплатный, учётных записей нет, имя и e-mail мы не запрашиваем.</p>
-<p class="m">The site is free, has no accounts, and does not ask for your name or e-mail.</p>
+<p class="m" lang="en">The site is free, has no accounts, and does not ask for your name or e-mail.</p>
 
 <h2>Что хранится в твоём браузере / Stored in your browser</h2>
 <p>Через <code>localStorage</code> (остаётся только на твоём устройстве, на сервер не отправляется): список известных иероглифов (<code>hanzi-known</code>), язык (<code>hanzi-lang</code>), текущая и полученные фразы (<code>hanzi-phrase</code>, <code>hanzi-seen-pool</code>), твой выбор по аналитике (<code>hanzi-consent</code>).</p>
-<p class="m">Kept only on your device via localStorage: known characters, language, current/seen phrases and your analytics choice. None of it is sent to the server.</p>
+<p class="m" lang="en">Kept only on your device via localStorage: known characters, language, current/seen phrases and your analytics choice. None of it is sent to the server.</p>
 
 <h2>Аналитика / Analytics</h2>
 <p>Google Analytics 4 включается <b>только после твоего согласия</b>. Он ставит cookies (<code>_ga*</code>) и передаёт Google данные о посещении: страницы, события вроде «новая фраза», примерный регион, тип устройства. IP-адрес анонимизируется. Без согласия ничего не загружается.</p>
-<p class="m">Google Analytics 4 loads <b>only after you consent</b> and sets cookies (<code>_ga*</code>). Without consent nothing is loaded.</p>
+<p class="m" lang="en">Google Analytics 4 loads <b>only after you consent</b> and sets cookies (<code>_ga*</code>). Without consent nothing is loaded.</p>
 <p><button id="yes">Разрешить / Allow</button><button id="no">Отказаться / Decline</button><span id="st" class="m"></span></p>
 
 <h2>Запоминалки / Mnemonics</h2>
 <p>Когда ты нажимаешь «Запоминалка», на наш сервер уходят иероглиф, его пиньинь, значение, состав и язык интерфейса. Они передаются в Google Gemini API, чтобы получить текст. Готовые тексты кэшируются и показываются всем. Для лимитов на запросы мы храним в базе дневной счётчик, привязанный к хэшу IP-адреса (сам адрес не сохраняется), и этот же хэш помечает созданный текст. Счётчики пока не удаляются автоматически.</p>
-<p class="m">When you request a mnemonic, the character, its pinyin, meaning, components and interface language are sent to our server and to the Google Gemini API. Results are cached and shared. For rate limits we keep a daily counter tied to a hash of your IP address (the address itself is not stored); the same hash tags the generated text. Counters are not purged automatically yet.</p>
+<p class="m" lang="en">When you request a mnemonic, the character, its pinyin, meaning, components and interface language are sent to our server and to the Google Gemini API. Results are cached and shared. For rate limits we keep a daily counter tied to a hash of your IP address (the address itself is not stored); the same hash tags the generated text. Counters are not purged automatically yet.</p>
 
 <h2>Перевод фразы / Phrase translation</h2>
 <p>Когда ты нажимаешь «Перевести фразу», на наш сервер и в Google Gemini API уходит сама китайская фраза (до 120 знаков) и язык интерфейса. Перевод не сохраняется; для лимитов хранится только счётчик запросов.</p>
-<p class="m">When you press “Translate phrase”, the Chinese phrase itself (up to 120 characters) and the interface language are sent to our server and to the Google Gemini API. The translation is not stored; only a request counter is kept for rate limits.</p>
+<p class="m" lang="en">When you press “Translate phrase”, the Chinese phrase itself (up to 120 characters) and the interface language are sent to our server and to the Google Gemini API. The translation is not stored; only a request counter is kept for rate limits.</p>
 
 <h2 id="extension">Расширение Chrome / Chrome extension</h2>
 <p>Расширение Hanzi Burst работает полностью офлайн: словарь входит в пакет, никаких запросов в сеть оно не делает и ничего не отправляет ни нам, ни третьим лицам. Тексты страниц, которые ты читаешь, и выделенные фрагменты не покидают браузер и не сохраняются.</p>
 <p>В <code>chrome.storage.local</code> на твоём устройстве хранятся только настройки (режим «выделение/наведение», язык, включено/выключено, сайты, где расширение отключено) и список известных тебе иероглифов. Разрешение <code>storage</code> нужно для этого, <code>activeTab</code> — чтобы кнопка в панели показывала адрес текущего сайта и отключала на нём расширение. Скрипт расширения подключается ко всем страницам, чтобы показать карточку при выделении или наведении на китайский текст; страница читается только локально. Аналитики, рекламы и удалённого кода нет. Единственная ссылка наружу — «hanzi.lipu.dev», она открывается только по клику.</p>
-<p class="m">The Hanzi Burst Chrome extension works fully offline: the dictionary ships inside the package, it makes no network requests and sends nothing to us or to third parties. Page text and your selections never leave the browser and are not stored. Only settings (mode, language, on/off, per-site opt-outs) and your list of known characters are kept in <code>chrome.storage.local</code> on your device. <code>storage</code> is needed for that; <code>activeTab</code> lets the toolbar popup show the current site and switch the extension off there. The content script runs on all pages only to show the card when you select or hover Chinese text; the page is read locally. No analytics, ads or remote code. The only outbound link is “hanzi.lipu.dev”, opened only when you click it.</p>
+<p class="m" lang="en">The Hanzi Burst Chrome extension works fully offline: the dictionary ships inside the package, it makes no network requests and sends nothing to us or to third parties. Page text and your selections never leave the browser and are not stored. Only settings (mode, language, on/off, per-site opt-outs) and your list of known characters are kept in <code>chrome.storage.local</code> on your device. <code>storage</code> is needed for that; <code>activeTab</code> lets the toolbar popup show the current site and switch the extension off there. The content script runs on all pages only to show the card when you select or hover Chinese text; the page is read locally. No analytics, ads or remote code. The only outbound link is “hanzi.lipu.dev”, opened only when you click it.</p>
 <h2>Хостинг / Hosting</h2>
 <p>Сайт работает на Cloudflare (Workers, D1). Как и любой хостинг, Cloudflare видит технические данные запроса (IP, User-Agent) в своих логах.</p>
-<p class="m">The site runs on Cloudflare (Workers, D1), which sees standard request data in its logs.</p>
+<p class="m" lang="en">The site runs on Cloudflare (Workers, D1), which sees standard request data in its logs.</p>
 
 <h2>Вход через Google / Sign-in</h2>
 <p>Вход через Google подготовлен, но пока не включён. Если мы его включим, этот документ будет обновлён.</p>
-<p class="m">Google sign-in is prepared but not enabled yet; this page will be updated if it is.</p>
+<p class="m" lang="en">Google sign-in is prepared but not enabled yet; this page will be updated if it is.</p>
 
 <h2>Контакт / Contact</h2>
 <p>Вопросы и просьбы об удалении: <a href="https://github.com/komapc">github.com/komapc</a>.</p>
