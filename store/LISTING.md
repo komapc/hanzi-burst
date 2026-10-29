@@ -6,6 +6,11 @@ As of 2026-10-29 the live store still shows the pre-0.2 text (summary "Select Ch
 page to see pinyin, meaning and how each character breaks down into parts. Works offline." and the
 old description without Japanese); the texts below are the ones to paste.
 
+**2026-10-29: 0.2.3 was rejected for "Keyword Spam" (violation ID Yellow Argon).** The flagged text was the
+dictionary-credits line in the RU description (a list of dataset names and licenses). Do not list the
+datasets in the store description: credits live in NOTICE.txt and on /about, which satisfies the
+CC BY-SA attribution. The descriptions below already have the one-line replacement.
+
 ## Store listing
 
 **Name:** Hanzi Burst
@@ -40,7 +45,7 @@ Features
 • Fully offline: the dictionaries ship inside the extension, nothing is sent anywhere
 • No ads, no analytics, no account
 
-Dictionary data: Make Me a Hanzi (LGPL), CC-CEDICT (CC BY-SA 4.0), Unicode/Unihan, JMdict and KANJIDIC2 (EDRDG, CC BY-SA 4.0), KanjiVG (CC BY-SA 3.0). See NOTICE.txt in the package and hanzi.lipu.dev/about.
+Built on open dictionary data; full credits and licenses are in NOTICE.txt and on hanzi.lipu.dev/about.
 
 **Краткое описание (RU, 121 из 132 знаков):** берётся из пакета (`extension/_locales/ru/messages.json`).
 Китайско-японский словарь при наведении: пиньинь или кана, значение и разбор иероглифа на ключи и части. Работает офлайн.
@@ -72,7 +77,7 @@ Hanzi Burst — китайско-японский словарь при наве
 • Полностью офлайн: словари внутри расширения, ничего никуда не отправляется
 • Без рекламы, аналитики и аккаунтов
 
-Данные словарей: Make Me a Hanzi (LGPL), CC-CEDICT (CC BY-SA 4.0), Unicode/Unihan, JMdict и KANJIDIC2 (EDRDG, CC BY-SA 4.0), KanjiVG (CC BY-SA 3.0). См. NOTICE.txt в пакете и hanzi.lipu.dev/about.
+Основано на открытых словарных данных; полный список источников и лицензий — в NOTICE.txt и на hanzi.lipu.dev/about.
 
 ## Assets (in this folder)
 - shot1.png, shot2.png, shot3.png, shot4.png: screenshots 1280x800 (up to 5 allowed); shot4 = card for 战略 on zh.wikipedia
