@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Hanzi Burst",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Select Chinese or Japanese text on any page to see pinyin or kana reading, meaning and how each character breaks down into parts. Works offline.",
   "icons": { "16": "icons/16.png", "48": "icons/48.png", "128": "icons/128.png" },
   "permissions": ["storage", "activeTab", "contextMenus"],

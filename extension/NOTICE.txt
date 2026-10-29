@@ -20,5 +20,27 @@ The offline dictionary data bundled in data/ is derived from the following sourc
    Radical names and fallback definitions, under the Unicode License,
    https://www.unicode.org/license.txt .
 
+4. JMdict — https://www.edrdg.org/wiki/index.php/JMdict-EDICT_Dictionary_Project
+   Japanese word dictionary (English and Russian glosses) used to split Japanese
+   text into words (data/ja/) and for Russian kanji meanings (data/kanji/).
+   Copyright the Electronic Dictionary Research and Development Group (EDRDG),
+   licensed under Creative Commons Attribution-ShareAlike 4.0,
+   https://creativecommons.org/licenses/by-sa/4.0/ . Converted from
+   jmdict-simplified, https://github.com/scriptin/jmdict-simplified .
+   See https://www.edrdg.org/edrdg/licence.html .
+
+5. KANJIDIC2 — https://www.edrdg.org/wiki/index.php/KANJIDIC_Project
+   On and kun readings and English meanings of kanji (data/kanji/).
+   Copyright EDRDG, licensed under Creative Commons Attribution-ShareAlike 4.0,
+   https://creativecommons.org/licenses/by-sa/4.0/ .
+
+6. KanjiVG — https://kanjivg.tagaini.net/
+   Breakdown of kanji into components (data/kanji/). Copyright Ulrich Apel,
+   licensed under Creative Commons Attribution-ShareAlike 3.0,
+   https://creativecommons.org/licenses/by-sa/3.0/ .
+   (Stroke outlines are not bundled in this extension.)
+
+The data files derived from sources 4-6 are distributed under the same CC BY-SA licenses.
+
 Russian-language definitions are original translations by the Hanzi Burst project.
 Extension code (c) Hanzi Burst, https://hanzi.lipu.dev
