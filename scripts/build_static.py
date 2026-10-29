@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Генерирует статические страницы для поисковиков из site/phrase.json:
-  site/c/<hex кодпоинта>.html — иероглиф (разбор, слова, где встречается, фразы)
+  site/c/<hex кодпоинта>.html — иероглиф (уровень HSK, разбор, слова, фразы, где встречается, похожие)
   site/p/<sha1(zh)[:8]>.html  — фраза (перевод, иероглифы)
   site/hsk/<1–7>.html          — знаки уровня HSK 3.0 (7 = уровни 7–9) с чтением и значением
   site/c/index.html, site/p/index.html, site/hsk/index.html — хабы со ссылками
@@ -9,8 +9,12 @@
 Сгенерированное не коммитится (см. .gitignore).
 Основной язык страниц русский (lang="ru"); английские дубли помечены lang="en", китайский текст lang="zh".
 """
-import glob, hashlib, html, json, re, shutil
+import glob, hashlib, html, json, re, shutil, sys
+from collections import Counter
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import hsk as hsklib
 
 ROOT = Path(__file__).resolve().parent.parent
 SITE = ROOT / "site"
@@ -25,6 +29,9 @@ def first(s): return (s or "").split(";")[0].strip()
 # keep crude/vulgar glosses out of the word lists.
 VULGAR = re.compile(r"\b(fuck\w*|shit\w*|bitch\w*|cunt|dick|cock|pussy|whore|slut|asshole|my ass|bastard|nigg\w*)\b", re.I)
 def clean_word(w): return not VULGAR.search(f"{w.get('def') or ''} {w.get('def_ru') or ''}")
+# словарные пометки, а не значения: такие слова на странице бесполезны
+SKIP = re.compile(r"^(surname|variant of|old variant|archaic variant|abbr\. for|see |erhua variant|used in|\(old\)|\(archaic\)|\(slang\)|\(neologism)", re.I)
+TOP_WORDS, TOP_PHRASES, TOP_PARENTS, TOP_SIMILAR = 10, 8, 20, 12
 EN = lambda s: f'<span lang="en">{s}</span>'
 ZH = lambda s: f'<span lang="zh">{s}</span>'
 def gloss(ru, en):
@@ -48,6 +55,7 @@ ul{padding-left:20px}.cta{display:inline-block;margin:12px 0;padding:8px 14px;bo
 a.known::after,a.allp::after,a.somep::after{content:"";position:absolute;top:2px;right:-3px;width:7px;height:7px;border-radius:50%;background:var(--ok)}
 a.allp::after{background:var(--info)}a.somep::after{background:var(--warn)}
 .hl{list-style:none;padding:0}.hl li{margin:2px 0}.hl a{font:24px/1.3 'Noto Serif SC',serif;text-decoration:none;margin-right:6px}
+.badge{display:inline-block;margin:0 0 6px;padding:2px 10px;border:1px solid var(--line);border-radius:999px;font-size:14px;text-decoration:none}
 .legend{font-size:14px}.legend .k{color:var(--ok)}.legend .a{color:var(--info);margin-left:10px}.legend .s{color:var(--warn);margin-left:10px}
 </style>"""
 
@@ -65,7 +73,7 @@ def page(title, desc, canon, body, ld=()):
 
 def main():
     D = json.load(open(SITE / "phrase.json", encoding="utf-8"))
-    chars, usage = D["chars"], json.load(open(SITE / "usage.json", encoding="utf-8"))
+    chars = D["chars"]
     phrases = D["phrases"] + json.load(open(SITE / "pool.json", encoding="utf-8"))
     seen, uniq = set(), []
     for p in phrases:
@@ -83,6 +91,44 @@ def main():
     sitemap_chars = set().union(*(hsk.get(lv, []) for lv in ("1", "2", "3")))
     for d in ("c", "p", "hsk"):
         shutil.rmtree(SITE / d, ignore_errors=True); (SITE / d).mkdir()
+    # все знаки из словарных шардов (build_shards.py): значения и состав для знаков вне phrase.json
+    allc = {}
+    for f in glob.glob(str(SITE / "data" / "chars" / "*.json")):
+        allc.update(json.load(open(f, encoding="utf-8")))
+    char_lv = {c: int(lv) for lv, cs in hsk.items() for c in cs}
+    lvname = lambda lv: "7–9" if str(lv) == "7" else str(lv)
+    # слова CC-CEDICT из шардов (build_shards.py): {слово: [pinyin, en, ru?]}; частота знака = в скольких словах он есть
+    dict_words = {}
+    for f in glob.glob(str(SITE / "data" / "words" / "*.json")):
+        dict_words.update(json.load(open(f, encoding="utf-8")))
+    freq = Counter(c for w in dict_words for c in set(w))
+    word_lv = hsklib.load_levels()
+    words_by_char = {}
+    for w, (wpy, wen, *wru) in dict_words.items():
+        if not 2 <= len(w) <= 4 or SKIP.match(wen) or not clean_word({"def": wen, "def_ru": wru[0] if wru else ""}):
+            continue
+        for c in set(w):
+            if c in chars:
+                words_by_char.setdefault(c, []).append(w)
+    def top_words(ch):
+        """Слова со знаком: сначала из списка HSK (по уровню, короткие первыми), потом из знаков HSK, потом самые частые по знакам."""
+        ws = words_by_char.get(ch, [])
+        ws.sort(key=lambda w: (word_lv.get(w, 99), hsklib.word_level(w, word_lv), len(w), -min(freq[x] for x in w), w))
+        return ws[:TOP_WORDS]
+    # обратный индекс: в каких знаках (со страницей) встречается часть; всего — по всему словарю
+    parents, parents_all = {}, Counter()
+    for c, v in chars.items():
+        if not IS_HAN(c):   # варианты радикалов (⺳, ⺍) — части, а не знаки для списков
+            continue
+        for x in set(v.get("components") or []):
+            parents.setdefault(x, []).append(c)
+    for c, v in allc.items():
+        for x in set(v.get("components") or []):
+            parents_all[x] += 1
+    rank = lambda c: (char_lv.get(c, 99), -freq[c], c)
+    for v in parents.values():
+        v.sort(key=rank)
+    def phrase_rank(p): return (p.get("hsk") or 9, len(p["zh"]))
     urls = [f"{BASE}/", f"{BASE}/about", f"{BASE}/privacy", f"{BASE}/extension", f"{BASE}/c/", f"{BASE}/p/", f"{BASE}/hsk/", f"{BASE}/japanese/"]
     link = lambda ch: f'<a href="/c/{cid(ch)}" data-c="{ch}">{ch}</a>' if ch in chars else ch
 
@@ -94,6 +140,9 @@ def main():
         body = [f'<div class="big" lang="zh">{ch}</div><h1>{kind} {ZH(ch)} — {E(py)}</h1>']
         if dru: body.append(f"<p><b>{E(dru)}</b></p>")
         if den: body.append(f'<p class="m" lang="en">{E(den)}</p>')
+        lv = char_lv.get(ch)
+        if lv:
+            body.append(f'<p><a class="badge" href="/hsk/{lv}">HSK 3.0 · уровень {lvname(lv)}</a></p>')
         body.append(f'<a class="cta" href="/?open={ch}&explode=1">Разобрать интерактивно →</a>')
         comps = c.get("components") or []
         if comps:
@@ -108,17 +157,42 @@ def main():
         hint = et.get("hint_ru") or et.get("hint")
         if et.get("type") or hint:
             body.append(f"<p class='m'>{EN(E(et['type'])) if et.get('type') else ''} {E(hint or '')}</p>")
-        u = usage.get(ch) or {}
-        words = [w for w in (u.get("words") or []) if clean_word(w)]
+        words = top_words(ch)
         if words:
-            li = "".join(f"<li>{ZH(E(w['w']))} <span class='m'>{E(w['pinyin'])}</span> — {gloss(w.get('def_ru'), w.get('def'))}</li>" for w in words)
-            body.append(f"<h2>Слова / {EN('Words')}</h2><ul>{li}</ul>")
-        if u.get("chars"):
-            body.append(f"<h2>Иероглифы с этой частью / {EN('Characters with this part')}</h2><p class='chs' lang='zh'>" + "".join(link(x) for x in u["chars"]) + "</p>")
-        ps = by_char.get(ch, [])[:8]
+            def wli(w):
+                wpy, wen, *wru = dict_words[w]
+                tag = f" <span class='m'>· HSK {lvname(word_lv[w])}</span>" if w in word_lv else ""
+                ws = "".join(link(x) if x != ch else x for x in w)
+                return f"<li><span lang='zh'>{ws}</span> <span class='m'>{E(wpy)}</span> — {gloss(wru[0] if wru else '', wen)}{tag}</li>"
+            body.append(f"<h2>Слова с {ZH(ch)} / {EN('Words')}</h2><ul>{''.join(wli(w) for w in words)}</ul>")
+        ps = sorted(by_char.get(ch, []), key=phrase_rank)[:TOP_PHRASES]
         if ps:
             li = "".join(f'<li><a href="/p/{pid(p["zh"])}" lang="zh">{E(p["zh"])}</a> — {gloss(p.get("ru"), p.get("en"))}</li>' for p in ps)
-            body.append(f"<h2>Фразы / {EN('Phrases')}</h2><ul>{li}</ul>")
+            body.append(f"<h2>Примеры фраз / {EN('Example phrases')}</h2><ul>{li}</ul>")
+        par = parents.get(ch, [])
+        if par:
+            n_all = parents_all.get(ch, len(par))
+            head = "Где встречается этот ключ" if kind == "Ключ" else f"Иероглифы, в которых есть {ZH(ch)}"
+            more = f" (всего в словаре — {n_all})" if n_all > len(par[:TOP_PARENTS]) else ""
+            body.append(f"<h2>{head} / {EN('Characters containing it')}</h2>"
+                        f"<p class='m'>{ZH(ch)} входит в состав этих знаков{more}, сначала простые по HSK:</p>"
+                        "<ul>" + "".join(
+                            f"<li>{link(x)} <span class='m'>{E((chars[x].get('pinyin') or [''])[0])}</span> — "
+                            f"{gloss(first(chars[x].get('definition_ru')), first(chars[x].get('definition')))}</li>"
+                            for x in par[:TOP_PARENTS]) + "</ul>")
+        # похожие по написанию: знаки с теми же частями; редкая общая часть весит больше частой (马 в 妈 важнее 口 в 中)
+        own = set(comps)
+        if own:
+            shared = Counter()
+            for cp in own:
+                for x in parents.get(cp, []):
+                    if x != ch:
+                        shared[x] += 1 / len(parents[cp])
+            sim = sorted(shared, key=lambda x: (-shared[x], *rank(x)))[:TOP_SIMILAR]
+            if sim:
+                body.append(f"<h2>Похожие по написанию / {EN('Similar characters')}</h2>"
+                            f"<p class='m'>Знаки с теми же частями: " + "、".join(
+                                f"{link(x)} ({E((chars[x].get('pinyin') or [''])[0])})" for x in sim) + "</p>")
         meaning = first(dru) or first(den)
         if c.get("radical") == ch:   # сам является ключом (радикалом)
             title = f"Ключ {ch} ({py}): значение и иероглифы с ним | Hanzi Burst"
@@ -126,6 +200,11 @@ def main():
         else:
             title = f"Иероглиф {ch} ({py}): значение и разбор на ключи | Hanzi Burst"
             desc = f"Иероглиф {ch} ({py}) — {meaning}. Разбор иероглифа на ключи (радикалы) и составные части, пиньинь, слова и фразы с ним."
+        if lv:
+            desc += f" HSK {lvname(lv)}."
+        hsk_words = [w for w in words if w in word_lv][:3]
+        if hsk_words:
+            desc += " Слова: " + ", ".join(hsk_words) + "."
         ld = [breadcrumbs((BRAND, "/"), ("Иероглифы", "/c/"), (ch, f"/c/{cid(ch)}")),
               {"@context": "https://schema.org", "@type": "DefinedTerm", "name": ch, "inLanguage": "zh",
                "description": " — ".join(x for x in (py, first(dru) or first(den)) if x),
@@ -174,11 +253,7 @@ def main():
         f"{len(phrases)} простых китайских фраз с переводом и разбором каждого иероглифа на радикалы. Подходит для начинающих.", "/p/",
         f"<h1>Китайские фразы с переводом</h1><ul>{li}</ul>",
         [breadcrumbs((BRAND, "/"), ("Фразы", "/p/"))]), encoding="utf-8")
-    # HSK: значения всех знаков уровня из словарных шардов (в phrase.json только знаки фраз)
-    allc = {}
-    for f in glob.glob(str(SITE / "data" / "chars" / "*.json")):
-        allc.update(json.load(open(f, encoding="utf-8")))
-    lvname = lambda lv: "7–9" if lv == "7" else lv
+    # HSK: значения всех знаков уровня из словарных шардов allc (в phrase.json только знаки фраз)
     nav = " · ".join(f'<a href="/hsk/{lv}">HSK {lvname(lv)}</a>' for lv in hsk)
     for lv, cs in hsk.items():
         rows = []
