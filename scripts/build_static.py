@@ -111,9 +111,9 @@ def main():
             if c in chars:
                 words_by_char.setdefault(c, []).append(w)
     def top_words(ch):
-        """Слова со знаком: сначала из списка HSK (по уровню, короткие первыми), потом самые частые по знакам."""
+        """Слова со знаком: сначала из списка HSK (по уровню, короткие первыми), потом из знаков HSK, потом самые частые по знакам."""
         ws = words_by_char.get(ch, [])
-        ws.sort(key=lambda w: (word_lv.get(w, 99), len(w), -min(freq[x] for x in w), w))
+        ws.sort(key=lambda w: (word_lv.get(w, 99), hsklib.word_level(w, word_lv), len(w), -min(freq[x] for x in w), w))
         return ws[:TOP_WORDS]
     # обратный индекс: в каких знаках (со страницей) встречается часть; всего — по всему словарю
     parents, parents_all = {}, Counter()
@@ -202,8 +202,9 @@ def main():
             desc = f"Иероглиф {ch} ({py}) — {meaning}. Разбор иероглифа на ключи (радикалы) и составные части, пиньинь, слова и фразы с ним."
         if lv:
             desc += f" HSK {lvname(lv)}."
-        if words:
-            desc += " Слова: " + ", ".join(words[:3]) + "."
+        hsk_words = [w for w in words if w in word_lv][:3]
+        if hsk_words:
+            desc += " Слова: " + ", ".join(hsk_words) + "."
         ld = [breadcrumbs((BRAND, "/"), ("Иероглифы", "/c/"), (ch, f"/c/{cid(ch)}")),
               {"@context": "https://schema.org", "@type": "DefinedTerm", "name": ch, "inLanguage": "zh",
                "description": " — ".join(x for x in (py, first(dru) or first(den)) if x),
