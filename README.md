@@ -14,7 +14,9 @@
 
 ## Статус
 
-Локальный прототип на одной фразе (我想学汉字).
+Сайт работает на https://hanzi.lipu.dev (бренд «Hanzi Burst»). Расширение для браузера (`extension/`):
+Chrome Web Store — опубликована 0.1.1, 0.2.3 на проверке (2026-10-30); Firefox (addons.mozilla.org, листинг `hanzi-burst`) —
+0.2.3 отправлена 2026-10-29, ждёт проверки. Подробнее — `extension/README.md` и `store/LISTING.md`.
 
 ## Запуск
 
@@ -49,7 +51,7 @@ python3 -I scripts/breakdown.py data/phrases.json site/phrase.json
 
 ## Данные и лицензии
 
-Make Me a Hanzi (LGPL/Arphic), CC-CEDICT (CC BY-SA), Unicode/Unihan (Unicode License), JMdict и KANJIDIC2 (EDRDG, CC BY-SA 4.0), KanjiVG (Ulrich Apel, CC BY-SA 3.0), фразы и их переводы: Tatoeba (CC BY 2.0 FR, авторы указаны на tatoeba.org по номеру в `source`). Атрибуцию добавить перед публикацией.
+Make Me a Hanzi (LGPL/Arphic), CC-CEDICT (CC BY-SA), Unicode/Unihan (Unicode License), JMdict и KANJIDIC2 (EDRDG, CC BY-SA 4.0), KanjiVG (Ulrich Apel, CC BY-SA 3.0), фразы и их переводы: Tatoeba (CC BY 2.0 FR, авторы указаны на tatoeba.org по номеру в `source`). Атрибуция: страница `/about` (`site/about.html`) и `extension/NOTICE.txt` в пакете расширения.
 
 ## Бэкенд и деплой (Cloudflare Workers + D1)
 
@@ -92,6 +94,13 @@ wrangler secret put GEMINI_API_KEY
 1. Поднять `version` в `extension/manifest.json`, смёржить в `main` (сайт задеплоится сам).
 2. `git tag v<версия> && git push origin v<версия>` — CI задеплоит этот коммит и загрузит расширение в Web Store на проверку.
 3. Если предыдущая версия ещё на проверке, Web Store ответит `ITEM_NOT_UPDATABLE`: шаг завершится предупреждением, а не ошибкой. Дождаться проверки (или отменить её в https://chrome.google.com/webstore/devconsole) и перезапустить Actions → extension-release.
+   Только загрузить, без отправки на проверку: Actions → extension-release → Run workflow с `publish=false`.
+4. Краткое описание в магазинах («Summary») берётся из пакета: `description` в манифесте = `__MSG_extDescription__` из
+   `extension/_locales/{en,ru}/messages.json` (до 132 знаков). Полное описание, скриншоты и обоснования разрешений вставляются
+   в дашборд вручную — тексты в `store/LISTING.md`. Не перечислять в описании словари и лицензии: 0.2.3 отклоняли за «Keyword Spam».
+5. Firefox: загрузить `hanzi-burst-firefox.zip` (https://hanzi.lipu.dev/hanzi-burst-firefox.zip) в
+   https://addons.mozilla.org/developers/addon/hanzi-burst/versions/submit/ вручную; на вопрос об исходниках — «нет»
+   (JS копируется как есть, `data/` — сгенерированные словарные JSON).
 
 ### Обновление снимка data/raw/
 
@@ -158,6 +167,21 @@ gh release create raw-data-$(date +%F) /tmp/raw-data.tar.xz --prerelease --title
 
 Для поисковиков — статические списки `/hsk/1` … `/hsk/7` (7 = уровни 7–9) и хаб `/hsk/` из `build_static.py`:
 знак, пиньинь, первое значение; ссылка на `/c/<код>` или `/?open=<знак>`, если своей страницы у знака нет.
+
+## Статические страницы и SEO
+
+`build_static.py` строит `/c/<hex>` (знаки), `/p/` (фразы), `/hsk/`, `sitemap.xml`.
+
+- Заголовки: главная «Разбор китайских иероглифов на ключи и радикалы — Hanzi Burst»; знак «Иероглиф 吗 (ma): значение и
+  разбор на ключи | Hanzi Burst», ключ «Ключ 口 (kǒu): значение и иероглифы с ним | Hanzi Burst». Дубликатов title и
+  description нет — проверять после правок шаблона.
+- Страница знака, кроме разбора: уровень HSK (ссылка на `/hsk/N`), до 10 слов CC-CEDICT (сначала слова HSK), до 8 фраз,
+  «Где встречается этот ключ» / «Иероглифы, в которых есть X» (до 20 + общее число), «Похожие по написанию» (до 12).
+  Всё из данных сборки, без текста от LLM.
+- `sitemap.xml` — только хабы, `/hsk/*` и знаки HSK 1–3 (~850 URL). Остальные `/c/` и все `/p/` не в sitemap, но и не
+  `noindex`: тысячи шаблонных страниц в sitemap мешали индексации (на 2026-10-29 Google не индексировал сайт).
+- Подтверждения владения: `site/yandex_075f1191e804f3a2.html` (Яндекс Вебмастер), `site/BingSiteAuth.xml` — не удалять.
+  Google Search Console — доменный ресурс `sc-domain:lipu.dev`.
 
 ## Загрузка и доступность
 
