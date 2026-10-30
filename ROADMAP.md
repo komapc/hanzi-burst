@@ -29,4 +29,4 @@
 - Вход через Google (отложен): нужен `GOOGLE_CLIENT_ID`, затем `SESSION_SECRET`; синхронизация «известных» между устройствами.
 - Автоматическая очистка счётчиков `usage` в D1.
 - Ленивая загрузка `phrase.json` / `glyphs.json` при росте данных.
-- Свой домен (SEO, бренд): после привязки обновить canonical, sitemap, OG и GSC/Bing.
+- ~~Свой домен~~ — сделано: hanzi.lipu.dev (старый `hanzi-burst.komapc.workers.dev` отдаёт 301), GSC/Bing/Яндекс подключены.
