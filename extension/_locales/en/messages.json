@@ -1,4 +1,8 @@
 {
+  "extName": {
+    "message": "Hanzi Burst: Chinese Pinyin Popup Dictionary",
+    "description": "Store and browser name (max 75 chars); short_name stays \"Hanzi Burst\""
+  },
   "extDescription": {
     "message": "Chinese & Japanese popup dictionary: hover for pinyin or kana, meaning and a radical-by-radical breakdown. Works offline.",
     "description": "Store summary and extension description (max 132 chars)"

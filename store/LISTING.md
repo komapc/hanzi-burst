@@ -1,4 +1,4 @@
-# Chrome Web Store: Hanzi Burst (v0.2.3)
+# Chrome Web Store: Hanzi Burst (v0.2.4)
 
 Notes only: nothing here is published automatically. Paste the texts into the Chrome Web Store
 dashboard (Store listing tab, EN and the RU localization) by hand.
@@ -13,7 +13,7 @@ CC BY-SA attribution. The descriptions below already have the one-line replaceme
 
 ## Store listing
 
-**Name:** Hanzi Burst
+**Name:** from the package (`extName` in `extension/_locales/{en,ru}/messages.json`): "Hanzi Burst: Chinese Pinyin Popup Dictionary" / "Hanzi Burst — словарь иероглифов с пиньинем" (since 0.2.4; `short_name` stays "Hanzi Burst")
 **Category:** Education (Productivity is the alternative)
 **Language:** English (add a Russian localization in the Store Listing tab)
 
