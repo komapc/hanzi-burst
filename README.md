@@ -88,19 +88,23 @@ wrangler secret put GEMINI_API_KEY
 
 - `CLOUDFLARE_API_TOKEN` — https://dash.cloudflare.com/profile/api-tokens, шаблон «Edit Cloudflare Workers» + Account → D1 → Edit.
 - `CWS_EXTENSION_ID`, `CWS_CLIENT_ID`, `CWS_CLIENT_SECRET`, `CWS_REFRESH_TOKEN` — Chrome Web Store API (OAuth-клиент `hanzi-burst-ci-desktop` в Google Cloud, проект hanzi-burst-ci).
+- `AMO_JWT_ISSUER`, `AMO_JWT_SECRET` — ключ API addons.mozilla.org (https://addons.mozilla.org/developers/addon/api/key/, «JWT issuer» и «JWT secret»). Без них Firefox пропускается с предупреждением.
 
 ### Выпуск новой версии расширения
 
 1. Поднять `version` в `extension/manifest.json`, смёржить в `main` (сайт задеплоится сам).
-2. `git tag v<версия> && git push origin v<версия>` — CI задеплоит этот коммит и загрузит расширение в Web Store на проверку.
+2. `git tag v<версия> && git push origin v<версия>` — CI задеплоит этот коммит, загрузит расширение в Web Store на проверку
+   и отправит Firefox-сборку на addons.mozilla.org (`web-ext sign --channel listed`; проверку AMO делает человек, CI её не ждёт).
 3. Если предыдущая версия ещё на проверке, Web Store ответит `ITEM_NOT_UPDATABLE`: шаг завершится предупреждением, а не ошибкой. Дождаться проверки (или отменить её в https://chrome.google.com/webstore/devconsole) и перезапустить Actions → extension-release.
    Только загрузить, без отправки на проверку: Actions → extension-release → Run workflow с `publish=false`.
 4. Краткое описание в магазинах («Summary») берётся из пакета: `description` в манифесте = `__MSG_extDescription__` из
    `extension/_locales/{en,ru}/messages.json` (до 132 знаков). Полное описание, скриншоты и обоснования разрешений вставляются
    в дашборд вручную — тексты в `store/LISTING.md`. Не перечислять в описании словари и лицензии: 0.2.3 отклоняли за «Keyword Spam».
-5. Firefox: загрузить `hanzi-burst-firefox.zip` (https://hanzi.lipu.dev/hanzi-burst-firefox.zip) в
-   https://addons.mozilla.org/developers/addon/hanzi-burst/versions/submit/ вручную; на вопрос об исходниках — «нет»
-   (JS копируется как есть, `data/` — сгенерированные словарные JSON).
+5. Firefox уходит в AMO из того же запуска (job `firefox`, только при `publish=true` — у AMO нет «загрузить без проверки»).
+   Повторный запуск той же версии AMO не примет — это предупреждение, не ошибка. Без секретов `AMO_JWT_*` — загрузить
+   `hanzi-burst-firefox.zip` (https://hanzi.lipu.dev/hanzi-burst-firefox.zip) вручную в
+   https://addons.mozilla.org/developers/addon/hanzi-burst/versions/submit/; на вопрос об исходниках — «нет»
+   (JS копируется как есть, `data/` — сгенерированные словарные JSON). Тексты листинга AMO правятся в devhub вручную.
 
 ### Обновление снимка data/raw/
 

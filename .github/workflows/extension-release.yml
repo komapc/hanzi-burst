@@ -1,6 +1,7 @@
 name: extension-release
 
-# Uploads the extension zip that is live on hanzi.lipu.dev to the Chrome Web Store.
+# Uploads the extension zips that are live on hanzi.lipu.dev to the Chrome Web Store and,
+# when publish=true, submits the Firefox build to addons.mozilla.org (AMO has no upload-only mode).
 # The zip is built and deployed by deploy.yml (wrangler.toml [build] runs build_extension.py --zip).
 #
 # Release flow (see README "Деплой"):
@@ -10,7 +11,9 @@ name: extension-release
 # Run by hand (Actions -> extension-release -> Run workflow) to re-upload the live zip.
 #
 # Needs repository secrets: CWS_EXTENSION_ID, CWS_CLIENT_ID, CWS_CLIENT_SECRET, CWS_REFRESH_TOKEN
-# (Chrome Web Store API OAuth, see https://github.com/fregante/chrome-webstore-upload-keys).
+# (Chrome Web Store API OAuth, see https://github.com/fregante/chrome-webstore-upload-keys);
+# AMO_JWT_ISSUER, AMO_JWT_SECRET (https://addons.mozilla.org/developers/addon/api/key/) — the
+# Firefox job is skipped with a warning until they are set.
 on:
   workflow_call:
     inputs:
@@ -76,6 +79,60 @@ jobs:
             msg="Chrome Web Store is not accepting uploads: the previous version is pending review or ready to publish. Publish or cancel it in the Developer Dashboard, then re-run this workflow."
             echo "::warning::$msg"
             echo "### ⚠️ Upload skipped" >> "$GITHUB_STEP_SUMMARY"
+            echo "$msg" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          exit "$status"
+
+  firefox:
+    if: inputs.publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - name: Check secrets are set
+        id: secrets
+        env:
+          AMO_JWT_ISSUER: ${{ secrets.AMO_JWT_ISSUER }}
+          AMO_JWT_SECRET: ${{ secrets.AMO_JWT_SECRET }}
+        run: |
+          if [ -n "$AMO_JWT_ISSUER" ] && [ -n "$AMO_JWT_SECRET" ]; then
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          else
+            msg="AMO_JWT_ISSUER / AMO_JWT_SECRET are not set: Firefox was not submitted. Upload hanzi-burst-firefox.zip by hand (README, «Выпуск новой версии расширения»)."
+            echo "::warning::$msg"
+            echo "### ⚠️ Firefox skipped" >> "$GITHUB_STEP_SUMMARY"
+            echo "$msg" >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Download the deployed Firefox package
+        if: steps.secrets.outputs.ok
+        run: |
+          curl -fsSL -o firefox.zip https://hanzi.lipu.dev/hanzi-burst-firefox.zip
+          mkdir ff && unzip -q firefox.zip -d ff
+          zipv=$(python3 -c 'import json; print(json.load(open("ff/manifest.json"))["version"])')
+          repov=$(python3 -c 'import json; print(json.load(open("extension/manifest.json"))["version"])')
+          echo "zip=$zipv repo=$repov"
+          [ "$zipv" = "$repov" ] || { echo "::error::deployed Firefox zip is $zipv but manifest.json is $repov"; exit 1; }
+      # Listed add-ons are never signed automatically: web-ext uploads, AMO validates and queues the
+      # version for human review, and the run ends there (--approval-timeout 0 = don't wait for it).
+      - name: Submit to addons.mozilla.org
+        if: steps.secrets.outputs.ok
+        env:
+          WEB_EXT_API_KEY: ${{ secrets.AMO_JWT_ISSUER }}
+          WEB_EXT_API_SECRET: ${{ secrets.AMO_JWT_SECRET }}
+        run: |
+          set +e
+          npx --yes web-ext@8 sign --channel listed --source-dir ff --artifacts-dir web-ext-artifacts \
+            --approval-timeout 0 2>&1 | tee sign.log
+          status=${PIPESTATUS[0]}
+          set -e
+          # Re-running a release whose version AMO already has is a no-op, not a failure.
+          if [ "$status" -ne 0 ] && grep -qiE 'version .*already exists|Duplicate add-on version' sign.log; then
+            msg="addons.mozilla.org already has this version; nothing was submitted."
+            echo "::warning::$msg"
+            echo "### ⚠️ Firefox: version already on AMO" >> "$GITHUB_STEP_SUMMARY"
             echo "$msg" >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
