@@ -15,7 +15,7 @@
 ## Статус
 
 Сайт работает на https://hanzi.lipu.dev (бренд «Hanzi Burst»). Расширение для браузера (`extension/`):
-Chrome Web Store — опубликована 0.1.1, 0.2.3 на проверке (2026-10-30); Firefox (addons.mozilla.org, листинг `hanzi-burst`) —
+Chrome Web Store — 0.2.3 опубликована (одобрена 2026-10-30); Firefox (addons.mozilla.org, листинг `hanzi-burst`) —
 0.2.3 отправлена 2026-10-29, ждёт проверки. Подробнее — `extension/README.md` и `store/LISTING.md`.
 
 ## Запуск
