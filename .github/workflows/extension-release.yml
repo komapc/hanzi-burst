@@ -107,6 +107,13 @@ jobs:
           AMO_JWT_SECRET: ${{ secrets.AMO_JWT_SECRET }}
         run: |
           if [ -n "$AMO_JWT_ISSUER" ] && [ -n "$AMO_JWT_SECRET" ]; then
+            # Shape check without printing the values: the issuer looks like user:12345678:123 and the
+            # secret is a 64-char hex string. Pasting them swapped or with whitespace gives AMO's
+            # unhelpful "Unknown JWT iss (issuer)".
+            iss=$(printf %s "$AMO_JWT_ISSUER" | tr -d '[:space:]'); sec=$(printf %s "$AMO_JWT_SECRET" | tr -d '[:space:]')
+            [ "$iss" = "$AMO_JWT_ISSUER" ] && [ "$sec" = "$AMO_JWT_SECRET" ] || echo "::warning::AMO secrets contain whitespace; it is stripped"
+            [[ "$iss" =~ ^user:[0-9]+:[0-9]+$ ]] || { echo "::error::AMO_JWT_ISSUER is not of the form user:<digits>:<digits> (length ${#iss}); is it the secret, or from another field?"; exit 1; }
+            [[ "$sec" =~ ^[0-9a-f]{64}$ ]] || echo "::warning::AMO_JWT_SECRET is not 64 hex chars (length ${#sec})"
             echo "ok=true" >> "$GITHUB_OUTPUT"
           else
             msg="AMO_JWT_ISSUER / AMO_JWT_SECRET are not set: Firefox was not submitted. Upload hanzi-burst-firefox.zip by hand (README, «Выпуск новой версии расширения»)."
@@ -131,6 +138,8 @@ jobs:
           WEB_EXT_API_KEY: ${{ secrets.AMO_JWT_ISSUER }}
           WEB_EXT_API_SECRET: ${{ secrets.AMO_JWT_SECRET }}
         run: |
+          export WEB_EXT_API_KEY=$(printf %s "$WEB_EXT_API_KEY" | tr -d '[:space:]')
+          export WEB_EXT_API_SECRET=$(printf %s "$WEB_EXT_API_SECRET" | tr -d '[:space:]')
           set +e
           npx --yes web-ext@8 sign --channel listed --source-dir ff --artifacts-dir web-ext-artifacts \
             --approval-timeout 0 2>&1 | tee sign.log
