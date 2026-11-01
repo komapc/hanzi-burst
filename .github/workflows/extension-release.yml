@@ -82,6 +82,14 @@ jobs:
             echo "$msg" >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
+          # Re-running a release whose version is already published is a no-op, not a failure.
+          if [ "$status" -ne 0 ] && grep -q PKG_INVALID_VERSION_NUMBER upload.log; then
+            msg="Chrome Web Store already has this version; nothing was uploaded."
+            echo "::warning::$msg"
+            echo "### ⚠️ Chrome: version already in the store" >> "$GITHUB_STEP_SUMMARY"
+            echo "$msg" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
           exit "$status"
 
   firefox:
