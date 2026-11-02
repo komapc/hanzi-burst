@@ -1,0 +1,47 @@
+<!doctype html>
+<!-- Source of site/og.png. Render:
+     google-chrome --headless=new --hide-scrollbars --window-size=1200,630 --user-data-dir=$(mktemp -d) \
+       --screenshot=site/og.png "file://$PWD/scripts/og.html" -->
+<html lang="ru"><head><meta charset="utf-8"><style>
+  * { box-sizing: border-box; }
+  body { margin: 0; width: 1200px; height: 630px; overflow: hidden; position: relative; color: #f7efe6;
+    font-family: 'DejaVu Sans', sans-serif;
+    background: radial-gradient(ellipse 700px 420px at 790px 130px, #7a3a33 0%, rgba(122,58,51,0) 100%),
+      linear-gradient(135deg, #2b1426 0%, #1d1020 55%, #150d1e 100%); }
+  svg { position: absolute; inset: 0; }
+  .title { position: absolute; left: 72px; top: 170px; margin: 0; font-size: 72px; font-weight: 700; letter-spacing: -1px; white-space: nowrap; }
+  .ru { position: absolute; left: 74px; top: 268px; margin: 0; font-size: 33px; color: #f4c6a0; }
+  .en { position: absolute; left: 74px; top: 318px; margin: 0; font-size: 25px; color: #b7a7ad; }
+  .chips { position: absolute; left: 72px; top: 392px; display: flex; gap: 12px; }
+  .chips span { padding: 9px 20px; border-radius: 999px; background: rgba(255,255,255,.1); font-size: 21px; color: #e8dcd6; }
+  .hint { position: absolute; left: 74px; top: 490px; margin: 0; font-size: 22px; color: #9c8d94; }
+  .url { position: absolute; left: 74px; top: 548px; margin: 0; font-size: 22px; color: #f4c6a0; }
+  .n { position: absolute; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 16px;
+    background: rgba(40,24,38,.92); border: 2px solid rgba(255,255,255,.28); }
+  .n b { font-family: 'Noto Sans CJK SC', sans-serif; font-weight: 400; line-height: 1.05; }
+  .n i { font-style: normal; color: #b7a7ad; }
+  .root { left: 778px; top: 44px; width: 204px; height: 204px; background: rgba(214,106,70,.3); border-color: #f0a077; box-shadow: 0 0 44px rgba(240,140,90,.45); }
+  .root b { font-size: 122px; color: #ffd9bd; } .root i { font-size: 21px; color: #f4c6a0; }
+  .mid { width: 150px; height: 150px; } .mid b { font-size: 88px; } .mid i { font-size: 19px; }
+  .low { width: 104px; height: 112px; } .low b { font-size: 58px; } .low i { font-size: 17px; }
+</style></head><body>
+  <svg width="1200" height="630" fill="none" stroke-linecap="round">
+    <g stroke="#e08a5e" stroke-width="3" opacity=".75">
+      <path d="M582 62 660 94M592 124 666 138M660 6 690 30M1016 74 1090 44M1024 124 1112 104M1108 152 1198 150M1000 16 1052 -6"/>
+    </g>
+    <g stroke="#a8989e" stroke-width="2.5">
+      <path d="M880 248V284M716 284H1040M716 284V312M1040 284V312M716 462V486M620 486H820M620 486V496M820 486V496"/>
+    </g>
+  </svg>
+  <h1 class="title">Hanzi Burst</h1>
+  <p class="ru">Иероглифы через радикалы</p>
+  <p class="en">Chinese &amp; Japanese by radicals</p>
+  <div class="chips"><span>разбор на части</span><span>пиньинь</span><span>фразы</span></div>
+  <p class="hint">Нажми на иероглиф — он разлетится</p>
+  <p class="url">hanzi.lipu.dev</p>
+  <div class="n root"><b>想</b><i>думать</i></div>
+  <div class="n mid" style="left:641px;top:312px"><b>相</b><i>взаимный</i></div>
+  <div class="n mid" style="left:965px;top:312px"><b>心</b><i>сердце</i></div>
+  <div class="n low" style="left:568px;top:496px"><b>木</b><i>дерево</i></div>
+  <div class="n low" style="left:768px;top:496px"><b>目</b><i>глаз</i></div>
+</body></html>
