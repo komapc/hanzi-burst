@@ -248,10 +248,12 @@ export default {
       const prompt = promptFor({ ch: b.ch, lang, avoid: have.map(v => v.text), ...ctx });
       try {
         const text = clip(await askGemini(env, prompt), 600);
-        // INSERT OR IGNORE: если параллельный запрос успел раньше, остаётся его вариант
+        // INSERT OR IGNORE: если параллельный запрос успел раньше, остаётся его вариант.
+        // Номер считается по всем версиям промпта: первичный ключ их не различает, и номер
+        // по текущей версии столкнулся бы со старой строкой, а оплаченный ответ пропал бы.
         await env.DB.prepare(
-          'INSERT OR IGNORE INTO mnemonics (ch, lang, variant, text, model, prompt_version, created_by, created_at) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)'
-        ).bind(b.ch, lang, have.length + 1, text, env.GEMINI_MODEL, PROMPT_VERSION, session ? uid : null, Date.now()).run();
+          'INSERT OR IGNORE INTO mnemonics (ch, lang, variant, text, model, prompt_version, created_by, created_at) SELECT ?1, ?2, COALESCE(MAX(variant), 0) + 1, ?3, ?4, ?5, ?6, ?7 FROM mnemonics WHERE ch = ?1 AND lang = ?2'
+        ).bind(b.ch, lang, text, env.GEMINI_MODEL, PROMPT_VERSION, session ? uid : null, Date.now()).run();
         return json({ variants: await read(), cached: false });
       } catch (e) {
         console.error('explain failed', e.message);
