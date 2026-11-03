@@ -1346,8 +1346,8 @@ const INTRO_EN = `<h2>Chinese characters through their radicals</h2>
     <p>Phrases with translations come from open corpora (Tatoeba, Wiktionary) and are picked so that as few characters as possible are new to you. Characters you know are marked, and your progress through the HSK levels has its own page. There is also a Japanese mode with kana and kanji.</p>
     <h2>Where to start</h2>
     <ul>
-      <li><a href="/hsk/">HSK 1–9 characters by level</a> with pinyin and meaning, starting with <a href="/hsk/1">HSK 1</a></li>
-      <li><a href="/c/">All characters and radicals</a>: every character has its own page with a breakdown</li>
+      <li><a href="/en/hsk/">HSK 1–9 characters by level</a> with pinyin and meaning, starting with <a href="/en/hsk/1">HSK 1</a></li>
+      <li><a href="/en/c/">All characters and radicals</a>: every character has its own page with a breakdown</li>
       <li><a href="/p/">Simple Chinese phrases with translations</a></li>
       <li><a href="/learned">My characters</a>: what you have learned and what is left for each HSK level</li>
       <li><a href="/japanese/">Kana</a>: hiragana, katakana and the characters they came from</li>
@@ -1358,7 +1358,8 @@ function renderFooter() {
   const li = (h, txt) => `<li><a href="${h}">${txt}</a></li>`;
   $('#ftag').textContent = t('ftag');
   $('#fh1').textContent = t('fExplore'); $('#fh2').textContent = t('fProject');
-  $('#fl1').innerHTML = li('/c/', t('fAll')) + li('/hsk/', t('fHsk')) + li('/p/', t('fPhrases')) + li('/learned', t('fLearned')) + li('/extension', t('fExt')) + li('/japanese/', t('fKana')) + `<li><a href="#" id="howLink">${t('fHow')}</a></li>`;
+  const pre = lang === 'en' ? '/en' : '';
+  $('#fl1').innerHTML = li(pre + '/c/', t('fAll')) + li(pre + '/hsk/', t('fHsk')) + li('/p/', t('fPhrases')) + li('/learned', t('fLearned')) + li('/extension', t('fExt')) + li('/japanese/', t('fKana')) + `<li><a href="#" id="howLink">${t('fHow')}</a></li>`;
   $('#fl2').innerHTML = li('/about', t('fAbout')) + li('/privacy', t('fPrivacy'));
   $('#howLink').onclick = e => { e.preventDefault(); const d = $('#howDlg'); d.showModal ? d.showModal() : d.setAttribute('open', ''); track('how_open'); };
   $('#fdata').textContent = t('fData');

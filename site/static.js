@@ -1,4 +1,4 @@
-/* Статические страницы /c/ и /p/: отмечаем знакомые иероглифы (hanzi-known из localStorage) —
+/* Статические страницы /c/, /p/ и /en/c/: отмечаем знакомые иероглифы (hanzi-known из localStorage) —
    зелёная точка = знаю, синяя = знаю все части, жёлтая = знаю часть частей. Как в приложении. */
 (function () {
   let known = new Set();
@@ -20,9 +20,11 @@
     let any = false;
     links.forEach(a => { const s = state(a.dataset.c); if (s) { a.classList.add(s); any = true; } });
     const box = document.querySelector('.chs');
-    if (any && box && /^\/c\/(index\.html)?$/.test(location.pathname)) {
+    if (any && box && /^\/(en\/)?c\/(index\.html)?$/.test(location.pathname)) {
       const lg = document.createElement('p'); lg.className = 'legend m';
-      lg.innerHTML = '<span class="k">●</span> знаю / known <span class="a">●</span> знаю все части / all parts <span class="s">●</span> знаю часть / some parts';
+      lg.innerHTML = location.pathname.startsWith('/en/')
+        ? '<span class="k">●</span> known <span class="a">●</span> all parts known <span class="s">●</span> some parts known'
+        : '<span class="k">●</span> знаю / known <span class="a">●</span> знаю все части / all parts <span class="s">●</span> знаю часть / some parts';
       box.before(lg);
     }
   }).catch(() => {});
