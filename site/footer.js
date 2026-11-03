@@ -14,8 +14,8 @@
     home: 'Home', all: 'All characters', phrases: 'All phrases', hsk: 'HSK characters', learned: 'My characters', ext: 'Chrome extension',
     kana: 'Kana (Japanese syllabaries)', about: 'About', privacy: 'Privacy', data: 'Data sources'
   };
-  const OTHER = [['EchoDrift', 'https://echodrift.pages.dev/'], ['Ido-tradukilo', 'https://ido-tradukilo.pages.dev/'], ['Vortaro', 'https://ido-vortaro.pages.dev/'],
-    ['min-co', 'https://komapc.github.io/contlang/'], ['Ideonology', 'https://komapc.github.io/ideon/ru/']];
+  const OTHER = [['EchoDrift', 'https://echodrift.lipu.dev/'], ['Ido-tradukilo', 'https://tradukilo.lipu.dev/'], ['Vortaro', 'https://vortaro.lipu.dev/'],
+    ['min-co', 'https://minco.lipu.dev/'], ['Ideonology', 'https://ideon.lipu.dev/ru/']];
   const li = (h, txt, ext) => `<li><a href="${h}"${ext ? ' class="ext" target="_blank" rel="noopener"' : ''}>${txt}</a></li>`;
   const css = `
 .sfoot{margin:48px auto 0;padding:28px 0 32px;border-top:1px solid var(--soft,var(--line));color:var(--muted);font:14.4px/1.5 system-ui,sans-serif;text-align:left}
