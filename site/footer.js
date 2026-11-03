@@ -36,9 +36,11 @@
   const foot = document.createElement('footer'); foot.className = 'sfoot'; box.replaceWith(foot);
   const render = () => {
     const T = (html.dataset.l || html.lang || 'ru').startsWith('ru') ? RU : EN;
+    // по-английски ведём на /en/c/ и /en/hsk/; со страниц /en/ не ссылаемся на русские фразы
+    const pre = T === EN ? '/en' : '', onEn = location.pathname.startsWith('/en/');
     foot.innerHTML = `<div class="sgrid">
 <div class="sbrand"><b>Hanzi Burst</b><p>${T.tag}</p><p><a href="https://lipu.dev/">lipu.dev</a></p></div>
-<nav><h2>${T.explore}</h2><ul>${li('/', T.home) + li('/c/', T.all) + li('/p/', T.phrases) + li('/hsk/', T.hsk) + li('/learned', T.learned) + li('/extension', T.ext) + li('/japanese/', T.kana)}</ul></nav>
+<nav><h2>${T.explore}</h2><ul>${li(onEn ? '/?lang=en' : '/', T.home) + li(pre + '/c/', T.all) + (onEn ? '' : li('/p/', T.phrases)) + li(pre + '/hsk/', T.hsk) + li('/learned', T.learned) + li('/extension', T.ext) + li('/japanese/', T.kana)}</ul></nav>
 <nav><h2>${T.project}</h2><ul>${li('/about', T.about) + li('/privacy', T.privacy)}</ul></nav>
 </div><details><summary>${T.data}</summary><p><a href="https://github.com/skishore/makemeahanzi">Make Me a Hanzi</a> (LGPL, Arphic) · <a href="https://cc-cedict.org/">CC-CEDICT</a> (CC BY-SA) · <a href="https://tatoeba.org/">Tatoeba</a> (CC BY 2.0 FR) · <a href="https://en.wiktionary.org/">Wiktionary</a> via <a href="https://kaikki.org/">kaikki.org</a> (CC BY-SA) · <a href="https://commonvoice.mozilla.org/">Mozilla Common Voice</a> (CC0) · Unicode / Unihan · <a href="https://www.edrdg.org/wiki/index.php/JMdict-EDICT_Dictionary_Project">JMdict</a> (EDRDG, CC BY-SA 4.0) via <a href="https://github.com/scriptin/jmdict-simplified">jmdict-simplified</a> · <a href="https://www.edrdg.org/wiki/index.php/KANJIDIC_Project">KANJIDIC2</a> (EDRDG, CC BY-SA 4.0) · <a href="https://kanjivg.tagaini.net/">KanjiVG</a> (Ulrich Apel, CC BY-SA 3.0)</p></details>`;
   };
