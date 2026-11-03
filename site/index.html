@@ -1187,9 +1187,16 @@ function renderConsent() {
 }
 $('#consentYes').onclick = () => { setConsent('yes'); loadGA(); renderConsent(); };
 $('#consentNo').onclick = () => { setConsent('no'); renderConsent(); };
+// Статический <head> остаётся русским; для английского интерфейса заголовок и описание подменяем.
+const DESC_EL = document.querySelector('meta[name="description"]');
+const HEAD_T = {
+  ru: [document.title, DESC_EL.content],
+  en: ['Chinese Characters Broken Down into Radicals — Hanzi Burst', 'Free breakdown of Chinese characters into radicals and components: tap a character and it bursts into parts. Pinyin, meanings, mnemonics, simple phrases and HSK 1–9 lists.'] };
 function applyLang() {
   renderConsent();
   document.documentElement.lang = lang;
+  const head = HEAD_T[lang] || HEAD_T.en;
+  document.title = head[0]; DESC_EL.content = head[1];
   document.querySelectorAll('.lang button').forEach(b => b.classList.toggle('on', b.dataset.lang === lang));
   $('#hint').textContent = t(tour === 1 ? 'tour1' : 'hint'); if (tour === 2 && $('#tourTip')) tourMark();
   $('#crumbs').textContent = t('crumbs');
