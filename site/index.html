@@ -1341,8 +1341,8 @@ async function randomPhrase() {
   track('random_phrase', { len: cjkLen(best.zh), mode });
   buildList(); await switchPhrase(L.length - 1);
 }
-const OTHER = [['EchoDrift', 'https://echodrift.pages.dev/'], ['Ido-tradukilo', 'https://ido-tradukilo.pages.dev/'], ['Vortaro', 'https://ido-vortaro.pages.dev/'],
-  ['min-co', 'https://komapc.github.io/contlang/'], ['Ideonology', 'https://komapc.github.io/ideon/ru/']];
+const OTHER = [['EchoDrift', 'https://echodrift.lipu.dev/'], ['Ido-tradukilo', 'https://tradukilo.lipu.dev/'], ['Vortaro', 'https://vortaro.lipu.dev/'],
+  ['min-co', 'https://minco.lipu.dev/'], ['Ideonology', 'https://ideon.lipu.dev/ru/']];
 // вводный текст: в HTML по-русски (для поисковиков, lang="ru"), английский подставляется при lang=en
 const INTRO_RU = $('#intro').innerHTML;
 const INTRO_EN = `<h2>Chinese characters through their radicals</h2>
