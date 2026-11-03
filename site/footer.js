@@ -6,27 +6,24 @@
   if (!box) return;
   const html = document.documentElement;
   const RU = {
-    tag: 'Учим китайские иероглифы через радикалы', explore: 'Разделы', project: 'Проект', other: 'Другие проекты',
+    tag: 'Учим китайские иероглифы через радикалы', explore: 'Разделы', project: 'Проект',
     home: 'Главная', all: 'Все иероглифы', phrases: 'Все фразы', hsk: 'Иероглифы по HSK', learned: 'Мои иероглифы', ext: 'Расширение для Chrome',
     kana: 'Кана (японская азбука)', about: 'О проекте', privacy: 'Конфиденциальность', data: 'Источники данных'
   }, EN = {
-    tag: 'Learn Chinese characters by radicals', explore: 'Explore', project: 'Project', other: 'Other projects',
+    tag: 'Learn Chinese characters by radicals', explore: 'Explore', project: 'Project',
     home: 'Home', all: 'All characters', phrases: 'All phrases', hsk: 'HSK characters', learned: 'My characters', ext: 'Chrome extension',
     kana: 'Kana (Japanese syllabaries)', about: 'About', privacy: 'Privacy', data: 'Data sources'
   };
-  const OTHER = [['EchoDrift', 'https://echodrift.lipu.dev/'], ['Ido-tradukilo', 'https://tradukilo.lipu.dev/'], ['Vortaro', 'https://vortaro.lipu.dev/'],
-    ['min-co', 'https://minco.lipu.dev/'], ['Ideonology', 'https://ideon.lipu.dev/ru/']];
-  const li = (h, txt, ext) => `<li><a href="${h}"${ext ? ' class="ext" target="_blank" rel="noopener"' : ''}>${txt}</a></li>`;
+  const li = (h, txt) => `<li><a href="${h}">${txt}</a></li>`;
   const css = `
 .sfoot{margin:48px auto 0;padding:28px 0 32px;border-top:1px solid var(--soft,var(--line));color:var(--muted);font:14.4px/1.5 system-ui,sans-serif;text-align:left}
-.sfoot .sgrid{display:grid;grid-template-columns:minmax(0,1.4fr) repeat(3,minmax(0,1fr));gap:28px 32px}
+.sfoot .sgrid{display:grid;grid-template-columns:minmax(0,1.4fr) repeat(2,minmax(0,1fr));gap:28px 32px}
 .sfoot b{color:var(--fg);font-size:1.05rem}
 .sfoot .sbrand p{margin:6px 0 0;line-height:1.45;max-width:28ch}
 .sfoot h2{margin:0 0 10px;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--muted)}
 .sfoot ul{list-style:none;margin:0;padding:0;display:grid;gap:7px}
 .sfoot a{color:var(--fg);text-decoration:none;opacity:.85}
 .sfoot a:hover{color:var(--accent);opacity:1}
-.sfoot a.ext::after{content:" ↗";font-size:.8em;opacity:.6}
 .sfoot details{margin-top:26px;padding-top:16px;border-top:1px solid var(--soft,var(--line));font-size:.8rem}
 .sfoot summary{cursor:pointer;list-style:none}
 .sfoot summary::-webkit-details-marker{display:none}
@@ -43,7 +40,6 @@
 <div class="sbrand"><b>Hanzi Burst</b><p>${T.tag}</p><p><a href="https://lipu.dev/">lipu.dev</a></p></div>
 <nav><h2>${T.explore}</h2><ul>${li('/', T.home) + li('/c/', T.all) + li('/p/', T.phrases) + li('/hsk/', T.hsk) + li('/learned', T.learned) + li('/extension', T.ext) + li('/japanese/', T.kana)}</ul></nav>
 <nav><h2>${T.project}</h2><ul>${li('/about', T.about) + li('/privacy', T.privacy)}</ul></nav>
-<nav><h2>${T.other}</h2><ul>${OTHER.map(([n, h]) => li(h, n, true)).join('')}</ul></nav>
 </div><details><summary>${T.data}</summary><p><a href="https://github.com/skishore/makemeahanzi">Make Me a Hanzi</a> (LGPL, Arphic) · <a href="https://cc-cedict.org/">CC-CEDICT</a> (CC BY-SA) · <a href="https://tatoeba.org/">Tatoeba</a> (CC BY 2.0 FR) · <a href="https://en.wiktionary.org/">Wiktionary</a> via <a href="https://kaikki.org/">kaikki.org</a> (CC BY-SA) · <a href="https://commonvoice.mozilla.org/">Mozilla Common Voice</a> (CC0) · Unicode / Unihan · <a href="https://www.edrdg.org/wiki/index.php/JMdict-EDICT_Dictionary_Project">JMdict</a> (EDRDG, CC BY-SA 4.0) via <a href="https://github.com/scriptin/jmdict-simplified">jmdict-simplified</a> · <a href="https://www.edrdg.org/wiki/index.php/KANJIDIC_Project">KANJIDIC2</a> (EDRDG, CC BY-SA 4.0) · <a href="https://kanjivg.tagaini.net/">KanjiVG</a> (Ulrich Apel, CC BY-SA 3.0)</p></details>`;
   };
   render();
