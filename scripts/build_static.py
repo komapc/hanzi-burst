@@ -291,6 +291,7 @@ def main():
         [breadcrumbs((BRAND, "/"), ("HSK", "/hsk/"))], alt=("/hsk/", "/en/hsk/")), encoding="utf-8")
 
     # Английские версии /en/c/ и /en/hsk/: те же данные, только английские значения, без подстановки русских.
+    # В sitemap их пока нет: сайт ещё не проиндексирован, Google находит их по ссылкам и hreflang.
     # Отдельных английских страниц фраз нет: примеры ведут в интерактивный режим с ?lang=en.
     link_en = lambda ch: f'<a href="/en/c/{cid(ch)}" data-c="{ch}">{ch}</a>' if ch in chars else ch
     def en_gloss(s): return f" — {E(s)}" if s else ""
@@ -357,8 +358,6 @@ def main():
                "description": " — ".join(x for x in (py, meaning) if x), "url": f"{BASE}/en/c/{cid(ch)}"}]
         (SITE / "en" / "c" / f"{cid(ch)}.html").write_text(
             page(title, desc[:300], f"/en/c/{cid(ch)}", "\n".join(body), ld, lang="en", alt=(f"/c/{cid(ch)}", f"/en/c/{cid(ch)}")), encoding="utf-8")
-        if ch in sitemap_chars:
-            urls.append(f"{BASE}/en/c/{cid(ch)}")
     (SITE / "en" / "c" / "index.html").write_text(page(f"All Chinese characters and radicals ({len(chars)}) | Hanzi Burst",
         f"{len(chars)} Chinese characters and radicals with pinyin, meaning and a breakdown into components. Click a character to open its page.", "/en/c/",
         f"<h1>Characters and radicals</h1><p class='m'>{len(chars)} characters: all those used in the site's phrases, including radicals and their variants. "
@@ -380,7 +379,6 @@ def main():
             f"All {len(cs)} characters of HSK {lvname(lv)} (HSK 3.0) with pinyin and meaning, from common to rare, each with a breakdown into radicals.",
             f"/en/hsk/{lv}", body, [breadcrumbs((BRAND, "/"), ("HSK", "/en/hsk/"), (f"HSK {lvname(lv)}", f"/en/hsk/{lv}"))],
             lang="en", alt=(f"/hsk/{lv}", f"/en/hsk/{lv}")), encoding="utf-8")
-        urls.append(f"{BASE}/en/hsk/{lv}")
     li = "".join(f'<li><a href="/en/hsk/{lv}">HSK {lvname(lv)}</a>: {len(cs)} characters: '
                  f'<span lang="zh">{"".join(cs[:12])}…</span></li>' for lv, cs in hsk.items())
     (SITE / "en" / "hsk" / "index.html").write_text(page("HSK 1–9 characters by level | Hanzi Burst",
