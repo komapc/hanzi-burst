@@ -1,7 +1,7 @@
 <!doctype html><html lang="ru"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Конфиденциальность / Privacy — Hanzi Burst</title>
-<meta name="description" content="Какие данные использует Hanzi Burst: localStorage, Google Analytics с согласия, запросы к Gemini для запоминалок. What data Hanzi Burst uses.">
+<meta name="description" content="Какие данные использует Hanzi Burst: localStorage, Cloudflare Web Analytics без cookies, Google Analytics с согласия, запросы к Gemini для запоминалок. What data Hanzi Burst uses.">
 <link rel="canonical" href="https://hanzi.lipu.dev/privacy">
 <style>
 :root{--bg:#faf7f2;--fg:#1f1b16;--muted:#6b6257;--accent:#c8402a;--line:#cfc6b6}
@@ -13,6 +13,7 @@ a{color:var(--accent)}h1{font-size:28px;margin:.5em 0}h2{font-size:18px;margin:1
 button{font:inherit;padding:6px 12px;border:1px solid var(--accent);border-radius:8px;background:none;color:var(--fg);cursor:pointer;margin-right:8px}
 </style><link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "7efcd1cc733b4eaf8c293f32b705fbf7"}'></script>
 </head><body><main>
 <p><a href="/">← Hanzi Burst</a> · <a href="/about">О проекте / About</a></p>
 <h1>Конфиденциальность / Privacy</h1>
@@ -24,8 +25,10 @@ button{font:inherit;padding:6px 12px;border:1px solid var(--accent);border-radiu
 <p class="m" lang="en">Kept only on your device via localStorage: known characters, language, current/seen phrases and your analytics choice. None of it is sent to the server.</p>
 
 <h2>Аналитика / Analytics</h2>
-<p>Google Analytics 4 включается <b>только после твоего согласия</b>. Он ставит cookies (<code>_ga*</code>) и передаёт Google данные о посещении: страницы, события вроде «новая фраза», примерный регион, тип устройства. IP-адрес анонимизируется. Без согласия ничего не загружается.</p>
-<p class="m" lang="en">Google Analytics 4 loads <b>only after you consent</b> and sets cookies (<code>_ga*</code>). Without consent nothing is loaded.</p>
+<p>Google Analytics 4 включается <b>только после твоего согласия</b>. Он ставит cookies (<code>_ga*</code>) и передаёт Google данные о посещении: страницы, события вроде «новая фраза», примерный регион, тип устройства. IP-адрес анонимизируется. Без согласия Google Analytics не загружается.</p>
+<p>Cloudflare Web Analytics считает посещения всегда: страницу, источник перехода, браузер, страну. Он не ставит cookies и не хранит ничего на твоём устройстве, поэтому согласия не спрашивает.</p>
+<p class="m" lang="en">Google Analytics 4 loads <b>only after you consent</b> and sets cookies (<code>_ga*</code>). Without consent Google Analytics does not load.</p>
+<p class="m" lang="en">Cloudflare Web Analytics always counts visits (page, referrer, browser, country). It sets no cookies and stores nothing on your device, so it does not ask for consent.</p>
 <p><button id="yes">Разрешить / Allow</button><button id="no">Отказаться / Decline</button><span id="st" class="m"></span></p>
 
 <h2>Запоминалки / Mnemonics</h2>

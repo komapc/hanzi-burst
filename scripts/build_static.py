@@ -62,6 +62,11 @@ a.allp::after{background:var(--info)}a.somep::after{background:var(--warn)}
 </style>"""
 
 
+# Cloudflare Web Analytics: без cookies, поэтому без согласия. Тег один, берём его из главной.
+BEACON = re.search(r"<script defer src=\"https://static\.cloudflareinsights\.com/[^>]*></script>",
+                   (SITE / "index.html").read_text(encoding="utf-8")).group(0)
+
+
 def page(title, desc, canon, body, ld=(), lang="ru", alt=None):
     """alt = (русский путь, английский путь): взаимные hreflang и ссылка на другой язык в шапке."""
     hreflang = f'<link rel="alternate" hreflang="ru" href="{BASE}{alt[0]}"><link rel="alternate" hreflang="en" href="{BASE}{alt[1]}">\n' if alt else ""
@@ -77,7 +82,7 @@ def page(title, desc, canon, body, ld=(), lang="ru", alt=None):
 <link rel="canonical" href="{BASE}{canon}"><meta name="robots" content="index,follow">
 {hreflang}<meta property="og:title" content="{E(title)}"><meta property="og:description" content="{E(desc)}">
 <meta property="og:image" content="{BASE}/og.png"><meta property="og:site_name" content="{BRAND}"><meta property="og:url" content="{BASE}{canon}">
-{ld_script(ld)}{CSS}</head><body><main><p>{nav}</p>
+{ld_script(ld)}{CSS}{BEACON}</head><body><main><p>{nav}</p>
 {body}<div id="sitefoot"></div><script src="/footer.js" defer></script></main><script src="/static.js" defer></script></body></html>"""
 
 
