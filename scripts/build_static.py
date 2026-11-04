@@ -62,8 +62,9 @@ a.allp::after{background:var(--info)}a.somep::after{background:var(--warn)}
 </style>"""
 
 
-# Cloudflare Web Analytics: без cookies, поэтому без согласия. Токен публичный.
-BEACON = """<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "7efcd1cc733b4eaf8c293f32b705fbf7"}'></script>"""
+# Cloudflare Web Analytics: без cookies, поэтому без согласия. Тег один, берём его из главной.
+BEACON = re.search(r"<script defer src=\"https://static\.cloudflareinsights\.com/[^>]*></script>",
+                   (SITE / "index.html").read_text(encoding="utf-8")).group(0)
 
 
 def page(title, desc, canon, body, ld=(), lang="ru", alt=None):
