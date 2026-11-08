@@ -4,6 +4,7 @@
   site/p/<sha1(zh)[:8]>.html  — фраза (перевод, иероглифы)
   site/hsk/<1–7>.html          — знаки уровня HSK 3.0 (7 = уровни 7–9) с чтением и значением
   site/c/index.html, site/p/index.html, site/hsk/index.html — хабы со ссылками
+  site/k/ — кандзи (scripts/kanji_pages.py)
   site/en/c/, site/en/hsk/ — английские версии страниц иероглифов и HSK со взаимными hreflang (у фраз английских страниц нет)
   site/sitemap.xml
 Интерактивная версия: /?open=<иероглиф> и /?z=<фраза>. Запускается из wrangler.toml [build].
@@ -17,6 +18,7 @@ from urllib.parse import quote
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import hsk as hsklib
+import kanji_pages
 
 ROOT = Path(__file__).resolve().parent.parent
 SITE = ROOT / "site"
@@ -50,7 +52,7 @@ CSS = """<style>
 body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 system-ui,sans-serif}
 main{max-width:760px;margin:0 auto;padding:20px 16px 60px}
 a{color:var(--accent)}h1{font-size:28px;margin:.4em 0}h2{font-size:17px;margin:1.4em 0 .4em}
-.big{font:96px/1.1 'Noto Serif SC',serif;color:var(--accent)}.m{color:var(--muted)}
+.big{font:96px/1.1 'Noto Serif SC',serif;color:var(--accent)}.big:lang(ja){font-family:'Noto Serif JP','Noto Serif CJK JP',serif}.m{color:var(--muted)}
 ul{padding-left:20px}.cta{display:inline-block;margin:12px 0;padding:8px 14px;border:1px solid var(--accent);border-radius:8px;text-decoration:none}
 .chs a{display:inline-block;position:relative;margin:0 6px 6px 0;font-size:22px;text-decoration:none}
 :root{--ok:#2f8f5b;--info:#2f6fd0;--warn:#d09a1f}@media(prefers-color-scheme:dark){:root{--ok:#5fcf93;--info:#6aa6ff;--warn:#e8b84a}}
@@ -74,7 +76,7 @@ def page(title, desc, canon, body, ld=(), lang="ru", alt=None):
         nav = (f'<a href="/?lang=en">Hanzi Burst</a> · <a href="/en/c/">Characters</a> · <a href="/en/hsk/">HSK</a> · <a href="/about">About</a> · <a href="/privacy">Privacy</a>'
                f' · <a href="{alt[0]}" hreflang="ru" lang="ru">Русский</a>')
     else:
-        nav = '<a href="/">Hanzi Burst</a> · <a href="/c/">Иероглифы</a> · <a href="/p/">Фразы</a> · <a href="/hsk/">HSK</a> · <a href="/about">О проекте</a> · <a href="/privacy">Конфиденциальность</a>'
+        nav = '<a href="/">Hanzi Burst</a> · <a href="/c/">Иероглифы</a> · <a href="/p/">Фразы</a> · <a href="/hsk/">HSK</a> · <a href="/k/">Кандзи</a> · <a href="/about">О проекте</a> · <a href="/privacy">Конфиденциальность</a>'
         if alt: nav += f' · <a href="{alt[1]}" hreflang="en" lang="en">English</a>'
     return f"""<!doctype html><html lang="{lang}"><head><meta charset="utf-8"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -111,6 +113,7 @@ def main():
     allc = {}
     for f in glob.glob(str(SITE / "data" / "chars" / "*.json")):
         allc.update(json.load(open(f, encoding="utf-8")))
+    k_urls, kanji = kanji_pages.build(SITE, page, breadcrumbs, E, gloss, first, BRAND, BASE, set(chars), allc)
     char_lv = {c: int(lv) for lv, cs in hsk.items() for c in cs}
     lvname = lambda lv: "7–9" if str(lv) == "7" else str(lv)
     # слова CC-CEDICT из шардов (build_shards.py): {слово: [pinyin, en, ru?]}; частота знака = в скольких словах он есть
@@ -209,6 +212,8 @@ def main():
             body.append(f"<h2>Похожие по написанию / {EN('Similar characters')}</h2>"
                         f"<p class='m'>Знаки с теми же частями: " + "、".join(
                             f"{link(x)} ({E((chars[x].get('pinyin') or [''])[0])})" for x in sim) + "</p>")
+        if ch in kanji:
+            body.append(f"<p>Этот же знак в японском: <a href='/k/{cid(ch)}' lang='ja'>{ch}</a> — чтения он и кун, японские слова.</p>")
         meaning = first(dru) or first(den)
         if c.get("radical") == ch:   # сам является ключом (радикалом)
             title = f"Ключ {ch} ({py}): значение и иероглифы с ним | Hanzi Burst"
@@ -389,6 +394,7 @@ def main():
     (SITE / "en" / "hsk" / "index.html").write_text(page("HSK 1–9 characters by level | Hanzi Burst",
         "HSK 3.0 character lists for levels 1–9 with pinyin and meaning. Every character can be broken down into radicals.", "/en/hsk/",
         f"<h1>HSK characters by level</h1><ul>{li}</ul>", [breadcrumbs((BRAND, "/"), ("HSK", "/en/hsk/"))], lang="en", alt=("/hsk/", "/en/hsk/")), encoding="utf-8")
+    urls += k_urls
     # lastmod не пишем: все страницы пересобираются при каждом деплое, настоящей даты изменения у них нет
     sm = "".join(f"<url><loc>{u}</loc></url>" for u in urls)
     (SITE / "sitemap.xml").write_text(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{sm}</urlset>\n', encoding="utf-8")

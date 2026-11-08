@@ -1,4 +1,4 @@
-/* Общий футер для страниц без своего (about, privacy, extension, learned, /c/, /p/, /japanese/).
+/* Общий футер для страниц без своего (about, privacy, extension, learned, /c/, /p/, /k/, /japanese/).
    Страница ставит <div id="sitefoot"></div> и подключает этот скрипт; на главной футер свой (index.html).
    Язык: data-l у <html> (extension), иначе lang страницы. */
 (function () {
@@ -8,7 +8,7 @@
   const RU = {
     tag: 'Учим китайские иероглифы через радикалы', explore: 'Разделы', project: 'Проект',
     home: 'Главная', all: 'Все иероглифы', phrases: 'Все фразы', hsk: 'Иероглифы по HSK', learned: 'Мои иероглифы', ext: 'Расширение для Chrome',
-    kana: 'Кана (японская азбука)', about: 'О проекте', privacy: 'Конфиденциальность', data: 'Источники данных'
+    kana: 'Кана (японская азбука)', kanji: 'Кандзи по классам', about: 'О проекте', privacy: 'Конфиденциальность', data: 'Источники данных'
   }, EN = {
     tag: 'Learn Chinese characters by radicals', explore: 'Explore', project: 'Project',
     home: 'Home', all: 'All characters', phrases: 'All phrases', hsk: 'HSK characters', learned: 'My characters', ext: 'Chrome extension',
@@ -40,7 +40,7 @@
     const pre = T === EN ? '/en' : '', onEn = location.pathname.startsWith('/en/');
     foot.innerHTML = `<div class="sgrid">
 <div class="sbrand"><b>Hanzi Burst</b><p>${T.tag}</p><p><a href="https://lipu.dev/">lipu.dev</a></p></div>
-<nav><h2>${T.explore}</h2><ul>${li(onEn ? '/?lang=en' : '/', T.home) + li(pre + '/c/', T.all) + (onEn ? '' : li('/p/', T.phrases)) + li(pre + '/hsk/', T.hsk) + li('/learned', T.learned) + li('/extension', T.ext) + li('/japanese/', T.kana)}</ul></nav>
+<nav><h2>${T.explore}</h2><ul>${li(onEn ? '/?lang=en' : '/', T.home) + li(pre + '/c/', T.all) + (onEn ? '' : li('/p/', T.phrases)) + li(pre + '/hsk/', T.hsk) + li('/learned', T.learned) + li('/extension', T.ext) + li('/japanese/', T.kana) + (T === EN ? '' : li('/k/', T.kanji))}</ul></nav>
 <nav><h2>${T.project}</h2><ul>${li('/about', T.about) + li('/privacy', T.privacy)}</ul></nav>
 </div><details><summary>${T.data}</summary><p><a href="https://github.com/skishore/makemeahanzi">Make Me a Hanzi</a> (LGPL, Arphic) · <a href="https://cc-cedict.org/">CC-CEDICT</a> (CC BY-SA) · <a href="https://tatoeba.org/">Tatoeba</a> (CC BY 2.0 FR) · <a href="https://en.wiktionary.org/">Wiktionary</a> via <a href="https://kaikki.org/">kaikki.org</a> (CC BY-SA) · <a href="https://commonvoice.mozilla.org/">Mozilla Common Voice</a> (CC0) · Unicode / Unihan · <a href="https://www.edrdg.org/wiki/index.php/JMdict-EDICT_Dictionary_Project">JMdict</a> (EDRDG, CC BY-SA 4.0) via <a href="https://github.com/scriptin/jmdict-simplified">jmdict-simplified</a> · <a href="https://www.edrdg.org/wiki/index.php/KANJIDIC_Project">KANJIDIC2</a> (EDRDG, CC BY-SA 4.0) · <a href="https://kanjivg.tagaini.net/">KanjiVG</a> (Ulrich Apel, CC BY-SA 3.0)</p></details>`;
   };
