@@ -33,4 +33,7 @@ to list the characters of that level not marked yet.
 Known characters (`chrome.storage.local` `known`) are merged both ways with the site's list (`localStorage` `hanzi-known`)
 by the content script on hanzi.lipu.dev: on page load, when the extension's list changes, when the site saves its list (`hanzi-known-saved` event) and when the tab is hidden.
 `knownBase` holds the list after the last merge, so a character unmarked on one side is removed on the other too.
+A missing site list is not taken as "everything unmarked": if `hanzi-known` is absent (site data cleared, incognito)
+or none of `knownBase` is left in it, the lists are united and nothing is deleted (except a one-character `knownBase`
+right after the site saved its list: the user unmarked the last character). See the comment above `mergeKnown` in `content.js`.
 The site listens for the `hanzi-known` window event to reload its list.

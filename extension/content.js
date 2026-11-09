@@ -27,21 +27,41 @@
   // ---- hanzi.lipu.dev: our list and the site's (localStorage hanzi-known) are merged both ways ----
   // knownBase is the list after the last merge: a character in it that is now missing on one side was unmarked there.
   // Runs on load, when our list changes, when the site saves its list and, as a fallback, when the tab is hidden.
-  function syncSite() {
+  //
+  // The site writes hanzi-known only on a user action (marking a character, saveKnown in site/index.html) or when a
+  // signed-in user's list is synced from the server; learned.html only reads it. So a missing site list does not mean
+  // "everything was unmarked":
+  // - key absent (site data cleared, new browser profile, incognito): the site has no data. Our list is pushed to the
+  //   site (union, nothing deleted), and an empty result is not written.
+  // - key present but none of knownBase left in it: ambiguous (the user unmarked every character one by one, or the
+  //   data was reset some other way). Treat it as a reset: union, nothing deleted. The one exception is a one-character
+  //   knownBase right after the site saved its list (hanzi-known-saved): one save unmarks at most one character, so
+  //   that is the user unmarking the last one. Trade-off: if the user unmarks everything on the site while the
+  //   extension is not running there (disabled, or the event was missed), those characters come back from our list
+  //   on the next visit and have to be unmarked again. Losing the whole list is worse than unmarking twice.
+  // Normal unmarks are unaffected: one side drops a character that the other still has and knownBase still has.
+  function mergeKnown(site, ext, base, siteSaved) {   // site: array, or null when the key is absent; base: array or null
+    const S = new Set(site || []), E = new Set(ext);
+    let B = base ? new Set(base) : null;
+    if (B && B.size && (site === null || (![...B].some(c => S.has(c)) && !(siteSaved && B.size === 1)))) B = null;
+    return [...new Set([...ext, ...S])].filter(c => !B || !B.has(c) || (S.has(c) && E.has(c)));
+  }
+  function syncSite(ev) {
     if (location.hostname !== 'hanzi.lipu.dev') return;
-    let site;
-    try { site = JSON.parse(localStorage.getItem('hanzi-known') || '[]'); } catch (e) { return; }
-    if (!Array.isArray(site)) return;
+    const siteSaved = !!ev && ev.type === 'hanzi-known-saved';
+    let raw, site;
+    try { raw = localStorage.getItem('hanzi-known'); site = raw === null ? null : JSON.parse(raw); } catch (e) { return; }
+    if (site !== null && !Array.isArray(site)) return;
     try {
       chrome.storage.local.get(['known', 'knownBase'], v => {
-        const ext = v.known || [], S = new Set(site), E = new Set(ext), B = v.knownBase ? new Set(v.knownBase) : null;
-        const out = [...new Set([...ext, ...site])].filter(c => !B || !B.has(c) || (S.has(c) && E.has(c)));
+        const ext = v.known || [];
+        const out = mergeKnown(site, ext, v.knownBase || null, siteSaved);
         const O = new Set(out), same = a => a.length === O.size && a.every(c => O.has(c));
-        if (!same(site)) {
+        if (!same(site || [])) {                                       // absent key + empty result: nothing to write
           try { localStorage.setItem('hanzi-known', JSON.stringify(out)); } catch (e) { return; }
           window.dispatchEvent(new Event('hanzi-known'));            // the site reloads its list (index.html, learned.html)
         }
-        if (!same(ext) || !B || !same(v.knownBase)) chrome.storage.local.set(same(ext) ? { knownBase: out } : { known: out, knownBase: out });
+        if (!same(ext) || !v.knownBase || !same(v.knownBase)) chrome.storage.local.set(same(ext) ? { knownBase: out } : { known: out, knownBase: out });
       });
     } catch (e) { /* extension reloaded */ }
   }
