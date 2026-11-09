@@ -2,7 +2,8 @@ name: deploy
 
 # Builds the site + extension zip and deploys the Worker to hanzi.lipu.dev.
 #   push to main    -> deploy
-#   push of tag v*  -> deploy, then upload the extension to the Chrome Web Store (extension-release.yml)
+#   push of tag v*  -> deploy (only if the tag is on main's current HEAD), then upload the extension to the
+#                      Chrome Web Store (extension-release.yml)
 #   pull_request    -> same build, `wrangler deploy --dry-run` (nothing is published)
 #
 # The build reads data/raw/ (dictionaries, gitignored). CI takes a pinned snapshot of the files it
@@ -30,11 +31,23 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     # Never cancel a deploy halfway; PR dry-runs may cancel each other.
+    # Tag runs get their own group: in the shared 'deploy' group a queued tag run was replaced (cancelled)
+    # by a newer main push, and extension-release never ran. Since a tag run can then overlap a main run,
+    # it only deploys when the tag is main's HEAD (both deploy the same code); see "Tag is main's HEAD".
     concurrency:
-      group: ${{ github.event_name == 'pull_request' && format('deploy-pr-{0}', github.ref) || 'deploy' }}
+      group: ${{ github.event_name == 'pull_request' && format('deploy-pr-{0}', github.ref) || startsWith(github.ref, 'refs/tags/') && format('deploy-tag-{0}', github.ref) || 'deploy' }}
       cancel-in-progress: ${{ github.event_name == 'pull_request' }}
     steps:
       - uses: actions/checkout@v7
+      # A tag on an older commit must not roll prod back: main's own run has deployed (or is deploying) newer code.
+      # The live-zip check and extension-release still run and fail if the live zip's version doesn't match the tag.
+      - name: Tag is main's HEAD
+        id: head
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          main=$(git ls-remote origin refs/heads/main | cut -f1)
+          if [ "$main" = "$GITHUB_SHA" ]; then echo "deploy=true" >> "$GITHUB_OUTPUT"
+          else echo "::warning::tag $GITHUB_REF_NAME is $GITHUB_SHA, main is $main: not redeploying an old commit"; echo "deploy=false" >> "$GITHUB_OUTPUT"; fi
       - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
@@ -66,7 +79,7 @@ jobs:
           npx --yes "wrangler@$WRANGLER_VERSION" deploy --dry-run --outdir dist
           unzip -l site/hanzi-burst-extension.zip | tail -1
       - name: Deploy
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' && steps.head.outputs.deploy != 'false'
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: |

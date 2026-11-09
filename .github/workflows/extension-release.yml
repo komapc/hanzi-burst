@@ -7,7 +7,7 @@ name: extension-release
 # Release flow (see README "Деплой"):
 #   1. bump "version" in extension/manifest.json, merge to main (deploy.yml deploys it)
 #   2. git tag v<version> && git push origin v<version>
-#      -> deploy.yml deploys that commit, then calls this workflow with publish=true
+#      -> deploy.yml deploys that commit (if it is main's HEAD), then calls this workflow with publish=true
 # Run by hand (Actions -> extension-release -> Run workflow) to re-upload the live zip.
 #
 # Needs repository secrets: CWS_EXTENSION_ID, CWS_CLIENT_ID, CWS_CLIENT_SECRET, CWS_REFRESH_TOKEN

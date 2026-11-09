@@ -93,7 +93,7 @@ wrangler secret put GEMINI_API_KEY
 ### Выпуск новой версии расширения
 
 1. Поднять `version` в `extension/manifest.json`, смёржить в `main` (сайт задеплоится сам).
-2. `git tag v<версия> && git push origin v<версия>` — CI задеплоит этот коммит, загрузит расширение в Web Store на проверку
+2. `git tag v<версия> && git push origin v<версия>` — CI задеплоит этот коммит (только если он — текущий HEAD `main`: тег на старом коммите прод не откатывает), загрузит расширение в Web Store на проверку
    и отправит Firefox-сборку на addons.mozilla.org (`web-ext sign --channel listed`; проверку AMO делает человек, CI её не ждёт).
 3. Если предыдущая версия ещё на проверке, Web Store ответит `ITEM_NOT_UPDATABLE`: шаг завершится предупреждением, а не ошибкой. Дождаться проверки (или отменить её в https://chrome.google.com/webstore/devconsole) и перезапустить Actions → extension-release.
    Только загрузить, без отправки на проверку: Actions → extension-release → Run workflow с `publish=false`.
