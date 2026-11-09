@@ -30,7 +30,8 @@ def hira(s):
     return "".join(chr(ord(c) - 0x60) if 'ァ' <= c <= 'ヶ' else c for c in s)
 
 
-def cyr(kana):
+def cyr(kana, long=True):
+    """long=False — не сводить оу/уу/… в долгие гласные: глагол годан на -у (おもう → омоу), как long в transcribe() site/ja.js"""
     s, syl, i = hira(kana), [], 0
     while i < len(s):
         c, n = s[i], s[i + 1] if i + 1 < len(s) else ''
@@ -58,9 +59,28 @@ def cyr(kana):
             elif nx[0] in 'мбп': x = 'м'
         if x == 'и' and j > 0 and syl[j - 1] != 'Q' and re.search('[ауэояюё]' + MAC + '?$', out): x = 'й'
         out += x
-    for a, b in (('оу', 'о'), ('уу', 'у'), ('ёу', 'ё'), ('юу', 'ю'), ('оо', 'о')):
-        out = out.replace(a, b + MAC)
+    if long:
+        for a, b in (('оу', 'о'), ('уу', 'у'), ('ёу', 'ё'), ('юу', 'ю'), ('оо', 'о')):
+            out = out.replace(a, b + MAC)
     return out
+
+
+def cyr_word(rd, pos):
+    """Слово JMdict в словарной форме: глагол годан на う (pos v5u…) читается без долготы, как godanU в site/ja.js"""
+    return cyr(rd, long=not (re.search(r"\bv5u", pos or "") and rd.endswith("う")))
+
+
+def cyr_reading(r):
+    """Чтение KANJIDIC: он — катакана, кун — с точкой перед окуриганой (おも.う). Кун с окуриганой на う — всегда
+    глагол годан на -у (у прилагательных окончание い), поэтому без долготы: おも.う → омоу, す.う → суу."""
+    plain = r.replace(".", "").strip("-")
+    return cyr(plain, long=not ("." in r and plain.endswith("う")))
+
+
+def phrase_url(p):
+    """Фраза из pool-ja.json на главной: ?mode=ja&z= открывает именно её, с курируемым переводом и японским разбором
+    (?t= разбирал бы текст заново, без перевода, и при hanzi-textlang=zh — как китайский)"""
+    return f"/?mode=ja&amp;z={quote(p['ja'])}"
 
 
 def strokes(n):
@@ -148,8 +168,7 @@ def build(SITE, page, breadcrumbs, E, gloss, first, BRAND, BASE, zh_chars, zh_al
         stem, dot, oku = k.partition(".")
         return E(stem) + (f'<span class="m">{E(oku)}</span>' if dot else "")
     def reading(r, kun):
-        plain = r.replace(".", "").strip("-")
-        return f'<li>{JA(kun_html(r) if kun else E(r))} <span class="m">{E(cyr(plain))}</span></li>'
+        return f'<li>{JA(kun_html(r) if kun else E(r))} <span class="m">{E(cyr_reading(r))}</span></li>'
 
     urls = []
     for ch, e in joyo.items():
@@ -166,7 +185,7 @@ def build(SITE, page, breadcrumbs, E, gloss, first, BRAND, BASE, zh_chars, zh_al
         body.append("<p>" + " ".join(info) + "</p>")
         ps = phr_by.get(ch, [])
         if ps:
-            body.append(f'<a class="cta" href="/?t={quote(ps[0]["ja"])}">Разобрать во фразе →</a>')
+            body.append(f'<a class="cta" href="{phrase_url(ps[0])}">Разобрать во фразе →</a>')
         if on:
             body.append("<h2>Онъёми (китайское чтение)</h2><ul>" + "".join(reading(r, False) for r in on) + "</ul>")
         if kun:
@@ -183,13 +202,13 @@ def build(SITE, page, breadcrumbs, E, gloss, first, BRAND, BASE, zh_chars, zh_al
         ws = words_by.get(ch, [])[:TOP_WORDS]
         if ws:
             def wli(w):
-                rd, _, wen, wru, *_ = words[w]
+                rd, pos, wen, wru, *_ = words[w]
                 ws_ = "".join(link(x) if x != ch else x for x in w)
-                return (f"<li>{JA(ws_)} {JA(E(rd))} <span class='m'>{E(cyr(rd))}</span> — "
+                return (f"<li>{JA(ws_)} {JA(E(rd))} <span class='m'>{E(cyr_word(rd, pos))}</span> — "
                         f"{gloss(first(wru), first(wen))}</li>")
             body.append(f"<h2>Слова с {JA(ch)}</h2><ul>{''.join(wli(w) for w in ws)}</ul>")
         if ps:
-            li = "".join(f'<li><a href="/?t={quote(p["ja"])}" lang="ja">{E(p["ja"])}</a> — {gloss(p.get("ru"), p.get("en"))}</li>' for p in ps)
+            li = "".join(f'<li><a href="{phrase_url(p)}" lang="ja">{E(p["ja"])}</a> — {gloss(p.get("ru"), p.get("en"))}</li>' for p in ps)
             body.append(f"<h2>Примеры фраз</h2><ul>{li}</ul>")
         par = parents.get(ch, [])
         if par:
@@ -202,8 +221,8 @@ def build(SITE, page, breadcrumbs, E, gloss, first, BRAND, BASE, zh_chars, zh_al
         if ch in zh_chars:
             body.append(f"<p>Этот же знак в китайском: <a href='/c/{cid(ch)}' lang='zh'>{ch}</a> — пиньинь, разбор на ключи и китайские слова.</p>")
         mean = mean or first(en)
-        on1 = ", ".join(f"{r} ({cyr(r)})" for r in on[:2])
-        kun1 = ", ".join(f"{k.replace('.', '').strip('-')} ({cyr(k.replace('.', '').strip('-'))})" for k in kun[:2])
+        on1 = ", ".join(f"{r} ({cyr_reading(r)})" for r in on[:2])
+        kun1 = ", ".join(f"{k.replace('.', '').strip('-')} ({cyr_reading(k)})" for k in kun[:2])
         title = f"Кандзи {ch} ({rd_short}): значение, чтения он и кун | {BRAND}"
         desc = f"Японский иероглиф (кандзи) {ch} — {mean}."
         if on1: desc += f" Онъёми: {on1}."

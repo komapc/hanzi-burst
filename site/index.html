@@ -391,14 +391,22 @@ const T = {
 let D = null, G = {};
 let lang = 'ru';
 try { lang = localStorage.getItem('hanzi-lang') || (navigator.language.startsWith('ru') ? 'ru' : 'en'); } catch (e) {}
-let known = new Set();
-try { known = new Set(JSON.parse(localStorage.getItem('hanzi-known') || '[]')); } catch (e) {}
-const saveKnown = () => {
+const readKnown = () => { try { return new Set(JSON.parse(localStorage.getItem('hanzi-known') || '[]')); } catch (e) { return null; } };
+let known = readKnown() || new Set();
+/* Изменение (add/remove) накладывается на то, что сейчас лежит в localStorage, а не на нашу копию:
+   вкладка, открытая до отметок в другой вкладке, иначе записала бы свой устаревший список поверх. */
+const saveKnown = (add = [], remove = []) => {
+  const cur = readKnown() || new Set(known);
+  add.forEach(c => cur.add(c)); remove.forEach(c => cur.delete(c));
+  known = cur;
   try { localStorage.setItem('hanzi-known', JSON.stringify([...known])); } catch (e) {}
   window.dispatchEvent(new Event('hanzi-known-saved'));   // расширение Hanzi Burst сразу подхватит изменение
 };
+const reloadKnown = () => { const k = readKnown(); if (!k) return; known = k; refresh(); };
 // расширение Hanzi Burst объединило свой список с нашим и записало результат в localStorage
-window.addEventListener('hanzi-known', () => { try { known = new Set(JSON.parse(localStorage.getItem('hanzi-known') || '[]')); } catch (e) { return; } refresh(); });
+window.addEventListener('hanzi-known', reloadKnown);
+// список поменяли в другой вкладке (key === null: там очистили localStorage целиком)
+window.addEventListener('storage', e => { if (e.key === 'hanzi-known' || e.key === null) reloadKnown(); });
 const t = k => T[lang][k];
 const pick = (o, base) => (lang === 'ru' && o && o[base + '_ru']) || (o && o[base]) || '';
 
@@ -862,8 +870,8 @@ function setKbtn(b, ch) {
 function toggleKnown(ch) {
   if (tour === 2) setTimeout(tourDone);
   const add = !known.has(ch);
-  add ? known.add(ch) : known.delete(ch);
-  saveKnown(); refresh();
+  add ? saveKnown([ch]) : saveKnown([], [ch]);
+  refresh();
   if (user) api('/api/known', { method: 'PUT', body: add ? { add: [ch] } : { remove: [ch] } });
 }
 /* первый вход: 1 — нажми на иероглиф фразы, 2 — нажимай на части; у кого уже есть данные в localStorage, тура нет */
@@ -1119,9 +1127,8 @@ async function syncKnown() {
   const r = await api('/api/known');
   if (!r.ok) return;
   const server = new Set(r.data);
+  saveKnown(server);                                         // свежий localStorage ∪ сервер
   const localOnly = [...known].filter(c => !server.has(c));
-  server.forEach(c => known.add(c));
-  saveKnown();
   if (localOnly.length) await api('/api/known', { method: 'PUT', body: { add: localOnly } });
   refresh(); renderPhrase();
 }
@@ -1379,9 +1386,11 @@ document.querySelectorAll('.scr.ph input').forEach(i => {
   i.checked = i.value === phon;
   i.onchange = () => { if (!i.checked) return; phon = i.value; try { localStorage.setItem('hanzi-phon', phon); } catch (e) {} if (D && D.phrase) { renderPhrase(); renderTrans(); refresh(); } };
 });
-{ // ?mode=ja|zh; ссылки на китайские фразы и иероглифы (?z=, ?open=, ?p=) всегда открывают режим 中
+{ // ?mode=ja|zh; ссылки на китайские фразы и иероглифы (?z=, ?open=, ?p=) открывают режим 中,
+  // кроме ?mode=ja&z=<фраза>: японская фраза из пула (ссылки со страниц кандзи /k/, scripts/kanji_pages.py)
   const q0 = new URLSearchParams(location.search);
-  if (q0.get('z') || q0.get('open') || q0.has('p')) mode = 'zh';
+  if (q0.get('mode') === 'ja' && q0.get('z') && !q0.get('open') && !q0.has('p')) mode = 'ja';
+  else if (q0.get('z') || q0.get('open') || q0.has('p')) mode = 'zh';
   else if (/^(ja|zh)$/.test(q0.get('mode') || '')) mode = q0.get('mode');
   syncMode();
 }
@@ -1394,7 +1403,8 @@ fetch('phrase.json').then(r => r.json())
   }).then(async () => {
     const q0 = new URLSearchParams(location.search);
     let saved = 0; try { saved = parseInt(localStorage.getItem(PHRASE_KEY()) || '0', 10) || 0; } catch (e) {}
-    if (q0.get('z') && !D.phrases.some(p => p.zh === q0.get('z')) && (D.pool || []).some(p => p.zh === q0.get('z'))) {
+    const zPool = (mode === 'ja' ? D.poolJa : D.pool) || [];
+    if (q0.get('z') && (mode === 'ja' || !D.phrases.some(p => p.zh === q0.get('z'))) && zPool.some(p => p.zh === q0.get('z'))) {
       const sn = getSeen(); if (!sn.includes(q0.get('z'))) { sn.push(q0.get('z')); saveSeen(sn); }
     }
     buildList();
@@ -1405,7 +1415,9 @@ fetch('phrase.json').then(r => r.json())
     await switchPhrase(cur); applyLang();
     // ссылка вида ?open=想&explode=1&lang=en открывает иероглиф сразу
     const q = new URLSearchParams(location.search);
-    if (q.get('lang')) { lang = q.get('lang'); applyLang(); }
+    if (/^(ru|en)$/.test(q.get('lang') || '')) { lang = q.get('lang'); applyLang(); }   // другие значения: T[lang] нет, applyLang упал бы
+    // знак не из phrase.json (ссылки /c/ на иероглифы без страницы, «Мои иероглифы») сначала грузим из шардов
+    if (q.get('open') && HAN.test(q.get('open')) && !D.chars[q.get('open')]) await loadChars([q.get('open')]);
     if (q.get('open') && D.chars[q.get('open')]) {
       openRoot(q.get('open'));
       if (q.get('explode')) { explodeAll($('#tree > .node')); }

@@ -157,11 +157,14 @@ $hsk.onclick = async e => {
 const $h1 = document.getElementById('h1'), $back = document.getElementById('back'), $sum = document.getElementById('sum'), $out = document.getElementById('out');
 document.querySelectorAll('.lang button').forEach(b => b.onclick = () => { lang = b.dataset.lang; try { localStorage.setItem('hanzi-lang', lang); } catch (e) {} render(); });
 render();
-// расширение Hanzi Burst объединило свой список с нашим (см. extension/content.js)
-window.addEventListener('hanzi-known', async () => {
+// расширение Hanzi Burst объединило свой список с нашим (см. extension/content.js) или список поменяли в другой вкладке.
+// Эта страница список только читает, поэтому устаревшей копией ничего не затрёт.
+const reloadKnown = async () => {
   try { known = JSON.parse(localStorage.getItem('hanzi-known') || '[]'); } catch (e) { return; }
   render(); await load(known.filter(c => !D.chars[c])); render();
-});
+};
+window.addEventListener('hanzi-known', reloadKnown);
+window.addEventListener('storage', e => { if (e.key === 'hanzi-known' || e.key === null) reloadKnown(); });
 (async () => {
   try {
     D.chars = (await fetch('phrase.json').then(r => r.json())).chars;

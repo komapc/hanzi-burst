@@ -27,17 +27,35 @@ async function readSession(env, request) {
   if (!m) return null;
   const [body, sig] = m[1].split('.');
   if (!body || !sig) return null;
-  const ok = await crypto.subtle.verify('HMAC', await hmacKey(env.SESSION_SECRET), unb64(sig), enc.encode(body));
-  if (!ok) return null;
-  const p = JSON.parse(new TextDecoder().decode(unb64(body)));
-  return p.exp > Date.now() / 1000 ? p : null;
+  // испорченная кука (не base64url, не JSON): atob/JSON.parse бросают — это «нет сессии», а не 500 на всём /api/*
+  try {
+    const ok = await crypto.subtle.verify('HMAC', await hmacKey(env.SESSION_SECRET), unb64(sig), enc.encode(body));
+    if (!ok) return null;
+    const p = JSON.parse(new TextDecoder().decode(unb64(body)));
+    return p && p.exp > Date.now() / 1000 ? p : null;
+  } catch (e) {
+    return null;
+  }
 }
 const cookie = (value, maxAge) =>
   `hb_session=${value}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${maxAge}`;
 
 /* ---------- анонимный пользователь: хэш IP, без хранения самого адреса ---------- */
+// IPv6: провайдер обычно выдаёт абоненту целую /64, и каждый адрес из неё считался бы отдельным клиентом
+// (одна /64 выбрала бы весь общий дневной лимит). Поэтому для IPv6 считаем по префиксу /64.
+// IPv4 хэшируется как раньше, байт в байт: сегодняшние счётчики не обнуляются.
+function ipKey(ip) {
+  if (!ip.includes(':')) return ip;
+  const v4 = /(\d+\.\d+\.\d+\.\d+)$/.exec(ip);   // ::ffff:1.2.3.4 — это IPv4
+  if (v4) return v4[1];
+  const [h, t] = ip.toLowerCase().split('%')[0].split('::');
+  const part = x => (x ? x.split(':') : []);
+  const a = part(h), b = part(t);
+  const groups = t === undefined ? a : [...a, ...Array(Math.max(0, 8 - a.length - b.length)).fill('0'), ...b];
+  return groups.slice(0, 4).map(g => (parseInt(g, 16) || 0).toString(16)).join(':') + '::/64';
+}
 async function ipId(request) {
-  const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+  const ip = ipKey(request.headers.get('CF-Connecting-IP') || 'unknown');
   const d = await crypto.subtle.digest('SHA-256', enc.encode('hanzi-burst:' + ip));
   return 'ip:' + b64(d).slice(0, 22);
 }
@@ -168,6 +186,8 @@ export default {
     }
 
     if (path === '/api/auth/google' && method === 'POST') {
+      // только application/json: обычная HTML-форма (text/plain, без CORS-preflight) не может войти за пользователя (login CSRF)
+      if (!/^application\/json\s*(;|$)/i.test(request.headers.get('Content-Type') || '')) return json({ error: 'unsupported_media_type' }, 415);
       const { credential } = await request.json().catch(() => ({}));
       const u = credential && (await verifyGoogle(env, credential));
       if (!u) return json({ error: 'invalid_token' }, 401);
@@ -251,9 +271,13 @@ export default {
         // INSERT OR IGNORE: если параллельный запрос успел раньше, остаётся его вариант.
         // Номер считается по всем версиям промпта: первичный ключ их не различает, и номер
         // по текущей версии столкнулся бы со старой строкой, а оплаченный ответ пропал бы.
+        // Потолок MAX_VARIANTS (по текущей версии) проверяется в том же запросе: два параллельных
+        // запроса оба прошли проверку have.length выше, но вставит только тот, кто ещё влезает.
         await env.DB.prepare(
-          'INSERT OR IGNORE INTO mnemonics (ch, lang, variant, text, model, prompt_version, created_by, created_at) SELECT ?1, ?2, COALESCE(MAX(variant), 0) + 1, ?3, ?4, ?5, ?6, ?7 FROM mnemonics WHERE ch = ?1 AND lang = ?2'
-        ).bind(b.ch, lang, text, env.GEMINI_MODEL, PROMPT_VERSION, session ? uid : null, Date.now()).run();
+          'INSERT OR IGNORE INTO mnemonics (ch, lang, variant, text, model, prompt_version, created_by, created_at) ' +
+          'SELECT ?1, ?2, (SELECT COALESCE(MAX(variant), 0) + 1 FROM mnemonics WHERE ch = ?1 AND lang = ?2), ?3, ?4, ?5, ?6, ?7 ' +
+          'WHERE (SELECT COUNT(*) FROM mnemonics WHERE ch = ?1 AND lang = ?2 AND prompt_version = ?5) < ?8'
+        ).bind(b.ch, lang, text, env.GEMINI_MODEL, PROMPT_VERSION, session ? uid : null, Date.now(), MAX_VARIANTS).run();
         return json({ variants: await read(), cached: false });
       } catch (e) {
         console.error('explain failed', e.message);
