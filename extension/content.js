@@ -34,16 +34,16 @@
   // - key absent (site data cleared, new browser profile, incognito): the site has no data. Our list is pushed to the
   //   site (union, nothing deleted), and an empty result is not written.
   // - key present but none of knownBase left in it: ambiguous (the user unmarked every character one by one, or the
-  //   data was reset some other way). Unless the site has just saved it (the hanzi-known-saved event, i.e. the user
-  //   unmarked the last character right now), treat it as a reset: union, nothing deleted. Trade-off: if the user
-  //   unmarks everything on the site while the extension is not running there (disabled, or the event was missed),
-  //   those characters come back from our list on the next visit and have to be unmarked again. Losing the whole
-  //   list is worse than unmarking twice.
+  //   data was reset some other way). Treat it as a reset: union, nothing deleted. The one exception is a one-character
+  //   knownBase right after the site saved its list (hanzi-known-saved): one save unmarks at most one character, so
+  //   that is the user unmarking the last one. Trade-off: if the user unmarks everything on the site while the
+  //   extension is not running there (disabled, or the event was missed), those characters come back from our list
+  //   on the next visit and have to be unmarked again. Losing the whole list is worse than unmarking twice.
   // Normal unmarks are unaffected: one side drops a character that the other still has and knownBase still has.
   function mergeKnown(site, ext, base, siteSaved) {   // site: array, or null when the key is absent; base: array or null
     const S = new Set(site || []), E = new Set(ext);
     let B = base ? new Set(base) : null;
-    if (B && B.size && (site === null || (!siteSaved && ![...B].some(c => S.has(c))))) B = null;
+    if (B && B.size && (site === null || (![...B].some(c => S.has(c)) && !(siteSaved && B.size === 1)))) B = null;
     return [...new Set([...ext, ...S])].filter(c => !B || !B.has(c) || (S.has(c) && E.has(c)));
   }
   function syncSite(ev) {
