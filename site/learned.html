@@ -164,7 +164,7 @@ const reloadKnown = async () => {
   render(); await load(known.filter(c => !D.chars[c])); render();
 };
 window.addEventListener('hanzi-known', reloadKnown);
-window.addEventListener('storage', e => { if (e.key === 'hanzi-known' || e.key === null) reloadKnown(); });
+window.addEventListener('storage', e => { if (e.key === 'hanzi-known' && e.newValue !== null) reloadKnown(); });
 (async () => {
   try {
     D.chars = (await fetch('phrase.json').then(r => r.json())).chars;

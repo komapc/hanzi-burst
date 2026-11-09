@@ -391,10 +391,13 @@ const T = {
 let D = null, G = {};
 let lang = 'ru';
 try { lang = localStorage.getItem('hanzi-lang') || (navigator.language.startsWith('ru') ? 'ru' : 'en'); } catch (e) {}
-const readKnown = () => { try { return new Set(JSON.parse(localStorage.getItem('hanzi-known') || '[]')); } catch (e) { return null; } };
+// null — ключа нет (данные сайта стёрли) или он испорчен: это не «пустой список»
+const readKnown = () => { try { const v = localStorage.getItem('hanzi-known'); return v === null ? null : new Set(JSON.parse(v)); } catch (e) { return null; } };
 let known = readKnown() || new Set();
 /* Изменение (add/remove) накладывается на то, что сейчас лежит в localStorage, а не на нашу копию:
-   вкладка, открытая до отметок в другой вкладке, иначе записала бы свой устаревший список поверх. */
+   вкладка, открытая до отметок в другой вкладке, иначе записала бы свой устаревший список поверх.
+   Ключа нет (localStorage стёрли при открытой вкладке) — на нашу копию: иначе записали бы один знак,
+   и расширение по hanzi-known-saved удалило бы у себя остальные. */
 const saveKnown = (add = [], remove = []) => {
   const cur = readKnown() || new Set(known);
   add.forEach(c => cur.add(c)); remove.forEach(c => cur.delete(c));
@@ -405,8 +408,8 @@ const saveKnown = (add = [], remove = []) => {
 const reloadKnown = () => { const k = readKnown(); if (!k) return; known = k; refresh(); };
 // расширение Hanzi Burst объединило свой список с нашим и записало результат в localStorage
 window.addEventListener('hanzi-known', reloadKnown);
-// список поменяли в другой вкладке (key === null: там очистили localStorage целиком)
-window.addEventListener('storage', e => { if (e.key === 'hanzi-known' || e.key === null) reloadKnown(); });
+// список поменяли в другой вкладке; удалённый ключ (или очищенный localStorage) не считаем пустым списком
+window.addEventListener('storage', e => { if (e.key === 'hanzi-known' && e.newValue !== null) reloadKnown(); });
 const t = k => T[lang][k];
 const pick = (o, base) => (lang === 'ru' && o && o[base + '_ru']) || (o && o[base]) || '';
 
