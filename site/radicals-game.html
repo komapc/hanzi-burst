@@ -1,0 +1,184 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Игра: учим ключи китайских иероглифов — Hanzi Burst</title>
+<meta name="description" content="Игра для запоминания 214 ключей (радикалов) китайских иероглифов: угадай значение ключа или найди ключ в иероглифе. Сначала 60 самых частых, повторение по карточкам Лейтнера.">
+<link rel="canonical" href="https://hanzi.lipu.dev/radicals-game">
+<style>
+:root{--bg:#faf7f2;--fg:#1f1b16;--muted:#6b6257;--accent:#c8402a;--line:#cfc6b6;--soft:#e6dfd3;--card:#fff;--ok:#2a7f51;--bad:#c0392b}
+@media(prefers-color-scheme:dark){:root{--bg:#17140f;--on:#17140f;--fg:#f1ebe0;--muted:#a59c8e;--accent:#ff7a5c;--line:#5a5144;--soft:#352f25;--card:#221e17;--ok:#5fcf93;--bad:#ff6b5c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,sans-serif}
+main{max-width:640px;margin:0 auto;padding:20px 16px 60px}
+a{color:var(--accent)}h1{font-size:24px;margin:.4em 0 .2em}
+.m{color:var(--muted)}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.seg{display:inline-flex;margin:4px 8px 4px 0}
+.seg button{background:none;border:1px solid var(--soft);color:var(--muted);padding:4px 12px;font:inherit;font-size:.88rem;cursor:pointer}
+.seg button:first-child{border-radius:999px 0 0 999px}.seg button:last-child{border-radius:0 999px 999px 0}
+.seg button.on{background:var(--accent);border-color:var(--accent);color:var(--on,#fff)}
+.card{margin:18px 0;padding:18px;border:1px solid var(--soft);border-radius:16px;background:var(--card);text-align:center}
+.q{font:120px/1.15 'Noto Serif SC','Noto Serif CJK SC',serif;color:var(--accent)}
+.ask{color:var(--muted);margin-bottom:6px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.opts button{padding:12px 8px;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--fg);font:inherit;cursor:pointer;min-height:56px}
+.opts button:hover:not(:disabled){border-color:var(--accent)}
+.opts button .z{font:30px/1.1 'Noto Serif SC','Noto Serif CJK SC',serif;display:block}
+.opts button.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 18%,var(--bg))}
+.opts button.bad{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 18%,var(--bg))}
+.fb{min-height:3.2em;margin-top:12px}
+.next{margin-top:8px;padding:8px 18px;border:1px solid var(--accent);border-radius:8px;background:none;color:var(--accent);font:inherit;cursor:pointer}
+.bar{height:8px;border-radius:999px;background:var(--soft);overflow:hidden;margin:6px 0}.bar i{display:block;height:100%;background:var(--ok)}
+.boxes{display:flex;gap:6px;justify-content:center;font-size:.8rem;color:var(--muted)}
+.reset{background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;font:inherit;font-size:.85rem}
+</style><link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "7efcd1cc733b4eaf8c293f32b705fbf7"}'></script>
+</head><body><main>
+<div class="top"><a href="/r/" id="back"></a>
+<span class="seg" id="lang"><button data-v="ru">RU</button><button data-v="en">EN</button></span></div>
+<h1 id="h1"></h1><p class="m" id="intro"></p>
+<div><span class="seg" id="mode"><button data-v="meaning"></button><button data-v="find"></button></span><span class="seg" id="set"><button data-v="top"></button><button data-v="all"></button></span></div>
+<div id="prog"></div>
+<div class="card" id="card"></div>
+<p class="m" style="font-size:.85rem"><span id="hint"></span> <button class="reset" id="reset"></button></p>
+<div id="sitefoot"></div><script src="/footer.js" defer></script>
+</main>
+<script>
+/* Игра на ключи. Карточки Лейтнера: коробки 1–5, правильный ответ — в следующую коробку, ошибка — в первую.
+   Чем ниже коробка, тем чаще карточка выпадает. Ключ, дошедший до 5-й коробки в режиме «значение», считается выученным
+   и добавляется в hanzi-known (как кнопка «Знаю» на главной). Прогресс — localStorage['hanzi-radicals-srs']. */
+const T = {
+  ru: {title: 'Учим ключи иероглифов', back: '← 214 ключей', intro: 'Ключ (радикал) подсказывает смысл иероглифа. Сначала 60 частых ключей: на них держится большинство иероглифов HSK.',
+       meaning: 'Ключ → значение', find: 'Иероглиф → ключ', top: '60 частых', all: 'Все 214',
+       askMeaning: 'Что значит этот ключ?', askFind: 'Какой ключ в этом иероглифе?', ok: 'Верно!', bad: 'Нет:', next: 'Дальше →',
+       learned: (a, b) => `Выучено ${a} из ${b}`, box: 'коробка', page: 'страница ключа', ch: 'иероглиф',
+       hint: 'Прогресс хранится только в этом браузере. Выученные ключи попадают в «Мои иероглифы».', reset: 'Сбросить прогресс',
+       done: 'Все ключи этого набора выучены! Можно взять «Все 214» или продолжать повторять.'},
+  en: {title: 'Learn the Chinese radicals', back: '← 214 radicals', intro: 'A radical hints at what a character means. Start with the 60 common radicals: they build most HSK characters.',
+       meaning: 'Radical → meaning', find: 'Character → radical', top: '60 common', all: 'All 214',
+       askMeaning: 'What does this radical mean?', askFind: 'Which radical is in this character?', ok: 'Correct!', bad: 'No:', next: 'Next →',
+       learned: (a, b) => `Learned ${a} of ${b}`, box: 'box', page: 'radical page', ch: 'character',
+       hint: 'Progress is stored only in this browser. Learned radicals are added to “My characters”.', reset: 'Reset progress',
+       done: 'Every radical in this set is learned! Switch to “All 214” or keep reviewing.'},
+};
+const LS = (k, d) => { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } };
+const put = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+const q = new URLSearchParams(location.search);
+let lang = q.get('lang'); if (!lang) { try { lang = localStorage.getItem('hanzi-lang'); } catch (e) {} }
+lang = lang || (navigator.language.startsWith('ru') ? 'ru' : 'en');
+if (!T[lang]) lang = 'ru';
+let mode = q.get('mode') === 'find' ? 'find' : 'meaning', set = q.get('set') === 'all' ? 'all' : 'top';
+let srs = LS('hanzi-radicals-srs', {}), R = [], cur = null, last = '';
+const t = k => T[lang][k];
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+const hex = ch => ch.codePointAt(0).toString(16);
+const pre = () => lang === 'en' ? '/en' : '';
+const MAXBOX = 5;
+const key = (r, ex) => mode === 'meaning' ? 'm' + r.n : 'f' + ex;
+const box = k => (srs[k] && srs[k].b) || 1;
+const pool = () => R.filter(r => set === 'all' || r.top).sort((a, b) => b.hsk - a.hsk || a.n - b.n);   // новые карточки — от частых к редким
+
+// как saveKnown() в index.html: накладываем на то, что сейчас в localStorage, и сообщаем расширению
+function addKnown(chars) {
+  let cur; try { const v = localStorage.getItem('hanzi-known'); cur = new Set(v === null ? [] : JSON.parse(v)); } catch (e) { return; }
+  const n = cur.size; chars.forEach(c => cur.add(c));
+  if (cur.size === n) return;
+  put('hanzi-known', [...cur]);
+  window.dispatchEvent(new Event('hanzi-known-saved'));
+}
+
+function pickCard() {
+  const P = pool();
+  const items = mode === 'meaning' ? P.map(r => ({r, k: 'm' + r.n}))
+    : P.flatMap(r => r.examples.slice(0, 4).map(ex => ({r, ex, k: 'f' + ex})));
+  // вес карточки: 2^(5 - коробка); новая карточка (без записи) весит как коробка 1, но новые вводим по порядку частоты
+  const seen = items.filter(it => srs[it.k]), fresh = items.filter(it => !srs[it.k]);
+  const low = seen.filter(it => box(it.k) <= 2).length;
+  const cand = [...seen, ...(low < 8 ? fresh.slice(0, 8 - low) : [])].filter(it => it.k !== last);
+  const list = cand.length ? cand : items;
+  let sum = 0; const w = list.map(it => (sum += 2 ** (MAXBOX - box(it.k))));
+  const x = Math.random() * sum;
+  return list[w.findIndex(v => v > x)];
+}
+function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+let C = {};   // comps.json: части знака — в режиме «иероглиф → ключ» не предлагаем как неверный ответ ключ, который в знаке тоже есть
+const parts = ch => { const out = new Set(), walk = (c, d) => [...(C[c] || '')].forEach(x => { out.add(x); if (d < 4) walk(x, d + 1); }); walk(ch, 0); return out; };
+function distract(r) {
+  const inside = mode === 'find' ? parts(cur.ex) : new Set();
+  const P = pool().filter(x => x.n !== r.n && x[lang] !== r[lang] && ![x.char, ...x.variants].some(f => inside.has(f)));
+  return shuffle(P).slice(0, 3);
+}
+
+function render() {
+  document.documentElement.lang = lang;
+  document.title = t('title') + ' — Hanzi Burst';
+  $('back').textContent = t('back'); $('back').href = pre() + '/r/';
+  $('h1').textContent = t('title'); $('intro').textContent = t('intro');
+  $('hint').textContent = t('hint'); $('reset').textContent = t('reset');
+  for (const [id, val] of [['lang', lang], ['mode', mode], ['set', set]])
+    $(id).querySelectorAll('button').forEach(b => { b.classList.toggle('on', b.dataset.v === val); if (id !== 'lang') b.textContent = t(b.dataset.v); });
+  progress(); next();
+}
+function progress() {
+  const P = pool();
+  const ks = mode === 'meaning' ? P.map(r => 'm' + r.n) : P.flatMap(r => r.examples.slice(0, 4).map(ex => 'f' + ex));
+  const done = ks.filter(k => box(k) >= MAXBOX).length;
+  const counts = [1, 2, 3, 4, 5].map(b => ks.filter(k => srs[k] && box(k) === b).length);
+  $('prog').innerHTML = `<div class="bar"><i style="width:${(100 * done / Math.max(ks.length, 1)).toFixed(1)}%"></i></div>`
+    + `<div class="boxes"><span>${t('learned')(done, ks.length)}</span>${counts.map((c, i) => c ? `<span>· ${t('box')} ${i + 1}: ${c}</span>` : '').join('')}</div>`
+    + (done === ks.length && ks.length ? `<p>${t('done')}</p>` : '');
+}
+function next() {
+  cur = pickCard(); if (!cur) return;
+  last = cur.k;
+  const r = cur.r;
+  let shown, ask, opts;
+  const others = distract(r);
+  if (mode === 'meaning') {
+    const forms = [r.char, ...r.variants];
+    shown = forms[Math.floor(Math.random() * forms.length)];
+    ask = t('askMeaning');
+    opts = shuffle([r, ...others]).map(o => `<button data-n="${o.n}">${esc(o[lang])}</button>`);
+  } else {
+    shown = cur.ex; ask = t('askFind');
+    const form = o => o.variants[0] && !/[⺀-⻿]/.test(o.variants[0]) ? o.variants[0] : o.char;   // упрощённая форма, если есть
+    opts = shuffle([r, ...others]).map(o => `<button data-n="${o.n}"><span class="z" lang="zh">${form(o)}</span>${esc(o[lang])}</button>`);
+  }
+  $('card').innerHTML = `<div class="ask">${ask}</div><div class="q" lang="zh">${shown}</div><div class="opts">${opts.join('')}</div><div class="fb" id="fb"></div>`;
+  $('card').querySelectorAll('.opts button').forEach(b => b.onclick = () => answer(b));
+}
+function answer(b) {
+  const r = cur.r, right = +b.dataset.n === r.n;
+  $('card').querySelectorAll('.opts button').forEach(x => { x.disabled = true; if (+x.dataset.n === r.n) x.classList.add('ok'); });
+  if (!right) b.classList.add('bad');
+  const s = srs[cur.k] || {b: 1};
+  s.b = right ? Math.min(MAXBOX, s.b + (srs[cur.k] ? 1 : 2)) : 1;   // новая и сразу угаданная карточка — сразу в 3-ю коробку
+  srs[cur.k] = s; put('hanzi-radicals-srs', srs);
+  if (right && mode === 'meaning' && s.b >= MAXBOX) addKnown([r.char]);
+  const vs = r.variants.length ? ` (${r.variants.join('、')})` : '';
+  const exl = mode === 'find' ? ` · ${t('ch')} <a lang="zh" href="/?open=${encodeURIComponent(cur.ex)}${lang === 'en' ? '&lang=en' : ''}">${cur.ex}</a>` : '';
+  $('fb').innerHTML = `${right ? `<b style="color:var(--ok)">${t('ok')}</b>` : `<b style="color:var(--bad)">${t('bad')}</b>`} `
+    + `<span lang="zh">${r.char}${vs}</span> ${esc(r.pinyin)} — ${esc(r[lang])} · <a href="${pre()}/r/${hex(r.char)}">${t('page')}</a>${exl}`
+    + `<br><button class="next" id="nx">${t('next')}</button>`;
+  $('nx').onclick = () => { progress(); next(); };
+  $('nx').focus();
+}
+
+document.querySelectorAll('.seg').forEach(g => g.addEventListener('click', e => {
+  const v = e.target.closest('button')?.dataset.v; if (!v) return;
+  if (g.id === 'lang') { lang = v; try { localStorage.setItem('hanzi-lang', v); } catch (e) {} }
+  if (g.id === 'mode') mode = v;
+  if (g.id === 'set') set = v;
+  last = ''; render();
+}));
+$('reset').onclick = () => { srs = {}; put('hanzi-radicals-srs', srs); render(); };
+document.addEventListener('keydown', e => {
+  const bs = [...$('card').querySelectorAll('.opts button')];
+  if (/^[1-4]$/.test(e.key) && bs[e.key - 1] && !bs[0].disabled) bs[e.key - 1].click();
+  else if ((e.key === 'Enter' || e.key === ' ') && $('nx') && document.activeElement !== $('nx')) { e.preventDefault(); $('nx').click(); }
+});
+fetch('/comps.json').then(r => r.json()).then(d => { C = d; }).catch(() => {});
+fetch('/radicals.json').then(r => r.json()).then(d => { R = d; render(); });
+</script>
+</body></html>
