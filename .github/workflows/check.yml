@@ -42,6 +42,24 @@ jobs:
           print("\n".join(bad) or "all JSON ok")
           sys.exit(1 if bad else 0)
           PY
+      - name: Radicals table is complete
+        run: |
+          python - <<'PY'
+          import json, sys
+          R = json.load(open("data/radicals.json", encoding="utf-8"))
+          bad = []
+          if [r["n"] for r in R] != list(range(1, 215)):
+              bad.append("numbers are not 1..214")
+          for r in R:
+              if not (r["char"] and r["ru"] and r["en"] and r["strokes"] > 0 and r["pinyin"]):
+                  bad.append(f"{r['n']}: empty field")
+              if any(len(v) != 1 for v in r["variants"]):
+                  bad.append(f"{r['n']}: variant is not one character")
+          if sum(r["top"] for r in R) < 30:
+              bad.append("too few common radicals")
+          print("\n".join(bad) or "radicals ok")
+          sys.exit(1 if bad else 0)
+          PY
       - name: Home page has what the app needs
         run: |
           grep -q 'id="phrase"' site/index.html
