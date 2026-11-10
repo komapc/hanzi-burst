@@ -5,6 +5,8 @@ dashboard (Store listing tab, EN and the RU localization) by hand.
 As of 2026-10-29 the live store still shows the pre-0.2 text (summary "Select Chinese text on any
 page to see pinyin, meaning and how each character breaks down into parts. Works offline." and the
 old description without Japanese); the texts below are the ones to paste.
+2026-11-10: the pinyin paragraph in both descriptions now says "pinyin over text on any web page" /
+«пиньинь над текстом на любой странице» (search phrases). Dashboard text only: no package change, no version bump.
 
 **2026-10-29: 0.2.3 was rejected for "Keyword Spam" (violation ID Yellow Argon).** The flagged text was the
 dictionary-credits line in the RU description (a list of dataset names and licenses). Do not list the
@@ -28,7 +30,7 @@ Hover over Chinese text on any page, hover while holding Alt, or select it, and 
 • the full breakdown of every character into its components, down to the radicals, with pinyin and meaning for each part
 • which parts you already know
 
-Pinyin over the whole page: switch it on in the popup, or for the current tab only via right-click → "pinyin on this page". Readings go by words: 银行 is yín háng. On Japanese pages it shows furigana over kanji.
+Pinyin over text on any web page: switch it on in the popup for every site, or for the current tab only via right-click → "pinyin on this page". Readings go by words: 银行 is yín háng. On Japanese pages it shows furigana over kanji.
 
 Japanese: when the text has kana or the page is marked as Japanese, the card shows words with their reading (kana and romaji), the dictionary form of verbs (見ました → 見る), and on/kun readings plus parts for each kanji.
 
@@ -60,7 +62,7 @@ Hanzi Burst — китайско-японский словарь при наве
 • полный разбор каждого иероглифа на составные части вплоть до ключей (радикалов), с пиньинем и значением каждой части
 • какие части вы уже знаете
 
-Пиньинь над всей страницей: переключатель в настройках или, только для текущей вкладки, контекстное меню → «pinyin on this page». Чтение берётся по словам: 银行 — yín háng. На японских страницах — фуригана над кандзи.
+Пиньинь над текстом на любой странице: включите его в настройках для всех сайтов или, только для текущей вкладки, через контекстное меню → «pinyin on this page». Чтение берётся по словам: 银行 — yín háng. На японских страницах — фуригана над кандзи.
 
 Японский: если в тексте есть кана или страница помечена как японская, карточка показывает слова с чтением (кана, ромадзи или кириллица по Поливанову), словарную форму глагола (見ました → 見る), а для кандзи — онные и кунные чтения и части.
 
