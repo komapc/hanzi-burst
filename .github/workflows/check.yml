@@ -65,3 +65,4 @@ jobs:
           grep -q 'id="phrase"' site/index.html
           grep -q "fetch('phrase.json')" site/index.html
           test -s site/phrase.json && test -s site/glyphs.json
+          test -s site/radicals-ru.pdf && test -s site/radicals-en.pdf   # built by hand: scripts/radicals_pdf.py

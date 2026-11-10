@@ -34,13 +34,15 @@ T = {
                as_char="Этот знак как иероглиф", top="Частые ключи", more="Показать ещё {k} ключей", by_strokes="{s} черт",
                none="Среди иероглифов HSK этого ключа нет: он встречается в редких и старых знаках.", prev="← Ключ", next="Ключ →",
                hsk="знаков HSK с этим ключом: {k}", interactive="Разобрать интерактивно →",
-               game="Учить ключи в игре →", game_q="?lang=ru"),
+               game="Учить ключи в игре →", game_q="?lang=ru",
+               pdf="Карточки для печати (PDF, 214 ключей)"),
     "en": dict(radical="Radical", hub="Radicals", all214="The 214 Kangxi radicals", n="Number", strokes="Strokes", pinyin="Pinyin",
                meaning="Meaning", variants="Variant forms", order="Stroke order", examples="Characters with this radical",
                as_char="This sign as a character", top="Common radicals", more="Show {k} more radicals", by_strokes="{s} strokes",
                none="No HSK characters use this radical: it appears in rare and old characters.", prev="← Radical", next="Radical →",
                hsk="HSK characters with this radical: {k}", interactive="Break it down interactively →",
-               game="Learn the radicals in a game →", game_q="?lang=en"),
+               game="Learn the radicals in a game →", game_q="?lang=en",
+               pdf="Printable flashcards (PDF, 214 radicals)"),
 }
 
 
@@ -135,7 +137,7 @@ def build(SITE, page, breadcrumbs, E, BASE, chars, allc, first):
             if own:
                 body.append(f"<p>{t['as_char']}: " + " ".join(f'<a href="{pre}/c/{cid(c)}" data-c="{c}" lang="zh">{c}</a>' for c in own) + "</p>")
                 body.append(f'<a class="cta" href="/?open={own[0]}&amp;explode=1' + ("&amp;lang=en" if lang == "en" else "") + f'">{t["interactive"]}</a>')
-            body.append(f'<p><a href="/radicals-game{t["game_q"]}">{t["game"]}</a></p>')
+            body.append(f'<p><a href="/radicals-game{t["game_q"]}">{t["game"]}</a> · <a href="/radicals-{lang}.pdf">{t["pdf"]}</a></p>')
             pv, nx = by_n.get(n - 1), by_n.get(n + 1)
             body.append("<p class='pn'>" + (f'<a href="{pre}/r/{cid(pv["char"])}">{t["prev"]} {pv["char"]}</a>' if pv else "<span></span>")
                         + f'<a href="{pre}/r/">{t["hub"]}</a>'
@@ -183,7 +185,7 @@ def build(SITE, page, breadcrumbs, E, BASE, chars, allc, first):
                      f"Click a radical for its stroke order, variant forms and characters that use it.")
             desc = ("All 214 Kangxi radicals with number, meaning, stroke count, variant forms (氵扌亻忄…) and stroke order. "
                     f"The {len(top)} most common radicals first, the rest by stroke count.")
-        body = (f"{CSS}<h1>{h1}</h1><p class='m'>{intro}</p><a class='cta' href='/radicals-game{t["game_q"]}'>{t['game']}</a><h2>{t['top']}</h2><ul class='rg'>{''.join(cell(r) for r in top)}</ul>"
+        body = (f"{CSS}<h1>{h1}</h1><p class='m'>{intro}</p><a class='cta' href='/radicals-game{t["game_q"]}'>{t['game']}</a><p><a href='/radicals-{lang}.pdf'>{t['pdf']}</a> <span class='m'>· {'другой язык' if lang == 'ru' else 'other language'}: <a href='/radicals-{'en' if lang == 'ru' else 'ru'}.pdf'>{'EN' if lang == 'ru' else 'RU'}</a></span></p><h2>{t['top']}</h2><ul class='rg'>{''.join(cell(r) for r in top)}</ul>"
                 f"<details class='more'><summary>{t['more'].format(k=len(rest))}</summary>{more}</details>")
         ld = [breadcrumbs(("Hanzi Burst", "/"), (t["hub"], f"{pre}/r/")),
               {"@context": "https://schema.org", "@type": "DefinedTermSet", "name": h1, "url": f"{BASE}{pre}/r/", "inLanguage": lang}]
