@@ -5,7 +5,7 @@
   site/hsk/<1–7>.html          — знаки уровня HSK 3.0 (7 = уровни 7–9) с чтением и значением
   site/c/index.html, site/p/index.html, site/hsk/index.html — хабы со ссылками
   site/k/ — кандзи (scripts/kanji_pages.py)
-  site/en/c/, site/en/hsk/ — английские версии страниц иероглифов и HSK со взаимными hreflang (у фраз английских страниц нет)
+  site/en/c/, site/en/p/, site/en/hsk/ — английские версии страниц иероглифов, фраз и HSK со взаимными hreflang ru↔en (x-default = ru)
   site/sitemap.xml
 Интерактивная версия: /?open=<иероглиф> и /?z=<фраза>. Запускается из wrangler.toml [build].
 Сгенерированное не коммитится (см. .gitignore).
@@ -70,10 +70,11 @@ BEACON = re.search(r"<script defer src=\"https://static\.cloudflareinsights\.com
 
 
 def page(title, desc, canon, body, ld=(), lang="ru", alt=None):
-    """alt = (русский путь, английский путь): взаимные hreflang и ссылка на другой язык в шапке."""
-    hreflang = f'<link rel="alternate" hreflang="ru" href="{BASE}{alt[0]}"><link rel="alternate" hreflang="en" href="{BASE}{alt[1]}">\n' if alt else ""
+    """alt = (русский путь, английский путь): взаимные hreflang (x-default — русская версия) и ссылка на другой язык в шапке."""
+    hreflang = (f'<link rel="alternate" hreflang="ru" href="{BASE}{alt[0]}"><link rel="alternate" hreflang="en" href="{BASE}{alt[1]}">'
+                f'<link rel="alternate" hreflang="x-default" href="{BASE}{alt[0]}">\n') if alt else ""
     if lang == "en":
-        nav = (f'<a href="/?lang=en">Hanzi Burst</a> · <a href="/en/c/">Characters</a> · <a href="/en/hsk/">HSK</a> · <a href="/about">About</a> · <a href="/privacy">Privacy</a>'
+        nav = (f'<a href="/?lang=en">Hanzi Burst</a> · <a href="/en/c/">Characters</a> · <a href="/en/p/">Phrases</a> · <a href="/en/hsk/">HSK</a> · <a href="/about">About</a> · <a href="/privacy">Privacy</a>'
                f' · <a href="{alt[0]}" hreflang="ru" lang="ru">Русский</a>')
     else:
         nav = '<a href="/">Hanzi Burst</a> · <a href="/c/">Иероглифы</a> · <a href="/p/">Фразы</a> · <a href="/hsk/">HSK</a> · <a href="/k/">Кандзи</a> · <a href="/about">О проекте</a> · <a href="/privacy">Конфиденциальность</a>'
@@ -108,7 +109,9 @@ def main():
     sitemap_chars = set().union(*(hsk.get(lv, []) for lv in ("1", "2", "3")))
     for d in ("c", "p", "hsk"):
         shutil.rmtree(SITE / d, ignore_errors=True); (SITE / d).mkdir()
-    shutil.rmtree(SITE / "en", ignore_errors=True); (SITE / "en" / "c").mkdir(parents=True); (SITE / "en" / "hsk").mkdir()
+    shutil.rmtree(SITE / "en", ignore_errors=True)
+    for d in ("c", "p", "hsk"):
+        (SITE / "en" / d).mkdir(parents=True)
     # все знаки из словарных шардов (build_shards.py): значения и состав для знаков вне phrase.json
     allc = {}
     for f in glob.glob(str(SITE / "data" / "chars" / "*.json")):
@@ -259,7 +262,7 @@ def main():
         title = f"{zh} — перевод и пиньинь: {short} | Hanzi Burst"
         desc = f"{zh} ({pyl}): {tr}. Китайская фраза с пиньинем, переводом и разбором иероглифов на ключи (радикалы)."
         ld = [breadcrumbs((BRAND, "/"), ("Фразы", "/p/"), (zh, f"/p/{pid(zh)}"))]
-        (SITE / "p" / f"{pid(zh)}.html").write_text(page(title, desc[:300], f"/p/{pid(zh)}", "\n".join(body), ld), encoding="utf-8")
+        (SITE / "p" / f"{pid(zh)}.html").write_text(page(title, desc[:300], f"/p/{pid(zh)}", "\n".join(body), ld, alt=(f"/p/{pid(zh)}", f"/en/p/{pid(zh)}")), encoding="utf-8")
 
     comps = {c: "".join(v.get("components") or []) for c, v in chars.items() if v.get("components")}
     (SITE / "comps.json").write_text(json.dumps(comps, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
@@ -273,7 +276,7 @@ def main():
     (SITE / "p" / "index.html").write_text(page(f"Простые китайские фразы с переводом ({len(phrases)}) | Hanzi Burst",
         f"{len(phrases)} простых китайских фраз с переводом и разбором каждого иероглифа на радикалы. Подходит для начинающих.", "/p/",
         f"<h1>Китайские фразы с переводом</h1><ul>{li}</ul>",
-        [breadcrumbs((BRAND, "/"), ("Фразы", "/p/"))]), encoding="utf-8")
+        [breadcrumbs((BRAND, "/"), ("Фразы", "/p/"))], alt=("/p/", "/en/p/")), encoding="utf-8")
     # HSK: значения всех знаков уровня из словарных шардов allc (в phrase.json только знаки фраз)
     nav = " · ".join(f'<a href="/hsk/{lv}">HSK {lvname(lv)}</a>' for lv in hsk)
     for lv, cs in hsk.items():
@@ -300,9 +303,9 @@ def main():
         f"<h1>Иероглифы HSK по уровням</h1><ul>{li}</ul>",
         [breadcrumbs((BRAND, "/"), ("HSK", "/hsk/"))], alt=("/hsk/", "/en/hsk/")), encoding="utf-8")
 
-    # Английские версии /en/c/ и /en/hsk/: те же данные, только английские значения, без подстановки русских.
-    # В sitemap их пока нет: сайт ещё не проиндексирован, Google находит их по ссылкам и hreflang.
-    # Отдельных английских страниц фраз нет: примеры ведут в интерактивный режим с ?lang=en.
+    # Английские версии /en/c/, /en/p/ и /en/hsk/: те же данные, только английские значения, без подстановки русских.
+    # В sitemap — по той же политике, что и русские: хабы, HSK и знаки HSK 1–3; страниц фраз там нет.
+    # Ссылки «в приложение» с английских страниц добавляют lang=en.
     link_en = lambda ch: f'<a href="/en/c/{cid(ch)}" data-c="{ch}">{ch}</a>' if ch in chars else ch
     def en_gloss(s): return f" — {E(s)}" if s else ""
     for ch, c in chars.items():
@@ -337,7 +340,7 @@ def main():
             body.append(f"<h2>Words with {ZH(ch)}</h2><ul>{''.join(wli_en(w) for w in words)}</ul>")
         ps = [p for p in sorted(by_char.get(ch, []), key=phrase_rank) if p.get("en")][:TOP_PHRASES]
         if ps:
-            li = "".join(f'<li><a href="/?z={quote(p["zh"])}&amp;lang=en" lang="zh">{E(p["zh"])}</a> — {E(p["en"])}</li>' for p in ps)
+            li = "".join(f'<li><a href="/en/p/{pid(p["zh"])}" lang="zh">{E(p["zh"])}</a> — {E(p["en"])}</li>' for p in ps)
             body.append(f"<h2>Example phrases</h2><ul>{li}</ul>")
         par = parents.get(ch, [])
         if par:
@@ -353,10 +356,10 @@ def main():
                 f"{link_en(x)} ({E((chars[x].get('pinyin') or [''])[0])})" for x in sim) + "</p>")
         meaning = first(den)
         if is_radical:
-            title = f"Chinese radical {ch} ({py}): meaning and characters that use it | Hanzi Burst"
+            title = f"Radical {ch} {py} — meaning and characters that use it | Hanzi Burst"
             desc = f"The Chinese radical {ch} ({py}): {meaning}. Pinyin, meaning, characters built with this radical, words and example phrases."
         else:
-            title = f"Chinese character {ch} ({py}): meaning and breakdown into radicals | Hanzi Burst"
+            title = f"{ch} {py} — meaning, radicals and stroke order | Hanzi Burst"
             desc = f"The Chinese character {ch} ({py}): {meaning}. Breakdown into radicals and components, pinyin, words and example phrases."
         if lv:
             desc += f" HSK {lvname(lv)}."
@@ -368,11 +371,40 @@ def main():
                "description": " — ".join(x for x in (py, meaning) if x), "url": f"{BASE}/en/c/{cid(ch)}"}]
         (SITE / "en" / "c" / f"{cid(ch)}.html").write_text(
             page(title, desc[:300], f"/en/c/{cid(ch)}", "\n".join(body), ld, lang="en", alt=(f"/c/{cid(ch)}", f"/en/c/{cid(ch)}")), encoding="utf-8")
+        if ch in sitemap_chars:
+            urls.append(f"{BASE}/en/c/{cid(ch)}")
     (SITE / "en" / "c" / "index.html").write_text(page(f"All Chinese characters and radicals ({len(chars)}) | Hanzi Burst",
         f"{len(chars)} Chinese characters and radicals with pinyin, meaning and a breakdown into components. Click a character to open its page.", "/en/c/",
         f"<h1>Characters and radicals</h1><p class='m'>{len(chars)} characters: all those used in the site's phrases, including radicals and their variants. "
         f"Lists by level are in the <a href='/en/hsk/'>HSK</a> section.</p><p class='chs' lang='zh'>{''.join(link_en(ch) for ch in sorted(chars))}</p>",
         [breadcrumbs((BRAND, "/"), ("Characters", "/en/c/"))], lang="en", alt=("/c/", "/en/c/")), encoding="utf-8")
+    for p in phrases:
+        zh = p["zh"]
+        pyl = " ".join(" ".join(w.get("pinyin") or []) if w.get("pinyin") else "" for w in p["words"] if not w.get("punct"))
+        cs = []
+        for w in p["words"]:
+            for c in (w.get("chars") or []):
+                if c not in cs: cs.append(c)
+        en = p.get("en") or ""
+        body = [f"<h1 lang='zh'>{E(zh)}</h1><p class='m'>{E(pyl)}</p>"]
+        if en: body.append(f"<p><b>{E(en)}</b></p>")
+        body.append(f'<a class="cta" href="/?z={quote(zh)}&amp;lang=en">Break it down character by character →</a>')
+        body.append("<h2>Characters</h2><p class='chs' lang='zh'>" + "".join(link_en(c) for c in cs) + "</p>")
+        rows = [f"<li>{link_en(c)} <span class='m'>{E((chars[c].get('pinyin') or [''])[0])}</span>{en_gloss(first(chars[c].get('definition')))}</li>"
+                for c in cs if c in chars]
+        if rows:
+            body.append("<h2>Character by character</h2><ul>" + "".join(rows) + "</ul>")
+        short = en if len(en) <= 40 else en[:39].rstrip() + "…"
+        title = f"{zh} — meaning and pinyin: {short} | Hanzi Burst" if en else f"{zh} — pinyin and characters | Hanzi Burst"
+        desc = f"{zh} ({pyl})" + (f": {en}" if en else "") + ("" if en[-1:] in ".?!…" else ".") + " A Chinese phrase with pinyin, English translation and every character broken down into radicals."
+        ld = [breadcrumbs((BRAND, "/"), ("Phrases", "/en/p/"), (zh, f"/en/p/{pid(zh)}"))]
+        (SITE / "en" / "p" / f"{pid(zh)}.html").write_text(
+            page(title, desc[:300], f"/en/p/{pid(zh)}", "\n".join(body), ld, lang="en", alt=(f"/p/{pid(zh)}", f"/en/p/{pid(zh)}")), encoding="utf-8")
+    li = "".join(f'<li><a href="/en/p/{pid(p["zh"])}" lang="zh">{E(p["zh"])}</a>{en_gloss(p.get("en"))}</li>' for p in phrases)
+    (SITE / "en" / "p" / "index.html").write_text(page(f"Simple Chinese phrases with English translation ({len(phrases)}) | Hanzi Burst",
+        f"{len(phrases)} simple Chinese phrases with pinyin, English translation and every character broken down into radicals. Made for beginners.", "/en/p/",
+        f"<h1>Chinese phrases with translation</h1><ul>{li}</ul>",
+        [breadcrumbs((BRAND, "/"), ("Phrases", "/en/p/"))], lang="en", alt=("/p/", "/en/p/")), encoding="utf-8")
     nav_en = " · ".join(f'<a href="/en/hsk/{lv}">HSK {lvname(lv)}</a>' for lv in hsk)
     for lv, cs in hsk.items():
         rows = []
@@ -389,19 +421,22 @@ def main():
             f"All {len(cs)} characters of HSK {lvname(lv)} (HSK 3.0) with pinyin and meaning, from common to rare, each with a breakdown into radicals.",
             f"/en/hsk/{lv}", body, [breadcrumbs((BRAND, "/"), ("HSK", "/en/hsk/"), (f"HSK {lvname(lv)}", f"/en/hsk/{lv}"))],
             lang="en", alt=(f"/hsk/{lv}", f"/en/hsk/{lv}")), encoding="utf-8")
+        urls.append(f"{BASE}/en/hsk/{lv}")
     li = "".join(f'<li><a href="/en/hsk/{lv}">HSK {lvname(lv)}</a>: {len(cs)} characters: '
                  f'<span lang="zh">{"".join(cs[:12])}…</span></li>' for lv, cs in hsk.items())
     (SITE / "en" / "hsk" / "index.html").write_text(page("HSK 1–9 characters by level | Hanzi Burst",
         "HSK 3.0 character lists for levels 1–9 with pinyin and meaning. Every character can be broken down into radicals.", "/en/hsk/",
         f"<h1>HSK characters by level</h1><ul>{li}</ul>", [breadcrumbs((BRAND, "/"), ("HSK", "/en/hsk/"))], lang="en", alt=("/hsk/", "/en/hsk/")), encoding="utf-8")
-    urls += k_urls
+    urls += [f"{BASE}/en/c/", f"{BASE}/en/p/", f"{BASE}/en/hsk/"] + k_urls
     # lastmod не пишем: все страницы пересобираются при каждом деплое, настоящей даты изменения у них нет
     sm = "".join(f"<url><loc>{u}</loc></url>" for u in urls)
     (SITE / "sitemap.xml").write_text(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{sm}</urlset>\n', encoding="utf-8")
     by = {}
     for u in urls:
         path = u[len(BASE):]
-        k = "hub" if path.count("/") < 2 or path.endswith("/") else path.split("/")[1]
+        en = path.startswith("/en/")
+        rest = path[3:] if en else path
+        k = ("en/" if en else "") + ("hub" if rest.count("/") < 2 or rest.endswith("/") else rest.split("/")[1])
         by[k] = by.get(k, 0) + 1
     print(f"static: chars={len(chars)} phrases={len(phrases)} sitemap urls={len(urls)} {by}")
 
