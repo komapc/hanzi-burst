@@ -5,6 +5,7 @@
   site/hsk/<1–7>.html          — знаки уровня HSK 3.0 (7 = уровни 7–9) с чтением и значением
   site/c/index.html, site/p/index.html, site/hsk/index.html — хабы со ссылками
   site/k/ — кандзи (scripts/kanji_pages.py)
+  site/r/, site/en/r/ — 214 ключей Канси (scripts/radical_pages.py)
   site/en/c/, site/en/p/, site/en/hsk/ — английские версии страниц иероглифов, фраз и HSK со взаимными hreflang ru↔en (x-default = ru)
   site/sitemap.xml
 Интерактивная версия: /?open=<иероглиф> и /?z=<фраза>. Запускается из wrangler.toml [build].
@@ -19,6 +20,7 @@ from urllib.parse import quote
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import hsk as hsklib
 import kanji_pages
+import radical_pages
 
 ROOT = Path(__file__).resolve().parent.parent
 SITE = ROOT / "site"
@@ -74,10 +76,10 @@ def page(title, desc, canon, body, ld=(), lang="ru", alt=None):
     hreflang = (f'<link rel="alternate" hreflang="ru" href="{BASE}{alt[0]}"><link rel="alternate" hreflang="en" href="{BASE}{alt[1]}">'
                 f'<link rel="alternate" hreflang="x-default" href="{BASE}{alt[0]}">\n') if alt else ""
     if lang == "en":
-        nav = (f'<a href="/?lang=en">Hanzi Burst</a> · <a href="/en/c/">Characters</a> · <a href="/en/p/">Phrases</a> · <a href="/en/hsk/">HSK</a> · <a href="/about">About</a> · <a href="/privacy">Privacy</a>'
+        nav = (f'<a href="/?lang=en">Hanzi Burst</a> · <a href="/en/c/">Characters</a> · <a href="/en/p/">Phrases</a> · <a href="/en/hsk/">HSK</a> · <a href="/en/r/">Radicals</a> · <a href="/about">About</a> · <a href="/privacy">Privacy</a>'
                f' · <a href="{alt[0]}" hreflang="ru" lang="ru">Русский</a>')
     else:
-        nav = '<a href="/">Hanzi Burst</a> · <a href="/c/">Иероглифы</a> · <a href="/p/">Фразы</a> · <a href="/hsk/">HSK</a> · <a href="/k/">Кандзи</a> · <a href="/about">О проекте</a> · <a href="/privacy">Конфиденциальность</a>'
+        nav = '<a href="/">Hanzi Burst</a> · <a href="/c/">Иероглифы</a> · <a href="/p/">Фразы</a> · <a href="/hsk/">HSK</a> · <a href="/r/">Ключи</a> · <a href="/k/">Кандзи</a> · <a href="/about">О проекте</a> · <a href="/privacy">Конфиденциальность</a>'
         if alt: nav += f' · <a href="{alt[1]}" hreflang="en" lang="en">English</a>'
     return f"""<!doctype html><html lang="{lang}"><head><meta charset="utf-8"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -117,6 +119,10 @@ def main():
     for f in glob.glob(str(SITE / "data" / "chars" / "*.json")):
         allc.update(json.load(open(f, encoding="utf-8")))
     k_urls, kanji = kanji_pages.build(SITE, page, breadcrumbs, E, gloss, first, BRAND, BASE, set(chars), allc)
+    r_urls, rad_of = radical_pages.build(SITE, page, breadcrumbs, E, BASE, chars, allc, first)
+    def rad_links(ch, pre=""):
+        """Ссылки на страницы ключей /r/ для знака, который сам ключ или его вариант (阝 — два ключа)."""
+        return ", ".join(f'<a href="{pre}/r/{cid(rc)}">{"No. " if pre else "№"}{n} {rc}</a>' for n, rc in rad_of.get(ch, []))
     char_lv = {c: int(lv) for lv, cs in hsk.items() for c in cs}
     lvname = lambda lv: "7–9" if str(lv) == "7" else str(lv)
     # слова CC-CEDICT из шардов (build_shards.py): {слово: [pinyin, en, ru?]}; частота знака = в скольких словах он есть
@@ -166,7 +172,8 @@ def main():
         py = ", ".join(c.get("pinyin") or [])
         den, dru = c.get("definition") or "", c.get("definition_ru") or ""
         et = c.get("etymology") or {}
-        kind = "Ключ" if c.get("radical") == ch else "Иероглиф"
+        # знак, у которого есть страница ключа /r/, здесь называется иероглифом: «Ключ X» — заголовок страницы /r/
+        kind = "Ключ" if c.get("radical") == ch and ch not in rad_of else "Иероглиф"
         body = [f'<div class="big" lang="zh">{ch}</div><h1>{kind} {ZH(ch)} — {E(py)}</h1>']
         if dru: body.append(f"<p><b>{E(dru)}</b></p>")
         if den: body.append(f'<p class="m" lang="en">{E(den)}</p>')
@@ -174,6 +181,8 @@ def main():
         if lv:
             body.append(f'<p><a class="badge" href="/hsk/{lv}">HSK 3.0 · уровень {lvname(lv)}</a></p>')
         body.append(f'<a class="cta" href="/?open={ch}&explode=1">Разобрать интерактивно →</a>')
+        if ch in rad_of:
+            body.append(f"<p>{ZH(ch)} — ключ (радикал) {rad_links(ch)}: на странице ключа порядок черт, варианты написания и иероглифы с ним.</p>")
         comps = c.get("components") or []
         if comps:
             def comp(x):
@@ -183,7 +192,8 @@ def main():
             items = "".join(comp(x) for x in comps)
             body.append(f"<h2>Состав / {EN("Components")}</h2><ul>{items}</ul>")
         if c.get("radical"):
-            body.append(f"<p class='m'>Ключ / {EN("radical")}: {link(c['radical'])}</p>")
+            rl = rad_links(c["radical"]) if c["radical"] != ch else ""
+            body.append(f"<p class='m'>Ключ / {EN("radical")}: {link(c['radical'])}" + (f" · ключ {rl}" if rl else "") + "</p>")
         hint = et.get("hint_ru") or et.get("hint")
         if et.get("type") or hint:
             body.append(f"<p class='m'>{EN(E(et['type'])) if et.get('type') else ''} {E(hint or '')}</p>")
@@ -218,7 +228,7 @@ def main():
         if ch in kanji:
             body.append(f"<p>Этот же знак в японском: <a href='/k/{cid(ch)}' lang='ja'>{ch}</a> — чтения он и кун, японские слова.</p>")
         meaning = first(dru) or first(den)
-        if c.get("radical") == ch:   # сам является ключом (радикалом)
+        if kind == "Ключ":   # сам является ключом (радикалом), а своей страницы /r/ у него нет
             title = f"Ключ {ch} ({py}): значение и иероглифы с ним | Hanzi Burst"
             desc = f"Иероглиф и ключ {ch} ({py}): {meaning}. Пиньинь, значение, иероглифы с этим ключом (радикалом), слова и фразы."
         else:
@@ -312,7 +322,7 @@ def main():
         py = ", ".join(c.get("pinyin") or [])
         den = c.get("definition") or ""
         et = c.get("etymology") or {}
-        is_radical = c.get("radical") == ch
+        is_radical = c.get("radical") == ch and ch not in rad_of
         kind = "Radical" if is_radical else "Character"
         body = [f'<div class="big" lang="zh">{ch}</div><h1>{kind} {ZH(ch)} — {E(py)}</h1>']
         if den: body.append(f"<p><b>{E(den)}</b></p>")
@@ -320,6 +330,8 @@ def main():
         if lv:
             body.append(f'<p><a class="badge" href="/en/hsk/{lv}">HSK 3.0 · level {lvname(lv)}</a></p>')
         body.append(f'<a class="cta" href="/?open={ch}&amp;explode=1&amp;lang=en">Break it down interactively →</a>')
+        if ch in rad_of:
+            body.append(f"<p>{ZH(ch)} is a Kangxi radical, {rad_links(ch, '/en')}: its page shows the stroke order, variant forms and characters that use it.</p>")
         comps = c.get("components") or []
         if comps:
             def comp_en(x):
@@ -327,7 +339,8 @@ def main():
                 return f"<li>{link_en(x)} {E((cx.get('pinyin') or [''])[0])}{en_gloss(first(cx.get('definition')))}</li>"
             body.append(f"<h2>Components</h2><ul>{''.join(comp_en(x) for x in comps)}</ul>")
         if c.get("radical"):
-            body.append(f"<p class='m'>Radical: {link_en(c['radical'])}</p>")
+            rl = rad_links(c["radical"], "/en") if c["radical"] != ch else ""
+            body.append(f"<p class='m'>Radical: {link_en(c['radical'])}" + (f" · Kangxi radical {rl}" if rl else "") + "</p>")
         if et.get("type") or et.get("hint"):
             body.append("<p class='m'>" + ": ".join(E(x) for x in ((et.get("type") or "").capitalize(), et.get("hint")) if x) + "</p>")
         words = top_words(ch)
@@ -427,7 +440,7 @@ def main():
     (SITE / "en" / "hsk" / "index.html").write_text(page("HSK 1–9 characters by level | Hanzi Burst",
         "HSK 3.0 character lists for levels 1–9 with pinyin and meaning. Every character can be broken down into radicals.", "/en/hsk/",
         f"<h1>HSK characters by level</h1><ul>{li}</ul>", [breadcrumbs((BRAND, "/"), ("HSK", "/en/hsk/"))], lang="en", alt=("/hsk/", "/en/hsk/")), encoding="utf-8")
-    urls += [f"{BASE}/en/c/", f"{BASE}/en/p/", f"{BASE}/en/hsk/"] + k_urls
+    urls += [f"{BASE}/en/c/", f"{BASE}/en/p/", f"{BASE}/en/hsk/"] + k_urls + r_urls
     # lastmod не пишем: все страницы пересобираются при каждом деплое, настоящей даты изменения у них нет
     sm = "".join(f"<url><loc>{u}</loc></url>" for u in urls)
     (SITE / "sitemap.xml").write_text(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{sm}</urlset>\n', encoding="utf-8")
