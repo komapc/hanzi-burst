@@ -359,7 +359,7 @@ def main():
             title = f"Radical {ch} {py} — meaning and characters that use it | Hanzi Burst"
             desc = f"The Chinese radical {ch} ({py}): {meaning}. Pinyin, meaning, characters built with this radical, words and example phrases."
         else:
-            title = f"{ch} {py} — meaning, radicals and stroke order | Hanzi Burst"
+            title = f"{ch} {py} — meaning, radicals and components | Hanzi Burst"
             desc = f"The Chinese character {ch} ({py}): {meaning}. Breakdown into radicals and components, pinyin, words and example phrases."
         if lv:
             desc += f" HSK {lvname(lv)}."

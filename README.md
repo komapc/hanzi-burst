@@ -181,7 +181,7 @@ gh release create raw-data-$(date +%F) /tmp/raw-data.tar.xz --prerelease --title
 - Заголовки: главная «Разбор китайских иероглифов на ключи и радикалы — Hanzi Burst» (H1 «Разбор китайских иероглифов на
   ключи», по-английски «Chinese characters broken down into radicals»; бренд — мелкой надписью в шапке); знак «Иероглиф 吗 (ma): значение и
   разбор на ключи | Hanzi Burst», ключ «Ключ 口 (kǒu): значение и иероглифы с ним | Hanzi Burst»; по-английски
-  «吗 ma — meaning, radicals and stroke order | Hanzi Burst» и «Radical 口 kǒu — meaning and characters that use it | Hanzi Burst». Дубликатов title и
+  «吗 ma — meaning, radicals and components | Hanzi Burst» и «Radical 口 kǒu — meaning and characters that use it | Hanzi Burst». Дубликатов title и
   description нет — проверять после правок шаблона.
 - Страница знака, кроме разбора: уровень HSK (ссылка на `/hsk/N`), до 10 слов CC-CEDICT (сначала слова HSK), до 8 фраз,
   «Где встречается этот ключ» / «Иероглифы, в которых есть X» (до 20 + общее число), «Похожие по написанию» (до 12).
