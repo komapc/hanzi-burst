@@ -61,7 +61,7 @@
   main { overflow-x:clip; max-width:860px; margin:0 auto; padding:24px 16px 64px; }
   header { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; }
   .brand { font-size:1rem; font-weight:600; color:var(--muted); margin:0; letter-spacing:.04em; }
-  h1#h1 { font-size:1.15rem; font-weight:600; line-height:1.3; margin:-12px 0 16px; }
+  h1#h1 { font-size:1.15rem; font-weight:600; line-height:1.3; margin:0 0 14px; }
   .serif { font-family:"Noto Serif SC","Songti SC",serif; }
   .hint { color:var(--muted); font-size:.9rem; margin:8px 0 0; }
   svg.i { width:1.1em; height:1.1em; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; vertical-align:-.2em; }
@@ -87,6 +87,24 @@
   @media (max-width:480px) { .right { gap:8px; } .opts .scr span, .opts .lang button, .opts .md button { padding:5px 8px; } }
   @media (max-width:420px) { .brand { font-size:.85rem; } h1#h1 { font-size:1rem; } header { gap:8px; } .opts .scr span, .opts .lang button, .opts .md button { padding:5px 6px; font-size:.75rem; } }
 
+  /* настройки (язык фраз, чтение, письмо) — в выпадающей панели с подписями */
+  details.set { position:relative; }
+  details.set summary { list-style:none; cursor:pointer; display:inline-flex; align-items:center; gap:6px; padding:5px 12px; border-radius:999px;
+          font-size:.8rem; color:var(--muted); background:color-mix(in srgb, var(--soft) 45%, transparent); }
+  details.set summary::-webkit-details-marker { display:none; }
+  details.set summary:hover, details.set[open] summary { color:var(--fg); }
+  details.set .panel { position:absolute; right:0; top:calc(100% + 6px); z-index:30; display:grid; gap:10px; padding:12px 14px; min-width:250px;
+          background:var(--card); border:1px solid var(--soft); border-radius:12px; box-shadow:0 8px 24px rgba(0,0,0,.18); }
+  .srow { display:flex; flex-direction:column; gap:4px; }
+  .srow .sl { font-size:.75rem; color:var(--muted); }
+  .srow .opts { align-self:flex-start; }
+  html.jm .srow.rs { display:none; }
+  /* разделы сайта под шапкой */
+  .snav { display:flex; flex-wrap:wrap; gap:6px; margin:-12px 0 18px; }
+  .snav a { padding:4px 12px; border:1px solid var(--soft); border-radius:999px; font-size:.88rem; color:var(--fg); text-decoration:none; white-space:nowrap; }
+  .snav a:hover { border-color:var(--accent); color:var(--accent); }
+  .snav a.on { background:var(--accent); border-color:var(--accent); color:var(--on,#fff); }
+  .snav a b { font-weight:600; }
   #picker { display:flex; align-items:center; gap:8px; margin-bottom:14px; flex-wrap:wrap; }
   #picker .pk, #picker .hint { white-space:nowrap; }
   #picker .hint { margin:0; }
@@ -271,22 +289,27 @@
     <span class="brand">Hanzi Burst</span>
     <span class="right">
       <span id="auth"></span>
-      <span class="opts">
+      <details class="set" id="set"><summary><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg><span id="setSum"></span></summary>
+      <div class="panel">
+      <div class="srow"><span class="sl" id="slMode"></span><span class="opts">
       <span class="md" role="group" aria-label="中文 / 日本語">
-        <button data-mode="zh" lang="zh" title="中文 — китайский / Chinese">中</button><button data-mode="ja" lang="ja" title="日本語 — японский / Japanese">日</button>
-      </span>
+        <button data-mode="zh" title="中文">中文</button><button data-mode="ja" title="日本語">日本語</button>
+      </span></span></div>
+      <div class="srow rs"><span class="sl" id="slPhon"></span><span class="opts">
       <span class="scr ph" role="radiogroup" aria-label="Pinyin / Bopomofo">
-        <label title="Pinyin"><input type="radio" name="phon" value="p"><span>拼音</span></label><label title="Bopomofo / 注音"><input type="radio" name="phon" value="b"><span>注音</span></label>
-      </span>
+        <label title="Pinyin"><input type="radio" name="phon" value="p"><span data-k="sPy">拼音</span></label><label title="Bopomofo / 注音"><input type="radio" name="phon" value="b"><span data-k="sBo">注音</span></label>
+      </span></span></div>
+      <div class="srow rs"><span class="sl" id="slScr"></span><span class="opts">
       <span class="scr" role="radiogroup" aria-label="Script / 字体">
-        <label title="简体 — упрощённые / simplified"><input type="radio" name="script" value="s"><span>简</span></label><label title="繁體 — традиционные / traditional"><input type="radio" name="script" value="t"><span>繁</span></label>
-      </span>
-      <span class="lang" role="group" aria-label="Language">
+        <label title="简体 — упрощённые / simplified"><input type="radio" name="script" value="s"><span data-k="sSi">简</span></label><label title="繁體 — традиционные / traditional"><input type="radio" name="script" value="t"><span data-k="sTr">繁</span></label>
+      </span></span></div>
+      </div></details>
+      <span class="opts"><span class="lang" role="group" aria-label="Language">
         <button data-lang="ru">RU</button><button data-lang="en">EN</button>
-      </span>
-      </span>
+      </span></span>
     </span>
   </header>
+  <nav class="snav" id="snav" aria-label="Sections"></nav>
   <h1 id="h1">Разбор китайских иероглифов на ключи</h1>
   <noscript><style>.foot,#intro{display:block!important}</style></noscript>
   <noscript><p>Hanzi Burst: учи китайские иероглифы, разбирая их на радикалы. Нужен JavaScript. / Learn Chinese characters by breaking them into radicals. JavaScript required.</p></noscript>
@@ -319,6 +342,7 @@
     <p>Фразы с переводом взяты из открытых корпусов (Tatoeba, Wiktionary) и подбираются так, чтобы незнакомых знаков было как можно меньше. Выученные иероглифы отмечаются, а прогресс по уровням HSK виден на отдельной странице. Есть японский режим с каной и кандзи.</p>
     <h2>С чего начать</h2>
     <ul>
+      <li><a href="/r/">214 ключей</a>: значение, порядок черт и иероглифы с каждым ключом; <a href="/radicals-game?lang=ru">игра</a>, чтобы их запомнить, и <a href="/radicals-ru.pdf">карточки для печати</a></li>
       <li><a href="/hsk/">Иероглифы HSK 1–9 по уровням</a> с пиньинем и переводом, начиная с <a href="/hsk/1">HSK 1</a></li>
       <li><a href="/c/">Все иероглифы и радикалы</a>: у каждого знака своя страница с разбором на части</li>
       <li><a href="/p/">Простые китайские фразы с переводом</a></li>
@@ -376,14 +400,14 @@ const ICON = {
 };
 const T = {
   ru: { h1:'Разбор китайских иероглифов на ключи', qPh:'Найти знак: 想 или xiang', qPhJa:'Найти кандзи: 見', qNone:'Не нашёл', daily:'Фраза дня', phraseList:'Фраза', kReadings:'Чтения', kHere:'во фразе', vPy:'Пиньинь', vRd:'Чтение', vTr:'Перевод', vTn:'Тоны', vHid:'скрыто: нажми, чтобы показать', tour1:'Нажми на любой иероглиф — он разлетится на части.', tour2:'Нажимай на части — они тоже разлетаются. «+» в углу отмечает знакомые знаки.', tourOk:'Понятно', hint:'Нажми на иероглиф.', crumbs:'Нажимай на части',
-        all:'Взорвать всё', ftag:'Учим китайские иероглифы через радикалы', fExplore:'Разделы', fProject:'Проект', fAll:'Все иероглифы', fHsk:'Иероглифы по HSK', fPhrases:'Все фразы', fAbout:'О проекте', fPrivacy:'Конфиденциальность', fHow:'Как это работает', fData:'Источники данных', howTitle:'Как это работает', close:'Закрыть', howBody:'<p>Выбери фразу и нажми на иероглиф: он «разлетится» на радикалы и фонетики, пока не станет неделимым. У каждой части есть значение, пиньинь, слова и иероглифы, где она встречается.</p><p>«＋ Новая фраза» подбирает фразу с минимумом незнакомых тебе иероглифов, а «Своя фраза» разбирает любой вставленный китайский текст.</p><p>Переключатель 中 / 日 в шапке включает японский режим: японские фразы с чтениями, а кандзи — с онными и кунными чтениями и разбором по чертам KanjiVG.</p><p>Кнопки над фразой скрывают пиньинь (чтение) и перевод, чтобы проверить себя: нажми на серую полоску или размытый перевод, и он откроется. «Тоны» раскрашивают пиньинь по тону: 1 красный, 2 зелёный, 3 синий, 4 фиолетовый.</p><p>Фразы взяты из открытых корпусов: Tatoeba, Wiktionary, Common Voice.</p>', newPhrase:'Новая фраза', inPhrase:'В этой фразе', viaParents:'Ещё слова с этой частью', incompl:'В словаре у этого знака не хватает одной части разбора, поэтому дерево неполное.', ownTitle:'Своя фраза', ownGo:'Разобрать', ownRand:'Случайная', lgKnown:'знаю', lgAll:'знаю все части', lgSome:'знаю часть частей', fLearned:'Мои иероглифы', fExt:'Расширение для Chrome', fKana:'Кана (японская азбука)', fKanji:'Кандзи по классам', statsLink:'Что я выучил', trBtn:'Перевести', trBusy:'Перевожу…', trErr:'Не удалось перевести', trLimit:'Лимит переводов на сегодня', trMt:'машинный перевод', ownPh:'Вставьте китайский или японский текст (до 100 знаков)', ownBusy:'Загружаю словарь…', ownEmpty:'Нет иероглифов или каны', tlAuto:'Авто', jaNote:'Японский: разбор в браузере, слова и чтения из словаря JMdict. Нажмите на кану — её чтение и происхождение.', kanaRead:'Чтение', kanaOrigin:'Происхождение', kanaHira:'хирагана', kanaKata:'катакана', jaLemma:'словарная форма', ownErr:'Не удалось загрузить данные', ownNote:'Разбор идёт в вашем браузере. Значения слов из словаря CC-CEDICT. Перевод всей фразы — по кнопке (текст уходит на сервер и в Gemini).', ownTrad:'Традиционные знаки заменены упрощёнными.', noMore:'Фразы в пуле закончились', known:'Знаю', add:'Знаю', where:'Где ещё', words:'Слова', chars:'Иероглифы с этой частью',
+        all:'Взорвать всё', ftag:'Учим китайские иероглифы через радикалы', fExplore:'Разделы', fProject:'Проект', fAll:'Все иероглифы', fHsk:'Иероглифы по HSK', fPhrases:'Все фразы', fAbout:'О проекте', fPrivacy:'Конфиденциальность', fHow:'Как это работает', fData:'Источники данных', howTitle:'Как это работает', close:'Закрыть', howBody:'<p>Выбери фразу и нажми на иероглиф: он «разлетится» на радикалы и фонетики, пока не станет неделимым. У каждой части есть значение, пиньинь, слова и иероглифы, где она встречается.</p><p>«＋ Новая фраза» подбирает фразу с минимумом незнакомых тебе иероглифов, а «Своя фраза» разбирает любой вставленный китайский текст.</p><p>«Язык фраз» в меню «Настройки» включает японский режим: японские фразы с чтениями, а кандзи — с онными и кунными чтениями и разбором по чертам KanjiVG.</p><p>Кнопки над фразой скрывают пиньинь (чтение) и перевод, чтобы проверить себя: нажми на серую полоску или размытый перевод, и он откроется. «Тоны» раскрашивают пиньинь по тону: 1 красный, 2 зелёный, 3 синий, 4 фиолетовый.</p><p>Фразы взяты из открытых корпусов: Tatoeba, Wiktionary, Common Voice.</p>', newPhrase:'Новая фраза', inPhrase:'В этой фразе', viaParents:'Ещё слова с этой частью', incompl:'В словаре у этого знака не хватает одной части разбора, поэтому дерево неполное.', ownTitle:'Своя фраза', ownGo:'Разобрать', ownRand:'Случайная', lgKnown:'знаю', lgAll:'знаю все части', lgSome:'знаю часть частей', fLearned:'Мои иероглифы', fExt:'Расширение для Chrome', fKana:'Кана (японская азбука)', fKanji:'Кандзи по классам', statsLink:'Что я выучил', trBtn:'Перевести', trBusy:'Перевожу…', trErr:'Не удалось перевести', trLimit:'Лимит переводов на сегодня', trMt:'машинный перевод', ownPh:'Вставьте китайский или японский текст (до 100 знаков)', ownBusy:'Загружаю словарь…', ownEmpty:'Нет иероглифов или каны', tlAuto:'Авто', jaNote:'Японский: разбор в браузере, слова и чтения из словаря JMdict. Нажмите на кану — её чтение и происхождение.', kanaRead:'Чтение', kanaOrigin:'Происхождение', kanaHira:'хирагана', kanaKata:'катакана', jaLemma:'словарная форма', ownErr:'Не удалось загрузить данные', ownNote:'Разбор идёт в вашем браузере. Значения слов из словаря CC-CEDICT. Перевод всей фразы — по кнопке (текст уходит на сервер и в Gemini).', ownTrad:'Традиционные знаки заменены упрощёнными.', noMore:'Фразы в пуле закончились', known:'Знаю', add:'Знаю', where:'Где ещё', words:'Слова', chars:'Иероглифы с этой частью',
         seen:'Уже было во фразе:', nodesc:'В словаре нет описания.', derived:'выведено автоматически', mnemo:'Запоминалка', mnemoMore:'Ещё', mnemoLimit:'Лимит на сегодня исчерпан', mnemoLogin:'Запоминалки — после входа через Google', mnemoBusy:'Думаю…', mnemoErr:'Не получилось, попробуй позже', mnemoNote:'Выдумка для памяти, не этимология', logout:'Выйти', atomic:'неделимая часть: радикал или цельный рисунок',
         kOn:'Он', kKun:'Кун', kOnT:'онное чтение (китайское по происхождению)', kKunT:'кунное чтение (японское слово)', kGrade:'класс', kSecondary:'средняя школа', kStrokes:'черт', kParts:'Части', kWordRu:'как слово', kEn:'по-английски',
         lvN:'кандзи до {n} класса', lv7:'кандзи средней школы', lv0:'только кана', jaLoading:'Разбираю фразу…',
         phonetic:'Звук подсказывает', semantic:'смысл —', word:'Слово', known_n:'Известно:',
         types:{ pictophonetic:'смысл + звук', ideographic:'смысловая комбинация', pictographic:'рисунок' } },
   en: { h1:'Chinese characters broken down into radicals', qPh:'Find a character: 想 or xiang', qPhJa:'Find a kanji: 見', qNone:'Nothing found', daily:'Phrase of the day', phraseList:'Phrase', kReadings:'Readings', kHere:'in this phrase', vPy:'Pinyin', vRd:'Reading', vTr:'Translation', vTn:'Tones', vHid:'hidden: click to show', tour1:'Click any character — it bursts into its parts.', tour2:'Click the parts — they burst too. The “+” in the corner marks characters you know.', tourOk:'Got it', hint:'Click a character.', crumbs:'Click the parts',
-        all:'Explode all', ftag:'Learn Chinese characters by radicals', fExplore:'Explore', fProject:'Project', fAll:'All characters', fHsk:'HSK characters', fPhrases:'All phrases', fAbout:'About', fPrivacy:'Privacy', fHow:'How it works', fData:'Data sources', howTitle:'How it works', close:'Close', howBody:'<p>Pick a phrase and click a character: it breaks into radicals and phonetic parts until it can\'t be split further. Each part has a meaning, pinyin, words and characters that use it.</p><p>“＋ New phrase” picks a phrase with the fewest characters you don\'t know yet, and “Your own phrase” breaks down any Chinese text you paste.</p><p>The 中 / 日 switch in the header turns on Japanese mode: Japanese phrases with readings, and kanji with on/kun readings and KanjiVG stroke breakdowns.</p><p>The buttons above the phrase hide pinyin (reading) and the translation so you can test yourself: click a grey bar or the blurred translation to reveal it. “Tones” colours pinyin by tone: 1 red, 2 green, 3 blue, 4 purple.</p><p>Phrases come from open corpora: Tatoeba, Wiktionary, Common Voice.</p>', newPhrase:'New phrase', inPhrase:'In this phrase', viaParents:'More words with this part', incompl:'The dictionary is missing one part of this character\'s breakdown, so the tree is incomplete.', ownTitle:'Your own phrase', ownGo:'Break down', ownRand:'Random', lgKnown:'known', lgAll:'all parts known', lgSome:'some parts known', fLearned:'My characters', fExt:'Chrome extension', fKana:'Kana (Japanese syllabaries)', statsLink:'What I\'ve learned', trBtn:'Translate', trBusy:'Translating…', trErr:'Could not translate', trLimit:'Daily translation limit reached', trMt:'machine translation', ownPh:'Paste Chinese or Japanese text (up to 100 characters)', ownBusy:'Loading dictionary…', ownEmpty:'No characters or kana found', tlAuto:'Auto', jaNote:'Japanese: breakdown runs in your browser; words and readings come from JMdict. Click a kana to see its reading and origin.', kanaRead:'Reading', kanaOrigin:'Origin', kanaHira:'hiragana', kanaKata:'katakana', jaLemma:'dictionary form', ownErr:'Could not load data', ownNote:'Breakdown runs in your browser. Word meanings come from CC-CEDICT. Whole-phrase translation is on request (the text is sent to our server and Gemini).', ownTrad:'Traditional characters were converted to simplified.', noMore:'No more phrases in the pool', known:'Known', add:'Know it', where:'Where else', words:'Words', chars:'Characters with this part',
+        all:'Explode all', ftag:'Learn Chinese characters by radicals', fExplore:'Explore', fProject:'Project', fAll:'All characters', fHsk:'HSK characters', fPhrases:'All phrases', fAbout:'About', fPrivacy:'Privacy', fHow:'How it works', fData:'Data sources', howTitle:'How it works', close:'Close', howBody:'<p>Pick a phrase and click a character: it breaks into radicals and phonetic parts until it can\'t be split further. Each part has a meaning, pinyin, words and characters that use it.</p><p>“＋ New phrase” picks a phrase with the fewest characters you don\'t know yet, and “Your own phrase” breaks down any Chinese text you paste.</p><p>“Phrase language” in the Settings menu turns on Japanese mode: Japanese phrases with readings, and kanji with on/kun readings and KanjiVG stroke breakdowns.</p><p>The buttons above the phrase hide pinyin (reading) and the translation so you can test yourself: click a grey bar or the blurred translation to reveal it. “Tones” colours pinyin by tone: 1 red, 2 green, 3 blue, 4 purple.</p><p>Phrases come from open corpora: Tatoeba, Wiktionary, Common Voice.</p>', newPhrase:'New phrase', inPhrase:'In this phrase', viaParents:'More words with this part', incompl:'The dictionary is missing one part of this character\'s breakdown, so the tree is incomplete.', ownTitle:'Your own phrase', ownGo:'Break down', ownRand:'Random', lgKnown:'known', lgAll:'all parts known', lgSome:'some parts known', fLearned:'My characters', fExt:'Chrome extension', fKana:'Kana (Japanese syllabaries)', statsLink:'What I\'ve learned', trBtn:'Translate', trBusy:'Translating…', trErr:'Could not translate', trLimit:'Daily translation limit reached', trMt:'machine translation', ownPh:'Paste Chinese or Japanese text (up to 100 characters)', ownBusy:'Loading dictionary…', ownEmpty:'No characters or kana found', tlAuto:'Auto', jaNote:'Japanese: breakdown runs in your browser; words and readings come from JMdict. Click a kana to see its reading and origin.', kanaRead:'Reading', kanaOrigin:'Origin', kanaHira:'hiragana', kanaKata:'katakana', jaLemma:'dictionary form', ownErr:'Could not load data', ownNote:'Breakdown runs in your browser. Word meanings come from CC-CEDICT. Whole-phrase translation is on request (the text is sent to our server and Gemini).', ownTrad:'Traditional characters were converted to simplified.', noMore:'No more phrases in the pool', known:'Known', add:'Know it', where:'Where else', words:'Words', chars:'Characters with this part',
         seen:'Seen in this phrase:', nodesc:'No dictionary description.', derived:'derived automatically', mnemo:'Mnemonic', mnemoMore:'Another', mnemoLimit:'Daily limit reached', mnemoLogin:'Sign in with Google for mnemonics', mnemoBusy:'Thinking…', mnemoErr:'Failed, try again later', mnemoNote:'A memory aid, not etymology', logout:'Sign out', atomic:'indivisible part: a radical or a whole picture',
         kOn:'On', kKun:'Kun', kOnT:'on\'yomi (Chinese-derived reading)', kKunT:'kun\'yomi (native Japanese reading)', kGrade:'grade', kSecondary:'secondary school', kStrokes:'strokes', kParts:'Parts', kWordRu:'as a word', kEn:'in English',
         lvN:'kanji up to grade {n}', lv7:'secondary-school kanji', lv0:'kana only', jaLoading:'Analysing the phrase…',
@@ -413,6 +437,20 @@ window.addEventListener('hanzi-known', reloadKnown);
 // список поменяли в другой вкладке; удалённый ключ (или очищенный localStorage) не считаем пустым списком
 window.addEventListener('storage', e => { if (e.key === 'hanzi-known' && e.newValue !== null) reloadKnown(); });
 const t = k => T[lang][k];
+/* подписи шапки, меню настроек, разделов и подсказки к кнопкам — понятные новичку, без 中/拼音/简 без пояснений */
+const UI = {
+  ru: { set: 'Настройки', slMode: 'Язык фраз', slPhon: 'Как показывать чтение', slScr: 'Иероглифы', zh: 'Китайский', ja: 'Японский',
+        sPy: 'Пиньинь (pīnyīn)', sBo: 'Чжуинь (ㄅㄆㄇ)', sSi: 'Упрощённые (简)', sTr: 'Традиционные (繁)',
+        nav: [['/', 'Фразы'], ['/r/', '<b>214 ключей</b>'], ['/radicals-game?lang=ru', 'Игра: учим ключи'], ['/learned', 'Мои иероглифы'], ['/hsk/', 'HSK по уровням']],
+        tPy: 'Скрыть или показать пиньинь, чтобы проверить себя', tRd: 'Скрыть или показать чтение, чтобы проверить себя', tTr: 'Скрыть или показать перевод, чтобы проверить себя', tTn: 'Раскрасить пиньинь по тонам: 1 красный, 2 зелёный, 3 синий, 4 фиолетовый',
+        tNew: 'Подобрать фразу, где меньше всего незнакомых вам иероглифов', tRand: 'Любая фраза из списка', tDaily: 'Одна фраза на сегодня, общая для всех', tOwn: 'Вставить свой китайский текст и разобрать его' },
+  en: { set: 'Settings', slMode: 'Phrase language', slPhon: 'Reading shown as', slScr: 'Characters', zh: 'Chinese', ja: 'Japanese',
+        sPy: 'Pinyin (pīnyīn)', sBo: 'Zhuyin (ㄅㄆㄇ)', sSi: 'Simplified (简)', sTr: 'Traditional (繁)',
+        nav: [['/?lang=en', 'Phrases'], ['/en/r/', '<b>214 radicals</b>'], ['/radicals-game?lang=en', 'Radicals game'], ['/learned', 'My characters'], ['/en/hsk/', 'HSK by level']],
+        tPy: 'Hide or show pinyin to test yourself', tRd: 'Hide or show the reading to test yourself', tTr: 'Hide or show the translation to test yourself', tTn: 'Colour pinyin by tone: 1 red, 2 green, 3 blue, 4 purple',
+        tNew: 'Pick a phrase with the fewest characters you don\'t know yet', tRand: 'Any phrase from the list', tDaily: 'One phrase for today, the same for everyone', tOwn: 'Paste your own Chinese text and break it down' },
+};
+const ui = k => (UI[lang] || UI.en)[k];
 const pick = (o, base) => (lang === 'ru' && o && o[base + '_ru']) || (o && o[base]) || '';
 
 const short = d => d ? d.split(/[;,]/)[0].trim() : '';
@@ -559,6 +597,7 @@ function syncView() {
     const v = b.dataset.v, label = v === 'py' ? (mode === 'ja' ? t('vRd') : t('vPy')) : v === 'tr' ? t('vTr') : t('vTn');
     b.setAttribute('aria-pressed', String(view[v]));
     b.innerHTML = (v === 'tn' ? '' : ICON.eye) + label;
+    b.title = ui(v === 'py' ? (mode === 'ja' ? 'tRd' : 'tPy') : v === 'tr' ? 'tTr' : 'tTn');
   });
   ['#trans', '#gloss'].forEach(q => { $(q).title = view.tr ? '' : t('vHid'); });
   $('#q').placeholder = mode === 'ja' ? t('qPhJa') : t('qPh'); $('#q').lang = mode === 'ja' ? 'ja' : 'zh';
@@ -713,6 +752,7 @@ function renderPicker() {   // 50+ фраз: стрелки и выпадающ�
   const db = document.createElement('button'); db.className = 'pk'; db.textContent = '☀ ' + t('daily'); db.onclick = dailyPhrase;
   const ob = document.createElement('button'); ob.className = 'pk'; ob.textContent = '✎ ' + t('ownTitle');
   ob.onclick = () => { const o = $('#own'); o.hidden = !o.hidden; if (!o.hidden) { o.open = true; $('#ownText').focus(); } };
+  nb.title = ui('tNew'); wb.title = ui('tRand'); db.title = ui('tDaily'); ob.title = ui('tOwn');
   el.append(prev, sel, next, count, nb, wb, db, ob);
 }
 function renderTrans() {
@@ -1204,8 +1244,17 @@ const DESC_EL = document.querySelector('meta[name="description"]');
 const HEAD_T = {
   ru: [document.title, DESC_EL.content],
   en: ['Chinese Characters Broken Down into Radicals — Hanzi Burst', 'Free breakdown of Chinese characters into radicals and components: tap a character and it bursts into parts. Pinyin, meanings, mnemonics, simple phrases and HSK 1–9 lists.'] };
+function renderChrome() {
+  $('#setSum').textContent = ui('set'); $('#slMode').textContent = ui('slMode'); $('#slPhon').textContent = ui('slPhon'); $('#slScr').textContent = ui('slScr');
+  document.querySelectorAll('.md button').forEach(b => { b.textContent = ui(b.dataset.mode); });
+  document.querySelectorAll('.scr [data-k]').forEach(x => { x.textContent = ui(x.dataset.k); });
+  $('#snav').innerHTML = ui('nav').map(([h, txt], i) => `<a href="${h}"${i ? '' : ' class="on" aria-current="page"'}>${txt}</a>`).join('');
+}
+// меню настроек закрывается кликом мимо него и по Esc
+document.addEventListener('click', e => { const d = $('#set'); if (d.open && !d.contains(e.target)) d.open = false; });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') $('#set').open = false; });
 function applyLang() {
-  renderConsent();
+  renderConsent(); renderChrome();
   document.documentElement.lang = lang;
   const head = HEAD_T[lang] || HEAD_T.en;
   document.title = head[0]; DESC_EL.content = head[1];
@@ -1360,6 +1409,7 @@ const INTRO_EN = `<h2>Chinese characters through their radicals</h2>
     <p>Phrases with translations come from open corpora (Tatoeba, Wiktionary) and are picked so that as few characters as possible are new to you. Characters you know are marked, and your progress through the HSK levels has its own page. There is also a Japanese mode with kana and kanji.</p>
     <h2>Where to start</h2>
     <ul>
+      <li><a href="/en/r/">The 214 radicals</a>: meaning, stroke order and characters for each radical, a <a href="/radicals-game?lang=en">game</a> to learn them and <a href="/radicals-en.pdf">printable flashcards</a></li>
       <li><a href="/en/hsk/">HSK 1–9 characters by level</a> with pinyin and meaning, starting with <a href="/en/hsk/1">HSK 1</a></li>
       <li><a href="/en/c/">All characters and radicals</a>: every character has its own page with a breakdown</li>
       <li><a href="/en/p/">Simple Chinese phrases with translations</a></li>
@@ -1373,7 +1423,7 @@ function renderFooter() {
   $('#ftag').textContent = t('ftag');
   $('#fh1').textContent = t('fExplore'); $('#fh2').textContent = t('fProject');
   const pre = lang === 'en' ? '/en' : '';
-  $('#fl1').innerHTML = li(pre + '/c/', t('fAll')) + li(pre + '/hsk/', t('fHsk')) + li(pre + '/p/', t('fPhrases')) + li('/learned', t('fLearned')) + li('/extension', t('fExt')) + li('/japanese/', t('fKana')) + (lang === 'en' ? '' : li('/k/', t('fKanji'))) + `<li><a href="#" id="howLink">${t('fHow')}</a></li>`;
+  $('#fl1').innerHTML = li(pre + '/c/', t('fAll')) + li(pre + '/hsk/', t('fHsk')) + li(pre + '/r/', lang === 'en' ? '214 radicals' : '214 ключей') + li(pre + '/p/', t('fPhrases')) + li('/learned', t('fLearned')) + li('/extension', t('fExt')) + li('/japanese/', t('fKana')) + (lang === 'en' ? '' : li('/k/', t('fKanji'))) + `<li><a href="#" id="howLink">${t('fHow')}</a></li>`;
   $('#fl2').innerHTML = li('/about', t('fAbout')) + li('/privacy', t('fPrivacy'));
   $('#howLink').onclick = e => { e.preventDefault(); const d = $('#howDlg'); d.showModal ? d.showModal() : d.setAttribute('open', ''); track('how_open'); };
   $('#fdata').textContent = t('fData');
