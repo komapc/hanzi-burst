@@ -62,6 +62,13 @@ a.known::after,a.allp::after,a.somep::after{content:"";position:absolute;top:2px
 a.allp::after{background:var(--info)}a.somep::after{background:var(--warn)}
 .hl{list-style:none;padding:0}.hl li{margin:2px 0}.hl a{font:24px/1.3 'Noto Serif SC',serif;text-decoration:none;margin-right:6px}
 .badge{display:inline-block;margin:0 0 6px;padding:2px 10px;border:1px solid var(--line);border-radius:999px;font-size:14px;text-decoration:none}
+.tn{display:flex;align-items:center;gap:10px;margin:0 0 14px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.tn a{text-decoration:none;white-space:nowrap}.tb{font-weight:600;color:var(--fg)}
+.ts{display:flex;gap:4px;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none}.ts::-webkit-scrollbar{display:none}
+.ts a{padding:3px 10px;border-radius:999px;font-size:15px}.ts a:hover{background:color-mix(in srgb,var(--accent) 10%,transparent)}
+.ts a.on{background:var(--accent);color:var(--bg)}
+.ol{font-size:13px;padding:3px 8px;border:1px solid var(--line);border-radius:999px;color:var(--muted)}
+@media(max-width:520px){.tn{gap:6px}.tb{font-size:14px}.ts{-webkit-mask-image:linear-gradient(90deg,transparent,#000 14px,#000 85%,transparent);mask-image:linear-gradient(90deg,transparent,#000 14px,#000 85%,transparent)}.ts a{padding:3px 8px;font-size:14px}}
 .legend{font-size:14px}.legend .k{color:var(--ok)}.legend .a{color:var(--info);margin-left:10px}.legend .s{color:var(--warn);margin-left:10px}
 </style>"""
 
@@ -75,19 +82,26 @@ def page(title, desc, canon, body, ld=(), lang="ru", alt=None):
     """alt = (русский путь, английский путь): взаимные hreflang (x-default — русская версия) и ссылка на другой язык в шапке."""
     hreflang = (f'<link rel="alternate" hreflang="ru" href="{BASE}{alt[0]}"><link rel="alternate" hreflang="en" href="{BASE}{alt[1]}">'
                 f'<link rel="alternate" hreflang="x-default" href="{BASE}{alt[0]}">\n') if alt else ""
+    # шапка: бренд + разделы + другой язык; «О проекте» и «Конфиденциальность» — в футере.
+    # На телефоне — одна строка с горизонтальной прокруткой, а не три строки ссылок.
     if lang == "en":
-        nav = (f'<a href="/?lang=en">Hanzi Burst</a> · <a href="/en/c/">Characters</a> · <a href="/en/p/">Phrases</a> · <a href="/en/hsk/">HSK</a> · <a href="/en/r/">Radicals</a> · <a href="/about">About</a> · <a href="/privacy">Privacy</a>'
-               f' · <a href="{alt[0]}" hreflang="ru" lang="ru">Русский</a>')
+        links = [("/en/c/", "Characters"), ("/en/p/", "Phrases"), ("/en/hsk/", "HSK"), ("/en/r/", "Radicals")]
+        home, other = "/?lang=en", (f'<a class="ol" href="{alt[0]}" hreflang="ru" lang="ru">RU</a>' if alt else "")
     else:
-        nav = '<a href="/">Hanzi Burst</a> · <a href="/c/">Иероглифы</a> · <a href="/p/">Фразы</a> · <a href="/hsk/">HSK</a> · <a href="/r/">Ключи</a> · <a href="/k/">Кандзи</a> · <a href="/about">О проекте</a> · <a href="/privacy">Конфиденциальность</a>'
-        if alt: nav += f' · <a href="{alt[1]}" hreflang="en" lang="en">English</a>'
+        links = [("/c/", "Иероглифы"), ("/p/", "Фразы"), ("/hsk/", "HSK"), ("/r/", "Ключи"), ("/k/", "Кандзи")]
+        home, other = "/", (f'<a class="ol" href="{alt[1]}" hreflang="en" lang="en">EN</a>' if alt else "")
+    cur = canon if canon.endswith("/") else canon.rsplit("/", 1)[0] + "/"
+    items = "".join(f'<a href="{h}"' + (' class="on"' if cur.startswith(h) else "") + f">{t}</a>" for h, t in links)
+    nav = f'<nav class="tn"><a class="tb" href="{home}">Hanzi Burst</a><span class="ts">{items}</span>{other}</nav>'
+    # активный раздел — в поле зрения (на телефоне строка прокручивается)
+    nav += '<script>(function(){var s=document.querySelector(".ts"),o=s&&s.querySelector(".on");if(o)s.scrollLeft=o.offsetLeft-s.offsetLeft-24})()</script>'
     return f"""<!doctype html><html lang="{lang}"><head><meta charset="utf-8"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{E(title)}</title><meta name="description" content="{E(desc)}">
 <link rel="canonical" href="{BASE}{canon}"><meta name="robots" content="index,follow">
 {hreflang}<meta property="og:title" content="{E(title)}"><meta property="og:description" content="{E(desc)}">
 <meta property="og:image" content="{BASE}/og.png"><meta property="og:site_name" content="{BRAND}"><meta property="og:url" content="{BASE}{canon}">
-{ld_script(ld)}{CSS}{BEACON}</head><body><main><p>{nav}</p>
+{ld_script(ld)}{CSS}{BEACON}</head><body><main>{nav}
 {body}<div id="sitefoot"></div><script src="/footer.js" defer></script></main><script src="/static.js" defer></script></body></html>"""
 
 
@@ -180,7 +194,7 @@ def main():
         lv = char_lv.get(ch)
         if lv:
             body.append(f'<p><a class="badge" href="/hsk/{lv}">HSK 3.0 · уровень {lvname(lv)}</a></p>')
-        body.append(f'<a class="cta" href="/?open={ch}&explode=1">Разобрать интерактивно →</a>')
+        if c.get("components"): body.append(f'<a class="cta" href="/?open={ch}&explode=1">Разобрать интерактивно →</a>')
         if ch in rad_of:
             body.append(f"<p>{ZH(ch)} — ключ (радикал) {rad_links(ch)}: на странице ключа порядок черт, варианты написания и иероглифы с ним.</p>")
         comps = c.get("components") or []
@@ -329,7 +343,7 @@ def main():
         lv = char_lv.get(ch)
         if lv:
             body.append(f'<p><a class="badge" href="/en/hsk/{lv}">HSK 3.0 · level {lvname(lv)}</a></p>')
-        body.append(f'<a class="cta" href="/?open={ch}&amp;explode=1&amp;lang=en">Break it down interactively →</a>')
+        if c.get("components"): body.append(f'<a class="cta" href="/?open={ch}&amp;explode=1&amp;lang=en">Break it down interactively →</a>')
         if ch in rad_of:
             body.append(f"<p>{ZH(ch)} is a Kangxi radical, {rad_links(ch, '/en')}: its page shows the stroke order, variant forms and characters that use it.</p>")
         comps = c.get("components") or []

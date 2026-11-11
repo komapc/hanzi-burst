@@ -105,6 +105,17 @@
   .snav a:hover { border-color:var(--accent); color:var(--accent); }
   .snav a.on { background:var(--accent); border-color:var(--accent); color:var(--on,#fff); }
   .snav a b { font-weight:600; }
+  /* телефон: разделы — одна строка с прокруткой, «Настройки» — только значок, шапка компактнее */
+  @media (max-width:640px) {
+    header { margin-bottom:18px; }
+    .snav { flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none; margin:-8px -16px 14px; padding:0 16px;
+            -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 16px,#000 85%,transparent); mask-image:linear-gradient(90deg,transparent 0,#000 16px,#000 85%,transparent); }
+    .snav::-webkit-scrollbar { display:none; }
+    .snav a { padding:4px 10px; font-size:.82rem; }
+    #setSum { display:none; }
+    details.set summary { padding:6px 8px; }
+    details.set summary svg.i { width:1.25em; height:1.25em; }
+  }
   #picker { display:flex; align-items:center; gap:8px; margin-bottom:14px; flex-wrap:wrap; }
   #picker .pk, #picker .hint { white-space:nowrap; }
   #picker .hint { margin:0; }
@@ -1245,7 +1256,7 @@ const HEAD_T = {
   ru: [document.title, DESC_EL.content],
   en: ['Chinese Characters Broken Down into Radicals — Hanzi Burst', 'Free breakdown of Chinese characters into radicals and components: tap a character and it bursts into parts. Pinyin, meanings, mnemonics, simple phrases and HSK 1–9 lists.'] };
 function renderChrome() {
-  $('#setSum').textContent = ui('set'); $('#slMode').textContent = ui('slMode'); $('#slPhon').textContent = ui('slPhon'); $('#slScr').textContent = ui('slScr');
+  $('#setSum').textContent = ui('set'); $('#set summary').title = ui('set'); $('#set summary').setAttribute('aria-label', ui('set')); $('#slMode').textContent = ui('slMode'); $('#slPhon').textContent = ui('slPhon'); $('#slScr').textContent = ui('slScr');
   document.querySelectorAll('.md button').forEach(b => { b.textContent = ui(b.dataset.mode); });
   document.querySelectorAll('.scr [data-k]').forEach(x => { x.textContent = ui(x.dataset.k); });
   $('#snav').innerHTML = ui('nav').map(([h, txt], i) => `<a href="${h}"${i ? '' : ' class="on" aria-current="page"'}>${txt}</a>`).join('');
