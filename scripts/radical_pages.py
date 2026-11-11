@@ -33,14 +33,14 @@ T = {
                meaning="Значение", variants="Варианты написания", order="Порядок черт", examples="Иероглифы с этим ключом",
                as_char="Этот знак как иероглиф", top="Частые ключи", more="Показать ещё {k} ключей", by_strokes="{s} черт",
                none="Среди иероглифов HSK этого ключа нет: он встречается в редких и старых знаках.", prev="← Ключ", next="Ключ →",
-               hsk="знаков HSK с этим ключом: {k}", interactive="Разобрать интерактивно →",
+               hsk="знаков HSK с этим ключом: {k}",
                game="Учить ключи в игре →", game_q="?lang=ru",
                pdf="Карточки для печати (PDF, 214 ключей)"),
     "en": dict(radical="Radical", hub="Radicals", all214="The 214 Kangxi radicals", n="Number", strokes="Strokes", pinyin="Pinyin",
                meaning="Meaning", variants="Variant forms", order="Stroke order", examples="Characters with this radical",
                as_char="This sign as a character", top="Common radicals", more="Show {k} more radicals", by_strokes="{s} strokes",
                none="No HSK characters use this radical: it appears in rare and old characters.", prev="← Radical", next="Radical →",
-               hsk="HSK characters with this radical: {k}", interactive="Break it down interactively →",
+               hsk="HSK characters with this radical: {k}",
                game="Learn the radicals in a game →", game_q="?lang=en",
                pdf="Printable flashcards (PDF, 214 radicals)"),
 }
@@ -136,8 +136,7 @@ def build(SITE, page, breadcrumbs, E, BASE, chars, allc, first):
             own = [c for c in [ch, *r["variants"]] if c in chars]
             if own:
                 body.append(f"<p>{t['as_char']}: " + " ".join(f'<a href="{pre}/c/{cid(c)}" data-c="{c}" lang="zh">{c}</a>' for c in own) + "</p>")
-                body.append(f'<a class="cta" href="/?open={own[0]}&amp;explode=1' + ("&amp;lang=en" if lang == "en" else "") + f'">{t["interactive"]}</a>')
-            body.append(f'<p><a href="/radicals-game{t["game_q"]}">{t["game"]}</a> · <a href="/radicals-{lang}.pdf">{t["pdf"]}</a></p>')
+            body.append(f'<a class="cta" href="/radicals-game{t["game_q"]}">{t["game"]}</a> <a href="/radicals-{lang}.pdf">{t["pdf"]}</a>')
             pv, nx = by_n.get(n - 1), by_n.get(n + 1)
             body.append("<p class='pn'>" + (f'<a href="{pre}/r/{cid(pv["char"])}">{t["prev"]} {pv["char"]}</a>' if pv else "<span></span>")
                         + f'<a href="{pre}/r/">{t["hub"]}</a>'
