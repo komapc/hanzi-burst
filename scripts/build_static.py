@@ -19,6 +19,7 @@ from urllib.parse import quote
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import hsk as hsklib
+import palladius
 import kanji_pages
 import radical_pages
 
@@ -223,6 +224,9 @@ def main():
         # знак, у которого есть страница ключа /r/, здесь называется иероглифом: «Ключ X» — заголовок страницы /r/
         kind = "Ключ" if c.get("radical") == ch and ch not in rad_of else "Иероглиф"
         body = [f'<div class="big" lang="zh">{ch}</div><h1>{kind} {ZH(ch)} — {E(py)}</h1>']
+        pal = palladius.convert(py) if py else ""
+        if pal:   # кириллицей по системе Палладия, со знаком тона: 想 — ся̌н
+            body.append(f"<p class='m'>По-русски (система Палладия): <b>{E(pal)}</b></p>")
         if dru: body.append(f"<p><b>{E(dru)}</b></p>")
         if den: body.append(f'<p class="m" lang="en">{E(den)}</p>')
         lv = char_lv.get(ch)
@@ -281,7 +285,7 @@ def main():
             desc = f"Иероглиф и ключ {ch} ({py}): {meaning}. Пиньинь, значение, иероглифы с этим ключом (радикалом), слова и фразы."
         else:
             title = f"Иероглиф {ch} ({py}): значение и разбор на ключи | Hanzi Burst"
-            desc = f"Иероглиф {ch} ({py}) — {meaning}. Разбор иероглифа на ключи (радикалы) и составные части, пиньинь, слова и фразы с ним."
+            desc = f"Иероглиф {ch} ({py}" + (f", по-русски {palladius.plain(py)}" if py else "") + f") — {meaning}. Разбор иероглифа на ключи (радикалы) и составные части, пиньинь, слова и фразы с ним."
         if lv:
             desc += f" HSK {lvname(lv)}."
         hsk_words = [w for w in words if w in word_lv][:3]
@@ -502,6 +506,12 @@ def main():
     # у страниц плаката — превью в image sitemap (Google Картинки)
     img = lambda u: "".join(f"<image:image><image:loc>{i}</image:loc></image:image>" for i in radical_pages.IMAGES.get(u, ()))
     sm = "".join(f"<url><loc>{u}</loc>{img(u)}</url>" for u in urls)
+    # таблица Палладия для главной: вариант чтения «Палладий» и поиск кириллицей (сян → 想)
+    pyi = SITE / "data" / "pyindex.json"
+    if pyi.exists():
+        bases = sorted({re.sub(r"\d$", "", k) for k in json.loads(pyi.read_text(encoding="utf-8"))})
+        pm = {b: palladius.syllable(b) for b in bases if palladius.syllable(b)}
+        (SITE / "palladius.json").write_text(json.dumps(pm, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     (SITE / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" '
                                       f'xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">{sm}</urlset>\n', encoding="utf-8")
     by = {}
