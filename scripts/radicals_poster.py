@@ -4,7 +4,7 @@
 
 Лист A2 (420 × 594 мм), вектор: печатается и на A3/A4 с уменьшением. Ключи сгруппированы по числу черт, как в словарях;
 у каждого номер, варианты написания, пиньинь (цвет — тон, как «Тоны» на сайте), значение и три иероглифа с ним.
-Стиль строгий: чёрный, каллиграфический шрифт; красные только печать 部首 и точки у 60 частых ключей (по числу знаков HSK). В шапке легенда, доля HSK-иероглифов с частыми ключами и QR-код на /r/.
+Стиль строгий: чёрный, каллиграфический шрифт; красные только печать 部首 и точки у 60 частых ключей (по числу знаков HSK). Внизу легенда (с долей HSK-иероглифов, где есть частые ключи) и QR-код на /r/.
 
 Нужны: data/radicals.json, google-chrome, шрифт LXGW WenKai (OFL, github.com/lxgw/LxgwWenKai: LXGWWenKai-Medium.ttf
 в ~/.local/share/fonts; без него — Noto Serif CJK).
@@ -26,14 +26,14 @@ COLS, ROWS = 12, 20
 TXT = {
     "ru": dict(title="214 ключей китайских иероглифов",
                sub="Ключи (радикалы) Канси по числу черт: номер, варианты, пиньинь, значение и примеры",
-               top="частый ключ", stat="{p}% иероглифов HSK содержат один из 60 частых ключей — начните с них",
+               top="частый ключ: 60 таких ключей есть в {p}% иероглифов HSK — начните с них",
                lg_n="номер", lg_var="варианты", lg_py="пиньинь", lg_mean="значение", lg_ex="примеры", lg_tone="цвет — тон",
                url="hanzi.lipu.dev/r/", qr="https://hanzi.lipu.dev/r/",
                more="Порядок черт, все варианты и иероглифы с каждым ключом — на сайте. Там же игра для запоминания.",
                src="Данные: Unicode Unihan (kRSUnicode), Make Me a Hanzi, HSK 3.0 · Hanzi Burst"),
     "en": dict(title="The 214 Chinese radicals",
                sub="Kangxi radicals by stroke count: number, variant forms, pinyin, meaning and examples",
-               top="common radical", stat="{p}% of HSK characters contain one of the 60 common radicals — start with those",
+               top="common radical: the 60 of them appear in {p}% of HSK characters — start there",
                lg_n="number", lg_var="variants", lg_py="pinyin", lg_mean="meaning", lg_ex="examples", lg_tone="colour = tone",
                url="hanzi.lipu.dev/en/r/", qr="https://hanzi.lipu.dev/en/r/",
                more="Stroke order, every variant and the characters that use each radical are on the site, plus a game to learn them.",
@@ -41,7 +41,7 @@ TXT = {
     # эсперанто: страниц ключей на эсперанто нет, поэтому QR и адрес ведут на английские /en/r/
     "eo": dict(title="La 214 ĉinaj radikaloj",
                sub="Kangxi-radikaloj laŭ nombro de strekoj: numero, variantoj, pinjino, signifo kaj ekzemploj",
-               top="ofta radikalo", stat="{p}% de la HSK-signoj enhavas unu el la 60 oftaj radikaloj — komencu per ili",
+               top="ofta radikalo: la 60 aperas en {p}% de la HSK-signoj — komencu per ili",
                lg_n="numero", lg_var="variantoj", lg_py="pinjino", lg_mean="signifo", lg_ex="ekzemploj", lg_tone="koloro = tono",
                url="hanzi.lipu.dev/en/r/", qr="https://hanzi.lipu.dev/en/r/",
                more="Strekordo, ĉiuj variantoj kaj la signoj kun ĉiu radikalo troviĝas en la retejo (angle), kun ludo por lerni ilin.",
@@ -70,15 +70,13 @@ html,body{margin:0}
 body{width:420mm;height:593mm;overflow:hidden;padding:13mm 14mm 10mm;font-family:'Noto Sans','Noto Sans CJK SC',sans-serif;color:#1f1b16;background:#fbf9f5;
      display:flex;flex-direction:column;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .zh{font-family:'LXGW WenKai','Noto Serif CJK SC',serif}
-header{margin-bottom:6mm;display:grid;grid-template-columns:auto 1fr auto;align-items:end;column-gap:7mm}
+header{margin-bottom:6mm;display:grid;grid-template-columns:auto 1fr;align-items:end;column-gap:7mm}
 .seal{writing-mode:vertical-rl;background:#b8322a;color:#fbf9f5;border-radius:1.2mm;font-size:24pt;line-height:1;letter-spacing:1.5mm;
       padding:3mm 2.6mm 1.5mm;transform:rotate(-3deg);align-self:center;box-shadow:inset 0 0 0 .7mm #b8322a,inset 0 0 0 1.1mm #fbf9f5}
 h1{margin:0;line-height:1;font-weight:400}
 h1 .zh{display:block;font-size:66pt;font-weight:500;letter-spacing:4mm}
 h1 .tt{display:block;font-size:21pt;font-weight:600;margin-top:3mm;letter-spacing:.2pt}
 .sub{font-size:11.5pt;color:#6b6257;margin:1.5mm 0 0}
-.stat{max-width:95mm;font-size:11pt;line-height:1.35;color:#4a433b;text-align:right;padding-bottom:1mm}
-.stat b{display:block;font-size:30pt;font-weight:600;color:#b8322a;line-height:1}
 .legend{display:flex;gap:6mm;align-items:center;border-top:.3mm solid #1f1b16;padding:2mm 1mm 0}
 .legend .smp{height:100%;aspect-ratio:1.2;display:flex}.legend .smp .cell{flex:1}
 .legend ul{list-style:none;margin:0;padding:0;font-size:8.5pt;line-height:1.45;color:#4a433b;white-space:nowrap}
@@ -175,7 +173,7 @@ def main():
         # легенда и QR — в свободных клетках последнего ряда сетки (12 × 20 = 240 клеток, занято 214 + 17 заголовков групп)
         free = COLS * ROWS - len(cells)
         legend = (f"<div class='legend' style='grid-column:span {free}'><div class='smp'>{cell(sample)}</div><ul>"
-                  f"<li><i>{t['lg_n']}</i>85 · <span style='color:#b8322a'>●</span> {t['top']}</li>"
+                  f"<li><i>{t['lg_n']}</i>85 · <span style='color:#b8322a'>●</span> {E(t['top'].format(p=pct))}</li>"
                   f"<li><i>{t['lg_var']}</i><span class='zh'>{''.join(sample['variants'])}</span></li>"
                   f"<li><i>{t['lg_py']}</i>{PY(sample['pinyin'])} · {t['lg_tone']}: {PY('mā')} {PY('má')} {PY('mǎ')} {PY('mà')}</li><li><i>{t['lg_mean']}</i>{E(sample[lang])}</li>"
                   f"<li><i>{t['lg_ex']}</i><span class='zh'>{''.join(sample['examples'][:3])}</span></li></ul>"
@@ -183,8 +181,7 @@ def main():
                   + (f"<a class='qr' href='{t['qr']}'>{q}</a>" if q else "") + "</div>")
         # шапка: печать 部首 (единственное красное пятно, кроме точек частых ключей) и заголовок кистью
         body = (f"<header><div class='seal zh'>部首</div><div><h1><span class='zh'>康熙部首</span><span class='tt'>{E(t['title'])}</span></h1>"
-                f"<p class='sub'>{E(t['sub'])}</p></div>"
-                f"<div class='stat'><b>{pct}%</b>{E(t['stat'].format(p=pct).split('% ', 1)[1])}</div></header>"
+                f"<p class='sub'>{E(t['sub'])}</p></div></header>"
                 f"<div class='grid'>{''.join(cells)}{legend}</div>"
                 f"<footer><span>{E(t['src'])}</span><a href='{t['qr']}'>{t['url']}</a></footer>")
         doc = f"<!doctype html><html lang='{lang}'><head><meta charset='utf-8'><title>{E(META[lang]['title'])}</title><style>{CSS}</style></head><body>{body}</body></html>"
