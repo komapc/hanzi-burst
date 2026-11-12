@@ -5,7 +5,7 @@
   site/hsk/<1–7>.html          — знаки уровня HSK 3.0 (7 = уровни 7–9) с чтением и значением
   site/c/index.html, site/p/index.html, site/hsk/index.html — хабы со ссылками
   site/k/ — кандзи (scripts/kanji_pages.py)
-  site/r/, site/en/r/ — 214 ключей Канси (scripts/radical_pages.py)
+  site/r/, site/en/r/ — 214 ключей Канси (scripts/radical_pages.py), плакат /r/poster, /en/r/poster, /eo/r/poster
   site/en/c/, site/en/p/, site/en/hsk/ — английские версии страниц иероглифов, фраз и HSK со взаимными hreflang ru↔en (x-default = ru)
   site/sitemap.xml
 Интерактивная версия: /?open=<иероглиф> и /?z=<фраза>. Запускается из wrangler.toml [build].
@@ -78,19 +78,25 @@ BEACON = re.search(r"<script defer src=\"https://static\.cloudflareinsights\.com
                    (SITE / "index.html").read_text(encoding="utf-8")).group(0)
 
 
-def page(title, desc, canon, body, ld=(), lang="ru", alt=None):
-    """alt = (русский путь, английский путь): взаимные hreflang (x-default — русская версия) и ссылка на другой язык в шапке."""
-    hreflang = (f'<link rel="alternate" hreflang="ru" href="{BASE}{alt[0]}"><link rel="alternate" hreflang="en" href="{BASE}{alt[1]}">'
-                f'<link rel="alternate" hreflang="x-default" href="{BASE}{alt[0]}">\n') if alt else ""
+def page(title, desc, canon, body, ld=(), lang="ru", alt=None, image=None):
+    """alt = (русский путь, английский путь) или {язык: путь}: взаимные hreflang (x-default — русская версия)
+    и ссылки на другие языки в шапке. image — путь картинки для og:image (по умолчанию /og.png)."""
+    alts = alt if isinstance(alt, dict) else ({"ru": alt[0], "en": alt[1]} if alt else {})
+    hreflang = ("".join(f'<link rel="alternate" hreflang="{l}" href="{BASE}{u}">' for l, u in alts.items())
+                + f'<link rel="alternate" hreflang="x-default" href="{BASE}{alts["ru"]}">\n') if alts else ""
+    others = "".join(f'<a class="ol" href="{u}" hreflang="{l}" lang="{l}">{l.upper()}</a>' for l, u in alts.items() if l != lang)
     # шапка: бренд + разделы + другой язык; «О проекте» и «Конфиденциальность» — в футере.
     # На телефоне — одна строка с горизонтальной прокруткой, а не три строки ссылок.
-    if lang == "en":
-        links = [("/en/c/", "Characters"), ("/en/p/", "Phrases"), ("/en/hsk/", "HSK"), ("/en/r/", "Radicals")]
-        home, other = "/?lang=en", (f'<a class="ol" href="{alt[0]}" hreflang="ru" lang="ru">RU</a>' if alt else "")
-    else:
+    if lang == "ru":
         links = [("/c/", "Иероглифы"), ("/p/", "Фразы"), ("/hsk/", "HSK"), ("/r/", "Ключи"), ("/k/", "Кандзи")]
-        home, other = "/", (f'<a class="ol" href="{alt[1]}" hreflang="en" lang="en">EN</a>' if alt else "")
+        home = "/"
+    else:   # en и eo (страниц на эсперанто, кроме плаката, нет — разделы английские)
+        links = [("/en/c/", "Characters"), ("/en/p/", "Phrases"), ("/en/hsk/", "HSK"), ("/en/r/", "Radicals")]
+        home = "/?lang=en"
+    other = others
     cur = canon if canon.endswith("/") else canon.rsplit("/", 1)[0] + "/"
+    if lang == "eo":
+        cur = cur.replace("/eo/", "/en/", 1)
     items = "".join(f'<a href="{h}"' + (' class="on"' if cur.startswith(h) else "") + f">{t}</a>" for h, t in links)
     nav = f'<nav class="tn"><a class="tb" href="{home}">Hanzi Burst</a><span class="ts">{items}</span>{other}</nav>'
     # активный раздел — в поле зрения (на телефоне строка прокручивается)
@@ -100,7 +106,7 @@ def page(title, desc, canon, body, ld=(), lang="ru", alt=None):
 <title>{E(title)}</title><meta name="description" content="{E(desc)}">
 <link rel="canonical" href="{BASE}{canon}"><meta name="robots" content="index,follow">
 {hreflang}<meta property="og:title" content="{E(title)}"><meta property="og:description" content="{E(desc)}">
-<meta property="og:image" content="{BASE}/og.png"><meta property="og:site_name" content="{BRAND}"><meta property="og:url" content="{BASE}{canon}">
+<meta property="og:image" content="{BASE}{image or '/og.png'}"><meta property="og:site_name" content="{BRAND}"><meta property="og:url" content="{BASE}{canon}">
 {ld_script(ld)}{CSS}{BEACON}</head><body><main>{nav}
 {body}<div id="sitefoot"></div><script src="/footer.js" defer></script></main><script src="/static.js" defer></script></body></html>"""
 
@@ -456,8 +462,11 @@ def main():
         f"<h1>HSK characters by level</h1><ul>{li}</ul>", [breadcrumbs((BRAND, "/"), ("HSK", "/en/hsk/"))], lang="en", alt=("/hsk/", "/en/hsk/")), encoding="utf-8")
     urls += [f"{BASE}/en/c/", f"{BASE}/en/p/", f"{BASE}/en/hsk/"] + k_urls + r_urls
     # lastmod не пишем: все страницы пересобираются при каждом деплое, настоящей даты изменения у них нет
-    sm = "".join(f"<url><loc>{u}</loc></url>" for u in urls)
-    (SITE / "sitemap.xml").write_text(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{sm}</urlset>\n', encoding="utf-8")
+    # у страниц плаката — превью в image sitemap (Google Картинки)
+    img = lambda u: "".join(f"<image:image><image:loc>{i}</image:loc></image:image>" for i in radical_pages.IMAGES.get(u, ()))
+    sm = "".join(f"<url><loc>{u}</loc>{img(u)}</url>" for u in urls)
+    (SITE / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" '
+                                      f'xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">{sm}</urlset>\n', encoding="utf-8")
     by = {}
     for u in urls:
         path = u[len(BASE):]

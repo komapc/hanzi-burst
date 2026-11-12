@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
-"""Плакат «214 ключей» на одну страницу: site/radicals-poster-ru.pdf и site/radicals-poster-en.pdf
-(запускается вручную, PDF коммитятся).
+"""Плакат «214 ключей» на одну страницу: site/radicals-poster-{ru,en,eo}.pdf и превью site/radicals-poster-{ru,en,eo}.jpg
+(запускается вручную, PDF и JPEG коммитятся; страницы плаката /r/poster собирает radical_pages.py).
 
 Лист A2 (420 × 594 мм), вектор: печатается и на A3/A4 с уменьшением. Ключи сгруппированы по числу черт, как в словарях;
 у каждого номер, варианты написания, пиньинь, значение и пример иероглифа. 60 частых ключей (по числу знаков HSK)
 выделены цветом и звёздочкой. В шапке легенда, доля HSK-иероглифов с частыми ключами и QR-код на /r/.
 
 Нужны: data/radicals.json, data/raw/mmh/dictionary.txt (пиньинь примеров), google-chrome, шрифт Noto CJK.
-QR-код — пакет segno (pip install segno); без него плакат собирается без QR.
+QR-код — пакет segno, метаданные PDF — pypdf (pip install segno pypdf); без них плакат собирается без QR / без метаданных.
+Превью — ImageMagick (convert).
   python3 scripts/radicals_poster.py
 """
 import html, json, shutil, subprocess, sys, tempfile
@@ -36,7 +37,25 @@ TXT = {
                url="hanzi.lipu.dev/en/r/", qr="https://hanzi.lipu.dev/en/r/",
                more="Stroke order, every variant and the characters that use each radical are on the site, plus a game to learn them.",
                src="Data: Unicode Unihan (kRSUnicode), Make Me a Hanzi, HSK 3.0 · Hanzi Burst"),
+    # эсперанто: страниц ключей на эсперанто нет, поэтому QR и адрес ведут на английские /en/r/
+    "eo": dict(title="La 214 ĉinaj radikaloj",
+               sub="Kangxi-radikaloj laŭ nombro de strekoj: numero, variantoj, pinjino, signifo kaj ekzemplo",
+               top="ofta radikalo", stat="{p}% de la HSK-signoj enhavas unu el la 60 oftaj radikaloj — komencu per ili",
+               lg_n="numero", lg_var="variantoj", lg_py="pinjino", lg_mean="signifo", lg_ex="ekzemplo",
+               url="hanzi.lipu.dev/en/r/", qr="https://hanzi.lipu.dev/en/r/",
+               more="Strekordo, ĉiuj variantoj kaj la signoj kun ĉiu radikalo troviĝas en la retejo (angle), kun ludo por lerni ilin.",
+               src="Datumoj: Unicode Unihan (kRSUnicode), Make Me a Hanzi, HSK 3.0 · Hanzi Burst"),
 }
+# метаданные PDF (заголовок, тема, ключевые слова): их показывает поисковик в выдаче по PDF
+META = {
+    "ru": dict(title="Плакат: 214 ключей китайских иероглифов (радикалы Канси)",
+               kw="ключи китайских иероглифов, 214 ключей, радикалы Канси, плакат, таблица ключей, PDF, HSK, Hanzi Burst"),
+    "en": dict(title="Chinese radicals poster: the 214 Kangxi radicals",
+               kw="Chinese radicals, 214 Kangxi radicals, radicals chart, poster, printable, PDF, HSK, Hanzi Burst"),
+    "eo": dict(title="Afiŝo: la 214 ĉinaj radikaloj (Kangxi-radikaloj)",
+               kw="ĉinaj radikaloj, 214 Kangxi-radikaloj, ĉina skribo, afiŝo, tabelo, PDF, HSK, Hanzi Burst"),
+}
+STROKES = {"ru": strokes_word, "en": lambda k: "stroke" if k == 1 else "strokes", "eo": lambda k: "streko" if k == 1 else "strekoj"}
 
 # мягкие оттенки групп по числу черт: соседние группы различимы и в ч/б печати (разная светлота)
 # группы по числу черт — по таблице Канси (первый номер каждой группы); в MMH у шести ключей современный счёт черт
@@ -72,6 +91,7 @@ h1 .zh{color:#c8402a;font-weight:700;margin-right:4mm}
 .cell.top{background:#fdf0ea;border-color:#e9b8a6;border-top-color:#c8402a}
 .cell .n{position:absolute;top:.6mm;left:1.2mm;font-size:6.5pt;color:#8a8073}
 .cell .st{position:absolute;top:.2mm;right:1mm;font-size:8pt;color:#c8402a}
+.cell>*{flex-shrink:0}
 .cell .ch{display:flex;align-items:baseline;justify-content:center;gap:1.2mm;line-height:1}
 .cell .ch .m{font-size:27pt}
 .cell.top .ch .m{color:#b0361f}
@@ -85,6 +105,7 @@ h1 .zh{color:#c8402a;font-weight:700;margin-right:4mm}
 .grp span{font-size:8pt;margin-top:.8mm}
 footer{display:flex;justify-content:space-between;gap:6mm;margin-top:3mm;font-size:8.5pt;color:#8a8073}
 footer b{color:#c8402a;font-weight:600}
+a{color:inherit;text-decoration:none}
 """
 
 
@@ -97,6 +118,21 @@ def qr_svg(url):
     buf = io.BytesIO()
     segno.make(url, error="m").save(buf, kind="svg", border=0, omitsize=True, dark="#1f1b16", xmldecl=False, svgns=True, nl=False)
     return buf.getvalue().decode()
+
+
+def set_meta(pdf, lang, subject):
+    """Автор, тема, ключевые слова и язык документа (Chrome пишет только Title из <title>). Нужен pypdf; без него пропускаем."""
+    try:
+        from pypdf import PdfWriter
+        from pypdf.generic import NameObject, TextStringObject
+    except ImportError:
+        print("pypdf not installed: PDF metadata skipped")
+        return
+    w = PdfWriter(clone_from=pdf)
+    w.add_metadata({"/Title": META[lang]["title"], "/Author": "Hanzi Burst (hanzi.lipu.dev)", "/Subject": subject,
+                    "/Keywords": META[lang]["kw"], "/Creator": "Hanzi Burst, scripts/radicals_poster.py"})
+    w._root_object[NameObject("/Lang")] = TextStringObject(lang)
+    w.write(pdf)
 
 
 def main():
@@ -113,9 +149,8 @@ def main():
     total = sum(r["hsk"] for r in R)
     pct = round(100 * sum(r["hsk"] for r in R if r["top"]) / total)
 
-    for lang in ("ru", "en"):
-        t = TXT[lang]
-        sw = (lambda k: strokes_word(k)) if lang == "ru" else (lambda k: "stroke" if k == 1 else "strokes")
+    for lang in ("ru", "en", "eo"):
+        t, sw = TXT[lang], STROKES[lang]
 
         def cell(r, h, sample=False):
             ex = ex_of.get(r["n"])
@@ -142,23 +177,29 @@ def main():
                   f"<li><i>{t['lg_var']}</i><span class='zh'>{''.join(sample['variants'])}</span></li>"
                   f"<li><i>{t['lg_py']}</i>{sample['pinyin']}</li><li><i>{t['lg_mean']}</i>{E(sample[lang])}</li>"
                   f"<li><i>{t['lg_ex']}</i><span class='zh'>{ex_of[85]}</span> {E(py.get(ex_of[85], ''))}</li></ul>"
-                  f"<p class='more'>{E(t['more'])}<br><b>{t['url']}</b></p>"
-                  + (f"<div class='qr'>{q}</div>" if q else "") + "</div>")
+                  f"<p class='more'>{E(t['more'])}<br><a href='{t['qr']}'><b>{t['url']}</b></a></p>"
+                  + (f"<a class='qr' href='{t['qr']}'>{q}</a>" if q else "") + "</div>")
         body = (f"<header><h1><span class='zh'>部首</span>{E(t['title'])}</h1><p class='sub'>{E(t['sub'])}</p>"
                 f"<div class='stat'><b>{pct}%</b>{E(t['stat'].format(p=pct).split('% ', 1)[1])}</div></header>"
                 f"<div class='grid'>{''.join(cells)}{legend}</div>"
-                f"<footer><span>{E(t['src'])}</span><span>{t['url']}</span></footer>")
-        doc = f"<!doctype html><html lang='{lang}'><head><meta charset='utf-8'><style>{CSS}</style></head><body>{body}</body></html>"
+                f"<footer><span>{E(t['src'])}</span><a href='{t['qr']}'>{t['url']}</a></footer>")
+        doc = f"<!doctype html><html lang='{lang}'><head><meta charset='utf-8'><title>{E(META[lang]['title'])}</title><style>{CSS}</style></head><body>{body}</body></html>"
         with tempfile.TemporaryDirectory() as tmp:
             src = Path(tmp) / "poster.html"
             src.write_text(doc, encoding="utf-8")
             out = ROOT / "site" / f"radicals-poster-{lang}.pdf"
             subprocess.run([chrome, "--headless", "--disable-gpu", "--no-pdf-header-footer", f"--user-data-dir={tmp}/profile",
                             f"--print-to-pdf={out}", src.as_uri()], check=True, capture_output=True)
-            if "--png" in sys.argv:   # превью для проверки глазами
-                subprocess.run([chrome, "--headless", "--disable-gpu", "--hide-scrollbars", f"--user-data-dir={tmp}/profile2",
-                                "--window-size=1587,2245", f"--screenshot={Path(sys.argv[-1]) / f'poster-{lang}.png'}", src.as_uri()],
-                               check=True, capture_output=True)
+            # превью для страницы плаката (/r/poster) и og:image: JPEG 1000 px по ширине
+            png = Path(tmp) / "poster.png"
+            subprocess.run([chrome, "--headless", "--disable-gpu", "--hide-scrollbars", f"--user-data-dir={tmp}/profile2",
+                            "--window-size=1587,2245", f"--screenshot={png}", src.as_uri()], check=True, capture_output=True)
+            if "--png" in sys.argv:   # полноразмерный PNG для проверки глазами
+                shutil.copy(png, Path(sys.argv[-1]) / f"poster-{lang}.png")
+                shutil.copy(src, Path(sys.argv[-1]) / f"poster-{lang}.html")
+            subprocess.run(["convert", str(png), "-resize", "1000x", "-strip", "-quality", "82", "-sampling-factor", "4:2:0",
+                            "-interlace", "JPEG", str(ROOT / "site" / f"radicals-poster-{lang}.jpg")], check=True)
+        set_meta(out, lang, t["sub"])
         print(f"{out.relative_to(ROOT)}: {out.stat().st_size // 1024} KB")
 
 
