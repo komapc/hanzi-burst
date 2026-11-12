@@ -175,7 +175,7 @@ gh release create raw-data-$(date +%F) /tmp/raw-data.tar.xz --prerelease --title
 ## Статические страницы и SEO
 
 `build_static.py` строит `/c/<hex>` (знаки), `/p/` (фразы), `/hsk/`, `/k/<hex>` (кандзи, `scripts/kanji_pages.py`), `/r/<hex>` и `/en/r/<hex>` (214 ключей Канси, `scripts/radical_pages.py`), `sitemap.xml`.
-Таблица ключей `data/radicals.json` коммитится; её собирает `scripts/build_radicals.py` (запускать вручную после правки названий и вариантов в `scripts/radical_names.py`). Частые ключи (`top`, первые 60 по числу знаков HSK) идут первыми в указателе `/r/`. Карточки для печати `site/radicals-{ru,en}.pdf` тоже коммитятся: после правки таблицы пересобрать `python3 scripts/radicals_pdf.py` (нужны `google-chrome` и шрифт Noto CJK).
+Таблица ключей `data/radicals.json` коммитится; её собирает `scripts/build_radicals.py` (запускать вручную после правки названий и вариантов в `scripts/radical_names.py`). Частые ключи (`top`, первые 60 по числу знаков HSK) идут первыми в указателе `/r/`. Карточки для печати `site/radicals-{ru,en}.pdf` тоже коммитятся: после правки таблицы пересобрать `python3 scripts/radicals_pdf.py` (нужны `google-chrome` и шрифт Noto CJK). Плакат на одну страницу A2 `site/radicals-poster-{ru,en}.pdf` — `python3 scripts/radicals_poster.py` (QR-код рисует пакет `segno`, без него плакат собирается без QR).
 
 Английские версии: `/en/c/<hex>`, `/en/c/`, `/en/p/<id>`, `/en/p/`, `/en/hsk/`, `/en/hsk/N` со своими canonical и взаимными `hreflang` ru↔en (`x-default` — русская версия); значения только английские. Ссылки «в приложение» с английских страниц добавляют `lang=en`. Кандзи `/k/` — только по-русски.
 
