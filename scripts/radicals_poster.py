@@ -4,9 +4,9 @@
 
 Лист A2 (420 × 594 мм), вектор: печатается и на A3/A4 с уменьшением. Ключи сгруппированы по числу черт, как в словарях;
 у каждого номер, варианты написания, пиньинь (цвет — тон, как «Тоны» на сайте), значение и три иероглифа с ним.
-Стиль строгий: чёрный, каллиграфический шрифт; красные только печать 部首 и точки у 60 частых ключей (по числу знаков HSK). Внизу легенда (с долей HSK-иероглифов, где есть частые ключи) и QR-код на /r/.
+Стиль строгий: чёрный, знаки — контуры Make Me a Hanzi (кисть Arphic UKai, как на сайте); красные только печать 部首 и точки у 60 частых ключей (по числу знаков HSK). Внизу легенда (с долей HSK-иероглифов, где есть частые ключи) и QR-код на /r/.
 
-Нужны: data/radicals.json, google-chrome, шрифт LXGW WenKai (OFL, github.com/lxgw/LxgwWenKai: LXGWWenKai-Medium.ttf
+Нужны: data/radicals.json, data/raw/mmh/graphics.txt (контуры знаков), google-chrome; для трёх вариантов, которых нет в MMH (牜⺶⻊), — шрифт LXGW WenKai (OFL, github.com/lxgw/LxgwWenKai: LXGWWenKai-Medium.ttf
 в ~/.local/share/fonts; без него — Noto Serif CJK).
 QR-код — пакет segno, метаданные PDF — pypdf (pip install segno pypdf); без них плакат собирается без QR / без метаданных.
 Превью — ImageMagick (convert).
@@ -71,10 +71,9 @@ body{width:420mm;height:593mm;overflow:hidden;padding:13mm 14mm 10mm;font-family
      display:flex;flex-direction:column;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .zh{font-family:'LXGW WenKai','Noto Serif CJK SC',serif}
 header{margin-bottom:6mm;display:grid;grid-template-columns:auto 1fr;align-items:end;column-gap:7mm}
-.seal{writing-mode:vertical-rl;background:#b8322a;color:#fbf9f5;border-radius:1.2mm;font-size:24pt;line-height:1;letter-spacing:1.5mm;
-      padding:3mm 2.6mm 1.5mm;transform:rotate(-3deg);align-self:center;box-shadow:inset 0 0 0 .7mm #b8322a,inset 0 0 0 1.1mm #fbf9f5}
+.seal{display:flex;flex-direction:column;gap:1mm;background:#b8322a;color:#fbf9f5;border-radius:2.6mm 1.8mm 3mm 2mm;padding:2.4mm;transform:rotate(-3deg);align-self:center}.seal svg.g{width:9mm;height:9mm}
 h1{margin:0;line-height:1;font-weight:400}
-h1 .zh{display:block;font-size:66pt;font-weight:500;letter-spacing:4mm}
+h1 .zh{display:flex;gap:3mm}h1 .zh svg.g{width:23mm;height:23mm}
 h1 .tt{display:block;font-size:21pt;font-weight:600;margin-top:3mm;letter-spacing:.2pt}
 .sub{font-size:11.5pt;color:#6b6257;margin:1.5mm 0 0}
 .legend{display:flex;gap:6mm;align-items:center;border-top:.3mm solid #1f1b16;padding:2mm 1mm 0}
@@ -86,20 +85,21 @@ h1 .tt{display:block;font-size:21pt;font-weight:600;margin-top:3mm;letter-spacin
 .qr{height:100%;aspect-ratio:1;display:flex}.qr svg{width:100%;height:100%}
 .grid{flex:1;min-height:0;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));grid-template-rows:repeat(20,minmax(0,1fr));gap:1.6mm 1.2mm}
 .cell{position:relative;display:grid;grid-template-columns:5.2mm 1fr;grid-template-rows:1fr auto auto;column-gap:.6mm;padding:.4mm .6mm .6mm 0;overflow:hidden}
-.cell .n{position:absolute;top:0;left:0;min-width:4.4mm;height:3.4mm;padding:0 .6mm;background:#1f1b16;color:#fbf9f5;font-size:6pt;font-weight:700;
-         display:flex;align-items:center;justify-content:center;border-radius:.4mm}
-.cell .dot{position:absolute;top:.85mm;left:5.4mm;width:1.7mm;height:1.7mm;border-radius:50%;background:#b8322a}
-.cell .exs{grid-row:1 / 4;grid-column:1;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:.2mm;padding-top:3.6mm;
+.cell .n{position:absolute;top:0;left:.3mm;display:flex;align-items:center;gap:.8mm;font-size:6.6pt;color:#8a8073;font-variant-numeric:oldstyle-nums}
+.cell .dot{width:1.6mm;height:1.6mm;border-radius:50%;background:#b8322a}
+svg.g{display:block;fill:currentColor;overflow:visible}
+.cell .exs{grid-row:1 / 4;grid-column:1;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:.5mm;padding-top:3.2mm;
            font-size:8.6pt;line-height:1.08;color:#5d554b}
+.cell .exs svg.g{width:3.4mm;height:3.4mm}
 .cell .ch{grid-column:2;display:flex;align-items:center;justify-content:center;gap:.8mm;line-height:1;min-height:0}
-.cell .ch .m{font-size:33pt;font-weight:500}
-.cell .ch .v{display:flex;flex-direction:column;font-size:9.5pt;color:#7a7064;line-height:1.05}
+.cell .ch .m{font-size:33pt;font-weight:500}.cell .ch svg.m{width:12.6mm;height:12.6mm}
+.cell .ch .v{display:flex;flex-direction:column;gap:.4mm;font-size:9.5pt;color:#7a7064;line-height:1.05}.cell .ch .v svg.g{width:3.6mm;height:3.6mm}
 .cell .py{grid-column:2;text-align:center;font-size:7.6pt;font-weight:600;line-height:1.1}
 .cell .mn{grid-column:2;text-align:center;font-size:7.3pt;font-weight:700;line-height:1.1;max-height:2.2em;overflow:hidden;margin-top:.2mm}
 .t1{color:#c4322a}.t2{color:#237a3c}.t3{color:#2f6fd0}.t4{color:#8b46c9}.t5{color:#8a8073}
-.grp{display:flex;flex-direction:column;align-items:center;justify-content:center;border-left:.5mm solid #b8322a;color:#1f1b16}
-.grp b{font-size:30pt;font-weight:400;line-height:1}
-.grp span{font-size:7.5pt;margin-top:.6mm;color:#8a8073;letter-spacing:.3pt;text-transform:uppercase}
+.grp{display:flex;flex-direction:column;align-items:center;justify-content:center;color:#9a3226}
+.grp .gz{display:flex;flex-direction:column;align-items:center;gap:.3mm}.grp .gz svg.g{width:6.6mm;height:6.6mm}
+.grp span{font-size:6.8pt;margin-top:1.2mm;color:#8a8073;letter-spacing:.3pt}
 footer{display:flex;justify-content:space-between;gap:6mm;margin-top:3mm;font-size:8.5pt;color:#8a8073}
 a{color:inherit;text-decoration:none}
 """
@@ -114,6 +114,24 @@ def tone(p):
 
 def PY(p):   # пиньинь, раскрашенный по тону (как «Тоны» на сайте)
     return f"<span class='t{tone(p)}'>{E(p)}</span>"
+
+
+GRAPHICS = ROOT / "data/raw/mmh/graphics.txt"
+CN_NUM = "一二三四五六七八九十"
+
+
+def cn_num(k):   # 1..19 китайскими цифрами: 3 → 三, 12 → 十二
+    return CN_NUM[k - 1] if k <= 10 else "十" + CN_NUM[k - 11]
+
+
+def load_glyphs(chars):
+    """Контуры Make Me a Hanzi (кисть Arphic UKai) — те же знаки, что рисует сайт."""
+    out = {}
+    for line in open(GRAPHICS, encoding="utf-8"):
+        d = json.loads(line)
+        if d["character"] in chars:
+            out[d["character"]] = d["strokes"]
+    return out
 
 
 def qr_svg(url):
@@ -147,6 +165,20 @@ def main():
     if not chrome:
         sys.exit("google-chrome / chromium not found")
     R = sorted(json.loads(radical_pages.RADICALS.read_text(encoding="utf-8")), key=lambda r: r["n"])
+    G = load_glyphs({c for r in R for c in [r["char"]] + r["variants"][:2] + r["examples"][:3]} | set("康熙部首画" + CN_NUM))
+    used = set()
+
+    def gl(ch, cls="g"):
+        """Знак кистью: <use> на общий <symbol> (каждый контур в PDF один раз); нет в MMH — шрифтом."""
+        if ch not in G:
+            return f"<span class='zh'>{ch}</span>"
+        used.add(ch)
+        return f"<svg class='g {cls}' viewBox='0 0 1024 1024'><use href='#u{ord(ch):x}'/></svg>"
+
+    def defs():
+        return ("<svg width='0' height='0' style='position:absolute'>" + "".join(
+            f"<symbol id='u{ord(c):x}' viewBox='0 0 1024 1024'><g transform='scale(1,-1) translate(0,-900)'>"
+            + "".join(f"<path d='{d}'/>" for d in G[c]) + "</g></symbol>" for c in sorted(used)) + "</svg>")
     total = sum(r["hsk"] for r in R)
     pct = round(100 * sum(r["hsk"] for r in R if r["top"]) / total)
 
@@ -154,11 +186,11 @@ def main():
         t, sw = TXT[lang], STROKES[lang]
 
         def cell(r):
-            exs = "".join(f"<span>{c}</span>" for c in r["examples"][:3])
-            vs = "".join(f"<span>{v}</span>" for v in r["variants"][:2])
-            return (f"<div class='cell'><span class='n'>{r['n']}</span>" + ("<span class='dot'></span>" if r["top"] else "")
+            exs = "".join(gl(c) for c in r["examples"][:3])
+            vs = "".join(gl(v) for v in r["variants"][:2])
+            return (f"<div class='cell'><span class='n'>{r['n']}" + ("<i class='dot'></i>" if r["top"] else "") + "</span>"
                     + f"<div class='exs zh'>{exs}</div>"
-                    + f"<div class='ch zh'><span class='m'>{r['char']}</span>" + (f"<span class='v'>{vs}</span>" if vs else "") + "</div>"
+                    + f"<div class='ch zh'>{gl(r['char'], 'm')}" + (f"<span class='v'>{vs}</span>" if vs else "") + "</div>"
                     f"<div class='py'>{PY(r['pinyin'])}</div><div class='mn'>{E(r[lang])}</div></div>")
 
         cells, prev = [], None
@@ -166,7 +198,8 @@ def main():
             k = kx_strokes(r["n"])
             if k != prev:   # новая группа по числу черт
                 prev = k
-                cells.append(f"<div class='grp'><b class='zh'>{k}</b><span>{sw(k)}</span></div>")
+                # группа: «三画» кистью (画 — черта), под ним «3 черты»
+                cells.append(f"<div class='grp'><div class='gz'>{''.join(gl(c) for c in cn_num(k) + '画')}</div><span>{k} {sw(k)}</span></div>")
             cells.append(cell(r))
         sample = next(r for r in R if r["n"] == 85)
         q = qr_svg(t["qr"])
@@ -180,11 +213,11 @@ def main():
                   f"<p class='more'>{E(t['more'])}<br><a href='{t['qr']}'><b>{t['url']}</b></a></p>"
                   + (f"<a class='qr' href='{t['qr']}'>{q}</a>" if q else "") + "</div>")
         # шапка: печать 部首 (единственное красное пятно, кроме точек частых ключей) и заголовок кистью
-        body = (f"<header><div class='seal zh'>部首</div><div><h1><span class='zh'>康熙部首</span><span class='tt'>{E(t['title'])}</span></h1>"
+        body = (f"<header><div class='seal'>{gl('部')}{gl('首')}</div><div><h1><span class='zh'>{''.join(gl(c) for c in '康熙部首')}</span><span class='tt'>{E(t['title'])}</span></h1>"
                 f"<p class='sub'>{E(t['sub'])}</p></div></header>"
                 f"<div class='grid'>{''.join(cells)}{legend}</div>"
                 f"<footer><span>{E(t['src'])}</span><a href='{t['qr']}'>{t['url']}</a></footer>")
-        doc = f"<!doctype html><html lang='{lang}'><head><meta charset='utf-8'><title>{E(META[lang]['title'])}</title><style>{CSS}</style></head><body>{body}</body></html>"
+        doc = f"<!doctype html><html lang='{lang}'><head><meta charset='utf-8'><title>{E(META[lang]['title'])}</title><style>{CSS}</style></head><body>{defs()}{body}</body></html>"
         with tempfile.TemporaryDirectory() as tmp:
             src = Path(tmp) / "poster.html"
             src.write_text(doc, encoding="utf-8")
