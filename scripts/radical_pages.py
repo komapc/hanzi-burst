@@ -2,6 +2,7 @@
   site/r/<hex кодпоинта>.html, site/en/r/<hex>.html — ключ: порядок черт (SVG из Make Me a Hanzi, черты пронумерованы),
       номер, число черт, пиньинь, название, варианты написания, иероглифы HSK с этим ключом, соседние ключи
   site/radicals.json — данные для игры site/radicals-game.html
+  site/r/poster.html, site/en/r/poster.html, site/eo/r/poster.html — страница плаката (radicals_poster.py)
   site/r/index.html, site/en/r/index.html — указатель: сначала частые ключи (top в data/radicals.json),
       остальные под «Показать ещё», по числу черт
 Данные: data/radicals.json (scripts/build_radicals.py), data/raw/mmh/graphics.txt (контуры и медианы черт).
@@ -14,6 +15,105 @@ from radical_names import SUPPLEMENT
 ROOT = Path(__file__).resolve().parent.parent
 GRAPHICS = ROOT / "data/raw/mmh/graphics.txt"
 RADICALS = ROOT / "data/radicals.json"
+IMAGES = {}   # адрес страницы → картинки для image sitemap (заполняет build)
+
+# Страница плаката (scripts/radicals_poster.py): /r/poster, /en/r/poster, /eo/r/poster — описание, превью, скачивание.
+# Сам PDF поисковик показывает голым файлом; страница даёт ему заголовок, описание, картинку и hreflang.
+POSTER = {
+    "ru": dict(path="/r/poster", hub="/r/", hub_name="Ключи", crumb="Плакат",
+               title="Плакат 214 ключей китайских иероглифов: PDF для печати (A2, A3, A4) | Hanzi Burst",
+               desc=("Бесплатный плакат со всеми 214 ключами (радикалами) Канси на одном листе: номер, варианты написания, пиньинь, "
+                     "значение и пример иероглифа. 60 частых ключей выделены. PDF для печати на A2, A3 или A4."),
+               h1="Плакат: 214 ключей китайских иероглифов",
+               lead=("Все 214 ключей (радикалов) Канси на одном листе — повесить над столом и сверяться, пока учите иероглифы. "
+                     "Плакат бесплатный, PDF векторный: печатается чётко на любом формате."),
+               dl="Скачать PDF (A2, 1 МБ)", alt="Плакат «214 ключей китайских иероглифов»: таблица ключей Канси по числу черт",
+               what="Что на плакате",
+               items=["все 214 ключей Канси, по числу черт — в том же порядке, что в словарях;",
+                      "у каждого ключа номер, варианты написания (氵氺 у 水, 亻 у 人, 扌 у 手), пиньинь, значение и пример иероглифа с чтением;",
+                      "60 самых частых ключей выделены цветом и ★: в {p}% иероглифов HSK есть один из них — с них стоит начать;",
+                      "легенда и QR-код на страницы ключей: там порядок черт и все иероглифы с каждым ключом."],
+               print_h="Как напечатать",
+               print_t=("Лист A2 (42 × 59,4 см) — в копицентре или типографии. На домашнем принтере печатайте на A3 или A4 "
+                        "с масштабом «по размеру страницы»: на A4 знаки ключей около 5 мм, их всё ещё хорошо видно."),
+               other_h="Плакат на других языках", more_h="Ещё про ключи",
+               more=[("/r/", "Список 214 ключей со значениями и порядком черт"), ("/radicals-game?lang=ru", "Игра: учим ключи"),
+                     ("/radicals-ru.pdf", "Карточки для печати (PDF, 214 ключей, 12 на лист)")],
+               names={"ru": "по-русски", "en": "по-английски", "eo": "на эсперанто"}),
+    "en": dict(path="/en/r/poster", hub="/en/r/", hub_name="Radicals", crumb="Poster",
+               title="Chinese radicals poster: all 214 Kangxi radicals, printable PDF (A2, A3, A4) | Hanzi Burst",
+               desc=("Free one-page chart of all 214 Kangxi radicals: number, variant forms, pinyin, meaning and an example character. "
+                     "The 60 most common radicals are highlighted. Printable PDF for A2, A3 or A4."),
+               h1="Chinese radicals poster: the 214 Kangxi radicals",
+               lead=("All 214 Kangxi radicals on a single sheet, to hang above your desk while you learn Chinese characters. "
+                     "The poster is free and the PDF is vector, so it prints sharp at any size."),
+               dl="Download the PDF (A2, 1 MB)", alt="Poster of the 214 Chinese radicals: Kangxi radicals chart by stroke count",
+               what="What's on the poster",
+               items=["all 214 Kangxi radicals by stroke count, in dictionary order;",
+                      "for each radical: its number, variant forms (氵氺 for 水, 亻 for 人, 扌 for 手), pinyin, meaning and an example character with pinyin;",
+                      "the 60 most common radicals are highlighted with colour and ★: {p}% of HSK characters contain one of them, so start there;",
+                      "a legend and a QR code to the radical pages, with stroke order and every character that uses each radical."],
+               print_h="How to print",
+               print_t=("A2 (420 × 594 mm) at a print shop. On a home printer, print on A3 or A4 (or Letter) with “fit to page”: "
+                        "on A4 the radicals are about 5 mm tall and still easy to read."),
+               other_h="The poster in other languages", more_h="More on radicals",
+               more=[("/en/r/", "List of the 214 radicals with meanings and stroke order"), ("/radicals-game?lang=en", "Radicals game"),
+                     ("/radicals-en.pdf", "Printable flashcards (PDF, 214 radicals, 12 per page)")],
+               names={"ru": "Russian", "en": "English", "eo": "Esperanto"}),
+    "eo": dict(path="/eo/r/poster", hub="/en/r/", hub_name="Radikaloj", crumb="Afiŝo",
+               title="Afiŝo de la 214 ĉinaj radikaloj: PDF por presi (A2, A3, A4) | Hanzi Burst",
+               desc=("Senpaga afiŝo kun ĉiuj 214 Kangxi-radikaloj sur unu folio: numero, variantoj, pinjino, signifo kaj ekzempla signo. "
+                     "La 60 plej oftaj radikaloj estas emfazitaj. PDF por presi en A2, A3 aŭ A4."),
+               h1="Afiŝo: la 214 ĉinaj radikaloj",
+               lead=("Ĉiuj 214 Kangxi-radikaloj de la ĉina skribo sur unu folio, por pendigi super la skribotablo dum vi lernas "
+                     "ĉinajn signojn. La afiŝo estas senpaga, kaj la vektora PDF presiĝas klare en ĉiu formato."),
+               dl="Elŝuti la PDF-on (A2, 1 MB)", alt="Afiŝo de la 214 ĉinaj radikaloj: tabelo de la Kangxi-radikaloj laŭ nombro de strekoj",
+               what="Kio estas sur la afiŝo",
+               items=["ĉiuj 214 Kangxi-radikaloj laŭ nombro de strekoj, en la vortara ordo;",
+                      "ĉe ĉiu radikalo: numero, variantoj (氵氺 de 水, 亻 de 人, 扌 de 手), pinjino, signifo kaj ekzempla signo kun pinjino;",
+                      "la 60 plej oftaj radikaloj estas kolorigitaj kaj markitaj per ★: {p}% de la HSK-signoj enhavas unu el ili — komencu per ili;",
+                      "klarigo kaj QR-kodo al la paĝoj de la radikaloj (angle), kun strekordo kaj ĉiuj signoj kun ĉiu radikalo."],
+               print_h="Kiel presi",
+               print_t=("A2 (420 × 594 mm) en presejo. Per hejma presilo presu en A3 aŭ A4 kun «adapti al la paĝo»: "
+                        "en A4 la radikaloj estas ĉirkaŭ 5 mm altaj kaj ankoraŭ bone legeblaj."),
+               other_h="La afiŝo en aliaj lingvoj", more_h="Pli pri la radikaloj (angle)",
+               more=[("/en/r/", "Listo de la 214 radikaloj kun signifoj kaj strekordo"), ("/radicals-game?lang=en", "Ludo por lerni la radikalojn"),
+                     ("/radicals-en.pdf", "Kartoj por presi (PDF, 214 radikaloj)")],
+               names={"ru": "ruse", "en": "angle", "eo": "Esperante"}),
+}
+POSTER_CSS = """<style>.pv{display:block;max-width:420px;margin:16px 0}.pv img{width:100%;height:auto;border:1px solid var(--line);border-radius:6px}
+.dl{display:inline-block;margin:6px 0 4px;padding:10px 18px;border-radius:8px;background:var(--accent);color:var(--bg);text-decoration:none;font-weight:600}</style>"""
+
+
+def poster_pages(SITE, page, breadcrumbs, E, BASE, pct):
+    """Страницы плаката на трёх языках со взаимными hreflang. Возвращает адреса для sitemap (страницы и PDF)."""
+    alts = {l: v["path"] for l, v in POSTER.items()}
+    urls = []
+    for lang, t in POSTER.items():
+        pdf, jpg = f"/radicals-poster-{lang}.pdf", f"/radicals-poster-{lang}.jpg"
+        items = "".join(f"<li>{x.format(p=pct)}</li>" for x in t["items"])
+        others = " · ".join(f'<a href="{POSTER[l]["path"]}" hreflang="{l}">{t["names"][l]}</a> '
+                            f'(<a href="/radicals-poster-{l}.pdf" hreflang="{l}" type="application/pdf">PDF</a>)' for l in POSTER if l != lang)
+        more = "".join(f'<li><a href="{h}">{E(x)}</a></li>' for h, x in t["more"])
+        body = (f"{POSTER_CSS}<h1>{E(t['h1'])}</h1><p class='m'>{E(t['lead'])}</p>"
+                f'<a class="dl" href="{pdf}" type="application/pdf" download>{E(t["dl"])}</a>'
+                f'<a class="pv" href="{pdf}" type="application/pdf"><img src="{jpg}" width="1000" height="1414" alt="{E(t["alt"])}"></a>'
+                f"<h2>{E(t['what'])}</h2><ul>{items}</ul><h2>{E(t['print_h'])}</h2><p>{E(t['print_t'])}</p>"
+                f"<h2>{E(t['other_h'])}</h2><p>{others}</p><h2>{E(t['more_h'])}</h2><ul>{more}</ul>")
+        org = {"@type": "Organization", "name": "Hanzi Burst", "url": f"{BASE}/"}
+        ld = [breadcrumbs(("Hanzi Burst", "/"), (t["hub_name"], t["hub"]), (t["crumb"], t["path"])),
+              {"@context": "https://schema.org", "@type": "DigitalDocument", "name": t["h1"], "description": t["desc"],
+               "url": f"{BASE}{t['path']}", "inLanguage": lang, "isAccessibleForFree": True, "learningResourceType": "poster",
+               "educationalLevel": "beginner", "about": "Kangxi radicals", "author": org, "publisher": org,
+               "image": {"@type": "ImageObject", "contentUrl": f"{BASE}{jpg}", "caption": t["alt"], "width": 1000, "height": 1414,
+                         "creator": org, "creditText": "Hanzi Burst", "copyrightNotice": "Hanzi Burst"},
+               "encoding": {"@type": "MediaObject", "contentUrl": f"{BASE}{pdf}", "encodingFormat": "application/pdf"}}]
+        out = SITE / t["path"].lstrip("/")
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.with_suffix(".html").write_text(page(t["title"], t["desc"], t["path"], body, ld, lang=lang, alt=alts, image=jpg), encoding="utf-8")
+        urls += [f"{BASE}{t['path']}", f"{BASE}{pdf}"]
+        IMAGES[f"{BASE}{t['path']}"] = [f"{BASE}{jpg}"]
+    return urls
 
 CSS = """<style>
 .rsvg{width:220px;height:220px;display:block}.rsvg text{font:bold 64px system-ui,sans-serif;fill:var(--fg);paint-order:stroke;stroke:var(--bg);stroke-width:14px}
@@ -35,14 +135,14 @@ T = {
                none="Среди иероглифов HSK этого ключа нет: он встречается в редких и старых знаках.", prev="← Ключ", next="Ключ →",
                hsk="знаков HSK с этим ключом: {k}",
                game="Учить ключи в игре →", game_q="?lang=ru",
-               pdf="Карточки для печати (PDF, 214 ключей)", poster="Плакат на одну страницу (PDF, A2; печатается и на A3/A4)"),
+               pdf="Карточки для печати (PDF, 214 ключей)", poster="Плакат: все 214 ключей на одном листе (PDF, A2/A3/A4)"),
     "en": dict(radical="Radical", hub="Radicals", all214="The 214 Kangxi radicals", n="Number", strokes="Strokes", pinyin="Pinyin",
                meaning="Meaning", variants="Variant forms", order="Stroke order", examples="Characters with this radical",
                as_char="This sign as a character", top="Common radicals", more="Show {k} more radicals", by_strokes="{s} strokes",
                none="No HSK characters use this radical: it appears in rare and old characters.", prev="← Radical", next="Radical →",
                hsk="HSK characters with this radical: {k}",
                game="Learn the radicals in a game →", game_q="?lang=en",
-               pdf="Printable flashcards (PDF, 214 radicals)", poster="One-page poster (PDF, A2; prints on A3/A4 too)"),
+               pdf="Printable flashcards (PDF, 214 radicals)", poster="Poster: all 214 radicals on one page (PDF, A2/A3/A4)"),
 }
 
 
@@ -93,9 +193,11 @@ def build(SITE, page, breadcrumbs, E, BASE, chars, allc, first):
             rad_of.setdefault(c, []).append((r["n"], r["char"]))
     for c, n in SUPPLEMENT.items():   # формы, которые MMH пишет в поле radical (⺼, ⺮…)
         rad_of.setdefault(c, []).append((n, by_n[n]["char"]))
-    for d in ("r", "en/r"):
+    for d in ("r", "en/r", "eo"):
         shutil.rmtree(SITE / d, ignore_errors=True); (SITE / d).mkdir(parents=True)
     urls = [f"{BASE}/r/", f"{BASE}/en/r/", f"{BASE}/radicals-game"]
+    pct = round(100 * sum(r["hsk"] for r in R if r["top"]) / sum(r["hsk"] for r in R))
+    urls += poster_pages(SITE, page, breadcrumbs, E, BASE, pct)
     # данные для игры /radicals-game
     (SITE / "radicals.json").write_text(json.dumps(
         [{k: r[k] for k in ("n", "char", "variants", "pinyin", "en", "ru", "hsk", "top", "examples")} for r in R],
@@ -136,7 +238,7 @@ def build(SITE, page, breadcrumbs, E, BASE, chars, allc, first):
             own = [c for c in [ch, *r["variants"]] if c in chars]
             if own:
                 body.append(f"<p>{t['as_char']}: " + " ".join(f'<a href="{pre}/c/{cid(c)}" data-c="{c}" lang="zh">{c}</a>' for c in own) + "</p>")
-            body.append(f'<a class="cta" href="/radicals-game{t["game_q"]}">{t["game"]}</a> <a href="/radicals-{lang}.pdf">{t["pdf"]}</a> · <a href="/radicals-poster-{lang}.pdf">{t["poster"]}</a>')
+            body.append(f'<a class="cta" href="/radicals-game{t["game_q"]}">{t["game"]}</a> <a href="/radicals-{lang}.pdf">{t["pdf"]}</a> · <a href="{pre}/r/poster">{t["poster"]}</a>')
             pv, nx = by_n.get(n - 1), by_n.get(n + 1)
             body.append("<p class='pn'>" + (f'<a href="{pre}/r/{cid(pv["char"])}">{t["prev"]} {pv["char"]}</a>' if pv else "<span></span>")
                         + f'<a href="{pre}/r/">{t["hub"]}</a>'
@@ -184,7 +286,7 @@ def build(SITE, page, breadcrumbs, E, BASE, chars, allc, first):
                      f"Click a radical for its stroke order, variant forms and characters that use it.")
             desc = ("All 214 Kangxi radicals with number, meaning, stroke count, variant forms (氵扌亻忄…) and stroke order. "
                     f"The {len(top)} most common radicals first, the rest by stroke count.")
-        body = (f"{CSS}<h1>{h1}</h1><p class='m'>{intro}</p><a class='cta' href='/radicals-game{t["game_q"]}'>{t['game']}</a><p><a href='/radicals-poster-{lang}.pdf'>{t['poster']}</a><br><a href='/radicals-{lang}.pdf'>{t['pdf']}</a> <span class='m'>· {'другой язык' if lang == 'ru' else 'other language'}: <a href='/radicals-{'en' if lang == 'ru' else 'ru'}.pdf'>{'EN' if lang == 'ru' else 'RU'}</a></span></p><h2>{t['top']}</h2><ul class='rg'>{''.join(cell(r) for r in top)}</ul>"
+        body = (f"{CSS}<h1>{h1}</h1><p class='m'>{intro}</p><a class='cta' href='/radicals-game{t["game_q"]}'>{t['game']}</a><p><a href='{pre}/r/poster'>{t['poster']}</a><br><a href='/radicals-{lang}.pdf'>{t['pdf']}</a> <span class='m'>· {'другой язык' if lang == 'ru' else 'other language'}: <a href='/radicals-{'en' if lang == 'ru' else 'ru'}.pdf'>{'EN' if lang == 'ru' else 'RU'}</a></span></p><h2>{t['top']}</h2><ul class='rg'>{''.join(cell(r) for r in top)}</ul>"
                 f"<details class='more'><summary>{t['more'].format(k=len(rest))}</summary>{more}</details>")
         ld = [breadcrumbs(("Hanzi Burst", "/"), (t["hub"], f"{pre}/r/")),
               {"@context": "https://schema.org", "@type": "DefinedTermSet", "name": h1, "url": f"{BASE}{pre}/r/", "inLanguage": lang}]

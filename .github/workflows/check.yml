@@ -51,7 +51,7 @@ jobs:
           if [r["n"] for r in R] != list(range(1, 215)):
               bad.append("numbers are not 1..214")
           for r in R:
-              if not (r["char"] and r["ru"] and r["en"] and r["strokes"] > 0 and r["pinyin"]):
+              if not (r["char"] and r["ru"] and r["en"] and r.get("eo") and r["strokes"] > 0 and r["pinyin"]):
                   bad.append(f"{r['n']}: empty field")
               if any(len(v) != 1 for v in r["variants"]):
                   bad.append(f"{r['n']}: variant is not one character")
@@ -66,4 +66,4 @@ jobs:
           grep -q "fetch('phrase.json')" site/index.html
           test -s site/phrase.json && test -s site/glyphs.json
           test -s site/radicals-ru.pdf && test -s site/radicals-en.pdf   # built by hand: scripts/radicals_pdf.py
-          test -s site/radicals-poster-ru.pdf && test -s site/radicals-poster-en.pdf   # built by hand: scripts/radicals_poster.py
+          for l in ru en eo; do test -s site/radicals-poster-$l.pdf && test -s site/radicals-poster-$l.jpg; done   # built by hand: scripts/radicals_poster.py

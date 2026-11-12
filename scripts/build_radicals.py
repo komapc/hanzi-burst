@@ -4,7 +4,7 @@
 Источники: data/raw/unicode/CJKRadicals.txt (номер → знак), Unihan kRSUnicode (ключ каждого знака),
 Make Me a Hanzi (пиньинь, число черт), data/raw/hsk/complete.json (уровни и частота), scripts/radical_names.py (названия, варианты).
 
-Поля записи: n, char, variants, strokes, pinyin, en, ru, hsk (сколько знаков HSK с этим ключом), top (частый),
+Поля записи: n, char, variants, strokes, pinyin, en, ru, eo, hsk (сколько знаков HSK с этим ключом), top (частый),
 examples (до 12 знаков HSK с этим ключом: сначала по уровню, затем по частоте).
 Частые («top») — первые TOP ключей по числу знаков HSK; на сайте, в игре и в PDF они идут первыми.
 """
@@ -56,12 +56,12 @@ def main():
     out = []
     for n in range(1, 215):
         ch = num2char[n]
-        en, ru, variants = NAMES[n]
+        en, ru, variants, eo = NAMES[n]
         d = mmh.get(ch, {})
         exs = sorted((c for c in by_rad.get(n, []) if c != ch and c not in variants),
                      key=lambda c: (level[c], rank.get(c, 10**9), c))[:EXAMPLES]
         out.append({"n": n, "char": ch, "variants": list(variants), "strokes": strokes.get(ch) or 0,
-                    "pinyin": (d.get("pinyin") or [""])[0], "en": en, "ru": ru,
+                    "pinyin": (d.get("pinyin") or [""])[0], "en": en, "ru": ru, "eo": eo,
                     "hsk": count.get(n, 0), "top": n in top, "examples": exs})
     OUT.write_text("[\n" + ",\n".join(json.dumps(r, ensure_ascii=False) for r in out) + "\n]\n", encoding="utf-8")
     missing = [r["char"] for r in out if not r["strokes"] or not r["pinyin"]]
