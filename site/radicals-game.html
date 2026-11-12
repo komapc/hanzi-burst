@@ -11,7 +11,6 @@ body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,sans-
 main{max-width:640px;margin:0 auto;padding:20px 16px 60px}
 a{color:var(--accent)}h1{font-size:24px;margin:.4em 0 .2em}
 .m{color:var(--muted)}
-.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
 .seg{display:inline-flex;margin:4px 8px 4px 0}
 .seg button{background:none;border:1px solid var(--soft);color:var(--muted);padding:4px 12px;font:inherit;font-size:.88rem;cursor:pointer}
 .seg button:first-child{border-radius:999px 0 0 999px}.seg button:last-child{border-radius:0 999px 999px 0}
@@ -34,8 +33,7 @@ a{color:var(--accent)}h1{font-size:24px;margin:.4em 0 .2em}
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "7efcd1cc733b4eaf8c293f32b705fbf7"}'></script>
 </head><body><main>
-<div class="top"><a href="/r/" id="back"></a>
-<span class="seg" id="lang"><button data-v="ru">RU</button><button data-v="en">EN</button></span></div>
+<nav class="tn" id="sitenav"><span class="seg" id="lang"><button data-v="ru">RU</button><button data-v="en">EN</button></span></nav><script src="/nav.js"></script>
 <h1 id="h1"></h1><p class="m" id="intro"></p>
 <div><span class="seg" id="mode"><button data-v="meaning"></button><button data-v="find"></button></span><span class="seg" id="set"><button data-v="top"></button><button data-v="all"></button></span></div>
 <div id="prog"></div>
@@ -113,7 +111,6 @@ function distract(r) {
 function render() {
   document.documentElement.lang = lang;
   document.title = t('title') + ' — Hanzi Burst';
-  $('back').textContent = t('back'); $('back').href = pre() + '/r/';
   $('h1').textContent = t('title'); $('intro').textContent = t('intro');
   $('hint').textContent = t('hint'); $('reset').textContent = t('reset');
   for (const [id, val] of [['lang', lang], ['mode', mode], ['set', set]])
