@@ -99,7 +99,7 @@ def poster_pages(SITE, page, breadcrumbs, E, BASE, pct):
                 f'<a class="dl" href="{pdf}" type="application/pdf" download>{E(t["dl"])}</a>'
                 f'<a class="pv" href="{pdf}" type="application/pdf"><img src="{jpg}" width="1000" height="1414" alt="{E(t["alt"])}"></a>'
                 f"<h2>{E(t['what'])}</h2><ul>{items}</ul><h2>{E(t['print_h'])}</h2><p>{E(t['print_t'])}</p>"
-                f"<h2>{E(t['other_h'])}</h2><p>{others}</p><h2>{E(t['more_h'])}</h2><ul>{more}</ul>")
+                f"<h2>{E(t['other_h'])}</h2><p>{others} · <a href=\"/posters\">hanzi.lipu.dev/posters</a></p><h2>{E(t['more_h'])}</h2><ul>{more}</ul>")
         org = {"@type": "Organization", "name": "Hanzi Burst", "url": f"{BASE}/"}
         ld = [breadcrumbs(("Hanzi Burst", "/"), (t["hub_name"], t["hub"]), (t["crumb"], t["path"])),
               {"@context": "https://schema.org", "@type": "DigitalDocument", "name": t["h1"], "description": t["desc"],
@@ -113,7 +113,39 @@ def poster_pages(SITE, page, breadcrumbs, E, BASE, pct):
         out.with_suffix(".html").write_text(page(t["title"], t["desc"], t["path"], body, ld, lang=lang, alt=alts, image=jpg), encoding="utf-8")
         urls += [f"{BASE}{t['path']}", f"{BASE}{pdf}"]
         IMAGES[f"{BASE}{t['path']}"] = [f"{BASE}{jpg}"]
+    urls.append(posters_hub(SITE, page, breadcrumbs, E, BASE))
     return urls
+
+
+HUB = {"ru": ("Русский", "Плакат: 214 ключей китайских иероглифов", "Скачать PDF", "Подробнее"),
+       "en": ("English", "Poster: the 214 Chinese radicals", "Download PDF", "About"),
+       "eo": ("Esperanto", "Afiŝo: la 214 ĉinaj radikaloj", "Elŝuti PDF", "Pli")}
+
+
+def posters_hub(SITE, page, breadcrumbs, E, BASE):
+    """/posters — короткий адрес, чтобы делиться: все плакаты на всех языках на одной странице (якоря #ru, #en, #eo)."""
+    cards = "".join(
+        f'<li id="{l}" lang="{l}"><a class="pv" href="/radicals-poster-{l}.pdf" type="application/pdf">'
+        f'<img src="/radicals-poster-{l}.jpg" width="1000" height="1414" loading="lazy" alt="{E(POSTER[l]["alt"])}"></a>'
+        f'<b>{nm}</b><span>{E(h)}</span><a class="dl" href="/radicals-poster-{l}.pdf" type="application/pdf" download>{E(dl)}</a> '
+        f'<a href="{POSTER[l]["path"]}">{E(more)}</a></li>' for l, (nm, h, dl, more) in HUB.items())
+    css = POSTER_CSS + ("<style>.ph{list-style:none;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px}"
+                        ".ph li{display:flex;flex-direction:column;gap:6px}.ph .pv{margin:0}.ph span{color:var(--muted);font-size:15px}"
+                        ".ph .dl{align-self:flex-start}</style>")
+    body = (f"{css}<h1>Posters · Плакаты · Afiŝoj</h1>"
+            "<p class='m'>Free printable posters of the 214 Chinese (Kangxi) radicals: one page, A2/A3/A4. "
+            "<span lang='ru'>Бесплатные плакаты 214 ключей китайских иероглифов на одном листе.</span> "
+            "<span lang='eo'>Senpagaj afiŝoj de la 214 ĉinaj radikaloj por presi.</span></p>"
+            f"<ul class='ph'>{cards}</ul>")
+    title = "Chinese radicals posters (PDF): English, Русский, Esperanto | Hanzi Burst"
+    desc = ("Free one-page posters of the 214 Kangxi radicals in English, Russian and Esperanto: number, variants, pinyin, "
+            "meaning and an example for each radical. Printable PDF, A2/A3/A4.")
+    ld = [breadcrumbs(("Hanzi Burst", "/"), ("Posters", "/posters")),
+          {"@context": "https://schema.org", "@type": "CollectionPage", "name": "Posters · Плакаты · Afiŝoj", "url": f"{BASE}/posters",
+           "description": desc, "inLanguage": list(HUB), "hasPart": [f"{BASE}{POSTER[l]['path']}" for l in HUB]}]
+    (SITE / "posters.html").write_text(page(title, desc, "/posters", body, ld, lang="en", image="/radicals-poster-en.jpg"), encoding="utf-8")
+    IMAGES[f"{BASE}/posters"] = [f"{BASE}/radicals-poster-{l}.jpg" for l in HUB]
+    return f"{BASE}/posters"
 
 CSS = """<style>
 .rsvg{width:220px;height:220px;display:block}.rsvg text{font:bold 64px system-ui,sans-serif;fill:var(--fg);paint-order:stroke;stroke:var(--bg);stroke-width:14px}
