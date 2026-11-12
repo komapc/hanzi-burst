@@ -37,6 +37,10 @@ VULGAR = re.compile(r"\b(fuck\w*|shit\w*|bitch\w*|cunt|dick|cock|pussy|whore|slu
 def clean_word(w): return not VULGAR.search(f"{w.get('def') or ''} {w.get('def_ru') or ''}")
 # словарные пометки, а не значения: такие слова на странице бесполезны
 SKIP = re.compile(r"^(surname|variant of|old variant|archaic variant|abbr\. for|see |erhua variant|used in|\(old\)|\(archaic\)|\(slang\)|\(neologism)", re.I)
+def cell(href, ch, pys, g):
+    """Ячейка сетки знаков (/hsk/N): знак, пиньинь, значение одной строкой (полное — в title)."""
+    return (f'<li><a href="{href}" data-c="{ch}" title="{E(g)}"><span class="c" lang="zh">{ch}</span>'
+            f'<small>{E(pys)}</small><small>{E(g)}</small></a></li>')
 TOP_WORDS, TOP_PHRASES, TOP_PARENTS, TOP_SIMILAR = 10, 8, 20, 12
 EN = lambda s: f'<span lang="en">{s}</span>'
 ZH = lambda s: f'<span lang="zh">{s}</span>'
@@ -69,6 +73,12 @@ a.allp::after{background:var(--info)}a.somep::after{background:var(--warn)}
 .ts a.on{background:var(--accent);color:var(--bg)}
 .ol{font-size:13px;padding:3px 8px;border:1px solid var(--line);border-radius:999px;color:var(--muted)}
 @media(max-width:520px){.tn{gap:6px}.tb{font-size:14px}.ts{-webkit-mask-image:linear-gradient(90deg,transparent,#000 14px,#000 85%,transparent);mask-image:linear-gradient(90deg,transparent,#000 14px,#000 85%,transparent)}.ts a{padding:3px 8px;font-size:14px}}
+.cg{list-style:none;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(76px,1fr));gap:6px}
+.cg a{position:relative;display:flex;flex-direction:column;align-items:center;padding:4px 3px 5px;border:1px solid var(--line);border-radius:8px;text-decoration:none;color:var(--fg);text-align:center;min-width:0}
+.cg a:hover{border-color:var(--accent)}.cg .c{font:30px/1.15 'Noto Serif SC',serif;color:var(--accent)}
+.cg small{display:block;max-width:100%;font-size:12px;line-height:1.3;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+details.lv{border-top:1px solid var(--line);padding:8px 0}details.lv summary{cursor:pointer;font-weight:600;font-size:17px}
+details.lv summary span{font-weight:400;color:var(--muted);font-size:15px}
 .legend{font-size:14px}.legend .k{color:var(--ok)}.legend .a{color:var(--info);margin-left:10px}.legend .s{color:var(--warn);margin-left:10px}
 </style>"""
 
@@ -302,10 +312,20 @@ def main():
         f"<h1>Иероглифы и радикалы</h1><p class='m'>Всего знаков: {len(chars)} — все, что встречаются во фразах сайта, включая радикалы (ключи) и их варианты. "
         f"Списки по уровням — в разделе <a href='/hsk/'>HSK</a>, примеры употребления — во <a href='/p/'>фразах</a>.</p><p class='chs' lang='zh'>{hub_c}</p>",
         [breadcrumbs((BRAND, "/"), ("Иероглифы", "/c/"))], alt=("/c/", "/en/c/")), encoding="utf-8")
-    li = "".join(f'<li><a href="/p/{pid(p["zh"])}" lang="zh">{E(p["zh"])}</a> — {gloss(p.get("ru"), p.get("en"))}</li>' for p in phrases)
+    def by_level(item, word):
+        """Фразы по уровню HSK, каждый уровень свёрнут: страница короткая, а все ссылки остаются в HTML."""
+        lv_of = lambda p: min(int(p.get("hsk") or 7), 7)
+        out = ""
+        for lv in sorted({lv_of(p) for p in phrases}):
+            ps = [p for p in phrases if lv_of(p) == lv]
+            out += (f"<details class='lv' id='hsk{lv}'><summary>HSK {lvname(lv)} <span>· {len(ps)} {word} · "
+                    f"<span lang='zh'>{E(ps[0]['zh'])}</span>…</span></summary><ul>{''.join(item(p) for p in ps)}</ul></details>")
+        return out
+    li = by_level(lambda p: f'<li><a href="/p/{pid(p["zh"])}" lang="zh">{E(p["zh"])}</a> — {gloss(p.get("ru"), p.get("en"))}</li>', "фраз")
     (SITE / "p" / "index.html").write_text(page(f"Простые китайские фразы с переводом ({len(phrases)}) | Hanzi Burst",
         f"{len(phrases)} простых китайских фраз с переводом и разбором каждого иероглифа на радикалы. Подходит для начинающих.", "/p/",
-        f"<h1>Китайские фразы с переводом</h1><ul>{li}</ul>",
+        f"<h1>Китайские фразы с переводом</h1><p class='m'>{len(phrases)} фраз по уровню HSK 3.0. "
+        f"Откройте уровень, чтобы увидеть фразы.</p>{li}",
         [breadcrumbs((BRAND, "/"), ("Фразы", "/p/"))], alt=("/p/", "/en/p/")), encoding="utf-8")
     # HSK: значения всех знаков уровня из словарных шардов allc (в phrase.json только знаки фраз)
     nav = " · ".join(f'<a href="/hsk/{lv}">HSK {lvname(lv)}</a>' for lv in hsk)
@@ -314,15 +334,14 @@ def main():
         for ch in cs:
             cx = allc.get(ch) or {}
             href = f"/c/{cid(ch)}" if ch in chars else f"/?open={ch}"
-            rows.append(f'<li><a href="{href}" data-c="{ch}" lang="zh">{ch}</a> <span class="m">{E(", ".join(cx.get("pinyin") or []))}</span> — '
-                        f'{gloss(first(cx.get("definition_ru")), first(cx.get("definition")))}</li>')
+            rows.append(cell(href, ch, ", ".join(cx.get("pinyin") or []), first(cx.get("definition_ru")) or first(cx.get("definition"))))
         title = f"Иероглифы HSK {lvname(lv)} ({len(cs)}) — список с чтением и значением | Hanzi Burst"
         desc = (f"Все {len(cs)} иероглифов уровня HSK {lvname(lv)} (HSK 3.0) с пиньинем и переводом, от частых к редким, "
                 f"с разбором каждого знака на радикалы.")
         body = (f"<h1>Иероглифы HSK {lvname(lv)}</h1>"
                 f"<p class='m'>{len(cs)} новых знаков уровня по стандарту HSK 3.0, от частых к редким. "
                 f"Нажмите на знак, чтобы разобрать его на части.</p>"
-                f"<p>{nav}</p><a class='cta' href='/learned'>Мой прогресс по HSK →</a><ul class='hl'>{''.join(rows)}</ul>")
+                f"<p>{nav}</p><a class='cta' href='/learned'>Мой прогресс по HSK →</a><ul class='cg'>{''.join(rows)}</ul>")
         ld = [breadcrumbs((BRAND, "/"), ("HSK", "/hsk/"), (f"HSK {lvname(lv)}", f"/hsk/{lv}"))]
         (SITE / "hsk" / f"{lv}.html").write_text(page(title, desc, f"/hsk/{lv}", body, ld, alt=(f"/hsk/{lv}", f"/en/hsk/{lv}")), encoding="utf-8")
         urls.append(f"{BASE}/hsk/{lv}")
@@ -433,10 +452,11 @@ def main():
         ld = [breadcrumbs((BRAND, "/"), ("Phrases", "/en/p/"), (zh, f"/en/p/{pid(zh)}"))]
         (SITE / "en" / "p" / f"{pid(zh)}.html").write_text(
             page(title, desc[:300], f"/en/p/{pid(zh)}", "\n".join(body), ld, lang="en", alt=(f"/p/{pid(zh)}", f"/en/p/{pid(zh)}")), encoding="utf-8")
-    li = "".join(f'<li><a href="/en/p/{pid(p["zh"])}" lang="zh">{E(p["zh"])}</a>{en_gloss(p.get("en"))}</li>' for p in phrases)
+    li = by_level(lambda p: f'<li><a href="/en/p/{pid(p["zh"])}" lang="zh">{E(p["zh"])}</a>{en_gloss(p.get("en"))}</li>', "phrases")
     (SITE / "en" / "p" / "index.html").write_text(page(f"Simple Chinese phrases with English translation ({len(phrases)}) | Hanzi Burst",
         f"{len(phrases)} simple Chinese phrases with pinyin, English translation and every character broken down into radicals. Made for beginners.", "/en/p/",
-        f"<h1>Chinese phrases with translation</h1><ul>{li}</ul>",
+        f"<h1>Chinese phrases with translation</h1><p class='m'>{len(phrases)} phrases by HSK 3.0 level. "
+        f"Open a level to see its phrases.</p>{li}",
         [breadcrumbs((BRAND, "/"), ("Phrases", "/en/p/"))], lang="en", alt=("/p/", "/en/p/")), encoding="utf-8")
     nav_en = " · ".join(f'<a href="/en/hsk/{lv}">HSK {lvname(lv)}</a>' for lv in hsk)
     for lv, cs in hsk.items():
@@ -444,12 +464,11 @@ def main():
         for ch in cs:
             cx = allc.get(ch) or {}
             href = f"/en/c/{cid(ch)}" if ch in chars else f"/?open={ch}&amp;lang=en"
-            rows.append(f'<li><a href="{href}" data-c="{ch}" lang="zh">{ch}</a> <span class="m">{E(", ".join(cx.get("pinyin") or []))}</span>'
-                        f'{en_gloss(first(cx.get("definition")))}</li>')
+            rows.append(cell(href, ch, ", ".join(cx.get("pinyin") or []), first(cx.get("definition"))))
         body = (f"<h1>HSK {lvname(lv)} characters</h1>"
                 f"<p class='m'>{len(cs)} new characters of this level in the HSK 3.0 standard, from common to rare. "
                 f"Click a character to break it down into parts.</p>"
-                f"<p>{nav_en}</p><a class='cta' href='/learned'>My HSK progress →</a><ul class='hl'>{''.join(rows)}</ul>")
+                f"<p>{nav_en}</p><a class='cta' href='/learned'>My HSK progress →</a><ul class='cg'>{''.join(rows)}</ul>")
         (SITE / "en" / "hsk" / f"{lv}.html").write_text(page(f"HSK {lvname(lv)} characters ({len(cs)}): list with pinyin and meaning | Hanzi Burst",
             f"All {len(cs)} characters of HSK {lvname(lv)} (HSK 3.0) with pinyin and meaning, from common to rare, each with a breakdown into radicals.",
             f"/en/hsk/{lv}", body, [breadcrumbs((BRAND, "/"), ("HSK", "/en/hsk/"), (f"HSK {lvname(lv)}", f"/en/hsk/{lv}"))],
