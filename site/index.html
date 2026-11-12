@@ -233,8 +233,8 @@
     #card .grab { display:block; width:44px; height:5px; border-radius:3px; background:var(--line); margin:4px auto 10px; touch-action:none; }
     #cardClose { display:inline-flex; font-size:1.1rem; line-height:1; padding:4px 11px; }
     html.sheet main { padding-bottom:74dvh; }
-    /* баннер cookies: пока открыта нижняя панель разбора, он сверху экрана (над шапкой), а не поверх кнопок панели */
-    html.sheet #consent { top:8px; bottom:auto; }
+    /* баннер cookies: пока открыта нижняя панель разбора, он спрятан (иначе закрывает то шапку с поиском, то кнопки панели); вернётся, когда панель закроют */
+    html.sheet #consent { display:none; }
     html #consent { left:8px; right:8px; bottom:8px; padding:10px 12px; font-size:13px; gap:6px 8px; }
   }
   .toolbar { display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:8px; flex-wrap:wrap; }
