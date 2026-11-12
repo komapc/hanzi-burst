@@ -28,7 +28,8 @@ h2 small{color:var(--muted);font-weight:400}
 .bar{height:8px;border-radius:999px;background:var(--soft);overflow:hidden}.lv:hover .bar,.lv.on .bar{background:var(--card)}
 .bar i{display:block;height:100%;background:var(--ok);border-radius:inherit}
 .todo{margin:6px 0 14px}.todo h2{margin-top:.8em}
-.empty{padding:20px;border:1px dashed var(--line);border-radius:12px;color:var(--muted)}
+.empty{padding:20px;border:1px dashed var(--line);border-radius:12px;color:var(--muted)}.empty p{margin:0}
+.empty .go{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.gb{display:inline-flex;align-items:center;min-height:40px;padding:0 16px;border-radius:999px;background:var(--accent);color:var(--bg);text-decoration:none;font-weight:600}.gb.alt{background:none;color:var(--accent);border:1px solid var(--accent)}
 </style><link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "7efcd1cc733b4eaf8c293f32b705fbf7"}'></script>
@@ -43,12 +44,12 @@ h2 small{color:var(--muted);font-weight:400}
 <script>
 const T = {
   ru:{title:'Мои иероглифы',back:'← Hanzi Burst',known:'Известные иероглифы',parts:'Части (радикалы) в известных иероглифах',ready:'Готовы к изучению: все части известны',some:'Знаю часть частей',
-      empty:'Пока ничего не отмечено. Открой иероглиф на главной и нажми «Знаю».',loading:'Загружаю…',
+      empty:'Пока ничего не отмечено. Открой иероглиф во фразе и нажми «Знаю». Ключи, выученные в игре, тоже попадают сюда.',goPh:'К фразам',goGame:'Учить ключи в игре',loading:'Загружаю…',
       sum:(n,p,r)=>`Известно иероглифов: ${n}. Частей в них: ${p}. Готово к изучению: ${r}.`,
       hint:'Список хранится только в этом браузере.', partKnown:'отмечена', partMet:'встречается',
       hsk:'Прогресс по уровням HSK 3.0', todo:n=>`HSK ${n}: ещё не знаю`, all:'Все знаки этого уровня отмечены 🎉'},
   en:{title:'My characters',back:'← Hanzi Burst',known:'Known characters',parts:'Parts (radicals) inside known characters',ready:'Ready to learn: all parts known',some:'Some parts known',
-      empty:'Nothing marked yet. Open a character on the main page and press “Know it”.',loading:'Loading…',
+      empty:'Nothing marked yet. Open a character in a phrase and press “Know it”. Radicals you learn in the game show up here too.',goPh:'Go to phrases',goGame:'Learn radicals in the game',loading:'Loading…',
       sum:(n,p,r)=>`Known characters: ${n}. Parts inside them: ${p}. Ready to learn: ${r}.`,
       hint:'The list is stored only in this browser.', partKnown:'marked', partMet:'seen',
       hsk:'Progress by HSK 3.0 level', todo:n=>`HSK ${n}: not yet known`, all:'Every character of this level is marked 🎉'},
@@ -129,7 +130,12 @@ function render() {
   document.title = t('title') + ' — Hanzi Burst';
   $h1.textContent = t('title');
   document.querySelectorAll('.lang button').forEach(b => b.classList.toggle('on', b.dataset.lang === lang));
-  if (!known.length) { $out.innerHTML = `<div class="empty">${t('empty')}</div>`; $sum.textContent = ''; return; }
+  if (!known.length) {   // пустой список: куда идти дальше — к фразам или в игру с ключами
+    const en = lang === 'en';
+    $out.innerHTML = `<div class="empty"><p>${t('empty')}</p><p class="go"><a class="gb" href="/${en ? '?lang=en' : ''}">${t('goPh')}</a>`
+      + `<a class="gb alt" href="/radicals-game?lang=${lang}">${t('goGame')}</a></p></div>`;
+    $sum.textContent = ''; return;
+  }
   if (!ready) { $out.innerHTML = `<p class="m">${t('loading')}</p>`; return; }
   const ks = kset();
   const parts = new Set();
