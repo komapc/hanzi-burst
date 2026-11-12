@@ -71,8 +71,15 @@ a.allp::after{background:var(--info)}a.somep::after{background:var(--warn)}
 .ts{display:flex;gap:4px;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none}.ts::-webkit-scrollbar{display:none}
 .ts a{padding:3px 10px;border-radius:999px;font-size:15px}.ts a:hover{background:color-mix(in srgb,var(--accent) 10%,transparent)}
 .ts a.on{background:var(--accent);color:var(--bg)}
-.ol{font-size:13px;padding:3px 8px;border:1px solid var(--line);border-radius:999px;color:var(--muted)}
-@media(max-width:520px){.tn{gap:6px}.tb{font-size:14px}.ts{-webkit-mask-image:linear-gradient(90deg,transparent,#000 14px,#000 85%,transparent);mask-image:linear-gradient(90deg,transparent,#000 14px,#000 85%,transparent)}.ts a{padding:3px 8px;font-size:14px}}
+.tn .lang{display:inline-flex;flex:none;padding:2px;border:1px solid var(--line);border-radius:999px}
+.tn .lang a{padding:3px 9px;border-radius:999px;font-size:13px;color:var(--muted)}.tn .lang a.on{background:var(--accent);color:var(--bg)}
+.tq{margin:0;display:flex}.tq input{width:34px;height:30px;box-sizing:border-box;padding:0 8px 0 28px;border:1px solid var(--line);border-radius:999px;
+background:transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2.4' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E") 9px 50%/15px no-repeat;
+color:var(--fg);font:inherit;font-size:15px;transition:width .15s;cursor:pointer}
+.tq input:focus,.tq input:not(:placeholder-shown){width:150px;outline:none;border-color:var(--accent);cursor:text}
+.tq input::placeholder{color:transparent}.tq input:focus::placeholder{color:var(--muted)}.tq input::-webkit-search-cancel-button{display:none}
+@media(pointer:coarse){.ts a{display:inline-flex;align-items:center;min-height:40px;box-sizing:border-box}.tq input{width:40px;height:40px}}
+@media(max-width:520px){.tq input:focus,.tq input:not(:placeholder-shown){width:120px}.tn{gap:6px;flex-wrap:wrap}.tq{margin-left:auto}.tb{font-size:14px}.ts{order:9;flex:1 0 100%;-webkit-mask-image:linear-gradient(90deg,#000 85%,transparent);mask-image:linear-gradient(90deg,#000 85%,transparent)}.ts a{padding:3px 8px;font-size:14px}}
 .cg{list-style:none;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(76px,1fr));gap:6px}
 .cg a{position:relative;display:flex;flex-direction:column;align-items:center;padding:4px 3px 5px;border:1px solid var(--line);border-radius:8px;text-decoration:none;color:var(--fg);text-align:center;min-width:0}
 .cg a:hover{border-color:var(--accent)}.cg .c{font:30px/1.15 'Noto Serif SC',serif;color:var(--accent)}
@@ -94,21 +101,30 @@ def page(title, desc, canon, body, ld=(), lang="ru", alt=None, image=None):
     alts = alt if isinstance(alt, dict) else ({"ru": alt[0], "en": alt[1]} if alt else {})
     hreflang = ("".join(f'<link rel="alternate" hreflang="{l}" href="{BASE}{u}">' for l, u in alts.items())
                 + f'<link rel="alternate" hreflang="x-default" href="{BASE}{alts["ru"]}">\n') if alts else ""
-    others = "".join(f'<a class="ol" href="{u}" hreflang="{l}" lang="{l}">{l.upper()}</a>' for l, u in alts.items() if l != lang)
+    # переключатель языка — как на главной: все языки страницы, текущий выделен
+    others = ('<span class="lang">' + "".join(f'<a href="{u}" hreflang="{l}" lang="{l}"' + (' class="on" aria-current="true"' if l == lang else "")
+                                              + f'>{l.upper()}</a>' for l, u in alts.items()) + "</span>") if alts else ""
     # шапка: бренд + разделы + другой язык; «О проекте» и «Конфиденциальность» — в футере.
     # На телефоне — одна строка с горизонтальной прокруткой, а не три строки ссылок.
+    # разделы — те же, что в site/nav.js и UI.nav на главной (index.html): меняйте вместе
     if lang == "ru":
-        links = [("/c/", "Иероглифы"), ("/p/", "Фразы"), ("/hsk/", "HSK"), ("/r/", "Ключи"), ("/k/", "Кандзи")]
+        links = [("/", "Фразы"), ("/r/", "Ключи"), ("/c/", "Иероглифы"), ("/hsk/", "HSK"), ("/radicals-game", "Игра"), ("/learned", "Мои иероглифы")]
         home = "/"
     else:   # en и eo (страниц на эсперанто, кроме плаката, нет — разделы английские)
-        links = [("/en/c/", "Characters"), ("/en/p/", "Phrases"), ("/en/hsk/", "HSK"), ("/en/r/", "Radicals")]
+        links = [("/?lang=en", "Phrases"), ("/en/r/", "Radicals"), ("/en/c/", "Characters"), ("/en/hsk/", "HSK"),
+                 ("/radicals-game?lang=en", "Game"), ("/learned", "My characters")]
         home = "/?lang=en"
-    other = others
     cur = canon if canon.endswith("/") else canon.rsplit("/", 1)[0] + "/"
     if lang == "eo":
         cur = cur.replace("/eo/", "/en/", 1)
-    items = "".join(f'<a href="{h}"' + (' class="on"' if cur.startswith(h) else "") + f">{t}</a>" for h, t in links)
-    nav = f'<nav class="tn"><a class="tb" href="{home}">Hanzi Burst</a><span class="ts">{items}</span>{other}</nav>'
+    def on(h):   # «Фразы» ведут на главную, но подсвечены и на страницах фраз /p/
+        return cur.startswith(h) if h.endswith("/") and h != "/" else (h.split("?")[0] == "/" and cur.startswith(("/p/", "/en/p/")))
+    items = "".join(f'<a href="{h}"' + (' class="on"' if on(h) else "") + f">{t}</a>" for h, t in links)
+    # поиск знака: уходит на главную (/?q=), там тот же поиск по знаку и пиньиню
+    search = (f'<form class="tq" action="/" role="search"><input type="search" name="q" placeholder="想 / xiang" '
+              f'aria-label="{"Найти иероглиф" if lang == "ru" else "Find a character"}" autocomplete="off" spellcheck="false" enterkeyhint="search">'
+              + ("" if lang == "ru" else '<input type="hidden" name="lang" value="en">') + "</form>")
+    nav = f'<nav class="tn"><a class="tb" href="{home}">Hanzi Burst</a><span class="ts">{items}</span>{search}{others}</nav>'
     # активный раздел — в поле зрения (на телефоне строка прокручивается)
     nav += '<script>(function(){var s=document.querySelector(".ts"),o=s&&s.querySelector(".on");if(o)s.scrollLeft=o.offsetLeft-s.offsetLeft-24})()</script>'
     return f"""<!doctype html><html lang="{lang}"><head><meta charset="utf-8"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png">

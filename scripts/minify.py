@@ -33,7 +33,7 @@ def main():
         return
     site = Path(args[0]) if args else Path(__file__).resolve().parent.parent / "site"
     before = after = 0
-    for f in [site / "script.js", site / "ja.js", site / "footer.js"]:
+    for f in [site / "script.js", site / "ja.js", site / "footer.js", site / "nav.js"]:
         src = f.read_text(encoding="utf-8")
         out = terse(src)
         if out:

@@ -10,7 +10,6 @@ body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,sans-
 main{max-width:860px;margin:0 auto;padding:20px 16px 60px}
 a{color:var(--accent)}h1{font-size:26px;margin:.4em 0 .2em}h2{font-size:16px;margin:1.8em 0 .6em;display:flex;align-items:baseline;gap:8px}
 h2 small{color:var(--muted);font-weight:400}
-.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
 .lang button{background:none;border:1px solid var(--soft);color:var(--muted);padding:3px 10px;font:inherit;font-size:.85rem;cursor:pointer}
 .lang button:first-child{border-radius:999px 0 0 999px}.lang button:last-child{border-radius:0 999px 999px 0}
 .lang button.on{background:var(--accent);border-color:var(--accent);color:var(--on,#fff)}
@@ -34,8 +33,7 @@ h2 small{color:var(--muted);font-weight:400}
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "7efcd1cc733b4eaf8c293f32b705fbf7"}'></script>
 </head><body><main>
-<div class="top"><a href="/" id="back"></a>
-<span class="lang"><button data-lang="ru">RU</button><button data-lang="en">EN</button></span></div>
+<nav class="tn" id="sitenav"><span class="lang"><button data-lang="ru">RU</button><button data-lang="en">EN</button></span></nav><script src="/nav.js"></script>
 <h1 id="h1"></h1><p class="m" id="sum"></p>
 <h2 id="hskH"></h2><div class="hsk" id="hsk"></div><div class="todo" id="todo"></div>
 <div id="out"></div>
@@ -129,7 +127,7 @@ function render() {
   renderHsk();
   document.documentElement.lang = lang;
   document.title = t('title') + ' — Hanzi Burst';
-  $h1.textContent = t('title'); $back.textContent = t('back');
+  $h1.textContent = t('title');
   document.querySelectorAll('.lang button').forEach(b => b.classList.toggle('on', b.dataset.lang === lang));
   if (!known.length) { $out.innerHTML = `<div class="empty">${t('empty')}</div>`; $sum.textContent = ''; return; }
   if (!ready) { $out.innerHTML = `<p class="m">${t('loading')}</p>`; return; }
@@ -154,7 +152,7 @@ $hsk.onclick = async e => {
   openLv = openLv === b.dataset.lv ? 0 : b.dataset.lv; renderHsk();
   if (openLv) { const lv = openLv; await load([...HSK[lv]].filter(c => !D.chars[c])); if (openLv === lv) renderHsk(); }
 };
-const $h1 = document.getElementById('h1'), $back = document.getElementById('back'), $sum = document.getElementById('sum'), $out = document.getElementById('out');
+const $h1 = document.getElementById('h1'), $sum = document.getElementById('sum'), $out = document.getElementById('out');
 document.querySelectorAll('.lang button').forEach(b => b.onclick = () => { lang = b.dataset.lang; try { localStorage.setItem('hanzi-lang', lang); } catch (e) {} render(); });
 render();
 // расширение Hanzi Burst объединило свой список с нашим (см. extension/content.js) или список поменяли в другой вкладке.
