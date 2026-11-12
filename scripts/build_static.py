@@ -79,7 +79,7 @@ color:var(--fg);font:inherit;font-size:15px;transition:width .15s;cursor:pointer
 .tq input:focus,.tq input:not(:placeholder-shown){width:150px;outline:none;border-color:var(--accent);cursor:text}
 .tq input::placeholder{color:transparent}.tq input:focus::placeholder{color:var(--muted)}.tq input::-webkit-search-cancel-button{display:none}
 @media(pointer:coarse){.ts a{display:inline-flex;align-items:center;min-height:40px;box-sizing:border-box}.tq input{width:40px;height:40px}}
-@media(max-width:520px){.tq input:focus,.tq input:not(:placeholder-shown){width:120px}.tn{gap:6px;flex-wrap:wrap}.tq{margin-left:auto}.tb{font-size:14px}.ts{order:9;flex:1 0 100%;-webkit-mask-image:linear-gradient(90deg,#000 85%,transparent);mask-image:linear-gradient(90deg,#000 85%,transparent)}.ts a{padding:3px 8px;font-size:14px}}
+@media(max-width:520px){.tq input:focus,.tq input:not(:placeholder-shown){width:120px}.tn{gap:6px;flex-wrap:wrap}.tq{margin-left:auto}.tb{font-size:14px}.ts{order:9;flex:1 0 100%;-webkit-mask-image:linear-gradient(90deg,#000 85%,transparent);mask-image:linear-gradient(90deg,#000 85%,transparent)}.ts a{padding:3px 8px;font-size:14px}.ts::after{content:"";flex:0 0 36px}}
 .cg{list-style:none;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(76px,1fr));gap:6px}
 .cg a{position:relative;display:flex;flex-direction:column;align-items:center;padding:4px 3px 5px;border:1px solid var(--line);border-radius:8px;text-decoration:none;color:var(--fg);text-align:center;min-width:0}
 .cg a:hover{border-color:var(--accent)}.cg .c{font:30px/1.15 'Noto Serif SC',serif;color:var(--accent)}
@@ -126,7 +126,7 @@ def page(title, desc, canon, body, ld=(), lang="ru", alt=None, image=None):
               + ("" if lang == "ru" else '<input type="hidden" name="lang" value="en">') + "</form>")
     nav = f'<nav class="tn"><a class="tb" href="{home}">Hanzi Burst</a><span class="ts">{items}</span>{search}{others}</nav>'
     # активный раздел — в поле зрения (на телефоне строка прокручивается)
-    nav += '<script>(function(){var s=document.querySelector(".ts"),o=s&&s.querySelector(".on");if(o)s.scrollLeft=o.offsetLeft-s.offsetLeft-24})()</script>'
+    nav += '<script>(function(){var s=document.querySelector(".ts"),o=s&&s.querySelector(".on");if(o)s.scrollLeft=o.offsetLeft-s.offsetLeft-(s.clientWidth-o.offsetWidth)/2})()</script>'
     return f"""<!doctype html><html lang="{lang}"><head><meta charset="utf-8"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{E(title)}</title><meta name="description" content="{E(desc)}">
@@ -166,9 +166,11 @@ def main():
         allc.update(json.load(open(f, encoding="utf-8")))
     k_urls, kanji = kanji_pages.build(SITE, page, breadcrumbs, E, gloss, first, BRAND, BASE, set(chars), allc)
     r_urls, rad_of = radical_pages.build(SITE, page, breadcrumbs, E, BASE, chars, allc, first)
-    def rad_links(ch, pre=""):
-        """Ссылки на страницы ключей /r/ для знака, который сам ключ или его вариант (阝 — два ключа)."""
-        return ", ".join(f'<a href="{pre}/r/{cid(rc)}">{"No. " if pre else "№"}{n} {rc}</a>' for n, rc in rad_of.get(ch, []))
+    def rad_links(ch, pre="", bare=False):
+        """Ссылки на страницы ключей /r/ для знака, который сам ключ или его вариант (阝 — два ключа).
+        bare — без самого знака (он уже стоит рядом): «№38», а не «№38 女»."""
+        return ", ".join(f'<a href="{pre}/r/{cid(rc)}">{"No. " if pre else "№"}{n}' + ("" if bare else f" {rc}") + "</a>"
+                         for n, rc in rad_of.get(ch, []))
     char_lv = {c: int(lv) for lv, cs in hsk.items() for c in cs}
     lvname = lambda lv: "7–9" if str(lv) == "7" else str(lv)
     # слова CC-CEDICT из шардов (build_shards.py): {слово: [pinyin, en, ru?]}; частота знака = в скольких словах он есть
@@ -236,10 +238,10 @@ def main():
                 p0 = (cx.get("pinyin") or [""])[0]
                 return f"<li>{link(x)} {E(p0)} — {gloss(first(cx.get('definition_ru')), first(cx.get('definition')))}</li>"
             items = "".join(comp(x) for x in comps)
-            body.append(f"<h2>Состав / {EN("Components")}</h2><ul>{items}</ul>")
+            body.append(f"<h2>Состав</h2><ul>{items}</ul>")
         if c.get("radical"):
-            rl = rad_links(c["radical"]) if c["radical"] != ch else ""
-            body.append(f"<p class='m'>Ключ / {EN("radical")}: {link(c['radical'])}" + (f" · ключ {rl}" if rl else "") + "</p>")
+            rl = rad_links(c["radical"], bare=True) if c["radical"] != ch else ""
+            body.append(f"<p class='m'>Ключ: {link(c['radical'])}" + (f" — ключ Канси {rl}" if rl else "") + "</p>")
         hint = et.get("hint_ru") or et.get("hint")
         if et.get("type") or hint:
             body.append(f"<p class='m'>{EN(E(et['type'])) if et.get('type') else ''} {E(hint or '')}</p>")
@@ -250,17 +252,17 @@ def main():
                 tag = f" <span class='m'>· HSK {lvname(word_lv[w])}</span>" if w in word_lv else ""
                 ws = "".join(link(x) if x != ch else x for x in w)
                 return f"<li><span lang='zh'>{ws}</span> <span class='m'>{E(wpy)}</span> — {gloss(wru[0] if wru else '', wen)}{tag}</li>"
-            body.append(f"<h2>Слова с {ZH(ch)} / {EN('Words')}</h2><ul>{''.join(wli(w) for w in words)}</ul>")
+            body.append(f"<h2>Слова с {ZH(ch)}</h2><ul>{''.join(wli(w) for w in words)}</ul>")
         ps = sorted(by_char.get(ch, []), key=phrase_rank)[:TOP_PHRASES]
         if ps:
             li = "".join(f'<li><a href="/p/{pid(p["zh"])}" lang="zh">{E(p["zh"])}</a> — {gloss(p.get("ru"), p.get("en"))}</li>' for p in ps)
-            body.append(f"<h2>Примеры фраз / {EN('Example phrases')}</h2><ul>{li}</ul>")
+            body.append(f"<h2>Примеры фраз</h2><ul>{li}</ul>")
         par = parents.get(ch, [])
         if par:
             n_all = parents_all.get(ch, len(par))
             head = "Где встречается этот ключ" if kind == "Ключ" else f"Иероглифы, в которых есть {ZH(ch)}"
             more = f" (всего в словаре — {n_all})" if n_all > len(par[:TOP_PARENTS]) else ""
-            body.append(f"<h2>{head} / {EN('Characters containing it')}</h2>"
+            body.append(f"<h2>{head}</h2>"
                         f"<p class='m'>{ZH(ch)} входит в состав этих знаков{more}, сначала простые по HSK:</p>"
                         "<ul>" + "".join(
                             f"<li>{link(x)} <span class='m'>{E((chars[x].get('pinyin') or [''])[0])}</span> — "
@@ -268,7 +270,7 @@ def main():
                             for x in par[:TOP_PARENTS]) + "</ul>")
         sim = similar(ch, comps)
         if sim:
-            body.append(f"<h2>Похожие по написанию / {EN('Similar characters')}</h2>"
+            body.append(f"<h2>Похожие по написанию</h2>"
                         f"<p class='m'>Знаки с теми же частями: " + "、".join(
                             f"{link(x)} ({E((chars[x].get('pinyin') or [''])[0])})" for x in sim) + "</p>")
         if ch in kanji:
@@ -304,7 +306,7 @@ def main():
         if p.get("ru"): body.append(f"<p><b>{E(p['ru'])}</b></p>")
         if p.get("en"): body.append(f"<p class='m' lang='en'>{E(p['en'])}</p>")
         body.append(f'<a class="cta" href="/?z={E(zh)}">Разобрать по иероглифам →</a>')
-        body.append(f"<h2>Иероглифы / {EN('Characters')}</h2><p class='chs' lang='zh'>" + "".join(link(c) for c in cs) + "</p>")
+        body.append(f"<h2>Иероглифы</h2><p class='chs' lang='zh'>" + "".join(link(c) for c in cs) + "</p>")
         rows = []
         for c in cs:
             cx = chars.get(c)
@@ -312,7 +314,7 @@ def main():
                 rows.append(f"<li>{link(c)} <span class='m'>{E((cx.get('pinyin') or [''])[0])}</span> — "
                             f"{gloss(first(cx.get('definition_ru')), first(cx.get('definition')))}</li>")
         if rows:
-            body.append(f"<h2>Слово за словом / {EN('Character by character')}</h2><ul>" + "".join(rows) + "</ul>")
+            body.append(f"<h2>Слово за словом</h2><ul>" + "".join(rows) + "</ul>")
         tr = p.get('ru') or p.get('en') or ''
         short = tr if len(tr) <= 40 else tr[:39].rstrip() + "…"
         title = f"{zh} — перевод и пиньинь: {short} | Hanzi Burst"
@@ -394,8 +396,8 @@ def main():
                 return f"<li>{link_en(x)} {E((cx.get('pinyin') or [''])[0])}{en_gloss(first(cx.get('definition')))}</li>"
             body.append(f"<h2>Components</h2><ul>{''.join(comp_en(x) for x in comps)}</ul>")
         if c.get("radical"):
-            rl = rad_links(c["radical"], "/en") if c["radical"] != ch else ""
-            body.append(f"<p class='m'>Radical: {link_en(c['radical'])}" + (f" · Kangxi radical {rl}" if rl else "") + "</p>")
+            rl = rad_links(c["radical"], "/en", bare=True) if c["radical"] != ch else ""
+            body.append(f"<p class='m'>Radical: {link_en(c['radical'])}" + (f" — Kangxi radical {rl}" if rl else "") + "</p>")
         if et.get("type") or et.get("hint"):
             body.append("<p class='m'>" + ": ".join(E(x) for x in ((et.get("type") or "").capitalize(), et.get("hint")) if x) + "</p>")
         words = top_words(ch)

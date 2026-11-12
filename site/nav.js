@@ -26,7 +26,7 @@
 .tn .lang button,.tn #lang button{border:0;border-radius:999px;padding:3px 9px;font:inherit;font-size:13px;background:none;color:var(--muted,#888);cursor:pointer}
 .tn .lang button.on,.tn #lang button.on{background:var(--accent);color:var(--bg)}
 @media(max-width:520px){.tn{gap:6px;flex-wrap:wrap}.tq{margin-left:auto}.tn .tb{font-size:14px}.tn .ts{order:9;flex:1 0 100%;-webkit-mask-image:linear-gradient(90deg,#000 85%,transparent);mask-image:linear-gradient(90deg,#000 85%,transparent)}
-  .tn .ts a{padding:3px 8px;font-size:14px}.tq input:focus,.tq input:not(:placeholder-shown){width:120px}}
+  .tn .ts a{padding:3px 8px;font-size:14px}.tn .ts::after{content:"";flex:0 0 36px}.tq input:focus,.tq input:not(:placeholder-shown){width:120px}}
 @media(pointer:coarse){.tn .ts a{display:inline-flex;align-items:center;min-height:40px;box-sizing:border-box}.tq input{width:40px;height:40px}}`;
   const st = document.createElement('style'); st.textContent = css; document.head.append(st);
   // свой переключатель языка страницы (если есть) остаётся последним элементом шапки, его обработчики не трогаем
@@ -47,7 +47,7 @@
     form.innerHTML = `<input type="search" name="q" placeholder="想 / xiang" aria-label="${en ? 'Find a character' : 'Найти иероглиф'}" autocomplete="off" spellcheck="false" enterkeyhint="search">`
       + (en ? '<input type="hidden" name="lang" value="en">' : '');
     own.forEach(x => nav.append(x));
-    const o = ts.querySelector('.on'); if (o) ts.scrollLeft = o.offsetLeft - ts.offsetLeft - 24;
+    const o = ts.querySelector('.on'); if (o) ts.scrollLeft = o.offsetLeft - ts.offsetLeft - (ts.clientWidth - o.offsetWidth) / 2;   // по центру, не в затухании
   };
   render();
   new MutationObserver(render).observe(html, { attributes: true, attributeFilter: ['lang', 'data-l'] });

@@ -6,11 +6,11 @@
   if (!box) return;
   const html = document.documentElement;
   const RU = {
-    tag: 'Учим китайские иероглифы через радикалы', explore: 'Разделы', project: 'Проект',
+    tag: 'Учим китайские иероглифы через радикалы', explore: 'Разделы', project: 'Проект', more: 'Разделы, о проекте, источники',
     home: 'Главная', all: 'Все иероглифы', phrases: 'Все фразы', hsk: 'Иероглифы по HSK', radicals: '214 ключей', rgame: 'Игра: учим ключи', poster: 'Плакаты ключей (PDF)', learned: 'Мои иероглифы', ext: 'Расширение для Chrome',
     kana: 'Кана (японская азбука)', kanji: 'Кандзи по классам', about: 'О проекте', privacy: 'Конфиденциальность', data: 'Источники данных'
   }, EN = {
-    tag: 'Learn Chinese characters by radicals', explore: 'Explore', project: 'Project',
+    tag: 'Learn Chinese characters by radicals', explore: 'Explore', project: 'Project', more: 'Sections, about, data sources',
     home: 'Home', all: 'All characters', phrases: 'All phrases', hsk: 'HSK characters', radicals: '214 radicals', rgame: 'Radicals game', poster: 'Radicals posters (PDF)', learned: 'My characters', ext: 'Chrome extension',
     kana: 'Kana (Japanese syllabaries)', about: 'About', privacy: 'Privacy', data: 'Data sources'
   };
@@ -31,9 +31,13 @@
 .sfoot details[open] summary::before{content:"▾ "}
 .sfoot details p{line-height:1.6;margin:10px 0 0}
 .sfoot details a{color:inherit;text-decoration:underline;text-decoration-color:var(--soft,var(--line))}
+.sfoot.cmp{margin-top:28px;padding:14px 0 20px}.sfoot details.all{margin:0;padding:0;border:0;font-size:inherit}
+.sfoot details.all>summary{color:var(--muted)}.sfoot details.all>.sgrid{margin-top:18px}
 @media (max-width:640px){.sfoot .sgrid{grid-template-columns:1fr 1fr}.sfoot .sbrand{grid-column:1 / -1}}`;
   const st = document.createElement('style'); st.textContent = css; document.head.append(st);
-  const foot = document.createElement('footer'); foot.className = 'sfoot'; box.replaceWith(foot);
+  // data-compact (игра): футер свёрнут в одну строку, чтобы не быть выше самой игры
+  const compact = 'compact' in box.dataset;
+  const foot = document.createElement('footer'); foot.className = 'sfoot' + (compact ? ' cmp' : ''); box.replaceWith(foot);
   const render = () => {
     const T = (html.dataset.l || html.lang || 'ru').startsWith('ru') ? RU : EN;
     // по-английски ведём на /en/c/, /en/p/ и /en/hsk/
@@ -49,6 +53,10 @@
 <nav><h2>${T.project}</h2><ul>${li('/about', T.about) + li('/privacy', T.privacy)}</ul></nav>
 </div><details><summary>${T.data}</summary><p><a href="https://github.com/skishore/makemeahanzi">Make Me a Hanzi</a> (LGPL, Arphic) · <a href="https://cc-cedict.org/">CC-CEDICT</a> (CC BY-SA) · <a href="https://tatoeba.org/">Tatoeba</a> (CC BY 2.0 FR) · <a href="https://en.wiktionary.org/">Wiktionary</a> via <a href="https://kaikki.org/">kaikki.org</a> (CC BY-SA) · <a href="https://commonvoice.mozilla.org/">Mozilla Common Voice</a> (CC0) · Unicode / Unihan · <a href="https://www.edrdg.org/wiki/index.php/JMdict-EDICT_Dictionary_Project">JMdict</a> (EDRDG, CC BY-SA 4.0) via <a href="https://github.com/scriptin/jmdict-simplified">jmdict-simplified</a> · <a href="https://www.edrdg.org/wiki/index.php/KANJIDIC_Project">KANJIDIC2</a> (EDRDG, CC BY-SA 4.0) · <a href="https://kanjivg.tagaini.net/">KanjiVG</a> (Ulrich Apel, CC BY-SA 3.0)</p></details>`;
   };
-  render();
-  new MutationObserver(render).observe(html, { attributes: true, attributeFilter: ['lang', 'data-l'] });   // переключатель RU/EN (/extension, «Мои иероглифы», игра)
+  const draw = () => {
+    render();
+    if (compact) foot.innerHTML = `<details class="all"><summary>Hanzi Burst · ${((html.dataset.l || html.lang || 'ru').startsWith('ru') ? RU : EN).more}</summary>${foot.innerHTML}</details>`;
+  };
+  draw();
+  new MutationObserver(draw).observe(html, { attributes: true, attributeFilter: ['lang', 'data-l'] });   // переключатель RU/EN (/extension, «Мои иероглифы», игра)
 })();
