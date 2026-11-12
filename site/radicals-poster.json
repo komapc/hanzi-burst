@@ -1,0 +1,18 @@
+{
+ "version": "2026.11.12-0591d4e",
+ "inputs": "0591d4e0a9bf6e7960922ca6d9495c319c6a46aef2c96459ff2b9a09f530a648",
+ "files": {
+  "ru": {
+   "bytes": 1231478,
+   "sha256": "ee461ef871db42b9310f4b49c332f3eeb61eb66e24841b608f5396601c50ab91"
+  },
+  "en": {
+   "bytes": 1152018,
+   "sha256": "8ad6f524707638a5e60189eef1b4958f3037ddf9718f8f249361938cbdb1a3ed"
+  },
+  "eo": {
+   "bytes": 1155551,
+   "sha256": "049f5223899c7a9d127fc0dfb3c57f028fe89bfe339935ccbbc57c2d10242e8f"
+  }
+ }
+}

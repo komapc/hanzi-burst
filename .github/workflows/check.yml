@@ -60,6 +60,8 @@ jobs:
           print("\n".join(bad) or "radicals ok")
           sys.exit(1 if bad else 0)
           PY
+      - name: Poster PDFs match their inputs (site/radicals-poster.json)
+        run: python scripts/poster_version.py --check
       - name: Home page has what the app needs
         run: |
           grep -q 'id="phrase"' site/index.html

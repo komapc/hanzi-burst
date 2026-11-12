@@ -18,6 +18,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import radical_pages
 import palladius
+import poster_version
 from radical_pages import strokes_word
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -147,7 +148,7 @@ def qr_svg(url):
     return buf.getvalue().decode()
 
 
-def set_meta(pdf, lang, subject):
+def set_meta(pdf, lang, subject, ver):
     """Автор, тема, ключевые слова и язык документа (Chrome пишет только Title из <title>). Нужен pypdf; без него пропускаем."""
     try:
         from pypdf import PdfWriter
@@ -157,7 +158,7 @@ def set_meta(pdf, lang, subject):
         return
     w = PdfWriter(clone_from=pdf)
     w.add_metadata({"/Title": META[lang]["title"], "/Author": "Hanzi Burst (hanzi.lipu.dev)", "/Subject": subject,
-                    "/Keywords": META[lang]["kw"], "/Creator": "Hanzi Burst, scripts/radicals_poster.py"})
+                    "/Keywords": META[lang]["kw"], "/Creator": f"Hanzi Burst, scripts/radicals_poster.py v{ver}"})
     w._root_object[NameObject("/Lang")] = TextStringObject(lang)
     w.write(pdf)
 
@@ -166,6 +167,7 @@ def main():
     chrome = shutil.which("google-chrome") or shutil.which("chromium") or shutil.which("chromium-browser")
     if not chrome:
         sys.exit("google-chrome / chromium not found")
+    ver = poster_version.new_version()
     R = sorted(json.loads(radical_pages.RADICALS.read_text(encoding="utf-8")), key=lambda r: r["n"])
     G = load_glyphs({c for r in R for c in [r["char"]] + r["variants"][:2] + r["examples"][:3]} | set("康熙部首画" + CN_NUM))
     used = set()
@@ -218,7 +220,7 @@ def main():
         body = (f"<header><div class='seal'>{gl('部')}{gl('首')}</div><div><h1><span class='zh'>{''.join(gl(c) for c in '康熙部首')}</span><span class='tt'>{E(t['title'])}</span></h1>"
                 f"<p class='sub'>{E(t['sub'])}</p></div></header>"
                 f"<div class='grid'>{''.join(cells)}{legend}</div>"
-                f"<footer><span>{E(t['src'])}</span><a href='{t['qr']}'>{t['url']}</a></footer>")
+                f"<footer><span>{E(t['src'])} · v{ver}</span><a href='{t['qr']}'>{t['url']}</a></footer>")
         doc = f"<!doctype html><html lang='{lang}'><head><meta charset='utf-8'><title>{E(META[lang]['title'])}</title><style>{CSS}</style></head><body>{defs()}{body}</body></html>"
         with tempfile.TemporaryDirectory() as tmp:
             src = Path(tmp) / "poster.html"
@@ -235,8 +237,10 @@ def main():
                 shutil.copy(src, Path(sys.argv[-1]) / f"poster-{lang}.html")
             subprocess.run(["convert", str(png), "-resize", "1000x", "-strip", "-quality", "82", "-sampling-factor", "4:2:0",
                             "-interlace", "JPEG", str(ROOT / "site" / f"radicals-poster-{lang}.jpg")], check=True)
-        set_meta(out, lang, t["sub"])
+        set_meta(out, lang, t["sub"], ver)
         print(f"{out.relative_to(ROOT)}: {out.stat().st_size // 1024} KB")
+    poster_version.write(ver)
+    print(f"{poster_version.MANIFEST.relative_to(ROOT)}: {ver}")
 
 
 if __name__ == "__main__":
