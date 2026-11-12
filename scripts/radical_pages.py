@@ -11,6 +11,7 @@ import json, shutil
 from pathlib import Path
 
 from radical_names import SUPPLEMENT
+import palladius
 
 ROOT = Path(__file__).resolve().parent.parent
 GRAPHICS = ROOT / "data/raw/mmh/graphics.txt"
@@ -256,7 +257,8 @@ def build(SITE, page, breadcrumbs, E, BASE, chars, allc, first):
             body.append(f"<h1>{t['radical']} <span lang='zh'>{ch}</span>{h1_extra} — {E(name(r))}</h1>")
             sw = f"{r['strokes']} {strokes_word(r['strokes'])}" if lang == "ru" else f"{r['strokes']} stroke{'s' if r['strokes'] != 1 else ''}"
             body.append(f"<dl class='facts'><dt>{t['n']}</dt><dd>{n} / 214</dd><dt>{t['pinyin']}</dt><dd>{E(r['pinyin'])}</dd>"
-                        f"<dt>{t['strokes']}</dt><dd>{sw}</dd><dt>{t['meaning']}</dt><dd>{E(name(r))}</dd></dl>")
+                        + (f"<dt>Палладий</dt><dd>{E(palladius.convert(r['pinyin']))}</dd>" if lang == "ru" else "")
+                        + f"<dt>{t['strokes']}</dt><dd>{sw}</dd><dt>{t['meaning']}</dt><dd>{E(name(r))}</dd></dl>")
             if r["variants"]:
                 cells = "".join(f"<span>{svg(G[v], 'vsvg', False) if v in G else f'<span class=f>{v}</span>'}<br><span lang='zh'>{v}</span></span>"
                                 for v in r["variants"])
