@@ -280,7 +280,7 @@
   #consent { position: fixed; left: 12px; right: 12px; bottom: 12px; max-width: 640px; margin: 0 auto; padding: 12px 14px;
     background: var(--card); color: var(--fg); border: 1px solid var(--line); border-radius: 10px; font-size: 14px;
     display: flex; flex-wrap: wrap; gap: 8px 10px; align-items: center; box-shadow: 0 4px 18px rgba(0,0,0,.18); z-index: 50; }
-  #consent[hidden] { display: none; }
+  #consent[hidden], #explodeAll[hidden] { display: none; }
   #consent a { color: var(--accent); }
   /* широкий экран: панель описания слева, дерево справа */
   @media (min-width: 960px) {
@@ -975,6 +975,7 @@ function openKana(ch) {
   const hira = JA.toHira(ch), kata = hira.replace(/[\u3041-\u3096]/g, c => String.fromCharCode(c.charCodeAt(0) + 0x60));
   const tr = JA.transcribe(ch, { long: false });
   const big = hira.replace(/[ぁぃぅぇぉっゃゅょゎ]/, c => String.fromCharCode(c.charCodeAt(0) + 1));   // ゃ → や: в таблице только полные знаки
+  $('#explodeAll').hidden = true; $('#crumbs').style.visibility = 'hidden';
   $('#tree').innerHTML = `<div class="node"><div class="gw"><span class="glyph leaf">${hz(ch)}<span class="m">${tr.lat || '&nbsp;'}</span></span></div></div>`;
   $('#info').innerHTML = `<div class="kanacard"><h2><span lang="ja">${hira}</span> <span lang="ja">${kata}</span><small>${[tr.lat, tr.cyr].filter(Boolean).join(' · ')}</small></h2>
     <p>${t('kanaRead')}: <b>${tr.lat || '—'}</b> (Hepburn), <b>${tr.cyr || '—'}</b> (Поливанов). ${ch === hira ? t('kanaHira') : t('kanaKata')}.</p>
@@ -1007,11 +1008,14 @@ function openRoot(ch) {
   const tree = $('#tree'); tree.innerHTML = '';
   const node = makeNode(ch, [], false);
   tree.append(node);
-  toggle(node, [ch]);
+  // неделимый знак: ни пустой ветки (линии вниз), ни «Взорвать всё»
+  const split = node._comps.length > 0;
+  if (split) toggle(node, [ch]);
+  $('#explodeAll').hidden = !split; $('#crumbs').style.visibility = split ? '' : 'hidden';
   select(ch, node.querySelector('.glyph'));
   document.querySelectorAll('.ch').forEach(b => b.classList.toggle('sel', b.dataset.ch === ch));
   markWord(); sheetOpen();
-  if (tour === 1) tour = 2;
+  if (tour === 1 && split) tour = 2;
   tourMark();
 }
 $('#explodeAll').onclick = () => { const r = $('#tree > .node'); if (r) explodeAll(r); };
