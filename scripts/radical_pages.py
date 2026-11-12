@@ -23,15 +23,15 @@ POSTER = {
     "ru": dict(path="/r/poster", hub="/r/", hub_name="Ключи", crumb="Плакат",
                title="Плакат 214 ключей китайских иероглифов: PDF для печати (A2, A3, A4) | Hanzi Burst",
                desc=("Бесплатный плакат со всеми 214 ключами (радикалами) Канси на одном листе: номер, варианты написания, пиньинь, "
-                     "значение и пример иероглифа. 60 частых ключей выделены. PDF для печати на A2, A3 или A4."),
+                     "значение и примеры иероглифов. 60 частых ключей выделены. PDF для печати на A2, A3 или A4."),
                h1="Плакат: 214 ключей китайских иероглифов",
                lead=("Все 214 ключей (радикалов) Канси на одном листе — повесить над столом и сверяться, пока учите иероглифы. "
                      "Плакат бесплатный, PDF векторный: печатается чётко на любом формате."),
-               dl="Скачать PDF (A2, 1 МБ)", alt="Плакат «214 ключей китайских иероглифов»: таблица ключей Канси по числу черт",
+               dl="Скачать PDF (A2, 0,6 МБ)", alt="Плакат «214 ключей китайских иероглифов»: таблица ключей Канси по числу черт",
                what="Что на плакате",
                items=["все 214 ключей Канси, по числу черт — в том же порядке, что в словарях;",
-                      "у каждого ключа номер, варианты написания (氵氺 у 水, 亻 у 人, 扌 у 手), пиньинь, значение и пример иероглифа с чтением;",
-                      "60 самых частых ключей выделены цветом и ★: в {p}% иероглифов HSK есть один из них — с них стоит начать;",
+                      "у каждого ключа номер, варианты написания (氵氺 у 水, 亻 у 人, 扌 у 手), пиньинь (цветом показан тон) и значение, слева — три иероглифа с этим ключом;",
+                      "60 самых частых ключей отмечены красной точкой: в {p}% иероглифов HSK есть один из них — с них стоит начать;",
                       "легенда и QR-код на страницы ключей: там порядок черт и все иероглифы с каждым ключом."],
                print_h="Как напечатать",
                print_t=("Лист A2 (42 × 59,4 см) — в копицентре или типографии. На домашнем принтере печатайте на A3 или A4 "
@@ -42,16 +42,16 @@ POSTER = {
                names={"ru": "по-русски", "en": "по-английски", "eo": "на эсперанто"}),
     "en": dict(path="/en/r/poster", hub="/en/r/", hub_name="Radicals", crumb="Poster",
                title="Chinese radicals poster: all 214 Kangxi radicals, printable PDF (A2, A3, A4) | Hanzi Burst",
-               desc=("Free one-page chart of all 214 Kangxi radicals: number, variant forms, pinyin, meaning and an example character. "
+               desc=("Free one-page chart of all 214 Kangxi radicals: number, variant forms, pinyin (coloured by tone), meaning and example characters. "
                      "The 60 most common radicals are highlighted. Printable PDF for A2, A3 or A4."),
                h1="Chinese radicals poster: the 214 Kangxi radicals",
                lead=("All 214 Kangxi radicals on a single sheet, to hang above your desk while you learn Chinese characters. "
                      "The poster is free and the PDF is vector, so it prints sharp at any size."),
-               dl="Download the PDF (A2, 1 MB)", alt="Poster of the 214 Chinese radicals: Kangxi radicals chart by stroke count",
+               dl="Download the PDF (A2, 0.6 MB)", alt="Poster of the 214 Chinese radicals: Kangxi radicals chart by stroke count",
                what="What's on the poster",
                items=["all 214 Kangxi radicals by stroke count, in dictionary order;",
-                      "for each radical: its number, variant forms (氵氺 for 水, 亻 for 人, 扌 for 手), pinyin, meaning and an example character with pinyin;",
-                      "the 60 most common radicals are highlighted with colour and ★: {p}% of HSK characters contain one of them, so start there;",
+                      "for each radical: its number, variant forms (氵氺 for 水, 亻 for 人, 扌 for 手), pinyin (coloured by tone) and meaning, with three characters that use it on the left;",
+                      "the 60 most common radicals are marked with a red dot: {p}% of HSK characters contain one of them, so start there;",
                       "a legend and a QR code to the radical pages, with stroke order and every character that uses each radical."],
                print_h="How to print",
                print_t=("A2 (420 × 594 mm) at a print shop. On a home printer, print on A3 or A4 (or Letter) with “fit to page”: "
@@ -62,16 +62,16 @@ POSTER = {
                names={"ru": "Russian", "en": "English", "eo": "Esperanto"}),
     "eo": dict(path="/eo/r/poster", hub="/en/r/", hub_name="Radikaloj", crumb="Afiŝo",
                title="Afiŝo de la 214 ĉinaj radikaloj: PDF por presi (A2, A3, A4) | Hanzi Burst",
-               desc=("Senpaga afiŝo kun ĉiuj 214 Kangxi-radikaloj sur unu folio: numero, variantoj, pinjino, signifo kaj ekzempla signo. "
+               desc=("Senpaga afiŝo kun ĉiuj 214 Kangxi-radikaloj sur unu folio: numero, variantoj, pinjino, signifo kaj ekzemplaj signoj. "
                      "La 60 plej oftaj radikaloj estas emfazitaj. PDF por presi en A2, A3 aŭ A4."),
                h1="Afiŝo: la 214 ĉinaj radikaloj",
                lead=("Ĉiuj 214 Kangxi-radikaloj de la ĉina skribo sur unu folio, por pendigi super la skribotablo dum vi lernas "
                      "ĉinajn signojn. La afiŝo estas senpaga, kaj la vektora PDF presiĝas klare en ĉiu formato."),
-               dl="Elŝuti la PDF-on (A2, 1 MB)", alt="Afiŝo de la 214 ĉinaj radikaloj: tabelo de la Kangxi-radikaloj laŭ nombro de strekoj",
+               dl="Elŝuti la PDF-on (A2, 0.6 MB)", alt="Afiŝo de la 214 ĉinaj radikaloj: tabelo de la Kangxi-radikaloj laŭ nombro de strekoj",
                what="Kio estas sur la afiŝo",
                items=["ĉiuj 214 Kangxi-radikaloj laŭ nombro de strekoj, en la vortara ordo;",
-                      "ĉe ĉiu radikalo: numero, variantoj (氵氺 de 水, 亻 de 人, 扌 de 手), pinjino, signifo kaj ekzempla signo kun pinjino;",
-                      "la 60 plej oftaj radikaloj estas kolorigitaj kaj markitaj per ★: {p}% de la HSK-signoj enhavas unu el ili — komencu per ili;",
+                      "ĉe ĉiu radikalo: numero, variantoj (氵氺 de 水, 亻 de 人, 扌 de 手), pinjino (la koloro montras la tonon) kaj signifo, maldekstre tri signoj kun la radikalo;",
+                      "la 60 plej oftaj radikaloj estas markitaj per ruĝa punkto: {p}% de la HSK-signoj enhavas unu el ili — komencu per ili;",
                       "klarigo kaj QR-kodo al la paĝoj de la radikaloj (angle), kun strekordo kaj ĉiuj signoj kun ĉiu radikalo."],
                print_h="Kiel presi",
                print_t=("A2 (420 × 594 mm) en presejo. Per hejma presilo presu en A3 aŭ A4 kun «adapti al la paĝo»: "
