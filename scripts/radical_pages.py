@@ -27,7 +27,7 @@ POSTER = {
                h1="Плакат: 214 ключей китайских иероглифов",
                lead=("Все 214 ключей (радикалов) Канси на одном листе — повесить над столом и сверяться, пока учите иероглифы. "
                      "Плакат бесплатный, PDF векторный: печатается чётко на любом формате."),
-               dl="Скачать PDF (A2, 0,6 МБ)", alt="Плакат «214 ключей китайских иероглифов»: таблица ключей Канси по числу черт",
+               dl="Скачать PDF (A2, 1,1 МБ)", alt="Плакат «214 ключей китайских иероглифов»: таблица ключей Канси по числу черт",
                what="Что на плакате",
                items=["все 214 ключей Канси, по числу черт — в том же порядке, что в словарях;",
                       "у каждого ключа номер, варианты написания (氵氺 у 水, 亻 у 人, 扌 у 手), пиньинь (цветом показан тон) и значение, слева — три иероглифа с этим ключом;",
@@ -47,7 +47,7 @@ POSTER = {
                h1="Chinese radicals poster: the 214 Kangxi radicals",
                lead=("All 214 Kangxi radicals on a single sheet, to hang above your desk while you learn Chinese characters. "
                      "The poster is free and the PDF is vector, so it prints sharp at any size."),
-               dl="Download the PDF (A2, 0.6 MB)", alt="Poster of the 214 Chinese radicals: Kangxi radicals chart by stroke count",
+               dl="Download the PDF (A2, 1.1 MB)", alt="Poster of the 214 Chinese radicals: Kangxi radicals chart by stroke count",
                what="What's on the poster",
                items=["all 214 Kangxi radicals by stroke count, in dictionary order;",
                       "for each radical: its number, variant forms (氵氺 for 水, 亻 for 人, 扌 for 手), pinyin (coloured by tone) and meaning, with three characters that use it on the left;",
@@ -67,7 +67,7 @@ POSTER = {
                h1="Afiŝo: la 214 ĉinaj radikaloj",
                lead=("Ĉiuj 214 Kangxi-radikaloj de la ĉina skribo sur unu folio, por pendigi super la skribotablo dum vi lernas "
                      "ĉinajn signojn. La afiŝo estas senpaga, kaj la vektora PDF presiĝas klare en ĉiu formato."),
-               dl="Elŝuti la PDF-on (A2, 0.6 MB)", alt="Afiŝo de la 214 ĉinaj radikaloj: tabelo de la Kangxi-radikaloj laŭ nombro de strekoj",
+               dl="Elŝuti la PDF-on (A2, 1.1 MB)", alt="Afiŝo de la 214 ĉinaj radikaloj: tabelo de la Kangxi-radikaloj laŭ nombro de strekoj",
                what="Kio estas sur la afiŝo",
                items=["ĉiuj 214 Kangxi-radikaloj laŭ nombro de strekoj, en la vortara ordo;",
                       "ĉe ĉiu radikalo: numero, variantoj (氵氺 de 水, 亻 de 人, 扌 de 手), pinjino (la koloro montras la tonon) kaj signifo, maldekstre tri signoj kun la radikalo;",
