@@ -28,7 +28,7 @@ POSTER = {
                h1="Плакат: 214 ключей китайских иероглифов",
                lead=("Все 214 ключей (радикалов) Канси на одном листе — повесить над столом и сверяться, пока учите иероглифы. "
                      "Плакат бесплатный, PDF векторный: печатается чётко на любом формате."),
-               dl="Скачать PDF (A2, 1,1 МБ)", alt="Плакат «214 ключей китайских иероглифов»: таблица ключей Канси по числу черт",
+               dl="Скачать PDF (A2, 1,2 МБ)", alt="Плакат «214 ключей китайских иероглифов»: таблица ключей Канси по числу черт",
                what="Что на плакате",
                items=["все 214 ключей Канси, по числу черт — в том же порядке, что в словарях;",
                       "у каждого ключа номер, варианты написания (氵氺 у 水, 亻 у 人, 扌 у 手), пиньинь (цветом показан тон) и значение, слева — три иероглифа с этим ключом;",
@@ -233,7 +233,8 @@ def build(SITE, page, breadcrumbs, E, BASE, chars, allc, first):
     urls += poster_pages(SITE, page, breadcrumbs, E, BASE, pct)
     # данные для игры /radicals-game
     (SITE / "radicals.json").write_text(json.dumps(
-        [{k: r[k] for k in ("n", "char", "variants", "pinyin", "en", "ru", "hsk", "top", "examples")} for r in R],
+        [{**{k: r[k] for k in ("n", "char", "variants", "pinyin", "en", "ru", "hsk", "top", "examples")}, "pal": palladius.convert(r["pinyin"])}
+         for r in R],
         ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
 
     def meaning(c, lang):

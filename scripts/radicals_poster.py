@@ -17,6 +17,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import radical_pages
+import palladius
 from radical_pages import strokes_word
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -25,9 +26,9 @@ COLS, ROWS = 12, 20
 
 TXT = {
     "ru": dict(title="214 ключей китайских иероглифов",
-               sub="Ключи (радикалы) Канси по числу черт: номер, варианты, пиньинь, значение и примеры",
+               sub="Ключи (радикалы) Канси по числу черт: номер, варианты, пиньинь и Палладий, значение и примеры",
                top="частый ключ: 60 таких ключей есть в {p}% иероглифов HSK — начните с них",
-               lg_n="номер", lg_var="варианты", lg_py="пиньинь", lg_mean="значение", lg_ex="примеры", lg_tone="цвет — тон",
+               lg_n="номер", lg_var="варианты", lg_py="чтение", lg_pal="по Палладию", lg_mean="значение", lg_ex="примеры", lg_tone="цвет — тон",
                url="hanzi.lipu.dev/r/", qr="https://hanzi.lipu.dev/r/",
                more="Порядок черт, все варианты и иероглифы с каждым ключом — на сайте. Там же игра для запоминания.",
                src="Данные: Unicode Unihan (kRSUnicode), Make Me a Hanzi, HSK 3.0 · Hanzi Burst"),
@@ -94,7 +95,7 @@ svg.g{display:block;fill:currentColor;overflow:visible}
 .cell .ch{grid-column:2;display:flex;align-items:center;justify-content:center;gap:.8mm;line-height:1;min-height:0}
 .cell .ch .m{font-size:33pt;font-weight:500}.cell .ch svg.m{width:12.6mm;height:12.6mm}
 .cell .ch .v{display:flex;flex-direction:column;gap:.4mm;font-size:9.5pt;color:#7a7064;line-height:1.05}.cell .ch .v svg.g{width:3.6mm;height:3.6mm}
-.cell .py{grid-column:2;text-align:center;font-size:7.6pt;font-weight:600;line-height:1.1}
+.cell .py{grid-column:2;text-align:center;font-size:7.6pt;font-weight:600;line-height:1.1;white-space:nowrap}.pl{font-weight:400}
 .cell .mn{grid-column:2;text-align:center;font-size:7.3pt;font-weight:700;line-height:1.1;max-height:2.2em;overflow:hidden;margin-top:.2mm}
 .t1{color:#c4322a}.t2{color:#237a3c}.t3{color:#2f6fd0}.t4{color:#8b46c9}.t5{color:#8a8073}
 .grp{display:flex;flex-direction:column;align-items:center;justify-content:center;color:#9a3226}
@@ -112,8 +113,9 @@ def tone(p):
     return next((t for m, t in (("\u0304", 1), ("\u0301", 2), ("\u030c", 3), ("\u0300", 4)) if m in d), 5)
 
 
-def PY(p):   # пиньинь, раскрашенный по тону (как «Тоны» на сайте)
-    return f"<span class='t{tone(p)}'>{E(p)}</span>"
+def PY(p, pal=False):   # пиньинь, раскрашенный по тону (как «Тоны» на сайте); pal — ещё и Палладий (русский плакат)
+    s = f"<span class='t{tone(p)}'>{E(p)}</span>"
+    return s + (f" <span class='pl t{tone(p)}'>{E(palladius.convert(p))}</span>" if pal else "")
 
 
 GRAPHICS = ROOT / "data/raw/mmh/graphics.txt"
@@ -191,7 +193,7 @@ def main():
             return (f"<div class='cell'><span class='n'>{r['n']}" + ("<i class='dot'></i>" if r["top"] else "") + "</span>"
                     + f"<div class='exs zh'>{exs}</div>"
                     + f"<div class='ch zh'>{gl(r['char'], 'm')}" + (f"<span class='v'>{vs}</span>" if vs else "") + "</div>"
-                    f"<div class='py'>{PY(r['pinyin'])}</div><div class='mn'>{E(r[lang])}</div></div>")
+                    f"<div class='py'>{PY(r['pinyin'], lang == 'ru')}</div><div class='mn'>{E(r[lang])}</div></div>")
 
         cells, prev = [], None
         for r in R:
@@ -208,7 +210,7 @@ def main():
         legend = (f"<div class='legend' style='grid-column:span {free}'><div class='smp'>{cell(sample)}</div><ul>"
                   f"<li><i>{t['lg_n']}</i>85 · <span style='color:#b8322a'>●</span> {E(t['top'].format(p=pct))}</li>"
                   f"<li><i>{t['lg_var']}</i><span class='zh'>{''.join(sample['variants'])}</span></li>"
-                  f"<li><i>{t['lg_py']}</i>{PY(sample['pinyin'])} · {t['lg_tone']}: {PY('mā')} {PY('má')} {PY('mǎ')} {PY('mà')}</li><li><i>{t['lg_mean']}</i>{E(sample[lang])}</li>"
+                  f"<li><i>{t['lg_py']}</i>{PY(sample['pinyin'])}" + (f" · {t['lg_pal']} {PY(sample['pinyin'], True).split('</span> ', 1)[1]}" if 'lg_pal' in t else '') + f" · {t['lg_tone']}: {PY('mā')} {PY('má')} {PY('mǎ')} {PY('mà')}</li><li><i>{t['lg_mean']}</i>{E(sample[lang])}</li>"
                   f"<li><i>{t['lg_ex']}</i><span class='zh'>{''.join(sample['examples'][:3])}</span></li></ul>"
                   f"<p class='more'>{E(t['more'])}<br><a href='{t['qr']}'><b>{t['url']}</b></a></p>"
                   + (f"<a class='qr' href='{t['qr']}'>{q}</a>" if q else "") + "</div>")

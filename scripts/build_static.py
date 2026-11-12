@@ -122,7 +122,7 @@ def page(title, desc, canon, body, ld=(), lang="ru", alt=None, image=None):
         return cur.startswith(h) if h.endswith("/") and h != "/" else (h.split("?")[0] == "/" and cur.startswith(("/p/", "/en/p/")))
     items = "".join(f'<a href="{h}"' + (' class="on"' if on(h) else "") + f">{t}</a>" for h, t in links)
     # поиск знака: уходит на главную (/?q=), там тот же поиск по знаку и пиньиню
-    search = (f'<form class="tq" action="/" role="search"><input type="search" name="q" placeholder="想 / xiang" '
+    search = (f'<form class="tq" action="/" role="search"><input type="search" name="q" placeholder="{"想, xiang, сян" if lang == "ru" else "想 / xiang"}" '
               f'aria-label="{"Найти иероглиф" if lang == "ru" else "Find a character"}" autocomplete="off" spellcheck="false" enterkeyhint="search">'
               + ("" if lang == "ru" else '<input type="hidden" name="lang" value="en">') + "</form>")
     nav = f'<nav class="tn"><a class="tb" href="{home}">Hanzi Burst</a><span class="ts">{items}</span>{search}{others}</nav>'

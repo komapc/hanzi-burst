@@ -44,7 +44,7 @@
       const on = p !== '/' && (p.endsWith('/') ? here.startsWith(p) : here === p);
       return `<a href="${h}"${on ? ' class="on" aria-current="page"' : ''}>${t}</a>`;
     }).join('');
-    form.innerHTML = `<input type="search" name="q" placeholder="想 / xiang" aria-label="${en ? 'Find a character' : 'Найти иероглиф'}" autocomplete="off" spellcheck="false" enterkeyhint="search">`
+    form.innerHTML = `<input type="search" name="q" placeholder="${en ? '想 / xiang' : '想, xiang, сян'}" aria-label="${en ? 'Find a character' : 'Найти иероглиф'}" autocomplete="off" spellcheck="false" enterkeyhint="search">`
       + (en ? '<input type="hidden" name="lang" value="en">' : '');
     own.forEach(x => nav.append(x));
     const o = ts.querySelector('.on'); if (o) ts.scrollLeft = o.offsetLeft - ts.offsetLeft - (ts.clientWidth - o.offsetWidth) / 2;   // по центру, не в затухании
