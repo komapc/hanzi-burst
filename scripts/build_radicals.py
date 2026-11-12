@@ -14,7 +14,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import breakdown
-from radical_names import NAMES
+from radical_names import NAMES, PINYIN
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "data" / "radicals.json"
@@ -61,7 +61,7 @@ def main():
         exs = sorted((c for c in by_rad.get(n, []) if c != ch and c not in variants),
                      key=lambda c: (level[c], rank.get(c, 10**9), c))[:EXAMPLES]
         out.append({"n": n, "char": ch, "variants": list(variants), "strokes": strokes.get(ch) or 0,
-                    "pinyin": (d.get("pinyin") or [""])[0], "en": en, "ru": ru, "eo": eo,
+                    "pinyin": PINYIN.get(n) or (d.get("pinyin") or [""])[0], "en": en, "ru": ru, "eo": eo,
                     "hsk": count.get(n, 0), "top": n in top, "examples": exs})
     OUT.write_text("[\n" + ",\n".join(json.dumps(r, ensure_ascii=False) for r in out) + "\n]\n", encoding="utf-8")
     missing = [r["char"] for r in out if not r["strokes"] or not r["pinyin"]]

@@ -12,6 +12,7 @@ from pathlib import Path
 
 from radical_names import SUPPLEMENT
 import palladius
+import poster_version
 
 ROOT = Path(__file__).resolve().parent.parent
 GRAPHICS = ROOT / "data/raw/mmh/graphics.txt"
@@ -28,7 +29,7 @@ POSTER = {
                h1="Плакат: 214 ключей китайских иероглифов",
                lead=("Все 214 ключей (радикалов) Канси на одном листе — повесить над столом и сверяться, пока учите иероглифы. "
                      "Плакат бесплатный, PDF векторный: печатается чётко на любом формате."),
-               dl="Скачать PDF (A2, 1,2 МБ)", alt="Плакат «214 ключей китайских иероглифов»: таблица ключей Канси по числу черт",
+               dl="Скачать PDF (A2, {mb} МБ)", ver="Версия {v}", alt="Плакат «214 ключей китайских иероглифов»: таблица ключей Канси по числу черт",
                what="Что на плакате",
                items=["все 214 ключей Канси, по числу черт — в том же порядке, что в словарях;",
                       "у каждого ключа номер, варианты написания (氵氺 у 水, 亻 у 人, 扌 у 手), пиньинь (цветом показан тон) и значение, слева — три иероглифа с этим ключом;",
@@ -48,7 +49,7 @@ POSTER = {
                h1="Chinese radicals poster: the 214 Kangxi radicals",
                lead=("All 214 Kangxi radicals on a single sheet, to hang above your desk while you learn Chinese characters. "
                      "The poster is free and the PDF is vector, so it prints sharp at any size."),
-               dl="Download the PDF (A2, 1.1 MB)", alt="Poster of the 214 Chinese radicals: Kangxi radicals chart by stroke count",
+               dl="Download the PDF (A2, {mb} MB)", ver="Version {v}", alt="Poster of the 214 Chinese radicals: Kangxi radicals chart by stroke count",
                what="What's on the poster",
                items=["all 214 Kangxi radicals by stroke count, in dictionary order;",
                       "for each radical: its number, variant forms (氵氺 for 水, 亻 for 人, 扌 for 手), pinyin (coloured by tone) and meaning, with three characters that use it on the left;",
@@ -68,7 +69,7 @@ POSTER = {
                h1="Afiŝo: la 214 ĉinaj radikaloj",
                lead=("Ĉiuj 214 Kangxi-radikaloj de la ĉina skribo sur unu folio, por pendigi super la skribotablo dum vi lernas "
                      "ĉinajn signojn. La afiŝo estas senpaga, kaj la vektora PDF presiĝas klare en ĉiu formato."),
-               dl="Elŝuti la PDF-on (A2, 1.1 MB)", alt="Afiŝo de la 214 ĉinaj radikaloj: tabelo de la Kangxi-radikaloj laŭ nombro de strekoj",
+               dl="Elŝuti la PDF-on (A2, {mb} MB)", ver="Versio {v}", alt="Afiŝo de la 214 ĉinaj radikaloj: tabelo de la Kangxi-radikaloj laŭ nombro de strekoj",
                what="Kio estas sur la afiŝo",
                items=["ĉiuj 214 Kangxi-radikaloj laŭ nombro de strekoj, en la vortara ordo;",
                       "ĉe ĉiu radikalo: numero, variantoj (氵氺 de 水, 亻 de 人, 扌 de 手), pinjino (la koloro montras la tonon) kaj signifo, maldekstre tri signoj kun la radikalo;",
@@ -83,22 +84,26 @@ POSTER = {
                names={"ru": "ruse", "en": "angle", "eo": "Esperante"}),
 }
 POSTER_CSS = """<style>.pv{display:block;max-width:420px;margin:16px 0}.pv img{width:100%;height:auto;border:1px solid var(--line);border-radius:6px}
-.dl{display:inline-block;margin:6px 0 4px;padding:10px 18px;border-radius:8px;background:var(--accent);color:var(--bg);text-decoration:none;font-weight:600}</style>"""
+.dl{display:inline-block;margin:6px 0 4px;padding:10px 18px;border-radius:8px;background:var(--accent);color:var(--bg);text-decoration:none;font-weight:600}.pver{margin-left:10px;font-size:.85rem}</style>"""
 
 
 def poster_pages(SITE, page, breadcrumbs, E, BASE, pct):
     """Страницы плаката на трёх языках со взаимными hreflang. Возвращает адреса для sitemap (страницы и PDF)."""
     alts = {l: v["path"] for l, v in POSTER.items()}
+    man = poster_version.load() or {}
     urls = []
     for lang, t in POSTER.items():
         pdf, jpg = f"/radicals-poster-{lang}.pdf", f"/radicals-poster-{lang}.jpg"
+        mb = f"{(SITE / pdf.lstrip('/')).stat().st_size / 2**20:.1f}"
+        mb = mb.replace(".", ",") if lang == "ru" else mb
         items = "".join(f"<li>{x.format(p=pct)}</li>" for x in t["items"])
         others = " · ".join(f'<a href="{POSTER[l]["path"]}" hreflang="{l}">{t["names"][l]}</a> '
                             f'(<a href="/radicals-poster-{l}.pdf" hreflang="{l}" type="application/pdf">PDF</a>)' for l in POSTER if l != lang)
         more = "".join(f'<li><a href="{h}">{E(x)}</a></li>' for h, x in t["more"])
         body = (f"{POSTER_CSS}<h1>{E(t['h1'])}</h1><p class='m'>{E(t['lead'])}</p>"
-                f'<a class="dl" href="{pdf}" type="application/pdf" download>{E(t["dl"])}</a>'
-                f'<a class="pv" href="{pdf}" type="application/pdf"><img src="{jpg}" width="1000" height="1414" alt="{E(t["alt"])}"></a>'
+                f'<a class="dl" href="{pdf}" type="application/pdf" download>{E(t["dl"].format(mb=mb))}</a>'
+                + (f'<span class="m pver">{E(t["ver"].format(v=man["version"]))}</span>' if man else "")
+                + f'<a class="pv" href="{pdf}" type="application/pdf"><img src="{jpg}" width="1000" height="1414" alt="{E(t["alt"])}"></a>'
                 f"<h2>{E(t['what'])}</h2><ul>{items}</ul><h2>{E(t['print_h'])}</h2><p>{E(t['print_t'])}</p>"
                 f"<h2>{E(t['other_h'])}</h2><p>{others} · <a href=\"/posters\">hanzi.lipu.dev/posters</a></p><h2>{E(t['more_h'])}</h2><ul>{more}</ul>")
         org = {"@type": "Organization", "name": "Hanzi Burst", "url": f"{BASE}/"}
