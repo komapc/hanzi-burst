@@ -217,7 +217,9 @@
     #card .grab { display:block; width:44px; height:5px; border-radius:3px; background:var(--line); margin:4px auto 10px; touch-action:none; }
     #cardClose { display:inline-flex; font-size:1.1rem; line-height:1; padding:4px 11px; }
     html.sheet main { padding-bottom:74dvh; }
-    html.cs #card.open { padding-bottom:140px; }   /* баннер cookies поверх низа карточки */
+    /* баннер cookies: пока открыта нижняя панель разбора, он сверху экрана (над шапкой), а не поверх кнопок панели */
+    html.sheet #consent { top:8px; bottom:auto; }
+    html #consent { left:8px; right:8px; bottom:8px; padding:10px 12px; font-size:13px; gap:6px 8px; }
   }
   .toolbar { display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:8px; flex-wrap:wrap; }
   .crumbs { color:var(--muted); font-size:.85rem; }
@@ -282,6 +284,15 @@
     display: flex; flex-wrap: wrap; gap: 8px 10px; align-items: center; box-shadow: 0 4px 18px rgba(0,0,0,.18); z-index: 50; }
   #consent[hidden], #explodeAll[hidden] { display: none; }
   #consent a { color: var(--accent); }
+  /* сенсорный экран: зона нажатия не меньше ~40 px; «+» на плитке остаётся маленьким, но ловит касание с запасом */
+  @media (pointer:coarse) {
+    .kbtn::after { content:""; position:absolute; inset:-8px; border-radius:50%; }
+    .pk, #view button, .btn, .snav a, details.set summary { min-height:40px; box-sizing:border-box; }
+    .pk, .snav a { display:inline-flex; align-items:center; }
+    #view button { padding:2px 12px; }
+    .opts .lang button { min-width:40px; min-height:36px; }
+    #q { min-height:40px; box-sizing:border-box; }
+  }
   /* широкий экран: панель описания слева, дерево справа */
   @media (min-width: 960px) {
     main { max-width:1180px; }
