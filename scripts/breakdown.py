@@ -361,6 +361,7 @@ def info(ch, mmh, maps=None, tr=None):
         "definition_ru": definition_ru,
         "definition_source": source,
         "radical": d.get("radical"),
+        **({"kx": maps[1][ch][0]} if maps and ch in maps[1] else {}),   # номер ключа Канси (kRSUnicode) — для ссылки на /r/
         "decomposition": d.get("decomposition"),
         "etymology": etymology,
         "atomic": ch in ATOMIC,
