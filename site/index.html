@@ -462,6 +462,20 @@ const UI = {
         tNew: 'Pick a phrase with the fewest characters you don\'t know yet', tRand: 'Any phrase from the list', tDaily: 'One phrase for today, the same for everyone', tOwn: 'Paste your own Chinese text and break it down' },
 };
 const ui = k => (UI[lang] || UI.en)[k];
+/* 214 ключей Канси (data/radicals.json): знак или его вариант → номер; у каждого ключа своя страница /r/<код основной формы> */
+const RAD_MAIN = [...'一丨丶丿乙亅二亠人儿入八冂冖冫几凵刀力勹匕匚匸十卜卩厂厶又口囗土士夂夊夕大女子宀寸小尢尸屮山巛工己巾干幺广廴廾弋弓彐彡彳心戈戶手支攴文斗斤方无日曰月木欠止歹殳毋比毛氏气水火爪父爻爿片牙牛犬玄玉瓜瓦甘生用田疋疒癶白皮皿目矛矢石示禸禾穴立竹米糸缶网羊羽老而耒耳聿肉臣自至臼舌舛舟艮色艸虍虫血行衣襾見角言谷豆豕豸貝赤走足身車辛辰辵邑酉釆里金長門阜隶隹雨靑非面革韋韭音頁風飛食首香馬骨高髟鬥鬯鬲鬼魚鳥鹵鹿麥麻黃黍黑黹黽鼎鼓鼠鼻齊齒龍龜龠'];
+const RAD_N = new Map(RAD_MAIN.map((c, i) => [c, i + 1]));
+'乚5,亻9,丷12,刂18,⺈18,⺊25,㔾26,⺌42,⺍42,尣43,川47,彑58,忄61,⺗61,扌64,攵66,旡71,歺78,氵85,氺85,灬86,爫87,丬90,牜93,犭94,王96,礻113,⺮118,纟120,糹120,罒122,⺳122,⺶123,耂125,月130,⺼130,艹140,衤145,覀146,见147,讠149,訁149,贝154,⻊157,车159,辶162,阝163,钅167,釒167,长168,门169,青174,韦178,页181,风182,飞183,饣184,飠184,马187,鱼195,鸟196,卤197,麦199,黄201,黾205,齐210,齿211,龙212,龟213,⺀15,'.split(',').forEach(x => { const c = [...x][0]; if (c) RAD_N.set(c, +x.slice(c.length)); });
+// ключ знака: номер Канси (kx), а форма — та, что в самом знаке (氵 в 河), если словарь MMH с ним согласен
+const radOf = c => !c.kx ? c.radical : RAD_N.get(c.radical) === c.kx ? c.radical : RAD_MAIN[c.kx - 1];
+function radBtn(ch, rad) {   // кнопка «Ключ …»: сам знак — ключ, или его ключ Канси (kx из kRSUnicode, как на /c/; без него — радикал MMH)
+  const self = RAD_N.has(ch), n = RAD_N.get(self ? ch : rad);
+  if (!n) return '';
+  const m = RAD_MAIN[n - 1], href = (lang === 'en' ? '/en' : '') + '/r/' + m.codePointAt(0).toString(16);
+  const label = self ? (lang === 'ru' ? `Ключ №${n}` : `Radical No. ${n}`) : (lang === 'ru' ? `Ключ ${rad} №${n}` : `Radical ${rad} No. ${n}`);
+  const tip = lang === 'ru' ? 'Страница ключа: порядок черт, варианты, иероглифы с ним' : 'Radical page: stroke order, variants, characters that use it';
+  return `<a class="btn" href="${href}" title="${tip}">${ICON.burst}<span lang="zh">${label}</span></a>`;
+}
 const pick = (o, base) => (lang === 'ru' && o && o[base + '_ru']) || (o && o[base]) || '';
 
 const short = d => d ? d.split(/[;,]/)[0].trim() : '';
@@ -1068,6 +1082,7 @@ function selectJa(ch, glyphEl) {
   h += `<div class="actions">
     <button class="btn ${isKnown ? 'on' : ''}" id="knownBtn">${isKnown ? ICON.check : ICON.star}${isKnown ? t('known') : t('add')}</button>
     ${inPh.length ? `<button class="btn" id="usageBtn">${ICON.list}${t('where')}</button>` : ''}
+    ${radBtn(ch, radOf((D.chars || {})[ch] || {}))}
     <a class="btn" target="_blank" rel="noopener" href="https://jisho.org/search/${encodeURIComponent(ch + ' #kanji')}">${ICON.ext}Jisho</a>
     <a class="btn" target="_blank" rel="noopener" href="https://${lang === 'ru' ? 'ru' : 'en'}.wiktionary.org/wiki/${encodeURIComponent(ch)}">${ICON.ext}Wiktionary</a>
   </div>`;
@@ -1117,6 +1132,7 @@ function select(ch, glyphEl) {
   h += `<div class="actions">
     <button class="btn ${isKnown ? 'on' : ''}" id="knownBtn">${isKnown ? ICON.check : ICON.star}${isKnown ? t('known') : t('add')}</button>
     ${backend ? `<button class="btn" id="mnemoBtn">${ICON.star}${t('mnemo')}</button>` : ''}
+    ${radBtn(ch, radOf(c))}
     ${(u || inPh.length) ? `<button class="btn" id="usageBtn">${ICON.list}${t('where')}</button>` : ''}
     <a class="btn" target="_blank" rel="noopener" href="https://${lang === 'ru' ? 'ru' : 'en'}.wiktionary.org/wiki/${encodeURIComponent(ch)}">${ICON.ext}Wiktionary</a>
   </div>`;
