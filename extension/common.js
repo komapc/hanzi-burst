@@ -33,3 +33,29 @@ function stateOf(node, known) {
   node.parts.forEach(x => walk(x, known.has(x.ch)));
   return !total || !got ? '' : got === total ? 'allp' : 'somep';
 }
+
+// Merge the site's and the extension's known lists (content.js syncSite; the reasoning is in the comment there).
+function mergeKnown(site, ext, base, siteSaved) {   // site: array, or null when the key is absent; base: array or null
+  const S = new Set(site || []), E = new Set(ext);
+  let B = base ? new Set(base) : null;
+  if (B && B.size && (site === null || (![...B].some(c => S.has(c)) && !(siteSaved && B.size === 1)))) B = null;
+  return [...new Set([...ext, ...S])].filter(c => !B || !B.has(c) || (S.has(c) && E.has(c)));
+}
+
+// Sentence around position pos of s, cut at sentence ends (kept) and at Latin text, at most 100 characters:
+// { text, at } (at: the position inside text, in code points), or null. "Goodbye - 再见 (zài jiàn)" gives 再见.
+const IN_S = /[\u3000-\u3001\u3003-\u303f\u3040-\u30ff\u3400-\u9fff\uf900-\ufaff\uff01-\uff60\s0-9·—“”‘’…]/, END_S = /[。！？!?；;…]/;
+function sentenceIn(s, pos) {
+  const ok = c => IN_S.test(c) && !END_S.test(c);
+  let i = pos, j = pos + 1;
+  while (i > 0 && ok(s[i - 1]) && s[i - 1] !== '\n') i--;
+  while (j < s.length && ok(s[j]) && s[j] !== '\n') j++;
+  while (j < s.length && END_S.test(s[j])) j++;                     // keep the sentence's own 。？！
+  while (j < s.length && /[”’」』）》]/.test(s[j])) j++;                // and the quote it closes
+  while (i < pos && /[\s，、。：；）」』》”’]/.test(s[i])) i++;      // no leading spaces or closing punctuation
+  const out = s.slice(i, j).replace(/\s+$/, '');
+  return out.length > 100 ? null : { text: out, at: [...s.slice(i, pos)].length };
+}
+
+// Node tests (tests/js) load this file directly.
+if (typeof module !== 'undefined') module.exports = { shardKey, partsOf, stateOf, mergeKnown, sentenceIn };

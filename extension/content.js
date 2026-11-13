@@ -40,12 +40,7 @@
   //   extension is not running there (disabled, or the event was missed), those characters come back from our list
   //   on the next visit and have to be unmarked again. Losing the whole list is worse than unmarking twice.
   // Normal unmarks are unaffected: one side drops a character that the other still has and knownBase still has.
-  function mergeKnown(site, ext, base, siteSaved) {   // site: array, or null when the key is absent; base: array or null
-    const S = new Set(site || []), E = new Set(ext);
-    let B = base ? new Set(base) : null;
-    if (B && B.size && (site === null || (![...B].some(c => S.has(c)) && !(siteSaved && B.size === 1)))) B = null;
-    return [...new Set([...ext, ...S])].filter(c => !B || !B.has(c) || (S.has(c) && E.has(c)));
-  }
+  // The merge itself is mergeKnown in common.js (unit-tested in tests/js).
   function syncSite(ev) {
     if (location.hostname !== 'hanzi.lipu.dev') return;
     const siteSaved = !!ev && ev.type === 'hanzi-known-saved';
@@ -233,7 +228,6 @@
   }
   // Sentence around the hovered character: the text of its block (our pinyin spans read as their original text),
   // cut at sentence ends and at Latin text. "Goodbye - 再见 (zài jiàn)" gives 再见.
-  const IN_S = /[\u3000-\u3001\u3003-\u303f\u3040-\u30ff\u3400-\u9fff\uf900-\ufaff\uff01-\uff60\s0-9·—“”‘’…]/, END = /[。！？!?；;…]/;
   function sentenceAt(node, at) {
     const span = node.parentElement && node.parentElement.closest('[data-hb]');
     const block = (span || node.parentElement).closest('p,li,td,th,dd,dt,h1,h2,h3,h4,h5,h6,blockquote,figcaption,div,section,article,body');
@@ -248,14 +242,7 @@
       }
     }
     if (pos < 0) { s = span && RUBY.has(span) ? RUBY.get(span) : node.data; pos = at; }
-    const ok = c => IN_S.test(c) && !END.test(c);
-    let i = pos, j = pos + 1;
-    while (i > 0 && ok(s[i - 1]) && s[i - 1] !== '\n') i--;
-    while (j < s.length && ok(s[j]) && s[j] !== '\n') j++;
-    while (j < s.length && END.test(s[j])) j++;                     // keep the sentence's own 。？！
-    while (i < pos && /[\s，、。：；）」』》”’]/.test(s[i])) i++;      // no leading spaces or closing punctuation
-    const out = s.slice(i, j).replace(/\s+$/, '');
-    return out.length > 100 ? null : { text: out, at: [...s.slice(i, pos)].length };
+    return sentenceIn(s, pos);
   }
   let timer = 0, seq = 0, mx = -1, my0 = -1;
   document.addEventListener('mousemove', e => {
