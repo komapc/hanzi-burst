@@ -1799,6 +1799,7 @@ fetch('phrase.json').then(r => r.json())
     // знак не из phrase.json (ссылки /c/ на иероглифы без страницы, «Мои иероглифы») сначала грузим из шардов
     if (q.get('open') && HAN.test(q.get('open')) && !D.chars[q.get('open')]) await loadChars([q.get('open')]);
     if (q.get('open') && D.chars[q.get('open')]) {
+      if (hanziScript.get() === 't') S2T = S2T || await hanziScript.map().catch(() => null);   // 繁: иначе гонка, откроется упрощённый
       openRoot(q.get('open'));
       if (q.get('explode')) { explodeAll($('#tree > .node')); }
     }
