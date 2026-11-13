@@ -222,6 +222,7 @@
   .legend { display:flex; flex-wrap:wrap; gap:6px 16px; margin:6px 0 0; }
   .legend i { display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:5px; }
   .punct { font-size:3.2rem; align-self:flex-end; }
+  .wp { display:flex; flex-wrap:nowrap; gap:0; } .word.pw { padding-inline:0; }
 
   #card { margin-top:24px; background:var(--card); border:1px solid var(--soft); border-radius:16px; padding:20px; display:none; }
   #card.open { display:block; }
@@ -999,7 +1000,22 @@ function renderPhrase() {
   D.phrase.forEach((w, wi) => {
     const el = document.createElement('div');
     el.className = 'word' + (revealed.has(wi) ? ' rv' : ''); el.dataset.w = wi;
-    if (w.punct) { const sp = document.createElement('span'); sp.className = 'punct'; sp.textContent = w.word; el.append(sp); root.append(el); return; }
+    if (w.punct) {   // знак препинания не переносится отдельно: закрывающий держится за предыдущим словом, открывающий — за следующим
+      [...w.word].forEach(ch => {   // «。「» приходит одним токеном: каждый знак — к своему слову
+        const pe = el.cloneNode(); pe.classList.add('pw');
+        const sp = document.createElement('span'); sp.className = 'punct'; sp.textContent = ch; pe.append(sp);
+        const last = root.lastElementChild;
+        if (/[「『（《“‘(]/.test(ch)) { const g = document.createElement('div'); g.className = 'wp open'; g.append(pe); root.append(g); return; }
+        if (last && !last.classList.contains('open')) {
+          const g = last.classList.contains('wp') ? last : document.createElement('div');
+          if (g !== last) { g.className = 'wp'; last.replaceWith(g); g.append(last); }
+          g.append(pe); return;
+        }
+        if (last) { last.append(pe); return; }   // «「「» подряд
+        root.append(pe);
+      });
+      return;
+    }
     if (w.ja) {
       el.classList.add('ja'); el.lang = 'ja';
       const r = document.createElement('span'); r.className = 'jr'; r.textContent = jaRead(w);
@@ -1029,7 +1045,8 @@ function renderPhrase() {
       f.onclick = () => { revealed.add(wi); el.classList.add('rv'); };
       run.append(f, ...boxes.slice(sg.i, sg.i + sg.n)); el.append(run);
     });
-    root.append(el);
+    const lw = root.lastElementChild;
+    if (lw && lw.classList.contains('open')) { lw.classList.remove('open'); lw.append(el); } else root.append(el);
   });
   markWord(); if (tour) tourMark();
 }
