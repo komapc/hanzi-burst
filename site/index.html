@@ -394,7 +394,7 @@
       <span class="crumbs" id="crumbs"></span>
       <span><button class="btn" id="explodeAll"></button> <button class="btn" id="cardClose" aria-label="close">×</button></span>
     </div>
-    <div id="tree"></div>
+    <div id="tree" data-noconv></div>
     <div id="info"></div>
   </section>
   <p class="stats" id="stats"></p>
@@ -1355,8 +1355,8 @@ function select(ch, glyphEl) {
   // characters mentioned in the text ("compare 左", "variant of 爲") open their own card (Kobi 2026-11-13)
   const xr = s => String(s || '').split(/(<[^>]*>)/).map(p => p[0] === '<' ? p : p.replace(/[\u3400-\u9fff\uf900-\ufaff]/g, x => x === ch ? x : `<a class="xr serif" href="?open=${x}" data-ch="${x}">${x}</a>`)).join('');
   const def = xr(pick(c, 'definition')), hint = xr(pick(e, 'hint'));
-  let h = `<h2>${hz(ch, '', true)}<small>${PYH((c.pinyin || []).join(', '))}</small></h2>`;
-  if (def) h += `<p>${def}${c.definition_source && c.definition_source !== 'mmh' ? ` <span class="tag">${t('derived')}</span>` : ''}</p>`;
+  let h = `<h2 data-noconv>${hz(ch, '', true)}<small>${PYH((c.pinyin || []).join(', '))}</small></h2>`;
+  if (def) h += `<p data-noconv>${def}${c.definition_source && c.definition_source !== 'mmh' ? ` <span class="tag">${t('derived')}</span>` : ''}</p>`;
   if (c.readings) {   // 多音字: у знака несколько чтений; чтение во фразе выделено
     const w = (D.phrase || []).find(w => w.chars && w.chars.includes(ch));
     const here = w && w.pinyin ? (w.pinyin[w.chars.indexOf(ch)] || '').toLowerCase() : '';
@@ -1365,8 +1365,8 @@ function select(ch, glyphEl) {
   }
   if (c.incomplete) h += `<p class="hint">${t('incompl')}</p>`;
   if (c.atomic) h += `<p><span class="tag">${t('atomic')}</span></p>`;
-  if (hint) h += `<p>${typeName ? `<span class="tag">${typeName}</span> ` : ''}${hint}</p>`;
-  if (e.type === 'pictophonetic') h += `<p>${t('phonetic')} <b>${xr(e.phonetic)}</b>, ${t('semantic')} <b>${xr(e.semantic)}</b>.</p>`;
+  if (hint) h += `<p data-noconv>${typeName ? `<span class="tag">${typeName}</span> ` : ''}${hint}</p>`;
+  if (e.type === 'pictophonetic') h += `<p data-noconv>${t('phonetic')} <b>${xr(e.phonetic)}</b>, ${t('semantic')} <b>${xr(e.semantic)}</b>.</p>`;
   if (!def && !hint) h += `<p class="hint">${t('nodesc')}</p>`;
   const rootParts = rootCh && rootCh !== ch ? seenInPhrase(ch, rootCh) : [];
   if (rootParts.length) h += `<div class="seen">${t('seen')} ${rootParts.map(x => `<b class="serif">${x}</b>`).join(', ')}.</div>`;
@@ -1391,7 +1391,7 @@ function select(ch, glyphEl) {
     ${(u || inPh.length) ? `<button class="btn" id="usageBtn">${ICON.list}${t('where')}</button>` : ''}
     <a class="btn" target="_blank" rel="noopener" href="https://${lang === 'ru' ? 'ru' : 'en'}.wiktionary.org/wiki/${encodeURIComponent(ch)}">${ICON.ext}Wiktionary</a>
   </div>`;
-  h += `<div id="mnemo"></div>`;
+  h += `<div id="mnemo" data-noconv></div>`;
   if (u || inPh.length) {
     h += `<div class="usage" id="usage">`;
     if (inPh.length) h += `<h3>${t('inPhrase')}</h3><ul class="wl">${inPh.map(w => `<li><span class="w serif">${w.word}</span><span class="p">${wordRead(w)}</span>${phGloss(w)}</li>`).join('')}</ul>`;
