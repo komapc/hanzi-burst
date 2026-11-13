@@ -11,8 +11,9 @@
 
   function walk(root) {
     const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
-      // японский текст (lang="ja") не трогаем: 国, 会, 来 в японском не «упрощённые»
-      acceptNode: n => /^(SCRIPT|STYLE|TEXTAREA)$/.test(n.parentNode.nodeName) || (n.parentNode.closest && n.parentNode.closest('[lang="ja"]'))
+      // японский текст (lang="ja") не трогаем: 国, 会, 来 в японском не «упрощённые»;
+      // [data-noconv]: разбор знака (дерево, его описание, мнемоника) — части пишутся как есть (尔 в 你 — не 爾)
+      acceptNode: n => /^(SCRIPT|STYLE|TEXTAREA)$/.test(n.parentNode.nodeName) || (n.parentNode.closest && n.parentNode.closest('[lang="ja"], [data-noconv]'))
         ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT });
     const out = []; for (let n; (n = w.nextNode());) out.push(n); return out;
   }
