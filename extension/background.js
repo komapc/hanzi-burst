@@ -153,7 +153,19 @@ async function lookupJa(raw, lang, hover) {
   };
 }
 
+// Whole-phrase translation: the only network request, and only when the user presses "Translate" in the card.
+// Same endpoint as the site's "Translate" (worker/index.js /api/translate, Gemini, per-IP daily limit); no cookies.
+async function translate(text, lang) {
+  try {
+    const r = await fetch('https://hanzi.lipu.dev/api/translate', { method: 'POST', credentials: 'omit',
+      headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ zh: String(text).slice(0, 120), lang: lang === 'ru' ? 'ru' : 'en' }) });
+    const d = await r.json().catch(() => ({}));
+    return r.ok && d.translation ? { tr: d.translation } : { err: r.status === 429 ? 'limit' : 'fail' };
+  } catch (e) { return { err: 'fail' }; }
+}
+
 chrome.runtime.onMessage.addListener((msg, _s, send) => {
+  if (msg && msg.type === 'translate') { translate(msg.text, msg.lang).then(send); return true; }
   if (msg && msg.type === 'open-learned') { chrome.tabs.create({ url: chrome.runtime.getURL('learned.html') }); return; }
   if (msg && msg.type === 'annotate') { annotate(msg.texts || [], msg.ja || []).then(send, () => send(null)); return true; }
   if (msg && msg.type === 'lookup' && msg.ja) { lookupJa(msg.text, msg.lang, !!msg.hover).then(send, () => send(null)); return true; }

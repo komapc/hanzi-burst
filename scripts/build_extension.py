@@ -46,7 +46,7 @@ def main():
         manifest = json.loads((EXT / "manifest.json").read_text(encoding="utf-8"))
         firefox = {**manifest, "background": {"scripts": ["common.js", "ja.js", "background.js"]},
                    "browser_specific_settings": {"gecko": {"id": "hanzi-burst@lipu.dev", "strict_min_version": "121.0",
-                                                         "data_collection_permissions": {"required": ["none"]}}}}   # nothing leaves the browser
+                                                         "data_collection_permissions": {"required": ["websiteContent"]}}}}   # only the phrase, on "Translate phrase"
         # served from hanzi.lipu.dev/hanzi-burst-extension.zip and /hanzi-burst-firefox.zip
         for name, mf in (("hanzi-burst-extension.zip", manifest), ("hanzi-burst-firefox.zip", firefox)):
             out = SITE / name
