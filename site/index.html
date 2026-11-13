@@ -306,6 +306,8 @@
   .wl .p { color:var(--muted); font-size:.8rem; margin-right:6px; }
   .chips { display:flex; flex-wrap:wrap; gap:6px; }
   .chip { padding:4px 8px; border:1px solid var(--soft); border-radius:10px; background:none; color:var(--fg); cursor:pointer; position:relative; }
+  a.xr { color:var(--accent); text-decoration:underline dotted; text-underline-offset:3px; font-size:1.1em; padding:0 1px; }
+  a.xr:hover { text-decoration-style:solid; }
   .chip svg.hz { width:30px; height:30px; }
   .chip:hover { border-color:var(--accent); }
   .chip.known { border-color:var(--ok); }
@@ -1332,7 +1334,9 @@ function select(ch, glyphEl) {
   const e = c.etymology || {};
   const typeName = t('types')[e.type] || '';
   const isKnown = known.has(ch);
-  const def = pick(c, 'definition'), hint = pick(e, 'hint');
+  // characters mentioned in the text ("compare 左", "variant of 爲") open their own card (Kobi 2026-11-13)
+  const xr = s => String(s || '').split(/(<[^>]*>)/).map(p => p[0] === '<' ? p : p.replace(/[\u3400-\u9fff\uf900-\ufaff]/g, x => x === ch ? x : `<a class="xr serif" href="?open=${x}" data-ch="${x}">${x}</a>`)).join('');
+  const def = xr(pick(c, 'definition')), hint = xr(pick(e, 'hint'));
   let h = `<h2>${hz(ch)}<small>${PYH((c.pinyin || []).join(', '))}</small></h2>`;
   if (def) h += `<p>${def}${c.definition_source && c.definition_source !== 'mmh' ? ` <span class="tag">${t('derived')}</span>` : ''}</p>`;
   if (c.readings) {   // 多音字: у знака несколько чтений; чтение во фразе выделено
@@ -1344,7 +1348,7 @@ function select(ch, glyphEl) {
   if (c.incomplete) h += `<p class="hint">${t('incompl')}</p>`;
   if (c.atomic) h += `<p><span class="tag">${t('atomic')}</span></p>`;
   if (hint) h += `<p>${typeName ? `<span class="tag">${typeName}</span> ` : ''}${hint}</p>`;
-  if (e.type === 'pictophonetic') h += `<p>${t('phonetic')} <b class="serif">${e.phonetic}</b>, ${t('semantic')} <b class="serif">${e.semantic}</b>.</p>`;
+  if (e.type === 'pictophonetic') h += `<p>${t('phonetic')} <b>${xr(e.phonetic)}</b>, ${t('semantic')} <b>${xr(e.semantic)}</b>.</p>`;
   if (!def && !hint) h += `<p class="hint">${t('nodesc')}</p>`;
   const rootParts = rootCh && rootCh !== ch ? seenInPhrase(ch, rootCh) : [];
   if (rootParts.length) h += `<div class="seen">${t('seen')} ${rootParts.map(x => `<b class="serif">${x}</b>`).join(', ')}.</div>`;
@@ -1383,6 +1387,10 @@ function select(ch, glyphEl) {
   const mb = $('#mnemoBtn'); if (mb) mb.onclick = () => mnemonic(ch);
   loadMnemonics(ch);
   const ub = $('#usageBtn'); if (ub) ub.onclick = () => $('#usage').classList.toggle('open');
+  $('#info').querySelectorAll('a.xr').forEach(a => a.onclick = ev => {
+    if (ev.ctrlKey || ev.metaKey || ev.shiftKey || ev.button) return;     // new tab: the ?open= link
+    ev.preventDefault(); openRoot(a.dataset.ch); track('xref');
+  });
   document.querySelectorAll('.chip').forEach(b => b.onclick = () => {
     if (!matchMedia('(max-width:640px)').matches) $('#card').scrollIntoView({ behavior: 'smooth', block: 'start' });
     openRoot(b.dataset.ch);
