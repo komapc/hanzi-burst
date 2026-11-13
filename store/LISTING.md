@@ -1,4 +1,4 @@
-# Chrome Web Store: Hanzi Burst (v0.2.6)
+# Chrome Web Store: Hanzi Burst (v0.2.7)
 
 Notes only: nothing here is published automatically. Paste the texts into the Chrome Web Store
 dashboard (Store listing tab, EN and the RU localization) by hand.
