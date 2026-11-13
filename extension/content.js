@@ -108,15 +108,22 @@
   .foot a{color:var(--accent);text-decoration:none;font-weight:600}.foot a:hover{text-decoration:underline}
   .foot button{all:unset;cursor:pointer;color:var(--muted);font-size:12px}.foot button:hover{color:var(--accent)}
   .card.ja .tile,.card.ja .nt{font-family:"Noto Serif JP","Hiragino Mincho ProN","Yu Mincho",serif}
-  .trow{padding:8px 16px}.tr{font-size:15px;line-height:1.4}.mt{font-size:11px;color:var(--muted);margin-top:2px}
+  .trow{padding:8px 16px}.sent{font:17px/1.5 "Noto Serif SC","Songti SC",serif;margin-bottom:6px}.sent b{color:var(--accent);font-weight:700}.tr{font-size:15px;line-height:1.4}.mt{font-size:11px;color:var(--muted);margin-top:2px}
   .trb{all:unset;cursor:pointer;font-size:13px;font-weight:600;color:var(--accent);padding:4px 10px;border:1.5px solid var(--line);border-radius:999px}.trb:hover{border-color:var(--accent)}.trb[disabled]{opacity:.6;cursor:default}
   .legend{display:flex;gap:10px;padding:4px 16px 0;font-size:11px;color:var(--muted)}.legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}
   @media(prefers-color-scheme:dark){.card{--bg:#17140f;--fg:#f1ebe0;--muted:#a59c8e;--card:#221e17;--accent:#ff7a5c;--line:#5a5144;--soft:#352f25;--ok:#5fcf93;--info:#6aa6ff;--warn:#e8b84a;
     box-shadow:0 12px 40px rgba(0,0,0,.6),0 2px 6px rgba(0,0,0,.4)}}`;
   const clean = s => String(s == null ? '' : s).replace(/\s*\[[^\]]*\d[^\]]*\]/g, '').trim();   // drop CC-CEDICT numeric-pinyin cross references
   const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-  const lbl = { en: { mark: 'Click: mark as known', unmark: 'Click: unmark', mine: 'My characters', known: 'known', all: 'all parts known', some: 'some parts known', tr: 'Translate phrase', trBusy: 'Translating…', trErr: 'Could not translate', trLimit: 'Daily translation limit reached', trNote: 'Sends the phrase to hanzi.lipu.dev (Gemini machine translation)', mt: 'machine translation' },
-                ru: { mark: 'Клик: отметить как известный', unmark: 'Клик: снять отметку', mine: 'Мои иероглифы', known: 'знаю', all: 'знаю все части', some: 'знаю часть частей', tr: 'Перевести фразу', trBusy: 'Перевожу…', trErr: 'Не удалось перевести', trLimit: 'Лимит переводов на сегодня', trNote: 'Фраза уйдёт на hanzi.lipu.dev (машинный перевод Gemini)', mt: 'машинный перевод' } };
+  const lbl = { en: { mark: 'Click: mark as known', unmark: 'Click: unmark', mine: 'My characters', known: 'known', all: 'all parts known', some: 'some parts known', tr: 'Translate phrase', trBusy: 'Translating…', trErr: 'Could not translate', trLimit: 'Daily translation limit reached', trNote: 'Sends the phrase to hanzi.lipu.dev (Gemini machine translation)', mt: 'machine translation', open: 'Open this on hanzi.lipu.dev' },
+                ru: { mark: 'Клик: отметить как известный', unmark: 'Клик: снять отметку', mine: 'Мои иероглифы', known: 'знаю', all: 'знаю все части', some: 'знаю часть частей', tr: 'Перевести фразу', trBusy: 'Перевожу…', trErr: 'Не удалось перевести', trLimit: 'Лимит переводов на сегодня', trNote: 'Фраза уйдёт на hanzi.lipu.dev (машинный перевод Gemini)', mt: 'машинный перевод', open: 'Открыть это на hanzi.lipu.dev' } };
+  // the site opens the same text: one character as its card (?open=), longer text as "Your own phrase" (?t=, up to 100)
+  const siteUrl = r => {
+    const t = [...(r.src || (r.word && r.word.w) || (r.chars && r.chars[0] && r.chars[0].ch) || '')], q = new URLSearchParams();
+    if (t.length === 1 && !r.ja) q.set('open', t[0]); else if (t.length) q.set('t', t.slice(0, 100).join(''));
+    q.set('mode', r.ja ? 'ja' : 'zh'); q.set('lang', lang());
+    return 'https://hanzi.lipu.dev/?' + q;
+  };
   const tip = ch => lbl[lang()][known.has(ch) ? 'unmark' : 'mark'];
   const tree = parts => (parts && parts.length ? `<div class="tree">${parts.map(p => { const st = stateOf(p, known); return `<div class="node"><div class="nrow"><button class="nt${p.parts.length ? '' : ' leaf'}${st ? ' st-' + st : ''}" data-ch="${esc(p.ch)}" title="${esc(tip(p.ch))}">${esc(p.ch)}</button><span class="nd">${p.py ? `<b class="npy">${esc(p.py)}</b>` : ''}${esc(p.def)}</span></div>${tree(p.parts)}</div>`; }).join('')}</div>` : '');
 
@@ -132,8 +139,11 @@
     let h = '';
     // phrase (3+ characters, not a single dictionary word): translation row first, by button (Kobi 2026-11-13)
     const L = lbl[lang()], phrase = r.src && [...r.src].length >= 3 && !(r.word && r.word.w === r.src);
-    if (phrase) h += r.trans ? `<div class="row trow"><div class="tr">${esc(r.trans)}</div><div class="mt">${L.mt}</div></div>`
-      : `<div class="row trow"><button id="trBtn" class="trb" title="${esc(L.trNote)}"${r.trBusy ? ' disabled' : ''}>${r.trBusy ? L.trBusy : r.trErr ? (r.trErr === 'limit' ? L.trLimit : L.trErr) : '⇄ ' + L.tr}</button></div>`;
+    // hover: the sentence around the character is shown, the hovered word in bold (Kobi 2026-11-13)
+    const sent = phrase && r.at != null ? (() => { const a = [...r.src], n = r.word ? [...r.word.w].length : r.ja && r.words && r.words[0] ? [...r.words[0].w].length : 1;
+      return `<div class="sent">${esc(a.slice(0, r.at).join(''))}<b>${esc(a.slice(r.at, r.at + n).join(''))}</b>${esc(a.slice(r.at + n).join(''))}</div>`; })() : '';
+    if (phrase) h += r.trans ? `<div class="row trow">${sent}<div class="tr">${esc(r.trans)}</div><div class="mt">${L.mt}</div></div>`
+      : `<div class="row trow">${sent}<button id="trBtn" class="trb" title="${esc(L.trNote)}"${r.trBusy ? ' disabled' : ''}>${r.trBusy ? L.trBusy : r.trErr ? (r.trErr === 'limit' ? L.trLimit : L.trErr) : '⇄ ' + L.tr}</button></div>`;
     if (r.ja) {
       r.words.forEach(w => { h += `<div class="row word">${head(w.w, [w.reading !== w.w ? w.reading : '', w.tr].filter(Boolean).join(' · '), (w.lemma ? w.lemma + ' — ' : '') + w.def)}</div>`; });
       r.chars.forEach(c => { h += `<div class="row">${head(c.ch, [c.on, c.kun].filter(Boolean).join(' · '), c.def, c)}${tree(c.parts)}</div>`; });   // он (катакана) · кун
@@ -141,7 +151,7 @@
     if (r.word) h += `<div class="row word">${head(r.word.w, r.word.pinyin, r.word.def)}</div>`;
     if (!r.ja) r.chars.forEach(c => { h += `<div class="row">${head(c.ch, c.pinyin, c.def, c)}${tree(c.parts)}</div>`; });
     h += `<div class="legend"><span><i style="background:var(--ok)"></i>${lbl[lang()].known}</span><span><i style="background:var(--info)"></i>${lbl[lang()].all}</span><span><i style="background:var(--warn)"></i>${lbl[lang()].some}</span></div>`;
-    h += `<div class="foot"><button id="mine">★ ${lbl[lang()].mine} · ${known.size}</button><a href="https://hanzi.lipu.dev/" target="_blank" rel="noopener">hanzi.lipu.dev ↗</a></div>`;
+    h += `<div class="foot"><button id="mine">★ ${lbl[lang()].mine} · ${known.size}</button><a href="${esc(siteUrl(r))}" target="_blank" rel="noopener" title="${esc(L.open)}">hanzi.lipu.dev ↗</a></div>`;
     const style = document.createElement('style'); style.textContent = CSS;
     const wrap = document.createElement('div'); wrap.className = 'card' + (r.ja ? ' ja' : ''); wrap.lang = r.ja ? 'ja' : 'zh';
     setHTML(wrap, h); root.append(style, wrap);
@@ -163,9 +173,13 @@
       }
       if (e.target.closest('#mine')) { try { chrome.runtime.sendMessage({ type: 'open-learned' }); } catch (err) {} }
     });
-    const w = card.offsetWidth, ch = card.offsetHeight;
+    // below the text, else above; if neither fits, the roomier side with a shorter (scrolling) card.
+    // The card must not cover the text: in hover mode the pointer would land on the card and the lookup would hide it.
+    const w = card.offsetWidth, ch = card.offsetHeight, below = innerHeight - rect.bottom - 14, above = rect.top - 14;
     const x = Math.min(Math.max(8, rect.left), innerWidth - w - 8);
-    let y = rect.bottom + 6; if (y + ch > innerHeight - 8) y = Math.max(8, rect.top - ch - 6);
+    let y;
+    if (ch <= below || below >= above) { y = rect.bottom + 6; if (ch > below) card.style.maxHeight = Math.max(80, below) + 'px'; }
+    else { if (ch > above) card.style.maxHeight = above + 'px'; y = rect.top - 6 - Math.min(ch, above); }
     card.style.left = x + 'px'; card.style.top = y + 'px';
   }
 
@@ -213,9 +227,35 @@
       const r = document.createRange(); r.setStart(node, o); r.setEnd(node, o + 1);
       const b = r.getBoundingClientRect();
       const at = base + o;
-      if (x >= b.left - 1 && x <= b.right + 1 && y >= b.top - 1 && y <= b.bottom + 1) return { text: t.slice(at, at + 12), rect: b, node, id: at + ':' + t.slice(at, at + 12) };
+      if (x >= b.left - 1 && x <= b.right + 1 && y >= b.top - 1 && y <= b.bottom + 1) return { text: t.slice(at, at + 12), rect: b, node, at, id: at + ':' + t.slice(at, at + 12) };
     }
     return null;
+  }
+  // Sentence around the hovered character: the text of its block (our pinyin spans read as their original text),
+  // cut at sentence ends and at Latin text. "Goodbye - 再见 (zài jiàn)" gives 再见.
+  const IN_S = /[\u3000-\u3001\u3003-\u303f\u3040-\u30ff\u3400-\u9fff\uf900-\ufaff\uff01-\uff60\s0-9·—“”‘’…]/, END = /[。！？!?；;…]/;
+  function sentenceAt(node, at) {
+    const span = node.parentElement && node.parentElement.closest('[data-hb]');
+    const block = (span || node.parentElement).closest('p,li,td,th,dd,dt,h1,h2,h3,h4,h5,h6,blockquote,figcaption,div,section,article,body');
+    let s = '', pos = -1;
+    if (block) {
+      const seen = new Set(), w = document.createTreeWalker(block, NodeFilter.SHOW_TEXT);
+      for (let n; (n = w.nextNode()) && s.length < 4000;) {
+        const el = n.parentElement; if (!el || el.closest('rt,script,style,noscript,textarea')) continue;
+        const sp = el.closest('[data-hb]');
+        if (sp && RUBY.has(sp)) { if (seen.has(sp)) continue; seen.add(sp); if (sp === span) pos = s.length + at; s += RUBY.get(sp); }
+        else { if (n === node) pos = s.length + at; s += n.data; }
+      }
+    }
+    if (pos < 0) { s = span && RUBY.has(span) ? RUBY.get(span) : node.data; pos = at; }
+    const ok = c => IN_S.test(c) && !END.test(c);
+    let i = pos, j = pos + 1;
+    while (i > 0 && ok(s[i - 1]) && s[i - 1] !== '\n') i--;
+    while (j < s.length && ok(s[j]) && s[j] !== '\n') j++;
+    while (j < s.length && END.test(s[j])) j++;                     // keep the sentence's own 。？！
+    while (i < pos && /[\s，、。：；）」』》”’]/.test(s[i])) i++;      // no leading spaces or closing punctuation
+    const out = s.slice(i, j).replace(/\s+$/, '');
+    return out.length > 100 ? null : { text: out, at: [...s.slice(i, pos)].length };
   }
   let timer = 0, seq = 0, mx = -1, my0 = -1;
   document.addEventListener('mousemove', e => {
@@ -231,6 +271,7 @@
   function hoverAt(x, y, delay) {
     clearTimeout(timer);
     timer = setTimeout(async () => {
+      if (host && document.elementFromPoint(x, y) === host) return;   // pointer on the card: keep it
       const hit = charAt(x, y);
       if (!hit) return hide();
       if (hit.id === shown) return;
@@ -239,7 +280,11 @@
       const my = ++seq;
       try {
         const r = await chrome.runtime.sendMessage({ type: 'lookup', text: hit.text, lang: lang(), hover: true, ja });
-        if (my === seq && r) { render(r, hit.rect); shown = hit.id; }
+        if (my === seq && r) {
+          const sn = sentenceAt(hit.node, hit.at);
+          if (sn && [...sn.text].length >= 3) { r.src = sn.text; r.at = sn.at; }
+          render(r, hit.rect); shown = hit.id;
+        }
       } catch (err) {}
     }, delay);
   }
