@@ -51,7 +51,10 @@
   .fdata p { line-height:1.6; margin:10px 0 0; }
   .fdata a { color:inherit; text-decoration:underline; text-decoration-color:var(--soft); }
   @media (max-width:640px) { .fgrid { grid-template-columns:1fr 1fr; } .fbrand { grid-column:1 / -1; } }
-  .about { margin-top:28px; max-width:70ch; }
+  .aboutd { margin-top:28px; max-width:70ch; font-size:.85rem; color:var(--muted); }
+  .aboutd > summary { cursor:pointer; list-style:none; display:inline-block; padding:4px 10px; border:1px solid var(--soft); border-radius:999px; }
+  .aboutd > summary::-webkit-details-marker { display:none; } .aboutd[open] > summary { margin-bottom:10px; }
+  .about { max-width:70ch; }
   .about h2 { font-size:15px; margin:0 0 6px; color:var(--fg); }
   .about p { margin:0 0 8px; line-height:1.5; }
   .about h2:not(:first-child) { margin-top:18px; }
@@ -98,7 +101,10 @@
   .srow { display:flex; flex-direction:column; gap:4px; }
   .srow .sl { font-size:.75rem; color:var(--muted); }
   .srow .opts { align-self:flex-start; }
-  html.jm .srow.rs { display:none; }
+  html.jm .srow.rs { display:none; } .srow.jrs { display:none; } html.jm .srow.jrs { display:flex; }
+  /* чтения — галочками, можно несколько сразу (пиньинь + чжуинь) */
+  .chk { display:flex; flex-direction:column; gap:2px; } .chk label { display:flex; align-items:center; gap:8px; padding:4px 2px; font-size:.88rem; cursor:pointer; white-space:nowrap; }
+  .chk label[hidden] { display:none; } .chk input { accent-color:var(--accent); width:1.05em; height:1.05em; margin:0; }
   /* разделы сайта под шапкой */
   .snav { display:flex; flex-wrap:wrap; gap:6px; margin:-12px 0 18px; }
   .snav a { padding:4px 12px; border:1px solid var(--soft); border-radius:999px; font-size:.88rem; color:var(--fg); text-decoration:none; white-space:nowrap; }
@@ -180,10 +186,12 @@
   .ch { position:relative; display:flex; flex-direction:column; align-items:center; background:none; border:0; color:inherit;
         cursor:pointer; padding:4px 6px; border-radius:8px; font:inherit; }
   .ch:hover { background:color-mix(in srgb, var(--accent) 15%, transparent); }
-  .ch .py { font-size:.8rem; color:var(--muted); }
+  .ch .py { font-size:.8rem; color:var(--muted); display:flex; flex-direction:column; align-items:center; } .ch .py .rl { line-height:1.2; white-space:nowrap; }
   /* японское слово: фуригана (кана) над группами кандзи, транскрипция всего слова под ним */
   .word.ja { position:relative; padding-top:1.1rem; padding-bottom:1.3rem; }
-  .word.ja .jr { position:absolute; bottom:2px; left:6px; right:6px; text-align:center; font-size:.8rem; color:var(--muted); white-space:nowrap; }
+  .word.ja .jr { position:absolute; bottom:2px; left:6px; right:6px; text-align:center; font-size:.8rem; line-height:1.25; color:var(--muted); white-space:pre; }
+  html.jr0 .word.ja { padding-bottom:.3rem; } html.jr0 .word.ja .jr { display:none; } html.jr2 .word.ja { padding-bottom:2.4rem; }
+  html.nofg .run .fg { display:none; } html.nofg .word.ja { padding-top:.3rem; }
   .run { position:relative; display:flex; gap:2px; }
   .run .fg { position:absolute; top:-.95rem; left:0; right:0; text-align:center; font-size:.72rem; line-height:1; color:var(--muted); white-space:nowrap; letter-spacing:.02em; }
   .word.ja .ch .py { display:none; }
@@ -340,10 +348,12 @@
       <span class="md" role="group" aria-label="中文 / 日本語">
         <button data-mode="zh" title="中文">中文</button><button data-mode="ja" title="日本語">日本語</button>
       </span></span></div>
-      <div class="srow rs"><span class="sl" id="slPhon"></span><span class="opts">
-      <span class="scr ph" role="radiogroup" aria-label="Pinyin / Bopomofo">
-        <label title="Pinyin"><input type="radio" name="phon" value="p"><span data-k="sPy">拼音</span></label><label title="Bopomofo / 注音"><input type="radio" name="phon" value="b"><span data-k="sBo">注音</span></label><label class="pal" title="Система Палладия: кириллица со знаком тона" hidden><input type="radio" name="phon" value="r"><span data-k="sPa">Палладий</span></label>
-      </span></span></div>
+      <div class="srow rs"><span class="sl" id="slPhon"></span><span class="chk ph" role="group" aria-label="Pinyin / Zhuyin">
+        <label><input type="checkbox" value="p"><span data-k="sPy">拼音</span></label><label><input type="checkbox" value="b"><span data-k="sBo">注音</span></label><label class="pal" title="Система Палладия: кириллица со знаком тона" hidden><input type="checkbox" value="r"><span data-k="sPa">Палладий</span></label>
+      </span></div>
+      <div class="srow jrs"><span class="sl" id="slJr"></span><span class="chk jr" role="group" aria-label="Furigana / romaji">
+        <label><input type="checkbox" value="f"><span data-k="sFg">ふりがな</span></label><label><input type="checkbox" value="l"><span data-k="sLat">rōmaji</span></label><label class="cyr" hidden><input type="checkbox" value="c"><span data-k="sCyr">кириллица</span></label>
+      </span></div>
       <div class="srow rs"><span class="sl" id="slScr"></span><span class="opts">
       <span class="scr" role="radiogroup" aria-label="Script / 字体">
         <label title="简体 — упрощённые / simplified"><input type="radio" name="script" value="s"><span data-k="sSi">简</span></label><label title="繁體 — традиционные / traditional"><input type="radio" name="script" value="t"><span data-k="sTr">繁</span></label>
@@ -364,7 +374,7 @@
     <div><span class="seg" id="ownLang" role="group"><button data-tl="auto"></button><button data-tl="zh" lang="zh">中文</button><button data-tl="ja" lang="ja">日本語</button></span>
       <button class="btn" id="ownGo"></button> <span class="hint" id="ownMsg"></span></div>
   </details>
-  <div id="view" role="group"><button data-v="py"></button><button data-v="tr"></button><details class="pm cp" id="copy"><summary></summary><div class="pml"><label><input type="checkbox" data-cp="hz"><span></span></label><label><input type="checkbox" data-cp="py"><span></span></label><label><input type="checkbox" data-cp="zy"><span></span></label><label><input type="checkbox" data-cp="pa"><span></span></label><label><input type="checkbox" data-cp="rd"><span></span></label><label><input type="checkbox" data-cp="tr"><span></span></label><button class="btn cpgo" id="cpGo"></button></div></details></div>
+  <div id="view" role="group"><button data-v="py"></button><button data-v="tr"></button><details class="pm cp" id="copy"><summary></summary><div class="pml"><label><input type="checkbox" data-cp="hz"><span></span></label><label><input type="checkbox" data-cp="py"><span></span></label><label><input type="checkbox" data-cp="zy"><span></span></label><label><input type="checkbox" data-cp="pa"><span></span></label><label><input type="checkbox" data-cp="kn"><span></span></label><label><input type="checkbox" data-cp="rl"><span></span></label><label><input type="checkbox" data-cp="rc"><span></span></label><label><input type="checkbox" data-cp="tr"><span></span></label><button class="btn cpgo" id="cpGo"></button></div></details></div>
   <div id="phrase"></div>
   <p class="trans" id="trans"></p>
   <ul class="wl" id="gloss"></ul>
@@ -380,6 +390,7 @@
     <div id="info"></div>
   </section>
   <p class="stats" id="stats"></p>
+  <details class="aboutd" id="introD"><summary id="introSum">ⓘ О сайте</summary>
   <section class="about" id="intro">
     <h2>Китайские иероглифы через радикалы</h2>
     <p>Hanzi Burst — бесплатный тренажёр для тех, кто начинает учить китайский. Нажмите на иероглиф в простой фразе, и он «разлетится» на радикалы и фонетики, а те — на ещё более мелкие части, пока не останутся неделимые компоненты. У каждой части есть значение, пиньинь, слова и другие иероглифы, где она встречается, а нелепая, но запоминающаяся мнемоника помогает связать части со смыслом знака.</p>
@@ -396,6 +407,7 @@
       <li><a href="/extension">Расширение для браузера</a>: значение и разбор иероглифа на любом сайте</li>
     </ul>
   </section>
+  </details>
   <footer class="foot">
     <div class="fgrid">
       <div class="fbrand"><b>Hanzi Burst</b><p id="ftag"></p><p><a href="https://lipu.dev/">lipu.dev</a></p></div>
@@ -484,13 +496,13 @@ window.addEventListener('storage', e => { if (e.key === 'hanzi-known' && e.newVa
 const t = k => T[lang][k];
 /* подписи шапки, меню настроек, разделов и подсказки к кнопкам — понятные новичку, без 中/拼音/简 без пояснений */
 const UI = {
-  ru: { set: 'Настройки', slMode: 'Язык фраз', slPhon: 'Как показывать чтение', slScr: 'Иероглифы', zh: 'Китайский', ja: 'Японский',
+  ru: { set: 'Настройки', slMode: 'Язык фраз', slPhon: 'Чтение (можно несколько)', slJr: 'Чтение японских слов', sFg: 'Фуригана (кана над кандзи)', sLat: 'Латиница (rōmaji)', sCyr: 'Кириллица (Поливанов)', cpKn: 'Кана', slScr: 'Иероглифы', zh: 'Китайский', ja: 'Японский',
         cpBtn: 'Копировать', cpHz: 'Иероглифы', cpTr: 'Перевод', cpOk: 'Скопировано', cpRd: 'Чтение', sPy: 'Пиньинь (pīnyīn)', sBo: 'Чжуинь (ㄅㄆㄇ)', sPa: 'Палладий (пӣньӣнь)', sSi: 'Упрощённые (简)', sTr: 'Традиционные (繁)',
         // те же разделы, что в site/nav.js и build_static.page — меняйте вместе
         nav: [['/', 'Фразы'], ['/r/', 'Ключи'], ['/c/', 'Иероглифы'], ['/hsk/', 'HSK'], ['/radicals-game?lang=ru', 'Игра'], ['/learned', 'Мои иероглифы']],
         tPy: 'Скрыть или показать пиньинь, чтобы проверить себя', tRd: 'Скрыть или показать чтение, чтобы проверить себя', tTr: 'Скрыть или показать перевод, чтобы проверить себя',
         tMore: 'Другие фразы: случайная, фраза дня, своя', tNew: 'Подобрать фразу, где меньше всего незнакомых вам иероглифов', tRand: 'Любая фраза из списка', tDaily: 'Одна фраза на сегодня, общая для всех', tOwn: 'Вставить свой китайский текст и разобрать его' },
-  en: { set: 'Settings', slMode: 'Phrase language', slPhon: 'Reading shown as', slScr: 'Characters', zh: 'Chinese', ja: 'Japanese',
+  en: { set: 'Settings', slMode: 'Phrase language', slPhon: 'Reading (pick one or more)', slJr: 'Japanese reading', sFg: 'Furigana (kana above kanji)', sLat: 'Rōmaji', sCyr: 'Cyrillic', cpKn: 'Kana', slScr: 'Characters', zh: 'Chinese', ja: 'Japanese',
         cpBtn: 'Copy', cpHz: 'Characters', cpTr: 'Translation', cpOk: 'Copied', cpRd: 'Reading', sPy: 'Pinyin (pīnyīn)', sBo: 'Zhuyin (ㄅㄆㄇ)', sPa: 'Palladius', sSi: 'Simplified (简)', sTr: 'Traditional (繁)',
         nav: [['/?lang=en', 'Phrases'], ['/en/r/', 'Radicals'], ['/en/c/', 'Characters'], ['/en/hsk/', 'HSK'], ['/radicals-game?lang=en', 'Game'], ['/learned', 'My characters']],
         tPy: 'Hide or show pinyin to test yourself', tRd: 'Hide or show the reading to test yourself', tTr: 'Hide or show the translation to test yourself',
@@ -517,6 +529,13 @@ const short = d => d ? d.split(/[;,]/)[0].trim() : '';
 const py = ch => ((D.chars[ch] || {}).pinyin || [])[0] || '';
 /* бопомофо (注音) вместо пиньиня; по умолчанию выключено */
 let phon = 'p'; try { phon = { b: 'b', r: 'r' }[localStorage.getItem('hanzi-phon')] || 'p'; } catch (e) {}
+/* какие чтения показывать над иероглифами (галочки, hanzi-rd: ['p','b','r']); phon — первое из них: им пишутся карточка, слова, поиск */
+const RD_ORDER = ['p', 'b', 'r'];
+let rds = [phon]; try { const v = JSON.parse(localStorage.getItem('hanzi-rd')); if (Array.isArray(v) && v.length) rds = RD_ORDER.filter(x => v.includes(x)); } catch (e) {}
+const rdsEff = () => { const r = rds.filter(x => x !== 'r' || lang === 'ru'); return r.length ? r : ['p']; };   // Палладий — только в русском интерфейсе
+/* японские чтения (hanzi-ja-rd): f — фуригана, l — латиница, c — кириллица (RU); по умолчанию фуригана + запись языка интерфейса */
+let jrs = null; try { const v = JSON.parse(localStorage.getItem('hanzi-ja-rd')); if (Array.isArray(v)) jrs = v; } catch (e) {}
+const jrEff = () => (jrs || ['f', lang === 'ru' ? 'c' : 'l']).filter(x => x !== 'c' || lang === 'ru');
 const ZY = (() => {
   const TONE = {}; 'aāáǎà eēéěè iīíǐì oōóǒò uūúǔù üǖǘǚǜ'.split(' ').forEach(r => [...r].slice(1).forEach((c, i) => TONE[c] = [r[0], i + 1]));
   const INI = { b:'ㄅ', p:'ㄆ', m:'ㄇ', f:'ㄈ', d:'ㄉ', t:'ㄊ', n:'ㄋ', l:'ㄌ', g:'ㄍ', k:'ㄎ', h:'ㄏ', j:'ㄐ', q:'ㄑ', x:'ㄒ', zh:'ㄓ', ch:'ㄔ', sh:'ㄕ', r:'ㄖ', z:'ㄗ', c:'ㄘ', s:'ㄙ' };
@@ -582,16 +601,16 @@ const PAL = (() => {
   };
   return s => PALM ? s.replace(/[A-Za-zÀ-ɏüÜ]+[1-5]?/g, tok => one(tok) ?? tok) : s;
 })();
-const PY = s => !s ? s : phon === 'b' ? ZY(String(s)) : (phon === 'r' && lang === 'ru') ? PAL(String(s)) : s;
+const PY = (s, sys = phon) => !s ? s : sys === 'b' ? ZY(String(s)) : (sys === 'r' && lang === 'ru') ? PAL(String(s)) : s;
 /* тон слога: по диакритике пиньиня или по знаку бопомофо (ˊˇˋ, ˙ впереди — лёгкий); без знака — лёгкий (пиньинь) или 1-й (бопомофо) */
 const TONE_MARK = {}; 'āēīōūǖ áéíóúǘ ǎěǐǒǔǚ àèìòùǜ'.split(' ').forEach((r, i) => [...r].forEach(c => TONE_MARK[c] = i + 1));
-const toneOf = syl => {
-  if (phon === 'b') return syl[0] === '˙' ? 5 : ({ 'ˊ': 2, 'ˇ': 3, 'ˋ': 4 })[syl.slice(-1)] || 1;
-  if (phon === 'r' && lang === 'ru' && /[а-яё]/i.test(syl)) { const m = syl.normalize('NFD').match(/[\u0304\u0301\u030c\u0300]/); return m ? ({ '\u0304': 1, '\u0301': 2, '\u030c': 3, '\u0300': 4 })[m[0]] : 5; }
+const toneOf = (syl, sys = phon) => {
+  if (sys === 'b') return syl[0] === '˙' ? 5 : ({ 'ˊ': 2, 'ˇ': 3, 'ˋ': 4 })[syl.slice(-1)] || 1;
+  if (sys === 'r' && lang === 'ru' && /[а-яё]/i.test(syl)) { const m = syl.normalize('NFD').match(/[\u0304\u0301\u030c\u0300]/); return m ? ({ '\u0304': 1, '\u0301': 2, '\u030c': 3, '\u0300': 4 })[m[0]] : 5; }
   for (const c of syl.toLowerCase()) if (TONE_MARK[c]) return TONE_MARK[c];
   return 5;
 };
-const PYH = s => s ? PY(String(s)).split(/([\s,，/]+)/).map(x => !x || /^[\s,，/]+$/.test(x) ? x : `<span class="t${toneOf(x)}">${x}</span>`).join('') : '';
+const PYH = (s, sys = phon) => s ? PY(String(s), sys).split(/([\s,，/]+)/).map(x => !x || /^[\s,，/]+$/.test(x) ? x : `<span class="t${toneOf(x, sys)}">${x}</span>`).join('') : '';
 
 /* японский режим: кандзи из шардов data/kanji/ (KANJIDIC2 + KanjiVG), см. loadKanji; ORIG: 亻 → 人 для значений частей */
 const K = {}, ORIG = {};
@@ -604,6 +623,7 @@ const defOf = ch => {
 };
 const compsOf = ch => ((isJa() ? K[ch] : D.chars[ch]) || {}).components || [];
 const jaRead = w => (lang === 'ru' ? w.cyr : w.lat) || w.reading || '';
+const jaLines = w => jrEff().filter(x => x !== 'f').map(x => (x === 'c' ? w.cyr : w.lat) || w.reading || '').filter(Boolean);
 const wordRead = w => w.ja ? jaRead(w) : PYH((w.pinyin || w.chars.map(py)).join(' '));
 
 /* Иероглиф рисуется по контурам черт (Make Me a Hanzi), а не шрифтом: шрифты теряют черты. */
@@ -690,8 +710,9 @@ function syncView() {
 }
 /* ---------- копирование фразы: иероглифы / чтение (в выбранной системе) / перевод / всё ---------- */
 const CP_PUNCT = { '，': ',', '。': '.', '？': '?', '！': '!', '；': ';', '：': ':', '、': ',', '「': '“', '」': '”', '『': '“', '』': '”', '（': '(', '）': ')', '…': '…' };
-const CP_ORDER = ['hz', 'py', 'zy', 'pa', 'rd', 'tr'];
-const cpShown = k => mode === 'ja' ? ['hz', 'rd', 'tr'].includes(k) : k !== 'rd' && (k !== 'pa' || lang === 'ru');
+const CP_ORDER = ['hz', 'py', 'zy', 'pa', 'kn', 'rl', 'rc', 'tr'];
+const CP_JA = ['hz', 'kn', 'rl', 'rc', 'tr'];
+const cpShown = k => (mode === 'ja' ? CP_JA.includes(k) : !CP_JA.includes(k) || k === 'hz' || k === 'tr') && ((k !== 'pa' && k !== 'rc') || lang === 'ru');
 function copyText(k) {
   const ws = (D && D.phrase) || [], ph = L[cur] || {};
   // чтение по словам (hànzì слитно, чжуинь — через пробел), китайская пунктуация → латинская
@@ -703,20 +724,22 @@ function copyText(k) {
     py: () => read(w => syl(w).join('')),
     zy: () => read(w => syl(w).map(p => ZY(String(p))).join(' ')),
     pa: () => PALM ? read(w => syl(w).map(p => PAL(String(p))).join('')) : '',
-    rd: () => read(w => jaRead(w)),
+    kn: () => read(w => w.reading || w.word),
+    rl: () => read(w => w.lat || w.reading || w.word),
+    rc: () => read(w => w.cyr || w.reading || w.word),
     tr: () => ph.custom ? ((ph.tr && ph.tr[lang]) || '') : ((lang === 'ru' ? ph.ru : ph.en) || ph.en || ''),
   };
   return [].concat(k).map(x => T[x] ? T[x]() : '').filter(Boolean).join('\n');   // k: 'hz' | ['hz', 'py', …]
 }
 /* какие строки копировать: при каждом открытии меню — то же, что сейчас на экране (Коби):
    иероглифы; чтение в показанной системе, если оно не скрыто кнопкой; перевод, если не скрыт. Галочки меняют только эту копию. */
-const shownReadings = () => mode === 'ja' ? ['rd'] : [phon === 'b' ? 'zy' : (phon === 'r' && lang === 'ru') ? 'pa' : 'py'];
+const shownReadings = () => mode === 'ja' ? jrEff().map(x => ({ f: 'kn', l: 'rl', c: 'rc' })[x]) : rdsEff().map(x => ({ p: 'py', b: 'zy', r: 'pa' })[x]);
 const cpDefault = () => ['hz', ...(view.py ? shownReadings() : []), ...(view.tr ? ['tr'] : [])];
 let cpSel = [];   // заполняется при открытии меню (cpDefault)
 function cpLabels() {
   $('#copy > summary').innerHTML = ICON.copy + ui('cpBtn');
   $('#copy > summary').title = ui('cpBtn');
-  const L2 = { hz: ui('cpHz'), py: ui('sPy'), zy: ui('sBo'), pa: ui('sPa'), rd: ui('cpRd'), tr: ui('cpTr') };
+  const L2 = { hz: ui('cpHz'), py: ui('sPy'), zy: ui('sBo'), pa: ui('sPa'), kn: ui('cpKn'), rl: ui('sLat'), rc: ui('sCyr'), tr: ui('cpTr') };
   document.querySelectorAll('#copy [data-cp]').forEach(i => {
     const k = i.dataset.cp; i.nextElementSibling.textContent = L2[k]; i.checked = cpSel.includes(k);
     i.parentElement.hidden = !cpShown(k) || (k === 'tr' && !copyText('tr'));
@@ -1019,7 +1042,7 @@ function renderPhrase() {
     }
     if (w.ja) {
       el.classList.add('ja'); el.lang = 'ja';
-      const r = document.createElement('span'); r.className = 'jr'; r.textContent = jaRead(w);
+      const r = document.createElement('span'); r.className = 'jr'; r.textContent = jaLines(w).join('\n');
       r.onclick = () => { revealed.add(wi); el.classList.add('rv'); };
       r.title = [w.reading, lang === 'ru' ? w.lat : w.cyr].filter(Boolean).join(' · ');
       el.append(r);
@@ -1030,7 +1053,8 @@ function renderPhrase() {
       b.className = 'ch' + (partState(c) ? ' ' + partState(c) : '') + (c === rootCh ? ' sel' : '') + (JA.KANA.test(c) ? ' kana' : '');
       b.dataset.ch = c;
       const tip = tipFor(w, i); if (tip) b.dataset.tip = tip;
-      b.innerHTML = `<span class="py">${PYH((w.pinyin && w.pinyin[i]) || py(c))}</span>${hz(c)}`;
+      const syl = (w.pinyin && w.pinyin[i]) || py(c);
+      b.innerHTML = `<span class="py">${rdsEff().map(sy => `<span class="rl">${PYH(syl, sy)}</span>`).join('')}</span>${hz(c)}`;
       b.onclick = e => {   // скрытое чтение: нажатие на полоску только открывает чтение слова
         if (view.py === false && !revealed.has(wi) && e.target.closest('.py, .jr, .fg')) { revealed.add(wi); el.classList.add('rv'); return; }
         if (view.py === false) { revealed.add(wi); el.classList.add('rv'); }
@@ -1430,9 +1454,9 @@ const HEAD_T = {
   ru: [document.title, DESC_EL.content],
   en: ['Chinese Characters Broken Down into Radicals — Hanzi Burst', 'Free breakdown of Chinese characters into radicals and components: tap a character and it bursts into parts. Pinyin, meanings, mnemonics, simple phrases and HSK 1–9 lists.'] };
 function renderChrome() {
-  $('#setSum').textContent = ui('set'); $('#set summary').title = ui('set'); $('#set summary').setAttribute('aria-label', ui('set')); $('#slMode').textContent = ui('slMode'); $('#slPhon').textContent = ui('slPhon'); $('#slScr').textContent = ui('slScr');
+  $('#setSum').textContent = ui('set'); $('#set summary').title = ui('set'); $('#set summary').setAttribute('aria-label', ui('set')); $('#slMode').textContent = ui('slMode'); $('#slPhon').textContent = ui('slPhon'); $('#slJr').textContent = ui('slJr'); $('#slScr').textContent = ui('slScr');
   document.querySelectorAll('.md button').forEach(b => { b.textContent = ui(b.dataset.mode); });
-  document.querySelectorAll('.scr [data-k]').forEach(x => { x.textContent = ui(x.dataset.k); });
+  document.querySelectorAll('.scr [data-k], .chk [data-k]').forEach(x => { x.textContent = ui(x.dataset.k); });
   $('#snav').innerHTML = ui('nav').map(([h, txt], i) => `<a href="${h}"${i ? '' : ' class="on" aria-current="page"'}>${txt}</a>`).join('');
 }
 // меню настроек закрывается кликом мимо него и по Esc
@@ -1440,9 +1464,9 @@ document.addEventListener('click', e => { const d = $('#set'); if (d.open && !d.
 document.addEventListener('keydown', e => { if (e.key === 'Escape') $('#set').open = false; });
 function applyLang() {
   // «Палладий» — русская запись: в английском интерфейсе вариант скрыт, чтение — пиньинь
-  $('.scr.ph .pal').hidden = lang !== 'ru';
-  document.querySelectorAll('.scr.ph input').forEach(i => { i.checked = i.value === (phon === 'r' && lang !== 'ru' ? 'p' : phon); });
-  if (phon === 'r') {   // смена языка или первая загрузка: таблица слогов и перерисовка чтения фразы
+  $('.chk.ph .pal').hidden = lang !== 'ru'; $('.chk.jr .cyr').hidden = lang !== 'ru';
+  syncRd(); syncJr();
+  if (rds.includes('r')) {   // смена языка или первая загрузка: таблица слогов и перерисовка чтения фразы
     const reRead = () => { if (D && D.phrase) { renderPhrase(); renderTrans(); refresh(); } };
     if (lang === 'ru' && !PALM) loadPal().then(() => setTimeout(reRead));
     else if (applyLang.was && applyLang.was !== lang) setTimeout(reRead);
@@ -1612,7 +1636,7 @@ const INTRO_EN = `<h2>Chinese characters through their radicals</h2>
       <li><a href="/extension">Browser extension</a>: meaning and breakdown of any character on any site</li>
     </ul>`;
 function renderFooter() {
-  $('#intro').innerHTML = lang === 'en' ? INTRO_EN : INTRO_RU;
+  $('#intro').innerHTML = lang === 'en' ? INTRO_EN : INTRO_RU; $('#introSum').textContent = lang === 'en' ? 'ⓘ About this site' : 'ⓘ О сайте';
   const li = (h, txt) => `<li><a href="${h}">${txt}</a></li>`;
   $('#ftag').textContent = t('ftag');
   $('#fh1').textContent = t('fExplore'); $('#fh2').textContent = t('fProject');
@@ -1632,13 +1656,33 @@ const ownLabels = () => {
   $('#ownText').placeholder = t('ownPh'); $('#ownMsg').textContent = t($('#ownMsg').dataset.k || 'ownNote');
 };
 
-document.querySelectorAll('.scr.ph input').forEach(i => {
-  i.checked = i.value === phon;
-  i.onchange = async () => {
-    if (!i.checked) return; phon = i.value; try { localStorage.setItem('hanzi-phon', phon); } catch (e) {}
-    if (phon === 'r') await loadPal();
-    if (D && D.phrase) { renderPhrase(); renderTrans(); refresh(); }
-  };
+/* чтения галочками: хоть одно всегда включено; первое (по порядку пиньинь → чжуинь → Палладий) — основное (phon) */
+function syncRd() {
+  const eff = rdsEff();
+  document.querySelectorAll('.chk.ph input').forEach(i => { i.checked = eff.includes(i.value); });
+  phon = eff[0];
+}
+function syncJr() {
+  const e = jrEff(), lines = e.filter(x => x !== 'f').length, h = document.documentElement.classList;
+  document.querySelectorAll('.chk.jr input').forEach(i => { i.checked = e.includes(i.value); });
+  h.toggle('nofg', !e.includes('f')); h.toggle('jr0', !lines); h.toggle('jr2', lines > 1);
+}
+document.querySelectorAll('.chk.ph input').forEach(i => i.onchange = async () => {
+  const eff = rdsEff(), v = i.value;
+  let n = i.checked ? [...new Set([...eff, v])] : eff.filter(x => x !== v);
+  if (!n.length) { i.checked = true; return; }   // без чтения совсем — нельзя
+  rds = RD_ORDER.filter(x => n.includes(x)); syncRd();
+  try { localStorage.setItem('hanzi-rd', JSON.stringify(rds)); localStorage.setItem('hanzi-phon', phon); } catch (e) {}
+  if (rds.includes('r')) await loadPal();
+  track('reading', { sys: rds.join('') });
+  if (D && D.phrase) { renderPhrase(); renderTrans(); refresh(); }
+});
+document.querySelectorAll('.chk.jr input').forEach(i => i.onchange = () => {
+  const e = jrEff(), v = i.value;
+  jrs = ['f', 'l', 'c'].filter(x => x === v ? i.checked : e.includes(x));
+  try { localStorage.setItem('hanzi-ja-rd', JSON.stringify(jrs)); } catch (e2) {}
+  syncJr(); track('ja_reading', { sys: jrs.join('') || '-' });
+  if (D && D.phrase && mode === 'ja') { renderPhrase(); renderTrans(); refresh(); }
 });
 { // ?mode=ja|zh; ссылки на китайские фразы и иероглифы (?z=, ?open=, ?p=) открывают режим 中,
   // кроме ?mode=ja&z=<фраза>: японская фраза из пула (ссылки со страниц кандзи /k/, scripts/kanji_pages.py)
