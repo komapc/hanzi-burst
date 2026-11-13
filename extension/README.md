@@ -35,5 +35,5 @@ by the content script on hanzi.lipu.dev: on page load, when the extension's list
 `knownBase` holds the list after the last merge, so a character unmarked on one side is removed on the other too.
 A missing site list is not taken as "everything unmarked": if `hanzi-known` is absent (site data cleared, incognito)
 or none of `knownBase` is left in it, the lists are united and nothing is deleted (except a one-character `knownBase`
-right after the site saved its list: the user unmarked the last character). See the comment above `mergeKnown` in `content.js`.
+right after the site saved its list: the user unmarked the last character). See the comment above `syncSite` in `content.js`; the function is `mergeKnown` in `common.js` (tested in `tests/js`).
 The site listens for the `hanzi-known` window event to reload its list.
