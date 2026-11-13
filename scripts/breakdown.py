@@ -103,12 +103,23 @@ def _usable(c):
     return c in IDS_OPS or 0x4E00 <= ord(c) <= 0x9FFF or 0x2E80 <= ord(c) <= 0x2FDF
 
 
+# Ручные разборы для «？», которые IDS закрывает знаком вне BMP (шрифтом не показать): 學 = ⿱𦥯子, 𦥯 = 臼 + 爻 + 冖.
+HOLE_FIXES = {
+    "學": "⿳⿴臼爻冖子",
+    "覺": "⿳⿴臼爻冖見",
+}
+
+
 def fill_holes(mmh):
     """У части знаков MMH пишет «？» вместо одного из компонентов (曷 = ⿱日？). Берём разбор из IDS,
     если все его части — обычные унифицированные иероглифы или радикалы (их можно показать шрифтом).
     Знаки, у которых «？» — всё разбиение (простые части), не трогаем."""
     ids = load_ids()
     filled = []
+    for ch, dec in HOLE_FIXES.items():
+        if ch in mmh and "？" in mmh[ch].get("decomposition", ""):
+            mmh[ch]["decomposition"] = dec
+            filled.append(ch)
     for ch, d in list(mmh.items()):
         dec = d.get("decomposition", "")
         if "？" not in dec or not dec.strip("？"):
