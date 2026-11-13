@@ -37,6 +37,7 @@ Japanese: when the text has kana or the page is marked as Japanese, the card sho
 Mark characters as known with one click. Tiles are painted green (known), blue (all parts known) or amber (some parts known). The "My characters" page shows your progress by HSK 3.0 level and what is ready to learn next. The list stays on your device and is merged with your list on hanzi.lipu.dev in the same browser.
 
 Features
+• On hover the card also shows the whole sentence around the character, with a "Translate phrase" button; the hanzi.lipu.dev link opens the phrase on the site
 • Three triggers: mouse hover, hover with Alt, or selection; plus a "Hanzi Burst" item in the right-click menu
 • Pinyin (Chinese) or furigana (Japanese) over page text
 • HSK 3.0 progress
@@ -69,6 +70,7 @@ Hanzi Burst — китайско-японский словарь при наве
 Отмечайте известные иероглифы одним кликом. Плитки подсвечиваются зелёным (знаю), синим (знаю все части) или жёлтым (знаю часть частей). Страница «Мои иероглифы» показывает прогресс по уровням HSK 3.0 и подсказывает, что учить следующим. Список хранится на вашем устройстве и объединяется со списком на hanzi.lipu.dev в том же браузере.
 
 Возможности
+• При наведении карточка показывает и всё предложение вокруг знака с кнопкой «Перевести фразу»; ссылка hanzi.lipu.dev открывает эту фразу на сайте
 • Три способа: наведение курсора, наведение с Alt или выделение; плюс пункт «Hanzi Burst» в контекстном меню
 • Пиньинь (китайский) или фуригана (японский) над текстом страницы
 • Прогресс по HSK 3.0
