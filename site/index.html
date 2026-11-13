@@ -208,7 +208,7 @@
   #ownLang button { border:0; background:none; color:inherit; padding:4px 10px; font:inherit; font-size:.85rem; cursor:pointer; }
   #ownLang button[aria-pressed="true"] { background:var(--fg); color:var(--bg); }
   .kanacard h2 small { font-size:1rem; color:var(--muted); margin-left:10px; }
-  .ch[data-tip]::before { content:attr(data-tip); position:absolute; left:50%; bottom:calc(100% + 4px); transform:translateX(-50%);
+  .ch[data-tip]::before { content:attr(data-tip); position:absolute; left:50%; bottom:calc(100% + 4px); transform:translateX(calc(-50% + var(--tx, 0px)));
         z-index:5; width:max-content; max-width:min(18rem, 80vw); white-space:pre-line; text-align:left; font-size:.85rem; line-height:1.35;
         padding:6px 10px; border-radius:8px; background:var(--card); color:var(--fg, inherit); border:1px solid var(--soft);
         box-shadow:0 4px 14px rgba(0,0,0,.25); opacity:0; pointer-events:none; transition:opacity .12s; }
@@ -711,6 +711,20 @@ function syncView() {
   try { cpLabels(); syncSay(); } catch (e) {}
   $('#q').placeholder = mode === 'ja' ? t('qPhJa') : t('qPh'); $('#q').setAttribute('aria-label', t('qLbl')); $('#q').lang = mode === 'ja' ? 'ja' : 'zh';
 }
+/* подсказка над знаком (::before, по центру) не должна вылезать за край окна: сдвиг --tx при наведении */
+function fitTip(e) {
+  const b = e.target.closest && e.target.closest('.ch[data-tip]'); if (!b) return;
+  b.style.removeProperty('--tx');
+  const cs = getComputedStyle(b, '::before'), w = parseFloat(cs.width) + parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight) + 2;
+  if (!w) return;
+  // границы: <main> обрезает по горизонтали (overflow-x:clip), и окно
+  const r = b.getBoundingClientRect(), c = r.left + r.width / 2, mb = (b.closest('main') || document.documentElement).getBoundingClientRect();
+  const lo = Math.max(0, mb.left) + 4, hi = Math.min(document.documentElement.clientWidth, mb.right) - 4;
+  let dx = 0;
+  if (c - w / 2 < lo) dx = lo - (c - w / 2); else if (c + w / 2 > hi) dx = hi - (c + w / 2);
+  if (dx) b.style.setProperty('--tx', Math.round(dx) + 'px');
+}
+document.addEventListener('pointerover', fitTip); document.addEventListener('focusin', fitTip);
 /* ---------- озвучка: синтез речи браузера (Web Speech API), без сервера (Коби, 13.11) ----------
    Голос — лучший из установленных для zh-CN / ja-JP (Google, Natural, Premium…). Нет голоса — кнопок нет. */
 const TTS = (() => {
