@@ -639,7 +639,9 @@ const wordRead = w => w.ja ? jaRead(w) : PYH((w.pinyin || w.chars.map(py)).join(
 /* традиционная запись: данные остаются упрощёнными, подменяется только начертание */
 let S2T = null;
 const disp = ch => (!(L[cur] && L[cur].ja) && window.hanziScript && hanziScript.get() === 't' && S2T && S2T[ch]) || ch;
-const glyphPaths = ch => (disp(ch) !== ch && G[disp(ch)]) || G[ch];
+const glyphPaths = (ch, raw) => (!raw && disp(ch) !== ch && G[disp(ch)]) || G[ch];
+// raw: the tree and the card draw the character itself. Only phrase-level text is shown in 繁: the tree already
+// breaks down the traditional form, and its parts must not be converted again (尔 in 你 is not 爾; Kobi 2026-11-13)
 /* Контуры черт: data/g/<кодпоинт >> 4>.json, по 16 знаков. Знак без контуров рисуется текстом (span.serif[data-c]);
    наблюдатель за DOM подгружает шарды для таких знаков и заменяет их на SVG. */
 const gKey = ch => (ch.codePointAt(0) >> 4).toString(16);
@@ -649,18 +651,18 @@ async function upgradeGlyphs(root = document) {
   const spans = [...root.querySelectorAll('span.serif[data-c]')];
   if (!spans.length) return;
   await loadGlyphs(spans.flatMap(sp => [sp.dataset.c, disp(sp.dataset.c)]));
-  spans.forEach(sp => { if (sp.isConnected && glyphPaths(sp.dataset.c)) sp.outerHTML = hz(sp.dataset.c, sp.dataset.cls || ''); });
+  spans.forEach(sp => { if (sp.isConnected && glyphPaths(sp.dataset.c, !!sp.dataset.raw)) sp.outerHTML = hz(sp.dataset.c, sp.dataset.cls || '', !!sp.dataset.raw); });
 }
 {
   let gt = 0;
   new MutationObserver(() => { clearTimeout(gt); gt = setTimeout(upgradeGlyphs, 20); }).observe(document.body, { childList: true, subtree: true });
 }
-function hz(ch, cls = '') {
+function hz(ch, cls = '', raw = false) {
   const k = isJa() && K[ch];
   if (k && k.p) return `<svg class="hz kvg ${cls}" data-c="${ch}" viewBox="0 0 109 109" role="img" aria-label="${ch}"><g>${k.p.map(d => `<path d="${d}"/>`).join('')}</g></svg>`;
-  const s = glyphPaths(ch);
-  if (!s) return `<span class="serif" data-c="${ch}" data-cls="${cls}">${disp(ch)}</span>`;   // контуры подгружаются позже из шардов data/g: см. upgradeGlyphs
-  return `<svg class="hz ${cls}" data-c="${ch}" viewBox="0 0 1024 1024" role="img" aria-label="${ch}"><g transform="scale(1,-1) translate(0,-900)">${s.map(d => `<path d="${d}"/>`).join('')}</g></svg>`;
+  const s = glyphPaths(ch, raw);
+  if (!s) return `<span class="serif" data-c="${ch}" data-cls="${cls}"${raw ? ' data-raw="1"' : ''}>${raw ? ch : disp(ch)}</span>`;   // контуры подгружаются позже из шардов data/g: см. upgradeGlyphs
+  return `<svg class="hz ${cls}" data-c="${ch}"${raw ? ' data-raw="1"' : ''} viewBox="0 0 1024 1024" role="img" aria-label="${ch}"><g transform="scale(1,-1) translate(0,-900)">${s.map(d => `<path d="${d}"/>`).join('')}</g></svg>`;
 }
 let scriptBusy = false;
 async function syncScript() {
@@ -674,7 +676,7 @@ async function syncScript() {
       await loadGlyphs(need);
     }
     document.querySelectorAll('svg.hz[data-c]:not(.kvg)').forEach(v => {
-      const s = glyphPaths(v.dataset.c); if (!s) return;
+      const s = glyphPaths(v.dataset.c, !!v.dataset.raw); if (!s) return;
       v.firstElementChild.innerHTML = s.map(d => `<path d="${d}"/>`).join('');
     });
   } catch (e) {} finally { scriptBusy = false; }
@@ -766,6 +768,7 @@ function syncSay() {
   document.querySelectorAll('#sayBtn').forEach(x => { x.hidden = b.hidden; });
 }
 $('#say').onclick = () => TTS.say(((D && D.phrase) || []).map(w => w.word).join('') || (L[cur] || {}).zh, sayLang());
+const cpChBtn = () => `<button class="btn" id="cpChBtn" title="${ui('cpBtn')}">${ICON.copy}${ui('cpBtn')}</button>`;
 const sayBtn = () => `<button class="btn" id="sayBtn" title="${ui('sayT')}"${TTS.ok(sayLang()) ? '' : ' hidden'}>${ICON.sound}${ui('say')}</button>`;
 /* ---------- копирование фразы: иероглифы / чтение (в выбранной системе) / перевод / всё ---------- */
 const CP_PUNCT = { '，': ',', '。': '.', '？': '?', '！': '!', '；': ';', '：': ':', '、': ',', '「': '“', '」': '”', '『': '“', '』': '”', '（': '(', '）': ')', '…': '…' };
@@ -1149,7 +1152,7 @@ function makeNode(ch, ancestors, animate) {
   node.dataset.ch = ch;
   const g = document.createElement('button');
   g.className = 'glyph' + (comps.length ? '' : ' leaf') + (partState(ch) ? ' ' + partState(ch) : '');
-  g.innerHTML = `${hz(ch)}<span class="m">${short(defOf(ch)) || '&nbsp;'}</span>`;
+  g.innerHTML = `${hz(ch, '', true)}<span class="m">${short(defOf(ch)) || '&nbsp;'}</span>`;
   // the glyph shows the explanation and opens the parts the first time, but never closes them (moving between
   // explanations kept collapsing the tree); + / − opens and closes; the star marks "known" (Kobi 2026-11-13)
   let xb = null;
@@ -1328,7 +1331,7 @@ function selectJa(ch, glyphEl) {
   const inPh = (D.phrase || []).filter(w => w.chars && w.chars.length > 1 && w.chars.some(x => x === ch || allParts(x).has(ch)));
   h += `<div class="actions">
     <button class="btn ${isKnown ? 'on' : ''}" id="knownBtn">${isKnown ? ICON.check : ICON.star}${isKnown ? t('known') : t('add')}</button>
-    ${sayBtn()}
+    ${sayBtn()}${cpChBtn()}
     ${inPh.length ? `<button class="btn" id="usageBtn">${ICON.list}${t('where')}</button>` : ''}
     ${radBtn(ch, radOf((D.chars || {})[ch] || {}))}
     <a class="btn" target="_blank" rel="noopener" href="https://jisho.org/search/${encodeURIComponent(ch + ' #kanji')}">${ICON.ext}Jisho</a>
@@ -1337,6 +1340,7 @@ function selectJa(ch, glyphEl) {
   if (inPh.length) h += `<div class="usage" id="usage"><h3>${t('inPhrase')}</h3><ul class="wl">${inPh.map(w => `<li><span class="w serif" lang="ja">${w.word}</span><span class="p">${wordRead(w)}</span>${wordMeaning(w)}</li>`).join('')}</ul></div>`;
   $('#info').innerHTML = h;
   $('#knownBtn').onclick = () => toggleKnown(ch); if ($('#sayBtn')) $('#sayBtn').onclick = () => TTS.say(ch, sayLang());
+  $('#cpChBtn').onclick = async () => { const b = $('#cpChBtn'), ok = await doCopy(ch); b.innerHTML = (ok ? ICON.check + ui('cpOk') : '—'); track('copy', { what: 'char' }); setTimeout(() => { if (b.isConnected) b.innerHTML = ICON.copy + ui('cpBtn'); }, 1500); };
   const ub = $('#usageBtn'); if (ub) ub.onclick = () => $('#usage').classList.toggle('open');
 }
 function select(ch, glyphEl) {
@@ -1351,7 +1355,7 @@ function select(ch, glyphEl) {
   // characters mentioned in the text ("compare 左", "variant of 爲") open their own card (Kobi 2026-11-13)
   const xr = s => String(s || '').split(/(<[^>]*>)/).map(p => p[0] === '<' ? p : p.replace(/[\u3400-\u9fff\uf900-\ufaff]/g, x => x === ch ? x : `<a class="xr serif" href="?open=${x}" data-ch="${x}">${x}</a>`)).join('');
   const def = xr(pick(c, 'definition')), hint = xr(pick(e, 'hint'));
-  let h = `<h2>${hz(ch)}<small>${PYH((c.pinyin || []).join(', '))}</small></h2>`;
+  let h = `<h2>${hz(ch, '', true)}<small>${PYH((c.pinyin || []).join(', '))}</small></h2>`;
   if (def) h += `<p>${def}${c.definition_source && c.definition_source !== 'mmh' ? ` <span class="tag">${t('derived')}</span>` : ''}</p>`;
   if (c.readings) {   // 多音字: у знака несколько чтений; чтение во фразе выделено
     const w = (D.phrase || []).find(w => w.chars && w.chars.includes(ch));
@@ -1381,7 +1385,7 @@ function select(ch, glyphEl) {
   if (u) u.chars.forEach(pc => ((D.usage[pc] || {}).words || []).forEach(w => { if (!have.has(w.w)) { have.add(w.w); via.push(w); } }));
   h += `<div class="actions">
     <button class="btn ${isKnown ? 'on' : ''}" id="knownBtn">${isKnown ? ICON.check : ICON.star}${isKnown ? t('known') : t('add')}</button>
-    ${sayBtn()}
+    ${sayBtn()}${cpChBtn()}
     ${backend ? `<button class="btn" id="mnemoBtn">${ICON.star}${t('mnemo')}</button>` : ''}
     ${radBtn(ch, radOf(c))}
     ${(u || inPh.length) ? `<button class="btn" id="usageBtn">${ICON.list}${t('where')}</button>` : ''}
@@ -1398,6 +1402,7 @@ function select(ch, glyphEl) {
   }
   $('#info').innerHTML = h;
   $('#knownBtn').onclick = () => toggleKnown(ch); if ($('#sayBtn')) $('#sayBtn').onclick = () => TTS.say(ch, sayLang());
+  $('#cpChBtn').onclick = async () => { const b = $('#cpChBtn'), ok = await doCopy(ch); b.innerHTML = (ok ? ICON.check + ui('cpOk') : '—'); track('copy', { what: 'char' }); setTimeout(() => { if (b.isConnected) b.innerHTML = ICON.copy + ui('cpBtn'); }, 1500); };
   const mb = $('#mnemoBtn'); if (mb) mb.onclick = () => mnemonic(ch);
   loadMnemonics(ch);
   const ub = $('#usageBtn'); if (ub) ub.onclick = () => $('#usage').classList.toggle('open');
