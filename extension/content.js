@@ -108,13 +108,15 @@
   .foot a{color:var(--accent);text-decoration:none;font-weight:600}.foot a:hover{text-decoration:underline}
   .foot button{all:unset;cursor:pointer;color:var(--muted);font-size:12px}.foot button:hover{color:var(--accent)}
   .card.ja .tile,.card.ja .nt{font-family:"Noto Serif JP","Hiragino Mincho ProN","Yu Mincho",serif}
+  .trow{padding:8px 16px}.tr{font-size:15px;line-height:1.4}.mt{font-size:11px;color:var(--muted);margin-top:2px}
+  .trb{all:unset;cursor:pointer;font-size:13px;font-weight:600;color:var(--accent);padding:4px 10px;border:1.5px solid var(--line);border-radius:999px}.trb:hover{border-color:var(--accent)}.trb[disabled]{opacity:.6;cursor:default}
   .legend{display:flex;gap:10px;padding:4px 16px 0;font-size:11px;color:var(--muted)}.legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}
   @media(prefers-color-scheme:dark){.card{--bg:#17140f;--fg:#f1ebe0;--muted:#a59c8e;--card:#221e17;--accent:#ff7a5c;--line:#5a5144;--soft:#352f25;--ok:#5fcf93;--info:#6aa6ff;--warn:#e8b84a;
     box-shadow:0 12px 40px rgba(0,0,0,.6),0 2px 6px rgba(0,0,0,.4)}}`;
   const clean = s => String(s == null ? '' : s).replace(/\s*\[[^\]]*\d[^\]]*\]/g, '').trim();   // drop CC-CEDICT numeric-pinyin cross references
   const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-  const lbl = { en: { mark: 'Click: mark as known', unmark: 'Click: unmark', mine: 'My characters', known: 'known', all: 'all parts known', some: 'some parts known' },
-                ru: { mark: 'Клик: отметить как известный', unmark: 'Клик: снять отметку', mine: 'Мои иероглифы', known: 'знаю', all: 'знаю все части', some: 'знаю часть частей' } };
+  const lbl = { en: { mark: 'Click: mark as known', unmark: 'Click: unmark', mine: 'My characters', known: 'known', all: 'all parts known', some: 'some parts known', tr: 'Translate phrase', trBusy: 'Translating…', trErr: 'Could not translate', trLimit: 'Daily translation limit reached', trNote: 'Sends the phrase to hanzi.lipu.dev (Gemini machine translation)', mt: 'machine translation' },
+                ru: { mark: 'Клик: отметить как известный', unmark: 'Клик: снять отметку', mine: 'Мои иероглифы', known: 'знаю', all: 'знаю все части', some: 'знаю часть частей', tr: 'Перевести фразу', trBusy: 'Перевожу…', trErr: 'Не удалось перевести', trLimit: 'Лимит переводов на сегодня', trNote: 'Фраза уйдёт на hanzi.lipu.dev (машинный перевод Gemini)', mt: 'машинный перевод' } };
   const tip = ch => lbl[lang()][known.has(ch) ? 'unmark' : 'mark'];
   const tree = parts => (parts && parts.length ? `<div class="tree">${parts.map(p => { const st = stateOf(p, known); return `<div class="node"><div class="nrow"><button class="nt${p.parts.length ? '' : ' leaf'}${st ? ' st-' + st : ''}" data-ch="${esc(p.ch)}" title="${esc(tip(p.ch))}">${esc(p.ch)}</button><span class="nd">${p.py ? `<b class="npy">${esc(p.py)}</b>` : ''}${esc(p.def)}</span></div>${tree(p.parts)}</div>`; }).join('')}</div>` : '');
 
@@ -128,6 +130,10 @@
     const root = host.attachShadow({ mode: 'closed' });
     const head = (big, py, def, c) => { const st = c ? stateOf(c, known) : ''; return `<div class="head">${c ? `<button class="tile${st ? ' st-' + st : ''}" data-ch="${esc(big)}" title="${esc(tip(big))}">${esc(big)}</button>` : `<span class="tile${[...big].length > 4 ? ' l5' : [...big].length > 2 ? ' l3' : ''}">${esc(big)}</span>`}<div><div class="py">${esc(py)}</div><div class="def" title="${esc(clean(def))}">${esc(clean(def))}</div>${c && c.hint ? `<div class="hint">💡 ${esc(c.hint.replace(/\u00a0/g, ' '))}</div>` : ''}</div></div>`; };
     let h = '';
+    // phrase (3+ characters, not a single dictionary word): translation row first, by button (Kobi 2026-11-13)
+    const L = lbl[lang()], phrase = r.src && [...r.src].length >= 3 && !(r.word && r.word.w === r.src);
+    if (phrase) h += r.trans ? `<div class="row trow"><div class="tr">${esc(r.trans)}</div><div class="mt">${L.mt}</div></div>`
+      : `<div class="row trow"><button id="trBtn" class="trb" title="${esc(L.trNote)}"${r.trBusy ? ' disabled' : ''}>${r.trBusy ? L.trBusy : r.trErr ? (r.trErr === 'limit' ? L.trLimit : L.trErr) : '⇄ ' + L.tr}</button></div>`;
     if (r.ja) {
       r.words.forEach(w => { h += `<div class="row word">${head(w.w, [w.reading !== w.w ? w.reading : '', w.tr].filter(Boolean).join(' · '), (w.lemma ? w.lemma + ' — ' : '') + w.def)}</div>`; });
       r.chars.forEach(c => { h += `<div class="row">${head(c.ch, [c.on, c.kun].filter(Boolean).join(' · '), c.def, c)}${tree(c.parts)}</div>`; });   // он (катакана) · кун
@@ -145,6 +151,16 @@
     root.addEventListener('click', e => {
       const b = e.target.closest('button[data-ch]');
       if (b) { const c = b.dataset.ch; const k = new Set(known); k.has(c) ? k.delete(c) : k.add(c); known = k; last.scroll = card.scrollTop; try { chrome.storage.local.set({ known: [...k] }); } catch (err) {} render(last.r, last.rect, card.scrollTop); return; }
+      if (e.target.closest('#trBtn') && !last.r.trBusy) {
+        const rr = last.r; rr.trBusy = true; rr.trErr = null; render(rr, last.rect, card.scrollTop);
+        try {
+          chrome.runtime.sendMessage({ type: 'translate', text: rr.src, lang: lang() }, res => {
+            rr.trBusy = false; if (res && res.tr) rr.trans = res.tr; else rr.trErr = (res && res.err) || 'fail';
+            if (last && last.r === rr && host) render(rr, last.rect, 0);
+          });
+        } catch (err) { rr.trBusy = false; rr.trErr = 'fail'; }
+        return;
+      }
       if (e.target.closest('#mine')) { try { chrome.runtime.sendMessage({ type: 'open-learned' }); } catch (err) {} }
     });
     const w = card.offsetWidth, ch = card.offsetHeight;
@@ -170,10 +186,11 @@
     const rect = sel.getRangeAt(0).getBoundingClientRect();
     try {
       const r = await chrome.runtime.sendMessage({ type: 'lookup', text, lang: lang(), ja });
-      if (r && selText(getSelection()) === text) render(r, rect);
+      if (r && selText(getSelection()) === text) { r.src = text; render(r, rect); }
     } catch (err) { /* extension reloaded */ }
   }
-  document.addEventListener('mouseup', e => setTimeout(() => onSelect(e), 10));
+  // composedPath() is empty once dispatch is over, so clicks inside the card are filtered here, not in the timeout
+  document.addEventListener('mouseup', e => { if (host && e.composedPath().includes(host)) return; setTimeout(() => onSelect(e), 10); });
   document.addEventListener('keyup', e => { if (e.key === 'Escape') hide(); else if (e.shiftKey) onSelect(e); });
   document.addEventListener('mousedown', e => { if (host && !e.composedPath().includes(host)) hide(); });
   document.addEventListener('scroll', hide, true);
