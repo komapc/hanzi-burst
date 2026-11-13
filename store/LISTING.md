@@ -44,7 +44,7 @@ Features
 • Glosses and interface in English and Russian
 • Dark theme
 • Turn off per site in one click
-• Fully offline: the dictionaries ship inside the extension, nothing is sent anywhere
+• Offline dictionary: the dictionaries ship inside the extension; the only network request is the optional “Translate phrase” button
 • No ads, no analytics, no account
 
 Built on open dictionary data; full credits and licenses are in NOTICE.txt and on hanzi.lipu.dev/about.
@@ -76,7 +76,7 @@ Hanzi Burst — китайско-японский словарь при наве
 • Переводы и интерфейс на русском и английском
 • Тёмная тема
 • Отключение на отдельном сайте одним кликом
-• Полностью офлайн: словари внутри расширения, ничего никуда не отправляется
+• Словарь офлайн: словари внутри расширения; в сеть уходит только фраза по кнопке «Перевести фразу»
 • Без рекламы, аналитики и аккаунтов
 
 Основано на открытых словарных данных; полный список источников и лицензий — в NOTICE.txt и на hanzi.lipu.dev/about.
