@@ -8,7 +8,8 @@ const tradMap = () => trad || (trad = fetch(chrome.runtime.getURL('data/trad.jso
 
 async function lookup(raw, lang, hover) {
   const map = await tradMap();
-  let text = [...raw].slice(0, hover ? 8 : 30).map(c => map[c] || c).join('');
+  const src = [...raw].slice(0, hover ? 8 : 30);                  // as on the page; words are matched in simplified
+  let text = src.map(c => map[c] || c).join('');
   const han = [...text].filter(c => HAN.test(c));
   if (!han.length || (hover && !HAN.test([...text][0]))) return null;
   const words = {};
@@ -18,7 +19,6 @@ async function lookup(raw, lang, hover) {
     const cs = [...text];
     for (let m = Math.min(6, cs.length); m >= 1; m--) { const s = cs.slice(0, m).join(''); if (m === 1 || words[s]) { text = s; w = m > 1 ? s : null; break; } }
   } else if (words[text]) w = text;
-  const uniq = [...new Set([...text].filter(c => HAN.test(c)))];
 
   const chars = {};
   const load = async list => {
@@ -27,8 +27,13 @@ async function lookup(raw, lang, hover) {
       list.filter(c => shardKey(c) === k && cd[c]).forEach(c => { chars[c] = cd[c]; });
     }));
   };
-  let level = uniq;
-  for (let d = 0; d <= MAX_DEPTH && level.length; d++) {          // load the whole tree level by level
+  // A traditional character that has its own entry is broken down as itself (禰 = 礻 + 爾, not 祢 = 礻 + 尔), as on
+  // the site in 繁 mode; one without an entry falls back to its simplified form (Kobi 2026-11-13)
+  const pairs = [...text].map((s, i) => [src[i], s]).filter(([, s]) => HAN.test(s));
+  await load([...new Set(pairs.flat())]);
+  const uniq = [...new Set(pairs.map(([o, s]) => (chars[o] ? o : s)))];
+  let level = [...new Set(uniq.flatMap(c => partsOf(c, chars[c]) || []))].filter(c => !chars[c]);
+  for (let d = 1; d <= MAX_DEPTH && level.length; d++) {          // load the whole tree level by level
     await load(level);
     level = [...new Set(level.flatMap(c => partsOf(c, chars[c]) || []))].filter(c => !chars[c]);
   }
@@ -45,7 +50,7 @@ async function lookup(raw, lang, hover) {
   };
   return {
     text, converted: !hover && text !== raw.slice(0, 30),
-    word: w ? { w, pinyin: words[w][0], def: words[w][1] } : null,
+    word: w ? { w: src.slice(0, [...w].length).join(''), pinyin: words[w][0], def: words[w][1] } : null,   // shown as on the page
     chars: uniq.slice(0, 8).map(view),
   };
 }
