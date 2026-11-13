@@ -148,7 +148,9 @@
   #view > button { display:inline-flex; align-items:center; gap:5px; background:none; border:1px solid var(--soft); border-radius:999px; padding:2px 10px;
                  font:inherit; font-size:.8rem; color:var(--muted); cursor:pointer; }
   #view > button:hover { border-color:var(--accent); color:var(--accent); }
-  #view > button[aria-pressed="false"] { text-decoration:line-through; opacity:.75; }
+  #view > button[data-v][aria-pressed="false"] { text-decoration:line-through; opacity:.75; }
+  #view > button[hidden], .actions .btn[hidden] { display:none; }
+  @media (max-width:480px) { #say .l { display:none; } #view { gap:5px; } #view > button, #copy > summary { padding-left:9px !important; padding-right:9px !important; } #copy > summary { font-size:.8rem; } }
   #view svg.i { width:1em; height:1em; }
   #copy > summary { display:inline-flex; align-items:center; gap:5px; cursor:pointer; border:1px solid var(--soft); border-radius:999px; padding:2px 10px; color:var(--muted); font-size:.85rem; }
   #copy > summary:hover, #copy[open] > summary { border-color:var(--accent); color:var(--accent); }
@@ -317,7 +319,7 @@
   /* сенсорный экран: зона нажатия не меньше ~40 px; «+» на плитке остаётся маленьким, но ловит касание с запасом */
   @media (pointer:coarse) {
     .kbtn::after { content:""; position:absolute; inset:-8px; border-radius:50%; }
-    .pk, #view > button, .btn, .snav a, details.set summary, .pml button { min-height:40px; box-sizing:border-box; }
+    .pk, #view > button, #copy > summary, .btn, .snav a, details.set summary, .pml button { min-height:40px; box-sizing:border-box; }
     .pk, .snav a { display:inline-flex; align-items:center; }
     #view > button { padding:2px 12px; }
     .opts .lang button { min-width:40px; min-height:36px; }
@@ -374,7 +376,7 @@
     <div><span class="seg" id="ownLang" role="group"><button data-tl="auto"></button><button data-tl="zh" lang="zh">中文</button><button data-tl="ja" lang="ja">日本語</button></span>
       <button class="btn" id="ownGo"></button> <span class="hint" id="ownMsg"></span></div>
   </details>
-  <div id="view" role="group"><button data-v="py"></button><button data-v="tr"></button><details class="pm cp" id="copy"><summary></summary><div class="pml"><label><input type="checkbox" data-cp="hz"><span></span></label><label><input type="checkbox" data-cp="py"><span></span></label><label><input type="checkbox" data-cp="zy"><span></span></label><label><input type="checkbox" data-cp="pa"><span></span></label><label><input type="checkbox" data-cp="kn"><span></span></label><label><input type="checkbox" data-cp="rl"><span></span></label><label><input type="checkbox" data-cp="rc"><span></span></label><label><input type="checkbox" data-cp="tr"><span></span></label><button class="btn cpgo" id="cpGo"></button></div></details></div>
+  <div id="view" role="group"><button data-v="py"></button><button data-v="tr"></button><button id="say" class="say" hidden></button><details class="pm cp" id="copy"><summary></summary><div class="pml"><label><input type="checkbox" data-cp="hz"><span></span></label><label><input type="checkbox" data-cp="py"><span></span></label><label><input type="checkbox" data-cp="zy"><span></span></label><label><input type="checkbox" data-cp="pa"><span></span></label><label><input type="checkbox" data-cp="kn"><span></span></label><label><input type="checkbox" data-cp="rl"><span></span></label><label><input type="checkbox" data-cp="rc"><span></span></label><label><input type="checkbox" data-cp="tr"><span></span></label><button class="btn cpgo" id="cpGo"></button></div></details></div>
   <div id="phrase"></div>
   <p class="trans" id="trans"></p>
   <ul class="wl" id="gloss"></ul>
@@ -453,6 +455,7 @@ const ICON = {
   ext: '<svg class="i" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>',
   copy: '<svg class="i" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a1 1 0 0 1 1-1h10"/></svg>',
   eye: '<svg class="i" viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',
+  sound: '<svg class="i" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9zM16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>',
   burst: '<svg class="i" viewBox="0 0 24 24"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M18.4 5.6l-2.8 2.8M8.4 15.6l-2.8 2.8"/></svg>',
 };
 const T = {
@@ -496,13 +499,13 @@ window.addEventListener('storage', e => { if (e.key === 'hanzi-known' && e.newVa
 const t = k => T[lang][k];
 /* подписи шапки, меню настроек, разделов и подсказки к кнопкам — понятные новичку, без 中/拼音/简 без пояснений */
 const UI = {
-  ru: { set: 'Настройки', slMode: 'Язык фраз', slPhon: 'Чтение (можно несколько)', slJr: 'Чтение японских слов', sFg: 'Фуригана (кана над кандзи)', sLat: 'Латиница (rōmaji)', sCyr: 'Кириллица (Поливанов)', cpKn: 'Кана', slScr: 'Иероглифы', zh: 'Китайский', ja: 'Японский',
+  ru: { set: 'Настройки', say: 'Слушать', sayT: 'Прочитать вслух (синтез речи в браузере; качество голоса зависит от устройства)', slMode: 'Язык фраз', slPhon: 'Чтение (можно несколько)', slJr: 'Чтение японских слов', sFg: 'Фуригана (кана над кандзи)', sLat: 'Латиница (rōmaji)', sCyr: 'Кириллица (Поливанов)', cpKn: 'Кана', slScr: 'Иероглифы', zh: 'Китайский', ja: 'Японский',
         cpBtn: 'Копировать', cpHz: 'Иероглифы', cpTr: 'Перевод', cpOk: 'Скопировано', cpRd: 'Чтение', sPy: 'Пиньинь (pīnyīn)', sBo: 'Чжуинь (ㄅㄆㄇ)', sPa: 'Палладий (пӣньӣнь)', sSi: 'Упрощённые (简)', sTr: 'Традиционные (繁)',
         // те же разделы, что в site/nav.js и build_static.page — меняйте вместе
         nav: [['/', 'Фразы'], ['/r/', 'Ключи'], ['/c/', 'Иероглифы'], ['/hsk/', 'HSK'], ['/radicals-game?lang=ru', 'Игра'], ['/learned', 'Мои иероглифы']],
         tPy: 'Скрыть или показать пиньинь, чтобы проверить себя', tRd: 'Скрыть или показать чтение, чтобы проверить себя', tTr: 'Скрыть или показать перевод, чтобы проверить себя',
         tMore: 'Другие фразы: случайная, фраза дня, своя', tNew: 'Подобрать фразу, где меньше всего незнакомых вам иероглифов', tRand: 'Любая фраза из списка', tDaily: 'Одна фраза на сегодня, общая для всех', tOwn: 'Вставить свой китайский текст и разобрать его' },
-  en: { set: 'Settings', slMode: 'Phrase language', slPhon: 'Reading (pick one or more)', slJr: 'Japanese reading', sFg: 'Furigana (kana above kanji)', sLat: 'Rōmaji', sCyr: 'Cyrillic', cpKn: 'Kana', slScr: 'Characters', zh: 'Chinese', ja: 'Japanese',
+  en: { set: 'Settings', say: 'Listen', sayT: 'Read aloud (speech synthesis in your browser; voice quality depends on the device)', slMode: 'Phrase language', slPhon: 'Reading (pick one or more)', slJr: 'Japanese reading', sFg: 'Furigana (kana above kanji)', sLat: 'Rōmaji', sCyr: 'Cyrillic', cpKn: 'Kana', slScr: 'Characters', zh: 'Chinese', ja: 'Japanese',
         cpBtn: 'Copy', cpHz: 'Characters', cpTr: 'Translation', cpOk: 'Copied', cpRd: 'Reading', sPy: 'Pinyin (pīnyīn)', sBo: 'Zhuyin (ㄅㄆㄇ)', sPa: 'Palladius', sSi: 'Simplified (简)', sTr: 'Traditional (繁)',
         nav: [['/?lang=en', 'Phrases'], ['/en/r/', 'Radicals'], ['/en/c/', 'Characters'], ['/en/hsk/', 'HSK'], ['/radicals-game?lang=en', 'Game'], ['/learned', 'My characters']],
         tPy: 'Hide or show pinyin to test yourself', tRd: 'Hide or show the reading to test yourself', tTr: 'Hide or show the translation to test yourself',
@@ -698,16 +701,52 @@ const revealed = new Set();   // слова текущей фразы, у кот
 function syncView() {
   const h = document.documentElement;
   h.classList.toggle('hpy', !view.py); h.classList.toggle('htr', !view.tr); h.classList.toggle('tn', view.tn);
-  document.querySelectorAll('#view > button').forEach(b => {
+  document.querySelectorAll('#view > button[data-v]').forEach(b => {
     const v = b.dataset.v, label = v === 'py' ? (mode === 'ja' ? t('vRd') : t('vPy')) : t('vTr');
     b.setAttribute('aria-pressed', String(view[v]));
     b.innerHTML = ICON.eye + label;
     b.title = ui(v === 'py' ? (mode === 'ja' ? 'tRd' : 'tPy') : 'tTr');
   });
   ['#trans', '#gloss'].forEach(q => { $(q).title = view.tr ? '' : t('vHid'); });
-  try { cpLabels(); } catch (e) {}
+  try { cpLabels(); syncSay(); } catch (e) {}
   $('#q').placeholder = mode === 'ja' ? t('qPhJa') : t('qPh'); $('#q').setAttribute('aria-label', t('qLbl')); $('#q').lang = mode === 'ja' ? 'ja' : 'zh';
 }
+/* ---------- озвучка: синтез речи браузера (Web Speech API), без сервера (Коби, 13.11) ----------
+   Голос — лучший из установленных для zh-CN / ja-JP (Google, Natural, Premium…). Нет голоса — кнопок нет. */
+const TTS = (() => {
+  const ss = window.speechSynthesis;
+  if (!ss || typeof SpeechSynthesisUtterance === 'undefined') return { ok: () => false, say() {} };
+  const RX = { zh: /^(zh[-_](CN|Hans|SG)|cmn)/i, ja: /^ja/i };
+  const GOOD = /google|natural|neural|premium|enhanced|online/i;
+  const voice = l => {
+    const vs = ss.getVoices(), m = vs.filter(v => RX[l].test(v.lang));
+    const any = m.length ? m : l === 'zh' ? vs.filter(v => /^zh/i.test(v.lang)) : [];
+    return any.find(v => GOOD.test(v.name)) || any[0] || null;
+  };
+  ss.addEventListener && ss.addEventListener('voiceschanged', () => syncSay());
+  return {
+    // голоса ещё не загружены (пустой список) — считаем, что есть: Android отдаёт список поздно, а lang всё равно сработает
+    ok: l => !ss.getVoices().length || !!voice(l),
+    say(text, l) {
+      if (!text) return;
+      ss.cancel();
+      const u = new SpeechSynthesisUtterance(text), v = voice(l);
+      if (v) try { u.voice = v; } catch (e) {}
+      u.lang = v ? v.lang : l === 'ja' ? 'ja-JP' : 'zh-CN';
+      u.rate = .8;                                           // медленнее: для учащихся
+      ss.speak(u);
+      track('speak', { len: [...text].length, mode: l });
+    },
+  };
+})();
+const sayLang = () => (mode === 'ja' ? 'ja' : 'zh');
+function syncSay() {
+  const b = $('#say'); if (!b) return;
+  b.hidden = !TTS.ok(sayLang()); b.innerHTML = ICON.sound + `<span class="l">${ui('say')}</span>`; b.title = ui('sayT'); b.setAttribute('aria-label', ui('say'));
+  document.querySelectorAll('#sayBtn').forEach(x => { x.hidden = b.hidden; });
+}
+$('#say').onclick = () => TTS.say(((D && D.phrase) || []).map(w => w.word).join('') || (L[cur] || {}).zh, sayLang());
+const sayBtn = () => `<button class="btn" id="sayBtn" title="${ui('sayT')}"${TTS.ok(sayLang()) ? '' : ' hidden'}>${ICON.sound}${ui('say')}</button>`;
 /* ---------- копирование фразы: иероглифы / чтение (в выбранной системе) / перевод / всё ---------- */
 const CP_PUNCT = { '，': ',', '。': '.', '？': '?', '！': '!', '；': ';', '：': ':', '、': ',', '「': '“', '」': '”', '『': '“', '』': '”', '（': '(', '）': ')', '…': '…' };
 const CP_ORDER = ['hz', 'py', 'zy', 'pa', 'kn', 'rl', 'rc', 'tr'];
@@ -765,7 +804,7 @@ $('#cpGo').onclick = async () => {
   setTimeout(cpLabels, 1500);
 };
 document.addEventListener('click', e => { if ($('#copy').open && !e.target.closest('#copy')) $('#copy').open = false; });
-document.querySelectorAll('#view > button').forEach(b => b.onclick = () => {
+document.querySelectorAll('#view > button[data-v]').forEach(b => b.onclick = () => {
   view[b.dataset.v] = !view[b.dataset.v];
   try { localStorage.setItem('hanzi-view', JSON.stringify(view)); } catch (e) {}
   if (b.dataset.v === 'py') revealed.clear();
@@ -1259,6 +1298,7 @@ function selectJa(ch, glyphEl) {
   const inPh = (D.phrase || []).filter(w => w.chars && w.chars.length > 1 && w.chars.some(x => x === ch || allParts(x).has(ch)));
   h += `<div class="actions">
     <button class="btn ${isKnown ? 'on' : ''}" id="knownBtn">${isKnown ? ICON.check : ICON.star}${isKnown ? t('known') : t('add')}</button>
+    ${sayBtn()}
     ${inPh.length ? `<button class="btn" id="usageBtn">${ICON.list}${t('where')}</button>` : ''}
     ${radBtn(ch, radOf((D.chars || {})[ch] || {}))}
     <a class="btn" target="_blank" rel="noopener" href="https://jisho.org/search/${encodeURIComponent(ch + ' #kanji')}">${ICON.ext}Jisho</a>
@@ -1266,7 +1306,7 @@ function selectJa(ch, glyphEl) {
   </div>`;
   if (inPh.length) h += `<div class="usage" id="usage"><h3>${t('inPhrase')}</h3><ul class="wl">${inPh.map(w => `<li><span class="w serif" lang="ja">${w.word}</span><span class="p">${wordRead(w)}</span>${wordMeaning(w)}</li>`).join('')}</ul></div>`;
   $('#info').innerHTML = h;
-  $('#knownBtn').onclick = () => toggleKnown(ch);
+  $('#knownBtn').onclick = () => toggleKnown(ch); if ($('#sayBtn')) $('#sayBtn').onclick = () => TTS.say(ch, sayLang());
   const ub = $('#usageBtn'); if (ub) ub.onclick = () => $('#usage').classList.toggle('open');
 }
 function select(ch, glyphEl) {
@@ -1309,6 +1349,7 @@ function select(ch, glyphEl) {
   if (u) u.chars.forEach(pc => ((D.usage[pc] || {}).words || []).forEach(w => { if (!have.has(w.w)) { have.add(w.w); via.push(w); } }));
   h += `<div class="actions">
     <button class="btn ${isKnown ? 'on' : ''}" id="knownBtn">${isKnown ? ICON.check : ICON.star}${isKnown ? t('known') : t('add')}</button>
+    ${sayBtn()}
     ${backend ? `<button class="btn" id="mnemoBtn">${ICON.star}${t('mnemo')}</button>` : ''}
     ${radBtn(ch, radOf(c))}
     ${(u || inPh.length) ? `<button class="btn" id="usageBtn">${ICON.list}${t('where')}</button>` : ''}
@@ -1324,7 +1365,7 @@ function select(ch, glyphEl) {
     h += `</div>`;
   }
   $('#info').innerHTML = h;
-  $('#knownBtn').onclick = () => toggleKnown(ch);
+  $('#knownBtn').onclick = () => toggleKnown(ch); if ($('#sayBtn')) $('#sayBtn').onclick = () => TTS.say(ch, sayLang());
   const mb = $('#mnemoBtn'); if (mb) mb.onclick = () => mnemonic(ch);
   loadMnemonics(ch);
   const ub = $('#usageBtn'); if (ub) ub.onclick = () => $('#usage').classList.toggle('open');
