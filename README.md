@@ -38,7 +38,19 @@ node --test tests/js/*.test.js                # расширение: common.js 
 python3 -m unittest discover -s tests/py      # скрипты сборки: пиньинь, сегментация, разбор, дыры «？», Палладий
 ```
 
-Без зависимостей и без `data/raw`; оба набора идут в CI (`check.yml`). JS сайта (`site/index.html`) пока проверяется только вручную/Playwright.
+Без зависимостей и без `data/raw`; оба набора идут в CI (`check.yml`).
+
+Сайт (`site/index.html`) проверяется в браузере: Playwright + Chromium открывают собранный `site/` (нужен `site/data`,
+то есть сборка `sh scripts/build_all.sh`) и проходят по интерфейсу: фраза, дерево, кнопки плитки (+/−, ★), ссылки
+в описании, Copy, 简/繁 (части не переводятся в 繁: 你 = 亻 + 尔, не 爾), `?t=`, японский режим.
+
+```bash
+pip install playwright && python3 -m playwright install chromium
+python3 -m unittest discover -s tests/e2e -v
+```
+
+В CI (`deploy.yml`) сайт собирается один раз, на нём идут эти тесты (уже минифицированный код), и только потом
+`wrangler deploy` (или `--dry-run` в PR) с `HB_BUILT=1`, чтобы wrangler не собирал заново.
 
 ## Устройство
 

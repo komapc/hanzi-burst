@@ -4,7 +4,7 @@ name: deploy
 #   push to main    -> deploy
 #   push of tag v*  -> deploy (only if the tag is on main's current HEAD), then upload the extension to the
 #                      Chrome Web Store (extension-release.yml)
-#   pull_request    -> same build, `wrangler deploy --dry-run` (nothing is published)
+#   pull_request    -> same build and browser tests, `wrangler deploy --dry-run` (nothing is published)
 #
 # The build reads data/raw/ (dictionaries, gitignored). CI takes a pinned snapshot of the files it
 # needs from the GitHub release RAW_DATA_TAG; see README "Деплой" for how to refresh it.
@@ -72,9 +72,19 @@ jobs:
           echo "$RAW_DATA_SHA256  raw-data.tar.xz" | sha256sum -c -
           mkdir -p data/raw
           tar -xJf raw-data.tar.xz -C data/raw
-      # wrangler.toml [build] runs build_shards + build_ja_shards + build_static + build_extension --zip.
+      # Built once here (scripts/build_all.sh, the same as wrangler.toml [build]) so the browser tests check the
+      # very files that get deployed; wrangler then skips its own build (HB_BUILT).
+      - name: Build
+        run: sh scripts/build_all.sh
+      - name: Browser tests (tests/e2e)
+        run: |
+          python -m pip install --quiet playwright==1.61.0
+          python -m playwright install --with-deps chromium
+          python -m unittest discover -s tests/e2e -v
       - name: Deploy (dry run)
         if: github.event_name == 'pull_request'
+        env:
+          HB_BUILT: "1"
         run: |
           npx --yes "wrangler@$WRANGLER_VERSION" deploy --dry-run --outdir dist
           unzip -l site/hanzi-burst-extension.zip | tail -1
@@ -82,6 +92,7 @@ jobs:
         if: github.event_name != 'pull_request' && steps.head.outputs.deploy != 'false'
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          HB_BUILT: "1"
         run: |
           [ -n "$CLOUDFLARE_API_TOKEN" ] || { echo "::error::secret CLOUDFLARE_API_TOKEN is not set"; exit 1; }
           npx --yes "wrangler@$WRANGLER_VERSION" deploy
