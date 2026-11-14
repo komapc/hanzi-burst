@@ -6,7 +6,7 @@
   site/c/index.html, site/p/index.html, site/hsk/index.html — хабы со ссылками
   site/k/ — кандзи (scripts/kanji_pages.py)
   site/r/, site/en/r/ — 214 ключей Канси (scripts/radical_pages.py), плакат /r/poster, /en/r/poster, /eo/r/poster
-  site/en/c/, site/en/p/, site/en/hsk/ — английские версии страниц иероглифов, фраз и HSK со взаимными hreflang ru↔en (x-default = ru)
+  site/en/c/, site/en/p/, site/en/hsk/ — английские версии страниц иероглифов, фраз и HSK со взаимными hreflang ru↔en (x-default = en)
   site/sitemap.xml
 Интерактивная версия: /?open=<иероглиф> и /?z=<фраза>. Запускается из wrangler.toml [build].
 Сгенерированное не коммитится (см. .gitignore).
@@ -99,11 +99,12 @@ BEACON = re.search(r"<script defer src=\"https://static\.cloudflareinsights\.com
 
 
 def page(title, desc, canon, body, ld=(), lang="ru", alt=None, image=None):
-    """alt = (русский путь, английский путь) или {язык: путь}: взаимные hreflang (x-default — русская версия)
+    """alt = (русский путь, английский путь) или {язык: путь}: взаимные hreflang (x-default — английская версия:
+    для тех, чей язык ни русский, ни английский)
     и ссылки на другие языки в шапке. image — путь картинки для og:image (по умолчанию /og.png, у английских страниц /og-en.png)."""
     alts = alt if isinstance(alt, dict) else ({"ru": alt[0], "en": alt[1]} if alt else {})
     hreflang = ("".join(f'<link rel="alternate" hreflang="{l}" href="{BASE}{u}">' for l, u in alts.items())
-                + f'<link rel="alternate" hreflang="x-default" href="{BASE}{alts["ru"]}">\n') if alts else ""
+                + f'<link rel="alternate" hreflang="x-default" href="{BASE}{alts.get("en") or alts["ru"]}">\n') if alts else ""
     # переключатель языка — как на главной: все языки страницы, текущий выделен
     others = ('<span class="lang">' + "".join(f'<a href="{u}" hreflang="{l}" lang="{l}"' + (' class="on" aria-current="true"' if l == lang else "")
                                               + f'>{l.upper()}</a>' for l, u in alts.items()) + "</span>") if alts else ""
