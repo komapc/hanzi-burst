@@ -1,6 +1,6 @@
 """Статические страницы 214 ключей Канси (вызывается из build_static.py):
   site/r/<hex кодпоинта>.html, site/en/r/<hex>.html — ключ: порядок черт (SVG из Make Me a Hanzi, черты пронумерованы),
-      номер, число черт, пиньинь, название, варианты написания, иероглифы HSK с этим ключом, соседние ключи
+      номер, число черт, пиньинь, что нарисовано (PICTURES в radical_names.py), название, варианты написания, иероглифы HSK с этим ключом, соседние ключи
   site/radicals.json — данные для игры site/radicals-game.html
   site/r/poster.html, site/en/r/poster.html, site/eo/r/poster.html — страница плаката (radicals_poster.py)
   site/r/index.html, site/en/r/index.html — указатель: сначала частые ключи (top в data/radicals.json),
@@ -10,7 +10,7 @@
 import json, shutil
 from pathlib import Path
 
-from radical_names import SUPPLEMENT
+from radical_names import PICTURES, SUPPLEMENT
 import palladius
 import poster_version
 
@@ -168,14 +168,14 @@ details.more{margin:18px 0}details.more summary{cursor:pointer;font-weight:600;c
 
 T = {
     "ru": dict(radical="Ключ", hub="Ключи", all214="214 ключей китайских иероглифов", n="Номер", strokes="Черт", pinyin="Пиньинь",
-               meaning="Значение", variants="Варианты написания", order="Порядок черт", examples="Иероглифы с этим ключом",
+               meaning="Значение", pic="Что нарисовано", variants="Варианты написания", order="Порядок черт", examples="Иероглифы с этим ключом",
                as_char="Этот знак как иероглиф", top="Частые ключи", more="Показать ещё {k} ключей", by_strokes="{s} черт",
                none="Среди иероглифов HSK этого ключа нет: он встречается в редких и старых знаках.", prev="← Ключ", next="Ключ →",
                hsk="знаков HSK с этим ключом: {k}",
                game="Учить ключи в игре →", game_q="?lang=ru",
                pdf="Карточки для печати (PDF, 214 ключей)", poster="Плакат: все 214 ключей на одном листе (PDF, A2/A3/A4)"),
     "en": dict(radical="Radical", hub="Radicals", all214="The 214 Kangxi radicals", n="Number", strokes="Strokes", pinyin="Pinyin",
-               meaning="Meaning", variants="Variant forms", order="Stroke order", examples="Characters with this radical",
+               meaning="Meaning", pic="What it depicts", variants="Variant forms", order="Stroke order", examples="Characters with this radical",
                as_char="This sign as a character", top="Common radicals", more="Show {k} more radicals", by_strokes="{s} strokes",
                none="No HSK characters use this radical: it appears in rare and old characters.", prev="← Radical", next="Radical →",
                hsk="HSK characters with this radical: {k}",
@@ -256,6 +256,8 @@ def build(SITE, page, breadcrumbs, E, BASE, chars, allc, first):
         for r in R:
             ch, n = r["char"], r["n"]
             vs = "".join(r["variants"])
+            pic = PICTURES.get(n, ("", ""))[lang == "ru"]   # исходная картинка, если она не совпадает со значением
+            mean = ", ".join(w for w in name(r).split(", ") if w != pic) or name(r)   # «правая рука, снова» → «снова»: рука уже в строке выше
             body = [CSS]
             g = G.get(ch)
             body.append(svg(g, label=f"{t['order']} {ch}") if g else f'<div class="big" lang="zh">{ch}</div>')
@@ -264,7 +266,9 @@ def build(SITE, page, breadcrumbs, E, BASE, chars, allc, first):
             sw = f"{r['strokes']} {strokes_word(r['strokes'])}" if lang == "ru" else f"{r['strokes']} stroke{'s' if r['strokes'] != 1 else ''}"
             body.append(f"<dl class='facts'><dt>{t['n']}</dt><dd>{n} / 214</dd><dt>{t['pinyin']}</dt><dd>{E(r['pinyin'])}</dd>"
                         + (f"<dt>Палладий</dt><dd>{E(palladius.convert(r['pinyin']))}</dd>" if lang == "ru" else "")
-                        + f"<dt>{t['strokes']}</dt><dd>{sw}</dd><dt>{t['meaning']}</dt><dd>{E(name(r))}</dd></dl>")
+                        + f"<dt>{t['strokes']}</dt><dd>{sw}</dd>"
+                        + (f"<dt>{t['pic']}</dt><dd>{E(pic)}</dd>" if pic else "")
+                        + f"<dt>{t['meaning']}</dt><dd>{E(mean)}</dd></dl>")
             if r["variants"]:
                 cells = "".join(f"<span>{svg(G[v], 'vsvg', False) if v in G else f'<span class=f>{v}</span>'}<br><span lang='zh'>{v}</span></span>"
                                 for v in r["variants"])
@@ -286,16 +290,16 @@ def build(SITE, page, breadcrumbs, E, BASE, chars, allc, first):
             exs = "、".join(r["examples"][:6])
             if lang == "ru":
                 title = f"Ключ {ch}{h1_extra} — {r['ru']} ({r['pinyin']}, №{n}): значение и иероглифы с ним | Hanzi Burst"
-                desc = (f"Ключ (радикал) {ch} {r['pinyin']} — «{r['ru']}», №{n} из 214 ключей Канси, {sw}. Порядок черт"
+                desc = (f"Ключ (радикал) {ch} {r['pinyin']} — «{r['ru']}»" + (f" (нарисовано: {pic})" if pic else "") + f", №{n} из 214 ключей Канси, {sw}. Порядок черт"
                         + (f", варианты {'、'.join(r['variants'])}" if vs else "") + (f" и иероглифы с этим ключом: {exs}." if exs else "."))
             else:
                 title = f"Radical {ch}{h1_extra} {r['pinyin']} ({r['en']}, No. {n}): meaning and characters | Hanzi Burst"
-                desc = (f"Chinese radical {ch} {r['pinyin']}, \"{r['en']}\", Kangxi radical {n} of 214, {sw}. Stroke order"
+                desc = (f"Chinese radical {ch} {r['pinyin']}, \"{r['en']}\"" + (f" (depicts {pic})" if pic else "") + f", Kangxi radical {n} of 214, {sw}. Stroke order"
                         + (f", variant forms {', '.join(r['variants'])}" if vs else "") + (f" and characters with this radical: {exs}." if exs else "."))
             path = f"{pre}/r/{cid(ch)}"
             ld = [breadcrumbs(("Hanzi Burst", "/"), (t["hub"], f"{pre}/r/"), (ch, path)),
                   {"@context": "https://schema.org", "@type": "DefinedTerm", "name": ch, "inLanguage": "zh",
-                   "description": f"{r['pinyin']} — {name(r)}", "url": f"{BASE}{path}",
+                   "description": f"{r['pinyin']} — {name(r)}" + (f" ({t['pic'].lower()}: {pic})" if pic else ""), "url": f"{BASE}{path}",
                    "inDefinedTermSet": f"{BASE}{pre}/r/"}]
             (SITE / path.lstrip("/")).with_suffix(".html").write_text(
                 page(title, desc[:300], path, "\n".join(body), ld, lang=lang, alt=(f"/r/{cid(ch)}", f"/en/r/{cid(ch)}")), encoding="utf-8")

@@ -252,7 +252,7 @@ tatoeba.org по номеру в `source`), Wiktionary (CC BY-SA), Common Voice 
 страницы — ссылка `/?open=<знак>`.
 
 - **Ключи.** Таблица `data/radicals.json` коммитится; её собирает `scripts/build_radicals.py` (запускать вручную после
-  правки названий и вариантов в `scripts/radical_names.py`, там же названия на эсперанто). Частые ключи (`top`, первые 60
+  правки названий и вариантов в `scripts/radical_names.py`, там же названия на эсперанто). Там же `PICTURES` — что нарисовано (又 значит «снова», а нарисована правая рука): строка «Что нарисовано» на `/r/` и `/en/r/`, только где картинка не совпадает со значением и этимология устоявшаяся; в `data/radicals.json` не входит, чтобы не пересобирать плакат. Частые ключи (`top`, первые 60
   по числу знаков HSK) идут первыми в указателе `/r/`.
 - **PDF ключей** (коммитятся): карточки `site/radicals-{ru,en}.pdf` — `python3 scripts/radicals_pdf.py` (нужны
   `google-chrome` и Noto CJK); плакат A2 `site/radicals-poster-{ru,en,eo}.pdf` + превью `.jpg` — `python3 scripts/radicals_poster.py`
