@@ -1,9 +1,9 @@
 <!doctype html><html lang="ru"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Hanzi Burst — китайско-японский словарь при наведении, расширение для Chrome</title>
+<title>Hanzi Burst — китайско-японский словарь при наведении, расширение для Chrome и Firefox</title>
 <meta id="desc" name="description" content="Расширение Hanzi Burst: наведите курсор на китайский иероглиф на любой странице и увидите значение, пиньинь и полный разбор на части. Работает офлайн.">
 <link rel="canonical" href="https://hanzi.lipu.dev/extension">
-<meta property="og:url" content="https://hanzi.lipu.dev/extension"><meta property="og:title" content="Hanzi Burst — Chinese &amp; Japanese popup dictionary for Chrome"><meta property="og:image" content="https://hanzi.lipu.dev/og.png">
+<meta property="og:url" content="https://hanzi.lipu.dev/extension"><meta property="og:title" content="Hanzi Burst — Chinese &amp; Japanese popup dictionary for Chrome &amp; Firefox"><meta property="og:image" content="https://hanzi.lipu.dev/og.png">
 <style>
 :root{--bg:#faf7f2;--fg:#1f1b16;--muted:#6b6257;--accent:#c8402a;--line:#cfc6b6;--soft:#e6dfd3;--card:#fff}
 @media(prefers-color-scheme:dark){:root{--bg:#17140f;--on:#17140f;--fg:#f1ebe0;--muted:#a59c8e;--accent:#ff7a5c;--line:#5a5144;--soft:#352f25;--card:#221e17}}
@@ -15,6 +15,7 @@ a{color:var(--accent)}h1{font-size:30px;margin:.5em 0 .2em}h2{font-size:19px;mar
 .lead{font-size:18px;margin:.3em 0}
 .dl{display:inline-flex;align-items:center;gap:10px;margin:14px 0 4px;padding:12px 22px;border-radius:999px;background:var(--accent);color:var(--on,#fff);font-weight:700;text-decoration:none}
 .dl:hover{filter:brightness(1.08)}
+.btns{display:flex;flex-wrap:wrap;gap:0 12px}
 .shots{display:grid;grid-template-columns:1fr;gap:16px;margin:18px 0}
 .shots img{display:block;max-width:100%;height:auto;border:1px solid var(--soft);border-radius:14px;background:var(--card)}
 .row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}.row img{flex:0 1 auto}
@@ -33,12 +34,12 @@ html[data-l="ru"] [lang="en"],html[data-l="en"] [lang="ru"]{display:none}
 </head><body><main>
 <nav class="tn" id="sitenav"><span class="lang"><button data-lang="ru">RU</button><button data-lang="en">EN</button></span></nav><script src="/nav.js"></script>
 <div lang="ru">
-<h1>Hanzi Burst для Chrome</h1>
+<h1>Hanzi Burst для Chrome и Firefox</h1>
 <p class="lead">Китайско-японский словарь при наведении: наведите курсор на иероглиф на любой странице и увидите пиньинь или кану, значение и полный разбор на ключи и части. Без интернета и без слежки.</p>
-<a class="dl" href="https://chromewebstore.google.com/detail/hfbfpndkjpkfakdaefmebbchapmidahf?utm_source=hanzi&amp;utm_medium=site">Установить из Chrome Web Store</a>
-<p class="m">Или <a href="/hanzi-burst-extension.zip" download>скачайте zip · v0.2.7 · ~21 МБ</a> и поставьте вручную (ниже).</p>
-<p class="m">Firefox: <a href="/hanzi-burst-firefox.zip" download>zip для Firefox</a>. Пока его нет в каталоге дополнений, он ставится на время: <code>about:debugging</code> → «Этот Firefox» → «Загрузить временное дополнение» → выбрать zip (после перезапуска браузера повторить).</p>
-<p class="m">Для компьютера: Chrome, Edge, Brave, Opera, Vivaldi.</p>
+<div class="btns"><a class="dl" href="https://chromewebstore.google.com/detail/hfbfpndkjpkfakdaefmebbchapmidahf?utm_source=hanzi&amp;utm_medium=site">Установить из Chrome Web Store</a>
+<a class="dl" href="https://addons.mozilla.org/firefox/addon/hanzi-burst/?utm_source=hanzi&amp;utm_medium=site">Установить из Firefox Add-ons</a></div>
+<p class="m">Для компьютера: Chrome, Edge, Brave, Opera, Vivaldi и Firefox.</p>
+<p class="m">Без магазина: <a href="/hanzi-burst-extension.zip" download>zip для Chrome · v0.2.7 · ~21 МБ</a> (как поставить — ниже) или <a href="/hanzi-burst-firefox.zip" download>zip для Firefox</a> — он ставится только на время: <code>about:debugging</code> → «Этот Firefox» → «Загрузить временное дополнение» → выбрать zip (после перезапуска браузера повторить).</p>
 
 <div class="shots"><img src="/ext/card.png" width="640" height="505" alt="Карточка иероглифа с деревом частей"></div>
 
@@ -87,12 +88,12 @@ html[data-l="ru"] [lang="en"],html[data-l="en"] [lang="ru"]{display:none}
 <p>Разбор — Make Me a Hanzi и cjkvi-ids, словарь — CC-CEDICT и данные Wiktionary; подробности и лицензии на странице <a href="/about">О проекте</a>.</p>
 </div>
 <div lang="en">
-<h1>Hanzi Burst for Chrome</h1>
+<h1>Hanzi Burst for Chrome &amp; Firefox</h1>
 <p class="lead">A Chinese &amp; Japanese popup dictionary: hover any character on any page to see pinyin or kana, meaning and a full radical-by-radical breakdown. Works offline, no tracking.</p>
-<a class="dl" href="https://chromewebstore.google.com/detail/hfbfpndkjpkfakdaefmebbchapmidahf?utm_source=hanzi&amp;utm_medium=site">Install from Chrome Web Store</a>
-<p class="m">Or <a href="/hanzi-burst-extension.zip" download>download the zip · v0.2.7 · ~21 MB</a> and install it by hand (below).</p>
-<p class="m">Firefox: <a href="/hanzi-burst-firefox.zip" download>Firefox zip</a>. Until it is listed on addons.mozilla.org it installs temporarily: <code>about:debugging</code> → “This Firefox” → “Load Temporary Add-on” → pick the zip (repeat after a browser restart).</p>
-<p class="m">Desktop browsers: Chrome, Edge, Brave, Opera, Vivaldi.</p>
+<div class="btns"><a class="dl" href="https://chromewebstore.google.com/detail/hfbfpndkjpkfakdaefmebbchapmidahf?utm_source=hanzi&amp;utm_medium=site">Install from Chrome Web Store</a>
+<a class="dl" href="https://addons.mozilla.org/firefox/addon/hanzi-burst/?utm_source=hanzi&amp;utm_medium=site">Install from Firefox Add-ons</a></div>
+<p class="m">Desktop browsers: Chrome, Edge, Brave, Opera, Vivaldi and Firefox.</p>
+<p class="m">Without a store: <a href="/hanzi-burst-extension.zip" download>Chrome zip · v0.2.7 · ~21 MB</a> (how to install it is below) or <a href="/hanzi-burst-firefox.zip" download>Firefox zip</a>, which installs only temporarily: <code>about:debugging</code> → “This Firefox” → “Load Temporary Add-on” → pick the zip (repeat after a browser restart).</p>
 
 <div class="shots"><img src="/ext/card.png" width="640" height="505" alt="Character card with the component tree"></div>
 
@@ -144,8 +145,8 @@ html[data-l="ru"] [lang="en"],html[data-l="en"] [lang="ru"]{display:none}
 </main>
 <script>
 (function () {
-  var T = { ru: ['Hanzi Burst — китайско-японский словарь при наведении, расширение для Chrome', 'Расширение Hanzi Burst: наведите курсор на китайский иероглиф на любой странице и увидите значение, пиньинь и полный разбор на части. Работает офлайн.'],
-            en: ['Hanzi Burst — Chinese & Japanese popup dictionary for Chrome', 'Hanzi Burst: a Chinese & Japanese popup dictionary. Hover any character on any page to see pinyin or kana, meaning and a radical-by-radical breakdown. Works offline.'] };
+  var T = { ru: ['Hanzi Burst — китайско-японский словарь при наведении, расширение для Chrome и Firefox', 'Расширение Hanzi Burst: наведите курсор на китайский иероглиф на любой странице и увидите значение, пиньинь и полный разбор на части. Работает офлайн.'],
+            en: ['Hanzi Burst — Chinese & Japanese popup dictionary for Chrome & Firefox', 'Hanzi Burst: a Chinese & Japanese popup dictionary. Hover any character on any page to see pinyin or kana, meaning and a radical-by-radical breakdown. Works offline.'] };
   var lang = window.__l || 'ru';
   function set(l, save) {
     lang = l; var d = document.documentElement; d.dataset.l = l; d.lang = l;
@@ -171,8 +172,9 @@ html[data-l="ru"] [lang="en"],html[data-l="en"] [lang="ru"]{display:none}
     var a = e.target.closest && e.target.closest('a[href]');
     if (!a || !window.gtag) return;
     var h = a.getAttribute('href');
-    if (/\.zip$/.test(h)) gtag('event', 'extension_download', { source: 'zip', lang: document.documentElement.lang });
-    else if (/chromewebstore|chrome\.google\.com\/webstore/.test(h)) gtag('event', 'extension_store_click', { lang: document.documentElement.lang });
+    var store = /firefox|mozilla/.test(h) ? 'firefox' : 'chrome';
+    if (/\.zip$/.test(h)) gtag('event', 'extension_download', { source: 'zip', store: store, lang: document.documentElement.lang });
+    else if (/chromewebstore|chrome\.google\.com\/webstore|addons\.mozilla\.org/.test(h)) gtag('event', 'extension_store_click', { store: store, lang: document.documentElement.lang });
   });
 })();
 </script>
