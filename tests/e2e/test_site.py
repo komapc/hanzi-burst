@@ -262,6 +262,16 @@ class Site(unittest.TestCase):
         finally:
             ctx.close()
 
+    def test_search_on_english_pages_lands_on_en_home(self):        # the header search of /en/… pages submits to /en/?q=
+        self.page.add_init_script("localStorage.setItem('hanzi-tour','done');localStorage.setItem('hanzi-consent','denied')")
+        self.page.goto(self.base + "en/hsk/")
+        self.page.fill(".tq input[name=q]", "学")
+        self.page.press(".tq input[name=q]", "Enter")
+        self.page.wait_for_selector("html.ready", timeout=20000)
+        self.assertEqual(self.page.evaluate("location.pathname"), "/en/")
+        self.assertEqual(self.tree()[0], "学")
+        self.assertEqual(self.page.evaluate("document.documentElement.lang"), "en")
+
     def test_lang_switch_moves_between_root_and_en(self):          # no reload; ?open= and the open character stay
         self.open("en/?open=" + quote("想"))
         self.page.click('.lang button[data-lang="ru"]')
