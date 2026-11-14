@@ -6,7 +6,22 @@ const PROMPT_VERSION = 2;   // поднять при смене промпта: 
 const MAX_VARIANTS = 3;
 const HAN = /^\p{Script=Han}$/u;
 const json = (data, status = 200, headers = {}) =>
-  new Response(JSON.stringify(data), { status, headers: { 'Content-Type': 'application/json', ...headers } });
+  new Response(JSON.stringify(data), { status, headers: { 'Content-Type': 'application/json', 'X-Content-Type-Options': 'nosniff', ...headers } });
+const isJson = request => /^application\/json\s*(;|$)/i.test(request.headers.get('Content-Type') || '');
+// Запросы, что меняют данные вошедшего пользователя или тратят его лимит, — только со своих страниц.
+// SameSite=Lax уже не даёт куку чужим сайтам, но соседние *.lipu.dev для браузера «тот же сайт». Без Origin
+// (curl, старые браузеры) пропускаем: подделать его из браузера нельзя, а вне браузера куки и так нет.
+const sameOrigin = request => { const o = request.headers.get('Origin'); return !o || o === new URL(request.url).origin; };
+const COOKIE_WRITES = new Set(['/api/known', '/api/explain', '/api/auth/google', '/api/auth/logout']);
+const today = () => new Date().toISOString().slice(0, 10);
+// дневной счётчик: свой у каждого (user_id) и общий на сайт; у перевода и запоминалок счётчики раздельные
+async function overLimit(env, key, all, limit) {
+  const bump = id => env.DB.prepare(
+    'INSERT INTO usage (user_id, day, n) VALUES (?1, ?2, 1) ON CONFLICT(user_id, day) DO UPDATE SET n = n + 1 RETURNING n'
+  ).bind(id, today()).first();
+  if ((await bump(key)).n > limit) return true;
+  return (await bump(all)).n > parseInt(env.GLOBAL_DAILY_LIMIT || '300', 10);   // страхует бюджет на весь сайт
+}
 
 /* ---------- подписанная кука-сессия (HMAC-SHA256) ---------- */
 const enc = new TextEncoder();
@@ -177,6 +192,7 @@ export default {
       return r;
     }
     const method = request.method;
+    if (method !== 'GET' && COOKIE_WRITES.has(path) && !sameOrigin(request)) return json({ error: 'forbidden_origin' }, 403);
 
     if (path === '/api/config') return json({ googleClientId: env.GOOGLE_CLIENT_ID || null });
 
@@ -187,7 +203,7 @@ export default {
 
     if (path === '/api/auth/google' && method === 'POST') {
       // только application/json: обычная HTML-форма (text/plain, без CORS-preflight) не может войти за пользователя (login CSRF)
-      if (!/^application\/json\s*(;|$)/i.test(request.headers.get('Content-Type') || '')) return json({ error: 'unsupported_media_type' }, 415);
+      if (!isJson(request)) return json({ error: 'unsupported_media_type' }, 415);
       const { credential } = await request.json().catch(() => ({}));
       const u = credential && (await verifyGoogle(env, credential));
       if (!u) return json({ error: 'invalid_token' }, 401);
@@ -211,7 +227,8 @@ export default {
       const { results } = await env.DB.prepare(
         'SELECT variant, text FROM mnemonics WHERE ch = ?1 AND lang = ?2 AND prompt_version = ?3 ORDER BY variant'
       ).bind(ch, lang, PROMPT_VERSION).all();
-      return json({ variants: results }, 200, { 'Cache-Control': 'public, max-age=60' });
+      // no-cache: только что придуманная запоминалка должна быть видна и после перезагрузки (раньше max-age=60 её прятал)
+      return json({ variants: results }, 200, { 'Cache-Control': 'no-cache' });
     }
 
     // сессия необязательна: без входа лимиты считаются по хэшу IP
@@ -225,6 +242,7 @@ export default {
       return json(results.map(r => r.ch));
     }
     if (path === '/api/known' && method === 'PUT') {
+      if (!isJson(request)) return json({ error: 'unsupported_media_type' }, 415);
       // тело: {add: [...], remove: [...]}; значения только одиночные символы, не больше 500 за раз
       const body = await request.json().catch(() => ({}));
       const ok = a => Array.isArray(a) ? a.filter(c => typeof c === 'string' && [...c].length === 1).slice(0, 500) : [];
@@ -237,6 +255,7 @@ export default {
     }
 
     if (path === '/api/explain' && method === 'POST') {
+      if (!isJson(request)) return json({ error: 'unsupported_media_type' }, 415);
       const b = await request.json().catch(() => ({}));
       const lang = b.lang === 'en' ? 'en' : 'ru';
       if (typeof b.ch !== 'string' || !HAN.test(b.ch)) return json({ error: 'bad_char' }, 400);
@@ -251,23 +270,13 @@ export default {
       const ctx = await charContext(env, request, b.ch, lang);
       if (!ctx) return json({ error: 'unknown_char', variants: have }, 400);
 
-      const day = new Date().toISOString().slice(0, 10);
-      const limit = parseInt(env.EXPLAIN_DAILY_LIMIT || '30', 10);
-      const row = await env.DB.prepare(
-        'INSERT INTO usage (user_id, day, n) VALUES (?1, ?2, 1) ON CONFLICT(user_id, day) DO UPDATE SET n = n + 1 RETURNING n'
-      ).bind(uid, day).first();
-      if (row.n > limit) return json({ error: 'rate_limited', variants: have }, 429);
-      // общий потолок на весь сайт: страхует бюджет, пока вход закрыт и аккаунтов нет
-      const globalLimit = parseInt(env.GLOBAL_DAILY_LIMIT || '300', 10);
-      const g = await env.DB.prepare(
-        "INSERT INTO usage (user_id, day, n) VALUES ('*', ?1, 1) ON CONFLICT(user_id, day) DO UPDATE SET n = n + 1 RETURNING n"
-      ).bind(day).first();
-      if (g.n > globalLimit) return json({ error: 'rate_limited', variants: have }, 429);
+      if (await overLimit(env, uid, '*', parseInt(env.EXPLAIN_DAILY_LIMIT || '30', 10))) return json({ error: 'rate_limited', variants: have }, 429);
 
       const clip = (s, n) => String(s || '').slice(0, n);
       const prompt = promptFor({ ch: b.ch, lang, avoid: have.map(v => v.text), ...ctx });
       try {
-        const text = clip(await askGemini(env, prompt), 600);
+        const text = clip(await askGemini(env, prompt), 600).trim();
+        if (!text) throw new Error('empty');   // пустой ответ не сохраняем: он занял бы вариант навсегда
         // INSERT OR IGNORE: если параллельный запрос успел раньше, остаётся его вариант.
         // Номер считается по всем версиям промпта: первичный ключ их не различает, и номер
         // по текущей версии столкнулся бы со старой строкой, а оплаченный ответ пропал бы.
@@ -285,24 +294,16 @@ export default {
       }
     }
 
-    // Перевод всей фразы (по кнопке). Не кэшируется: фразы свои/случайные. Лимиты те же, что у запоминалок.
+    // Перевод всей фразы (по кнопке). Не кэшируется: фразы свои/случайные. Лимит на человека тот же, что у запоминалок.
     if (path === '/api/translate' && method === 'POST') {
+      if (!isJson(request)) return json({ error: 'unsupported_media_type' }, 415);   // и сайт, и расширение шлют JSON
       const b = await request.json().catch(() => ({}));
       const lang = b.lang === 'en' ? 'en' : 'ru';
       const zh = typeof b.zh === 'string' ? b.zh.trim() : '';
       if (!zh || zh.length > 120 || !/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}]/u.test(zh)) return json({ error: 'bad_text' }, 400);
 
-      const day = new Date().toISOString().slice(0, 10);
-      const limit = parseInt(env.EXPLAIN_DAILY_LIMIT || '30', 10);
-      const row = await env.DB.prepare(
-        'INSERT INTO usage (user_id, day, n) VALUES (?1, ?2, 1) ON CONFLICT(user_id, day) DO UPDATE SET n = n + 1 RETURNING n'
-      ).bind('t:' + uid, day).first();
-      if (row.n > limit) return json({ error: 'rate_limited' }, 429);
-      const globalLimit = parseInt(env.GLOBAL_DAILY_LIMIT || '300', 10);
-      const g = await env.DB.prepare(
-        "INSERT INTO usage (user_id, day, n) VALUES ('*', ?1, 1) ON CONFLICT(user_id, day) DO UPDATE SET n = n + 1 RETURNING n"
-      ).bind(day).first();
-      if (g.n > globalLimit) return json({ error: 'rate_limited' }, 429);
+      // общий счётчик свой ('t:*'): переводы больше не съедают дневной потолок запоминалок
+      if (await overLimit(env, 't:' + uid, 't:*', parseInt(env.EXPLAIN_DAILY_LIMIT || '30', 10))) return json({ error: 'rate_limited' }, 429);
 
       const target = lang === 'ru' ? 'русский / Russian' : 'English';
       const prompt = `Переведи китайскую или японскую фразу на ${target}. Только перевод, без пояснений, транскрипции и комментариев. / Translate the Chinese or Japanese phrase into ${target}. Output the translation only, no explanations or romanization.
