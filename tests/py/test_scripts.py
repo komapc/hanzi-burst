@@ -108,3 +108,29 @@ class MainReading(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class Redirects(unittest.TestCase):
+    def test_permanent_redirects_for_the_built_site(self):
+        import tempfile
+        import redirects
+        with tempfile.TemporaryDirectory() as t:
+            site = Path(t)
+            for f in ("index.html", "about.html", "404.html", "yandex_1.html", "googleabc.html",
+                      "c/index.html", "c/6c34.html", "en/r/index.html", "en/r/53c8.html", "japanese/index.html",
+                      "data/c/6c.json"):
+                (site / f).parent.mkdir(parents=True, exist_ok=True)
+                (site / f).write_text("x")
+            r = redirects.rules(site)
+            for rule in ("/index.html / 301", "/about.html /about 301", "/c /c/ 301", "/c/index.html /c/ 301",
+                         "/c/:page.html /c/:page 301", "/en/r /en/r/ 301", "/en/r/:page.html /en/r/:page 301",
+                         "/japanese /japanese/ 301"):
+                self.assertIn(rule, r)
+            # 404 and verification files are left alone; en/ itself has no pages; data/ has no pages
+            self.assertFalse([x for x in r if "404" in x or "yandex" in x or "google" in x or x.startswith(("/en ", "/data"))])
+            # Cloudflare applies the first match: every static rule comes before the first placeholder rule
+            first_dynamic = next(i for i, x in enumerate(r) if ":" in x)
+            self.assertFalse([x for x in r[first_dynamic:] if ":" not in x])
+            # no rule sends a page to itself or to a path another rule redirects again (no chains or loops)
+            src = {x.split()[0] for x in r}
+            self.assertFalse([x for x in r if x.split()[1] in src])
