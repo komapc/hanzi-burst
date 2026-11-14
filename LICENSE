@@ -19,11 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
----
-
-This license covers the source code only. Dictionary data in data/, the
-generated dictionaries (site/data/, extension/data/) and the raw-data release
-snapshots are derived from third-party sources and stay under those sources'
-licenses (CC BY-SA, LGPL, GPL, Unicode License and others). See the
-"Источники и лицензии" section of README.md and extension/NOTICE.txt.
