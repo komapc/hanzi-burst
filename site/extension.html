@@ -52,7 +52,7 @@ html[data-l="ru"] [lang="en"],html[data-l="en"] [lang="ru"]{display:none}
 <li>Отметка выученного: клик по плитке. <span class="dot" style="background:#2f8f5b"></span>знаю, <span class="dot" style="background:#2f6fd0"></span>знаю все части, <span class="dot" style="background:#d09a1f"></span>знаю часть частей. Страница «Мои иероглифы» подсказывает, что учить дальше.</li>
 <li>Традиционные знаки приводятся к упрощённым. Переводы на русском и английском.</li>
 <li>Японский: если в тексте есть кана или страница помечена как японская, карточка показывает слова с чтением (кана, ромадзи или кириллица по Поливанову), словарную форму глагола (見ました → 見る), а для кандзи — онные и кунные чтения и части.</li>
-<li>Всё работает локально: словари лежат внутри расширения, никаких запросов в сеть.</li>
+<li>Словарь работает локально: он лежит внутри расширения, разбор и карточки — без запросов в сеть. Единственное исключение — кнопка «Перевести фразу» (см. ниже).</li>
 </ul>
 <div class="row">
 <img src="/ext/popup.png" width="300" height="380" alt="Настройки">
@@ -82,7 +82,7 @@ html[data-l="ru"] [lang="en"],html[data-l="en"] [lang="ru"]{display:none}
 </ul>
 
 <h2>Конфиденциальность</h2>
-<p>Расширение ничего не отправляет и не собирает. Словари лежат внутри него. В настройках браузера хранятся только ваши выборы (режим, язык) и список выученных иероглифов; на hanzi.lipu.dev он объединяется со списком сайта в том же браузере (ничего не уходит на сервер). Права: <code>storage</code> (эти настройки), <code>activeTab</code> (показать адрес сайта в окне настроек) и запуск скрипта на страницах <code>http/https</code>, чтобы показывать карточку.</p>
+<p>Расширение ничего не собирает. Словари лежат внутри него, текст страниц читается локально. Единственный запрос в сеть — кнопка «Перевести фразу» в карточке: только когда вы её нажимаете, выделенная фраза (до 120 знаков) и язык интерфейса уходят на hanzi.lipu.dev и в Google Gemini API; куки не передаются, перевод не сохраняется (<a href="/privacy">подробнее</a>). В настройках браузера хранятся только ваши выборы (режим, язык) и список выученных иероглифов; на hanzi.lipu.dev он объединяется со списком сайта в том же браузере (ничего не уходит на сервер). Права: <code>storage</code> (эти настройки), <code>activeTab</code> (показать адрес сайта в окне настроек), <code>contextMenus</code> (пункты в контекстном меню), доступ к hanzi.lipu.dev (только для перевода) и запуск скрипта на страницах <code>http/https</code>, чтобы показывать карточку.</p>
 
 <h2>Данные</h2>
 <p>Разбор — Make Me a Hanzi и cjkvi-ids, словарь — CC-CEDICT и данные Wiktionary; подробности и лицензии на странице <a href="/about">О проекте</a>.</p>
@@ -106,7 +106,7 @@ html[data-l="ru"] [lang="en"],html[data-l="en"] [lang="ru"]{display:none}
 <li>Mark what you know with a click on a tile: <span class="dot" style="background:#2f8f5b"></span>known, <span class="dot" style="background:#2f6fd0"></span>all parts known, <span class="dot" style="background:#d09a1f"></span>some parts known. The “My characters” page suggests what to learn next.</li>
 <li>Traditional characters are converted to simplified. Glosses in English and Russian.</li>
 <li>Japanese: when the text has kana or the page is marked as Japanese, the card shows words with their reading (kana and romaji), the dictionary form of verbs (見ました → 見る), and on/kun readings plus parts for each kanji.</li>
-<li>Everything runs locally: the dictionaries ship inside the extension and nothing is sent anywhere.</li>
+<li>The dictionary runs locally: it ships inside the extension, so lookups and breakdowns make no network requests. The one exception is the “Translate phrase” button (see below).</li>
 </ul>
 <div class="row">
 <img src="/ext/popup.png" width="300" height="380" alt="Popup settings">
@@ -136,7 +136,7 @@ html[data-l="ru"] [lang="en"],html[data-l="en"] [lang="ru"]{display:none}
 </ul>
 
 <h2>Privacy</h2>
-<p>The extension sends and collects nothing; the dictionaries are bundled. Only your preferences (mode, language) and your known-characters list are stored in the browser; on hanzi.lipu.dev that list is merged with the site’s list in the same browser (nothing goes to a server). Permissions: <code>storage</code> (those settings), <code>activeTab</code> (show the site name in the popup) and a content script on <code>http/https</code> pages to render the card.</p>
+<p>The extension collects nothing; the dictionaries are bundled and page text is read locally. The only network request is the “Translate phrase” button in the card: only when you press it, the selected phrase (up to 120 characters) and the interface language go to hanzi.lipu.dev and the Google Gemini API; no cookies are sent and the translation is not stored (<a href="/privacy">details</a>). Only your preferences (mode, language) and your known-characters list are stored in the browser; on hanzi.lipu.dev that list is merged with the site’s list in the same browser (nothing goes to a server). Permissions: <code>storage</code> (those settings), <code>activeTab</code> (show the site name in the popup), <code>contextMenus</code> (the right-click items), access to hanzi.lipu.dev (only for translation) and a content script on <code>http/https</code> pages to render the card.</p>
 
 <h2>Data</h2>
 <p>Breakdowns: Make Me a Hanzi and cjkvi-ids; dictionary: CC-CEDICT and Wiktionary data. Details and licenses are on the <a href="/about">About</a> page.</p>
