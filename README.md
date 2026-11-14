@@ -51,7 +51,8 @@ cd site && python3 -m http.server 8765
 
 ```bash
 node --test tests/js/*.test.js                # расширение: common.js (слияние списков, предложение под курсором,
-                                             # состояние узла) и lookup() из background.js на фикстурах tests/js/fixtures
+                                             # состояние узла) и lookup() из background.js на фикстурах tests/js/fixtures;
+                                             # worker/index.js: проверка Origin, только JSON, лимиты, кэш запоминалок
 python3 -m unittest discover -s tests/py      # скрипты сборки: пиньинь, сегментация, разбор, дыры «？», Палладий
 ```
 

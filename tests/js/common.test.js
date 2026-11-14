@@ -1,4 +1,4 @@
-// Unit tests for extension/common.js: node --test tests/js
+// Unit tests for extension/common.js: node --test tests/js/*.test.js
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const { shardKey, partsOf, stateOf, mergeKnown, sentenceIn } = require('../../extension/common.js');
