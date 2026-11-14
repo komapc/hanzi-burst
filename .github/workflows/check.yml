@@ -69,7 +69,8 @@ jobs:
       - name: Home page has what the app needs
         run: |
           grep -q 'id="phrase"' site/index.html
-          grep -q "fetch('phrase.json')" site/index.html
+          grep -q "fetch('/phrase.json')" site/index.html   # absolute: the same page is served at /en/
           test -s site/phrase.json && test -s site/glyphs.json
+          test -s site/og.png && test -s site/og-en.png   # link previews: scripts/og.html, scripts/og-en.html
           test -s site/radicals-ru.pdf && test -s site/radicals-en.pdf   # built by hand: scripts/radicals_pdf.py
           for l in ru en eo; do test -s site/radicals-poster-$l.pdf && test -s site/radicals-poster-$l.jpg; done   # built by hand: scripts/radicals_poster.py

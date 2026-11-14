@@ -8,8 +8,9 @@
 <meta name="keywords" content="китайские иероглифы, радикалы, ключи, hanzi, Chinese characters, radicals, learn Chinese, пиньинь, мнемоники">
 <meta name="msvalidate.01" content="CAFA7BE0D5D83695993D635831499022">
 <link rel="canonical" href="https://hanzi.lipu.dev/">
+<link rel="alternate" hreflang="ru" href="https://hanzi.lipu.dev/"><link rel="alternate" hreflang="en" href="https://hanzi.lipu.dev/en/"><link rel="alternate" hreflang="x-default" href="https://hanzi.lipu.dev/">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="preload" href="phrase.json" as="fetch" crossorigin>
+<link rel="preload" href="/phrase.json" as="fetch" crossorigin>
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="theme-color" content="#faf7f2">
 <meta property="og:type" content="website">
@@ -443,8 +444,8 @@
   <button class="btn" id="consentYes"></button><button class="btn" id="consentNo"></button>
   <a href="/privacy" id="consentMore"></a>
 </div>
-<script src="script.js"></script>
-<script src="ja.js"></script>
+<script src="/script.js"></script>
+<script src="/ja.js"></script>
 <script>
 /* Google Analytics 4: Measurement ID сайта. */
 const GA_ID = 'G-G4GHN6WZ7B';
@@ -491,6 +492,9 @@ const T = {
 let D = null, G = {};
 let lang = 'ru';
 try { lang = localStorage.getItem('hanzi-lang') || (navigator.language.startsWith('ru') ? 'ru' : 'en'); } catch (e) {}
+// /en/ — английская главная (копия этой страницы из scripts/build_static.py): язык задаёт адрес, а не сохранённый выбор и не ?lang=
+const EN_PATH = location.pathname.startsWith('/en/');
+if (EN_PATH) lang = 'en';
 // null — ключа нет (данные сайта стёрли) или он испорчен: это не «пустой список»
 const readKnown = () => { try { const v = localStorage.getItem('hanzi-known'); return v === null ? null : new Set(JSON.parse(v)); } catch (e) { return null; } };
 let known = readKnown() || new Set();
@@ -521,7 +525,7 @@ const UI = {
         tMore: 'Другие фразы: случайная, фраза дня, своя', tNew: 'Подобрать фразу, где меньше всего незнакомых вам иероглифов', tRand: 'Любая фраза из списка', tDaily: 'Одна фраза на сегодня, общая для всех', tOwn: 'Вставить свой китайский текст и разобрать его' },
   en: { set: 'Settings', say: 'Listen', sayT: 'Read aloud (speech synthesis in your browser; voice quality depends on the device)', slMode: 'Phrase language', slPhon: 'Reading (pick one or more)', slJr: 'Japanese reading', sFg: 'Furigana (kana above kanji)', sLat: 'Rōmaji', sCyr: 'Cyrillic', cpKn: 'Kana', slScr: 'Characters', zh: 'Chinese', ja: 'Japanese',
         cpBtn: 'Copy', cpHz: 'Characters', cpTr: 'Translation', cpOk: 'Copied', cpRd: 'Reading', sPy: 'Pinyin (pīnyīn)', sBo: 'Zhuyin (ㄅㄆㄇ)', sPa: 'Palladius', sSi: 'Simplified (简)', sTr: 'Traditional (繁)',
-        nav: [['/?lang=en', 'Phrases'], ['/en/r/', 'Radicals'], ['/en/c/', 'Characters'], ['/en/hsk/', 'HSK'], ['/radicals-game?lang=en', 'Game'], ['/learned', 'My characters']],
+        nav: [['/en/', 'Phrases'], ['/en/r/', 'Radicals'], ['/en/c/', 'Characters'], ['/en/hsk/', 'HSK'], ['/radicals-game?lang=en', 'Game'], ['/learned', 'My characters']],
         tPy: 'Hide or show pinyin to test yourself', tRd: 'Hide or show the reading to test yourself', tTr: 'Hide or show the translation to test yourself',
         tMore: 'More phrases: random, phrase of the day, your own', tNew: 'Pick a phrase with the fewest characters you don\'t know yet', tRand: 'Any phrase from the list', tDaily: 'One phrase for today, the same for everyone', tOwn: 'Paste your own Chinese text and break it down' },
 };
@@ -859,7 +863,7 @@ document.querySelectorAll('#view > button[data-v]').forEach(b => b.onclick = () 
 
 /* ---------- поиск знака: иероглиф открывается сразу, пиньинь — список (data/pyindex.json: слог+тон -> знаки) ---------- */
 let pyIndexP = null;
-const pyIndex = () => pyIndexP || (pyIndexP = fetch('data/pyindex.json').then(r => r.json()).catch(() => { pyIndexP = null; return {}; }));
+const pyIndex = () => pyIndexP || (pyIndexP = fetch('/data/pyindex.json').then(r => r.json()).catch(() => { pyIndexP = null; return {}; }));
 async function openSearched(ch) {
   await (mode === 'ja' ? loadKanji([ch]) : loadChars([ch]));
   if (!(mode === 'ja' ? K[ch] || D.chars[ch] : D.chars[ch])) return false;
@@ -941,10 +945,10 @@ function buildList() {   // курируемые фразы + фразы из п
 let poolP = null, poolJaP = null;
 /* японский пул: только текст и переводы; слова и чтения даёт JA.analyze при первом показе (switchPhrase) */
 const ensurePool = () => mode === 'ja'
-  ? poolJaP || (poolJaP = fetch('pool-ja.json').then(r => r.json())
+  ? poolJaP || (poolJaP = fetch('/pool-ja.json').then(r => r.json())
       .then(p => { D.poolJa = p.map(x => ({ zh: x.ja, en: x.en, ru: x.ru, lv: x.lv, ja: true, words: null })); })
       .catch(() => { poolJaP = null; D.poolJa = D.poolJa || []; }))
-  : poolP || (poolP = fetch('pool.json').then(r => r.json()).then(p => { D.pool = p; })
+  : poolP || (poolP = fetch('/pool.json').then(r => r.json()).then(p => { D.pool = p; })
       .catch(() => { poolP = null; D.pool = D.pool || []; }));
 const phraseChars = p => p.words ? p.words.flatMap(w => w.chars || []) : [...p.zh].filter(c => HAN.test(c));
 async function newPhrase() {
@@ -1371,7 +1375,7 @@ function selectJa(ch, glyphEl) {
 }
 /* «Где ещё встречается» (usage.json, 1,4 МБ) — при первом открытом знаке, а не при загрузке страницы */
 let usageP = null;
-const loadUsage = () => usageP || (usageP = fetch('usage.json').then(r => r.json()).then(u => {
+const loadUsage = () => usageP || (usageP = fetch('/usage.json').then(r => r.json()).then(u => {
   D.usage = u;
   if (selected && !isJa() && !($('#usage') && $('#usage').classList.contains('open'))) select(selected, document.querySelector(`.node[data-ch="${selected}"] > .gw > .glyph`));
 }).catch(() => { usageP = null; }));
@@ -1608,8 +1612,12 @@ function applyLang() {
 }
 document.querySelectorAll('.lang button').forEach(b => b.onclick = () => {
   lang = b.dataset.lang; try { localStorage.setItem('hanzi-lang', lang); } catch (e) {}
-  const u = new URL(location.href);   // иначе ?lang= из ссылки при обновлении страницы вернёт старый язык
-  if (u.searchParams.has('lang')) { u.searchParams.set('lang', lang); history.replaceState(history.state, '', u); }
+  // адрес следует за языком без перезагрузки: /en/ — английская главная, / — русская; ?open= и прочее сохраняются.
+  // ?lang= из старых ссылок иначе при обновлении страницы вернул бы прежний язык
+  const u = new URL(location.href);
+  u.pathname = lang === 'en' ? '/en/' : '/';
+  if (lang === 'en') u.searchParams.delete('lang'); else if (u.searchParams.has('lang')) u.searchParams.set('lang', lang);
+  if (u.href !== location.href) history.replaceState(history.state, '', u);
   applyLang();
 });
 
@@ -1620,7 +1628,7 @@ const shardCache = {};
 // 404 — шарда нет и не будет (395 блоков без контуров, kanji/38 для 㠯): запоминаем пустым, иначе наблюдатель за DOM
 // запрашивал их заново при каждой перерисовке. Сетевую ошибку и 5xx не запоминаем: повторим в следующий раз.
 const loadShard = (kind, k) => shardCache[kind + k] || (shardCache[kind + k] =
-  fetch(`data/${kind}/${k}.json`).then(r => r.ok ? r.json() : r.status === 404 ? {} : Promise.reject(r.status))
+  fetch(`/data/${kind}/${k}.json`).then(r => r.ok ? r.json() : r.status === 404 ? {} : Promise.reject(r.status))
     .catch(() => { delete shardCache[kind + k]; return {}; }));
 /* данные иероглифов (и всех их компонентов) из шардов: D.chars и контуры G */
 async function loadChars(han) {
@@ -1673,7 +1681,7 @@ async function analyzeText(raw) {
     await loadKanji([...ph.zh]);
     return Object.assign(ph, { cut: [...raw.trim()].length > 100 });
   }
-  tradMap = tradMap || await fetch('data/trad.json').then(r => r.json()).catch(() => ({}));
+  tradMap = tradMap || await fetch('/data/trad.json').then(r => r.json()).catch(() => ({}));
   let converted = false;
   const text = [...raw].slice(0, 100).map(c => { if (tradMap[c]) { converted = true; return tradMap[c]; } return c; }).join('');
   const han = [...new Set([...text].filter(c => HAN.test(c)))];
@@ -1814,7 +1822,7 @@ document.querySelectorAll('.chk.jr input').forEach(i => i.onchange = () => {
   syncMode();
 }
 applyLang();
-fetch('phrase.json').then(r => r.json())
+fetch('/phrase.json').then(r => r.json())
   .then(d => {
     D = d; D.pool = []; D.usage = {};
     const q0 = new URLSearchParams(location.search);
@@ -1834,7 +1842,7 @@ fetch('phrase.json').then(r => r.json())
     await switchPhrase(cur); applyLang();
     // ссылка вида ?open=想&explode=1&lang=en открывает иероглиф сразу
     const q = new URLSearchParams(location.search);
-    if (/^(ru|en)$/.test(q.get('lang') || '')) { lang = q.get('lang'); applyLang(); }   // другие значения: T[lang] нет, applyLang упал бы
+    if (!EN_PATH && /^(ru|en)$/.test(q.get('lang') || '')) { lang = q.get('lang'); applyLang(); }   // другие значения: T[lang] нет, applyLang упал бы
     // знак не из phrase.json (ссылки /c/ на иероглифы без страницы, «Мои иероглифы») сначала грузим из шардов
     const qo = q.get('open');
     if (qo && HAN.test(qo) && !D.chars[qo]) await loadChars([qo]);

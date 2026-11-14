@@ -132,7 +132,7 @@ function render() {
   document.querySelectorAll('.lang button').forEach(b => b.classList.toggle('on', b.dataset.lang === lang));
   if (!known.length) {   // пустой список: куда идти дальше — к фразам или в игру с ключами
     const en = lang === 'en';
-    $out.innerHTML = `<div class="empty"><p>${t('empty')}</p><p class="go"><a class="gb" href="/${en ? '?lang=en' : ''}">${t('goPh')}</a>`
+    $out.innerHTML = `<div class="empty"><p>${t('empty')}</p><p class="go"><a class="gb" href="/${en ? 'en/' : ''}">${t('goPh')}</a>`
       + `<a class="gb alt" href="/radicals-game?lang=${lang}">${t('goGame')}</a></p></div>`;
     $sum.textContent = ''; return;
   }

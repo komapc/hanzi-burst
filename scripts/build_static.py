@@ -100,7 +100,7 @@ BEACON = re.search(r"<script defer src=\"https://static\.cloudflareinsights\.com
 
 def page(title, desc, canon, body, ld=(), lang="ru", alt=None, image=None):
     """alt = (русский путь, английский путь) или {язык: путь}: взаимные hreflang (x-default — русская версия)
-    и ссылки на другие языки в шапке. image — путь картинки для og:image (по умолчанию /og.png)."""
+    и ссылки на другие языки в шапке. image — путь картинки для og:image (по умолчанию /og.png, у английских страниц /og-en.png)."""
     alts = alt if isinstance(alt, dict) else ({"ru": alt[0], "en": alt[1]} if alt else {})
     hreflang = ("".join(f'<link rel="alternate" hreflang="{l}" href="{BASE}{u}">' for l, u in alts.items())
                 + f'<link rel="alternate" hreflang="x-default" href="{BASE}{alts["ru"]}">\n') if alts else ""
@@ -114,19 +114,18 @@ def page(title, desc, canon, body, ld=(), lang="ru", alt=None, image=None):
         links = [("/", "Фразы"), ("/r/", "Ключи"), ("/c/", "Иероглифы"), ("/hsk/", "HSK"), ("/radicals-game", "Игра"), ("/learned", "Мои иероглифы")]
         home = "/"
     else:   # en и eo (страниц на эсперанто, кроме плаката, нет — разделы английские)
-        links = [("/?lang=en", "Phrases"), ("/en/r/", "Radicals"), ("/en/c/", "Characters"), ("/en/hsk/", "HSK"),
+        links = [("/en/", "Phrases"), ("/en/r/", "Radicals"), ("/en/c/", "Characters"), ("/en/hsk/", "HSK"),
                  ("/radicals-game?lang=en", "Game"), ("/learned", "My characters")]
-        home = "/?lang=en"
+        home = "/en/"
     cur = canon if canon.endswith("/") else canon.rsplit("/", 1)[0] + "/"
     if lang == "eo":
         cur = cur.replace("/eo/", "/en/", 1)
-    def on(h):   # «Фразы» ведут на главную, но подсвечены и на страницах фраз /p/
-        return cur.startswith(h) if h.endswith("/") and h != "/" else (h.split("?")[0] == "/" and cur.startswith(("/p/", "/en/p/")))
+    def on(h):   # «Фразы» ведут на главную (/ или /en/), но подсвечены и на страницах фраз /p/
+        return cur.startswith(("/p/", "/en/p/")) if h == home else h.endswith("/") and cur.startswith(h)
     items = "".join(f'<a href="{h}"' + (' class="on"' if on(h) else "") + f">{t}</a>" for h, t in links)
-    # поиск знака: уходит на главную (/?q=), там тот же поиск по знаку и пиньиню
-    search = (f'<form class="tq" action="/" role="search"><input type="search" name="q" placeholder="{"想, xiang, сян" if lang == "ru" else "想 / xiang"}" '
-              f'aria-label="{"Найти иероглиф" if lang == "ru" else "Find a character"}" autocomplete="off" spellcheck="false" enterkeyhint="search">'
-              + ("" if lang == "ru" else '<input type="hidden" name="lang" value="en">') + "</form>")
+    # поиск знака: уходит на главную (/?q= или /en/?q=), там тот же поиск по знаку и пиньиню
+    search = (f'<form class="tq" action="{home}" role="search"><input type="search" name="q" placeholder="{"想, xiang, сян" if lang == "ru" else "想 / xiang"}" '
+              f'aria-label="{"Найти иероглиф" if lang == "ru" else "Find a character"}" autocomplete="off" spellcheck="false" enterkeyhint="search"></form>')
     nav = f'<nav class="tn" aria-label="{"Разделы сайта" if lang == "ru" else "Site sections"}"><a class="tb" href="{home}">Hanzi Burst</a><span class="ts">{items}</span>{search}{others}</nav>'
     # активный раздел — в поле зрения (на телефоне строка прокручивается)
     nav += '<script>(function(){var s=document.querySelector(".ts"),o=s&&s.querySelector(".on");if(o)s.scrollLeft=o.offsetLeft-s.offsetLeft-(s.clientWidth-o.offsetWidth)/2})()</script>'
@@ -135,9 +134,64 @@ def page(title, desc, canon, body, ld=(), lang="ru", alt=None, image=None):
 <title>{E(title)}</title><meta name="description" content="{E(desc)}">
 <link rel="canonical" href="{BASE}{canon}"><meta name="robots" content="index,follow">
 {hreflang}<meta property="og:title" content="{E(title)}"><meta property="og:description" content="{E(desc)}">
-<meta property="og:image" content="{BASE}{image or '/og.png'}"><meta property="og:site_name" content="{BRAND}"><meta property="og:url" content="{BASE}{canon}">
+<meta property="og:image" content="{BASE}{image or ('/og.png' if lang == 'ru' else '/og-en.png')}"><meta property="og:site_name" content="{BRAND}"><meta property="og:url" content="{BASE}{canon}">
 {ld_script(ld)}{CSS}{BEACON}</head><body><main>{nav}
 {body}<div id="sitefoot"></div><script src="/footer.js" defer></script></main><script src="/static.js" defer></script></body></html>"""
+
+
+def en_home():
+    """site/en/index.html — английская главная: та же страница-приложение (site/index.html), но с английскими
+    <head>, шапкой и вводным текстом прямо в HTML (для поисковиков и превью ссылок). Язык интерфейса на /en/ задаёт
+    адрес (EN_PATH в index.html). Каждая замена должна совпасть ровно один раз: правка index.html, которая её
+    сломает, остановит сборку, а не выложит /en/ с русской шапкой."""
+    s = (SITE / "index.html").read_text(encoding="utf-8")
+
+    def one(pat, repl):
+        nonlocal s
+        s, n = re.subn(pat, lambda m: repl, s, flags=re.S)
+        assert n == 1, f"en_home: {n} matches for {pat!r}"
+
+    def grab(pat):
+        m = re.search(pat, s, flags=re.S)
+        assert m, f"en_home: no match for {pat!r}"
+        return m.group(1)
+
+    jsq = lambda v: json.dumps(v, ensure_ascii=False)   # строка JS
+    ru_title, ru_desc = html.unescape(grab(r"<title>(.*?)</title>")), html.unescape(grab(r'<meta name="description" content="(.*?)">'))
+    # заголовок и описание — из HEAD_T.en, вводный текст — из INTRO_EN: те же строки, что подставляет скрипт
+    en_title, en_desc = (grab(r"\n  en: \['((?:[^'\\]|\\.)*)', '(?:[^'\\]|\\.)*'\] \};").replace("\\'", "'"),
+                         grab(r"\n  en: \['(?:[^'\\]|\\.)*', '((?:[^'\\]|\\.)*)'\] \};").replace("\\'", "'"))
+    intro_en, intro_ru = grab(r"const INTRO_EN = `(.*?)`;"), grab(r'<section class="about" id="intro">(.*?)</section>')
+    assert "${" not in intro_en and "\\" not in intro_en, "en_home: INTRO_EN is not plain text"
+    og_desc = "Click a character and it bursts into radicals: meaning, pinyin, words and phrases for each part."
+    one(r'<html lang="ru">', '<html lang="en">')
+    one(r"<title>.*?</title>", f"<title>{E(en_title)}</title>")
+    one(r'<meta name="description" content=".*?">', f'<meta name="description" content="{E(en_desc)}">')
+    one(r'<meta name="keywords" content=".*?">', '<meta name="keywords" content="Chinese characters, radicals, hanzi, learn Chinese, pinyin, HSK, kanji, mnemonics">')
+    one(r'<link rel="canonical" href="https://hanzi.lipu.dev/">', f'<link rel="canonical" href="{BASE}/en/">')
+    one(r'<meta property="og:title" content=".*?">', f'<meta property="og:title" content="{E(en_title)}">')
+    one(r'<meta property="og:description" content=".*?">', f'<meta property="og:description" content="{E(og_desc)}">')
+    one(r'<meta property="og:url" content="https://hanzi.lipu.dev/">', f'<meta property="og:url" content="{BASE}/en/">')
+    one(r'<meta property="og:image" content="https://hanzi.lipu.dev/og.png">', f'<meta property="og:image" content="{BASE}/og-en.png">')
+    one(r'"url":"https://hanzi.lipu.dev/","applicationCategory"', f'"url":"{BASE}/en/","applicationCategory"')
+    one(r'"inLanguage":\["ru","en"\]', '"inLanguage":"en"')
+    # шапка, заголовок, вводный текст и футер — как их рисует скрипт при lang=en (T.en, UI.en.nav, renderFooter)
+    one(r'<a class="skip" id="skip" href="#phrase">.*?</a>', '<a class="skip" id="skip" href="#phrase">Skip to the phrase</a>')
+    nav = "".join(f'<a href="{h}"' + (' class="on" aria-current="page"' if i == 0 else "") + f">{t}</a>" for i, (h, t) in enumerate(
+        [("/en/", "Phrases"), ("/en/r/", "Radicals"), ("/en/c/", "Characters"), ("/en/hsk/", "HSK"), ("/radicals-game?lang=en", "Game"), ("/learned", "My characters")]))
+    one(r'<nav class="snav" id="snav" aria-label="[^"]*">.*?</nav>', f'<nav class="snav" id="snav" aria-label="Site sections">{nav}</nav>')
+    one(r'<h1 id="h1">.*?</h1>', '<h1 id="h1">Chinese characters broken down into radicals</h1>')
+    one(r'<summary id="introSum">.*?</summary>', '<summary id="introSum">ⓘ About this site</summary>')
+    one(r'(?<=<section class="about" id="intro">).*?(?=</section>)', intro_en + "\n  ")
+    li = lambda h, t: f'<li><a href="{h}">{t}</a></li>'
+    one(r'<ul id="fl1">.*?</ul>', '<ul id="fl1">' + li("/en/p/", "All phrases") + li("/posters#en", "Radicals posters (PDF)")
+        + li("/extension", "Chrome &amp; Firefox extension") + li("/japanese/", "Kana (Japanese syllabaries)") + "</ul>")
+    one(r'<ul id="fl2">.*?</ul>', '<ul id="fl2">' + li("/about", "About") + li("/privacy", "Privacy") + li("https://github.com/komapc/hanzi-burst", "Source code") + "</ul>")
+    # скрипт берёт русские строки из HTML; здесь в HTML английские, поэтому русские — константами
+    one(r"const INTRO_RU = \$\('#intro'\)\.innerHTML;", f"const INTRO_RU = {jsq(intro_ru)};")
+    one(r"\n  ru: \[document\.title, DESC_EL\.content\],", f"\n  ru: [{jsq(ru_title)}, {jsq(ru_desc)}],")
+    (SITE / "en").mkdir(exist_ok=True)
+    (SITE / "en" / "index.html").write_text(s, encoding="utf-8")
 
 
 def main():
@@ -216,7 +270,8 @@ def main():
                 if x != ch:
                     shared[x] += 1 / len(parents[cp])
         return sorted(shared, key=lambda x: (-shared[x], *rank(x)))[:TOP_SIMILAR]
-    urls = [f"{BASE}/", f"{BASE}/about", f"{BASE}/privacy", f"{BASE}/extension", f"{BASE}/c/", f"{BASE}/p/", f"{BASE}/hsk/", f"{BASE}/japanese/"]
+    en_home()
+    urls = [f"{BASE}/", f"{BASE}/en/", f"{BASE}/about", f"{BASE}/privacy", f"{BASE}/extension", f"{BASE}/c/", f"{BASE}/p/", f"{BASE}/hsk/", f"{BASE}/japanese/"]
     link = lambda ch: f'<a href="/c/{cid(ch)}" data-c="{ch}">{ch}</a>' if ch in chars else ch
 
     for ch, c in chars.items():

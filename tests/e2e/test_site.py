@@ -236,6 +236,43 @@ class Site(unittest.TestCase):
         self.page.click('.lang button[data-lang="ru"]')
         self.assertIn("lang=ru", self.page.url)
 
+    # ---- /en/: the English copy of the home page (build_static.en_home) ----
+    def test_en_home_is_english_even_if_russian_was_chosen(self):    # the address sets the language, not hanzi-lang
+        bad = []
+        ours = lambda u: u.startswith(self.base) and "/api/" not in u                    # not the beacon or GA4
+        self.page.on("response", lambda r: r.status >= 400 and ours(r.url) and bad.append(f"{r.status} {r.url}"))
+        self.page.on("requestfailed", lambda r: ours(r.url) and bad.append(r.url))
+        self.page.add_init_script("localStorage.setItem('hanzi-lang','ru')")
+        self.open("en/?open=" + quote("想"))
+        self.assertEqual(self.page.evaluate("document.documentElement.lang"), "en")
+        self.assertIn("radicals", self.page.inner_text("#h1"))
+        self.assertIn("想", self.tree())
+        self.assertEqual(bad, [], "requests that failed on /en/")
+
+    def test_en_home_html_is_english_without_javascript(self):      # what crawlers and link previews read
+        ctx = self.browser.new_context(java_script_enabled=False)
+        try:
+            page = ctx.new_page()
+            page.goto(self.base + "en/")
+            self.assertEqual(page.get_attribute("html", "lang"), "en")
+            self.assertEqual(page.get_attribute('link[rel="canonical"]', "href"), "https://hanzi.lipu.dev/en/")
+            self.assertEqual(page.get_attribute('meta[property="og:image"]', "content"), "https://hanzi.lipu.dev/og-en.png")
+            self.assertIn("Where to start", page.text_content("#intro"))
+            self.assertEqual(page.get_attribute("#snav a.on", "href"), "/en/")
+        finally:
+            ctx.close()
+
+    def test_lang_switch_moves_between_root_and_en(self):          # no reload; ?open= and the open character stay
+        self.open("en/?open=" + quote("想"))
+        self.page.click('.lang button[data-lang="ru"]')
+        self.assertEqual(self.page.evaluate("location.pathname"), "/")
+        self.assertIn("open=", self.page.url)
+        self.assertIn("С чего начать", self.page.text_content("#intro"))   # Russian intro, though the HTML of /en/ is English
+        self.assertIn("Разбор", self.page.title())
+        self.page.click('.lang button[data-lang="en"]')
+        self.assertEqual(self.page.evaluate("location.pathname"), "/en/")
+        self.assertIn("想", self.tree())
+
     def test_open_param_ignores_object_keys(self):                  # ?open=constructor used to throw
         self.open("?open=constructor&lang=en")
         self.assertFalse(self.page.is_visible("#card"))

@@ -41,10 +41,10 @@
   const render = () => {
     const T = (html.dataset.l || html.lang || 'ru').startsWith('ru') ? RU : EN;
     // по-английски ведём на /en/c/, /en/p/ и /en/hsk/
-    const pre = T === EN ? '/en' : '', onEn = location.pathname.startsWith('/en/');
+    const pre = T === EN ? '/en' : '';
     // разделы, что уже есть в шапке страницы (nav.tn), в футере не повторяем
     const inTop = new Set([...document.querySelectorAll('nav.tn a')].map(a => a.pathname));
-    const links = [[onEn ? '/?lang=en' : '/', T.home], [pre + '/c/', T.all], [pre + '/p/', T.phrases], [pre + '/hsk/', T.hsk], [pre + '/r/', T.radicals],
+    const links = [[pre + '/', T.home], [pre + '/c/', T.all], [pre + '/p/', T.phrases], [pre + '/hsk/', T.hsk], [pre + '/r/', T.radicals],
       ['/posters' + (T === EN ? '#en' : ''), T.poster], ['/radicals-game' + (T === EN ? '?lang=en' : ''), T.rgame], ['/learned', T.learned],
       ['/extension', T.ext], ['/japanese/', T.kana]].concat(T === EN ? [] : [['/k/', T.kanji]]);
     foot.innerHTML = `<div class="sgrid">
