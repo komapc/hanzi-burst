@@ -85,6 +85,24 @@ class Site(unittest.TestCase):
         return self.page.eval_on_selector("#info h2 [data-c]", "e => e.dataset.c")
 
     # ---- phrase and tree ----
+    def test_without_javascript_the_footer_and_about_are_shown(self):
+        # html:not(.ready) hides them until the data loads; without JS .ready never comes, <noscript> shows them
+        ctx = self.browser.new_context(java_script_enabled=False)
+        try:
+            page = ctx.new_page()
+            page.goto(self.base)
+            self.assertTrue(page.locator(".foot").is_visible())
+            self.assertTrue(page.locator("#introD > summary").is_visible())
+        finally:
+            ctx.close()
+
+    def test_footer_shows_even_if_the_data_fails_to_load(self):
+        self.page.route("**/phrase.json", lambda r: r.abort())
+        self.page.goto(self.base)
+        self.page.wait_for_selector("html.ready", state="attached")
+        self.assertTrue(self.page.locator(".foot").is_visible())
+        self.errors.clear()   # the failed fetch itself is reported as an uncaught rejection
+
     def test_home_renders_a_phrase(self):
         self.open("?lang=en")
         self.assertGreater(self.page.locator("#phrase .ch").count(), 0)
