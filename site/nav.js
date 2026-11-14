@@ -39,6 +39,7 @@
   const render = () => {
     const en = !(html.dataset.l || html.lang || 'ru').startsWith('ru');
     brand.href = en ? '/?lang=en' : '/'; brand.textContent = 'Hanzi Burst';
+    nav.setAttribute('aria-label', en ? 'Site sections' : 'Разделы сайта');   // навигаций на странице несколько: у каждой своё имя
     ts.innerHTML = NAV[en ? 'en' : 'ru'].map(([h, t]) => {
       const p = h.split('?')[0];
       const on = p !== '/' && (p.endsWith('/') ? here.startsWith(p) : here === p);

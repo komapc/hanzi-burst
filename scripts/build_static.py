@@ -64,7 +64,7 @@ a{color:var(--accent)}h1{font-size:28px;margin:.4em 0}h2{font-size:17px;margin:1
 ul{padding-left:20px}.cta{display:inline-block;margin:12px 0;padding:8px 14px;border:1px solid var(--accent);border-radius:8px;text-decoration:none}
 .chs a{display:inline-block;position:relative;margin:0 6px 6px 0;font-size:22px;text-decoration:none}
 :root{--ok:#2f8f5b;--info:#2f6fd0;--warn:#d09a1f}@media(prefers-color-scheme:dark){:root{--ok:#5fcf93;--info:#6aa6ff;--warn:#e8b84a}}
-a.known::after,a.allp::after,a.somep::after{content:"";position:absolute;top:2px;right:-3px;width:7px;height:7px;border-radius:50%;background:var(--ok)}
+a[data-c]{position:relative}a.known::after,a.allp::after,a.somep::after{content:"";position:absolute;top:2px;right:-2px;width:7px;height:7px;border-radius:50%;background:var(--ok)}
 a.allp::after{background:var(--info)}a.somep::after{background:var(--warn)}
 .hl{list-style:none;padding:0}.hl li{margin:2px 0}.hl a{font:24px/1.3 'Noto Serif SC',serif;text-decoration:none;margin-right:6px}
 .badge{display:inline-block;margin:0 0 6px;padding:2px 10px;border:1px solid var(--line);border-radius:999px;font-size:14px;text-decoration:none}
@@ -126,7 +126,7 @@ def page(title, desc, canon, body, ld=(), lang="ru", alt=None, image=None):
     search = (f'<form class="tq" action="/" role="search"><input type="search" name="q" placeholder="{"想, xiang, сян" if lang == "ru" else "想 / xiang"}" '
               f'aria-label="{"Найти иероглиф" if lang == "ru" else "Find a character"}" autocomplete="off" spellcheck="false" enterkeyhint="search">'
               + ("" if lang == "ru" else '<input type="hidden" name="lang" value="en">') + "</form>")
-    nav = f'<nav class="tn"><a class="tb" href="{home}">Hanzi Burst</a><span class="ts">{items}</span>{search}{others}</nav>'
+    nav = f'<nav class="tn" aria-label="{"Разделы сайта" if lang == "ru" else "Site sections"}"><a class="tb" href="{home}">Hanzi Burst</a><span class="ts">{items}</span>{search}{others}</nav>'
     # активный раздел — в поле зрения (на телефоне строка прокручивается)
     nav += '<script>(function(){var s=document.querySelector(".ts"),o=s&&s.querySelector(".on");if(o)s.scrollLeft=o.offsetLeft-s.offsetLeft-(s.clientWidth-o.offsetWidth)/2})()</script>'
     return f"""<!doctype html><html lang="{lang}"><head><meta charset="utf-8"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
