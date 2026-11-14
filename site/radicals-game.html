@@ -161,7 +161,7 @@ function answer(b) {
   srs[cur.k] = s; put('hanzi-radicals-srs', srs);
   if (right && mode === 'meaning' && s.b >= MAXBOX) addKnown([r.char, ...r.variants]);   // 氵 и 扌 — тоже «знаю» в деревьях
   const vs = r.variants.length ? ` (${r.variants.join('、')})` : '';
-  const exl = mode === 'find' ? ` · ${t('ch')} <a lang="zh" href="/?open=${encodeURIComponent(cur.ex)}${lang === 'en' ? '&lang=en' : ''}">${cur.ex}</a>` : '';
+  const exl = mode === 'find' ? ` · ${t('ch')} <a lang="zh" href="${lang === 'en' ? '/en/' : '/'}?open=${encodeURIComponent(cur.ex)}">${cur.ex}</a>` : '';
   $('fb').innerHTML = `${right ? `<b style="color:var(--ok)">${t('ok')}</b>` : `<b style="color:var(--bad)">${t('bad')}</b>`} `
     + `<span lang="zh">${r.char}${vs}</span> ${esc(r.pinyin)}${lang === 'ru' && r.pal ? ` (${esc(r.pal)})` : ''} — ${esc(r[lang])} · <a href="${pre()}/r/${hex(r.char)}">${t('page')}</a>${exl}`
     + `<br><button class="next" id="nx">${t('next')}</button>`;

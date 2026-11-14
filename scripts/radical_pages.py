@@ -256,7 +256,7 @@ def build(SITE, page, breadcrumbs, E, BASE, chars, allc, first):
         def ex_link(c):
             if c in chars:
                 return f'<a href="{pre}/c/{cid(c)}" data-c="{c}" lang="zh">{c}</a>'
-            return f'<a href="/?open={c}' + ("&amp;lang=en" if lang == "en" else "") + f'" data-c="{c}" lang="zh">{c}</a>'
+            return f'<a href="{"/en/" if lang == "en" else "/"}?open={c}" data-c="{c}" lang="zh">{c}</a>'
         for r in R:
             ch, n = r["char"], r["n"]
             vs = "".join(r["variants"])

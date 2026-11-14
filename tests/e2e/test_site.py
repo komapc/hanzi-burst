@@ -236,6 +236,44 @@ class Site(unittest.TestCase):
         self.page.click('.lang button[data-lang="ru"]')
         self.assertIn("lang=ru", self.page.url)
 
+    # ---- / is Russian for everyone without a saved choice (crawlers render with en-US); others get a hint to /en/ ----
+    def test_root_is_russian_for_an_english_browser_with_a_hint(self):   # this context is en-US, like Googlebot
+        self.open("?open=" + quote("想"))
+        self.assertEqual(self.page.evaluate("document.documentElement.lang"), "ru")
+        self.assertIn("Разбор", self.page.title())
+        self.assertTrue(self.page.is_visible("#enhint"))
+        self.assertEqual(self.page.evaluate("new URL(document.querySelector('#enhintGo').href).pathname + decodeURIComponent(new URL(document.querySelector('#enhintGo').href).search)"), "/en/?open=想")
+
+    def test_closing_the_hint_is_remembered_but_saves_no_language(self):   # hanzi-lang is read by /learned, the game, /extension
+        self.open()
+        self.page.click("#enhintX")
+        self.assertFalse(self.page.is_visible("#enhint"))
+        self.page.reload(); self.page.wait_for_selector("html.ready", timeout=20000)
+        self.assertFalse(self.page.is_visible("#enhint"))
+        self.assertIsNone(self.page.evaluate("localStorage.getItem('hanzi-lang')"))
+
+    def test_hint_link_opens_en_and_remembers_english(self):
+        self.open()
+        self.page.click("#enhintGo")
+        self.page.wait_for_selector("html.ready", timeout=20000)
+        self.assertEqual(self.page.evaluate("location.pathname"), "/en/")
+        self.page.goto(self.base); self.page.wait_for_selector("html.ready", timeout=20000)
+        self.assertEqual(self.page.evaluate("document.documentElement.lang"), "en")   # saved choice: English in place
+        self.assertFalse(self.page.is_visible("#enhint"))
+
+    def test_no_hint_for_russian_browsers_or_on_en(self):
+        self.open("en/")
+        self.assertFalse(self.page.is_visible("#enhint"))
+        ctx = self.browser.new_context(locale="ru-RU")
+        try:
+            page = ctx.new_page()
+            page.route("**googletagmanager**", lambda r: r.abort())
+            page.goto(self.base); page.wait_for_selector("html.ready", timeout=20000)
+            self.assertFalse(page.is_visible("#enhint"))
+            self.assertEqual(page.evaluate("document.documentElement.lang"), "ru")
+        finally:
+            ctx.close()
+
     # ---- /en/: the English copy of the home page (build_static.en_home) ----
     def test_en_home_is_english_even_if_russian_was_chosen(self):    # the address sets the language, not hanzi-lang
         bad = []

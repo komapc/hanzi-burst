@@ -245,6 +245,10 @@
   #card.open { display:block; }
   #card .grab { display:none; }
   #cardClose { font-size:1.1rem; line-height:1; padding:4px 11px; }   /* и на десктопе: не все знают про Esc */
+  #enhint { display:none; }   /* показ — класс enh у <html> из скрипта в <head> */
+  html.enh #enhint { display:flex; align-items:center; flex-wrap:wrap; gap:2px 10px; margin:0 0 12px; padding:6px 6px 6px 14px; border-radius:12px; background:var(--soft); }
+  #enhint a { color:var(--accent); font-weight:600; }
+  #enhint button { margin-left:auto; min-width:36px; min-height:36px; border:0; border-radius:999px; background:none; color:var(--muted); font-size:1.3rem; line-height:1; cursor:pointer; }
   .skip { position:absolute; left:-9999px; top:8px; z-index:60; padding:8px 14px; border-radius:10px; background:var(--card); border:2px solid var(--accent); color:var(--fg); }
   .skip:focus { left:8px; }
   /* первый вход: пульсирующее кольцо на том, что нажать (см. tour) */
@@ -349,11 +353,19 @@
             position:sticky; top:12px; max-height:calc(100vh - 40px); overflow-y:auto; }
   }
 </style>
+<script>/* браузер не на русском и язык ещё не выбран: подсказка #enhint про английскую главную /en/. Класс enh ставится до
+   отрисовки, поэтому полоса не сдвигает страницу (CLS). Сам / всегда русский, и для поисковиков тоже (Googlebot — en-US) */
+(function () { try {
+  var ru = (navigator.languages || [navigator.language]).some(function (l) { return /^ru/i.test(l || ''); });
+  if (location.pathname === '/' && !ru && !localStorage.getItem('hanzi-lang') && !localStorage.getItem('hanzi-enhint') && !/[?&]lang=/.test(location.search))
+    document.documentElement.classList.add('enh');
+} catch (e) {} })();</script>
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "7efcd1cc733b4eaf8c293f32b705fbf7"}'></script>
 </head>
 <body>
 <a class="skip" id="skip" href="#phrase">К фразе</a>
 <main>
+  <p id="enhint" lang="en"><span>This page is in Russian.</span> <a href="/en/" id="enhintGo">Open the English version →</a><button id="enhintX" aria-label="Close" title="Close">×</button></p>
   <header>
     <span class="brand">Hanzi Burst</span>
     <span class="right">
@@ -491,7 +503,9 @@ const T = {
 };
 let D = null, G = {};
 let lang = 'ru';
-try { lang = localStorage.getItem('hanzi-lang') || (navigator.language.startsWith('ru') ? 'ru' : 'en'); } catch (e) {}
+// без сохранённого выбора / — русская: поисковики рендерят страницу с английской локалью, и по языку браузера они видели
+// бы английскую страницу по адресу русской. Английская главная — /en/; браузерам не на русском — подсказка #enhint
+try { lang = localStorage.getItem('hanzi-lang') || 'ru'; } catch (e) {}
 // /en/ — английская главная (копия этой страницы из scripts/build_static.py): язык задаёт адрес, а не сохранённый выбор и не ?lang=
 const EN_PATH = location.pathname.startsWith('/en/');
 if (EN_PATH) lang = 'en';
@@ -1610,8 +1624,14 @@ function applyLang() {
   });
   refresh();
 }
+// подсказка «Open the English version» (класс enh ставит скрипт в <head>): ссылка сохраняет ?open= и прочее,
+// переход запоминает английский; × закрывает её насовсем, но язык не сохраняет (его читают /learned, игра, /extension)
+$('#enhintGo').href = '/en/' + location.search + location.hash;
+$('#enhintGo').onclick = () => { try { localStorage.setItem('hanzi-lang', 'en'); } catch (e) {} track('en_hint', { action: 'open' }); };
+$('#enhintX').onclick = () => { document.documentElement.classList.remove('enh'); try { localStorage.setItem('hanzi-enhint', 'closed'); } catch (e) {} track('en_hint', { action: 'close' }); };
 document.querySelectorAll('.lang button').forEach(b => b.onclick = () => {
   lang = b.dataset.lang; try { localStorage.setItem('hanzi-lang', lang); } catch (e) {}
+  document.documentElement.classList.remove('enh');   // язык выбран — подсказка про /en/ больше не нужна
   // адрес следует за языком без перезагрузки: /en/ — английская главная, / — русская; ?open= и прочее сохраняются.
   // ?lang= из старых ссылок иначе при обновлении страницы вернул бы прежний язык
   const u = new URL(location.href);

@@ -434,7 +434,7 @@ def main():
 
     # Английские версии /en/c/, /en/p/ и /en/hsk/: те же данные, только английские значения, без подстановки русских.
     # В sitemap — по той же политике, что и русские: хабы, HSK и знаки HSK 1–3; страниц фраз там нет.
-    # Ссылки «в приложение» с английских страниц добавляют lang=en.
+    # Ссылки «в приложение» с английских страниц ведут на английскую главную /en/.
     link_en = lambda ch: f'<a href="/en/c/{cid(ch)}" data-c="{ch}">{ch}</a>' if ch in chars else ch
     def en_gloss(s): return f" — {E(s)}" if s else ""
     for ch, c in chars.items():
@@ -448,7 +448,7 @@ def main():
         lv = char_lv.get(ch)
         if lv:
             body.append(f'<p><a class="badge" href="/en/hsk/{lv}">HSK 3.0 · level {lvname(lv)}</a></p>')
-        if c.get("components"): body.append(f'<a class="cta" href="/?open={ch}&amp;explode=1&amp;lang=en">Break it down interactively →</a>')
+        if c.get("components"): body.append(f'<a class="cta" href="/en/?open={ch}&amp;explode=1">Break it down interactively →</a>')
         if ch in rad_of:
             body.append(f"<p>{ZH(ch)} is a Kangxi radical, {rad_links(ch, '/en')}: its page shows the stroke order, variant forms and characters that use it.</p>")
         comps = c.get("components") or []
@@ -520,7 +520,7 @@ def main():
         en = p.get("en") or ""
         body = [f"<h1 lang='zh'>{E(zh)}</h1><p class='m'>{E(pyl)}</p>"]
         if en: body.append(f"<p><b>{E(en)}</b></p>")
-        body.append(f'<a class="cta" href="/?z={quote(zh)}&amp;lang=en">Break it down character by character →</a>')
+        body.append(f'<a class="cta" href="/en/?z={quote(zh)}">Break it down character by character →</a>')
         body.append("<h2>Characters</h2><p class='chs' lang='zh'>" + "".join(link_en(c) for c in cs) + "</p>")
         rows = [f"<li>{link_en(c)} <span class='m'>{E((chars[c].get('pinyin') or [''])[0])}</span>{en_gloss(first(chars[c].get('definition')))}</li>"
                 for c in cs if c in chars]
@@ -543,7 +543,7 @@ def main():
         rows = []
         for ch in cs:
             cx = allc.get(ch) or {}
-            href = f"/en/c/{cid(ch)}" if ch in chars else f"/?open={ch}&amp;lang=en"
+            href = f"/en/c/{cid(ch)}" if ch in chars else f"/en/?open={ch}"
             rows.append(cell(href, ch, ", ".join(cx.get("pinyin") or []), first(cx.get("definition"))))
         body = (f"<h1>HSK {lvname(lv)} characters</h1>"
                 f"<p class='m'>{len(cs)} new characters of this level in the HSK 3.0 standard, from common to rare. "
