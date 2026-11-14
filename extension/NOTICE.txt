@@ -40,6 +40,16 @@ The offline dictionary data bundled in data/ is derived from the following sourc
    https://creativecommons.org/licenses/by-sa/3.0/ .
    (Stroke outlines are not bundled in this extension.)
 
+7. cjkvi-ids — https://github.com/cjkvi/cjkvi-ids
+   Ideographic Description Sequences, used only to fill in breakdowns of
+   characters that Make Me a Hanzi does not cover. Copyright CJKVI Database,
+   based on the CHISE IDS Database; licensed under the GNU General Public
+   License v2, https://www.gnu.org/licenses/old-licenses/gpl-2.0.html .
+
+8. complete-hsk-vocabulary — https://github.com/drkameleon/complete-hsk-vocabulary
+   HSK 3.0 levels of words and characters. Copyright Dr.Kameleon,
+   licensed under the MIT License, https://opensource.org/licenses/MIT .
+
 The data files derived from sources 4-6 are distributed under the same CC BY-SA licenses.
 
 Russian-language definitions are original translations by the Hanzi Burst project.

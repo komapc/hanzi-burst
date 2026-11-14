@@ -12,9 +12,9 @@
 ## Статус (2026-11-14)
 
 - Сайт: деплоится из `main` автоматически (см. «Деплой»).
-- Расширение: 0.2.6 отправлена в Chrome Web Store и на addons.mozilla.org 2026-11-13, обе на проверке.
-  В `main` уже 0.2.7 (новая иконка, разбор традиционных знаков как есть); тег `v0.2.7` ставится, когда 0.2.6 одобрят
-  в обоих магазинах.
+- Расширение: 0.2.6 опубликована в Chrome Web Store и на addons.mozilla.org; 0.2.7 (новая иконка, разбор
+  традиционных знаков как есть) выпущена тегом `v0.2.7` 2026-11-14: на AMO уже опубликована, в Chrome Web Store на проверке.
+- Лицензия: код — MIT ([`LICENSE`](LICENSE)); данные — под лицензиями источников, см. [«Источники и лицензии»](#источники-и-лицензии).
 
 ## Содержание
 
@@ -197,6 +197,9 @@ Make Me a Hanzi (LGPL/Arphic), CC-CEDICT (CC BY-SA), Unicode/Unihan (Unicode Lic
 CC BY-SA 4.0), KanjiVG (Ulrich Apel, CC BY-SA 3.0), фразы и их переводы: Tatoeba (CC BY 2.0 FR, авторы указаны на
 tatoeba.org по номеру в `source`), Wiktionary (CC BY-SA), Common Voice (CC0). Атрибуция: страница `/about`
 (`site/about.html`) и `extension/NOTICE.txt` в пакете расширения.
+
+Лицензия MIT в [`LICENSE`](LICENSE) относится только к коду. Всё, что выведено из этих источников (`data/`,
+сгенерированные `site/data/` и `extension/data/`, снимки `raw-data-*` в релизах), остаётся под их лицензиями.
 
 Что лежит в `data/raw/` (и в снимке для CI): `mmh/{dictionary,graphics}.txt`, `cedict/cedict_ts.u8`,
 `unicode/CJKRadicals.txt`, `unihan/Unihan_*.txt`, `ids/ids.txt`, `hsk/complete.json`, `jmdict/jmdict-{eng,rus}-*.json`
