@@ -89,7 +89,7 @@ async function fillGlyphs() {
 }
 const def = ch => { const c = D.chars[ch] || {}; return (lang === 'ru' && c.definition_ru) || c.definition || ''; };
 const short = d => (d || '').split(/[;,]/)[0].trim();
-const cardHtml = (ch, cls) => `<a class="c ${cls || ''}" href="/?open=${encodeURIComponent(ch)}&lang=${lang}"><span class="p">${esc(((D.chars[ch] || {}).pinyin || [])[0] || '')}</span>${hz(ch)}<span class="d">${esc(short(def(ch)))}</span></a>`;
+const cardHtml = (ch, cls) => `<a class="c ${cls || ''}" href="${lang === 'en' ? '/en/' : '/'}?open=${encodeURIComponent(ch)}"><span class="p">${esc(((D.chars[ch] || {}).pinyin || [])[0] || '')}</span>${hz(ch)}<span class="d">${esc(short(def(ch)))}</span></a>`;
 const kset = () => new Set(known);
 function leaves(ch, ks) {   // {total, got} по листовым частям
   let total = 0, got = 0;
