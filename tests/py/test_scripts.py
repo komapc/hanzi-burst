@@ -7,6 +7,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 import breakdown  # noqa: E402
 import palladius  # noqa: E402
+from radical_names import NAMES, PICTURES  # noqa: E402
 
 
 class Pinyin(unittest.TestCase):
@@ -70,6 +71,18 @@ class Palladius(unittest.TestCase):
 
     def test_tone_marks_kept(self):
         self.assertEqual(palladius.convert("rén"), "жэ́нь")
+
+
+class RadicalPictures(unittest.TestCase):
+    def test_entries(self):
+        for n, (en, ru) in PICTURES.items():
+            self.assertIn(n, NAMES)
+            self.assertTrue(en.strip() and ru.strip(), n)
+            self.assertNotEqual(ru, NAMES[n][1], f"{n}: picture = name, nothing to add")
+
+    def test_hand_is_drawn_not_again(self):          # the case that started it: 又 means "again", depicts a hand
+        self.assertEqual(NAMES[29][0], "again")
+        self.assertEqual(PICTURES[29], ("a right hand", "правая рука"))
 
 
 if __name__ == "__main__":
