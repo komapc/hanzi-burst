@@ -22,6 +22,7 @@ import hsk as hsklib
 import palladius
 import kanji_pages
 import radical_pages
+import redirects
 
 ROOT = Path(__file__).resolve().parent.parent
 SITE = ROOT / "site"
@@ -523,7 +524,7 @@ def main():
         rest = path[3:] if en else path
         k = ("en/" if en else "") + ("hub" if rest.count("/") < 2 or rest.endswith("/") else rest.split("/")[1])
         by[k] = by.get(k, 0) + 1
-    print(f"static: chars={len(chars)} phrases={len(phrases)} sitemap urls={len(urls)} {by}")
+    print(f"static: chars={len(chars)} phrases={len(phrases)} sitemap urls={len(urls)} {by} redirects={redirects.write(SITE)}")
 
 
 if __name__ == "__main__":

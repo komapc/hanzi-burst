@@ -10,6 +10,7 @@ site/en/
 site/eo/
 site/posters.html
 site/sitemap.xml
+site/_redirects
 site/data/
 site/comps.json
 __pycache__/

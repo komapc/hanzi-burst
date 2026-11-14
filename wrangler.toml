@@ -2,7 +2,8 @@ name = "hanzi-burst"
 main = "worker/index.js"
 compatibility_date = "2025-01-01"
 
-routes = [{ pattern = "hanzi.lipu.dev", custom_domain = true }]   # workers.dev отвечает 301 на hanzi.lipu.dev (кроме /api/* и файла Google)
+routes = [{ pattern = "hanzi.lipu.dev", custom_domain = true }]
+# workers.dev отдаёт тот же сайт, но с X-Robots-Tag: noindex (site/_headers) и canonical на hanzi.lipu.dev
 workers_dev = true
 
 # Статика сайта и API живут на одном домене: куки работают без CORS.
@@ -13,9 +14,10 @@ command = "[ -n \"$HB_BUILT\" ] || sh scripts/build_all.sh"
 [assets]
 directory = "./site"
 binding = "ASSETS"
-# Все запросы сначала идут в Worker: он редиректит workers.dev на hanzi.lipu.dev,
-# обслуживает /api/* и файл подтверждения Google, остальное отдаёт из site/ через ASSETS.
-run_worker_first = true
+# Worker вызывается только для API и файлов подтверждения (их нужно отдать по точному адресу, без 307 на путь
+# без .html). Остальную статику Cloudflare отдаёт сам: она не тратит дневной лимит Workers (100 тыс. на аккаунт,
+# общий с vortaro). 301 на канонические адреса — site/_redirects (scripts/redirects.py), http -> https — зона.
+run_worker_first = ["/api/*", "/googled1d667f41fecd0d0.html", "/yandex_075f1191e804f3a2.html"]
 # несуществующие пути: статус 404 и страница site/404.html (иначе пустое тело)
 not_found_handling = "404-page"
 

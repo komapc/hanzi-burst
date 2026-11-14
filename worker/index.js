@@ -169,28 +169,17 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     const path = url.pathname;
-    // Google Search Console: файл подтверждения должен отдаваться по точному адресу, без редиректа на путь без .html
-    const gv = path === '/googled1d667f41fecd0d0.html' ? [null, 'googled1d667f41fecd0d0.html'] : null;
-    if (gv) return new Response('google-site-verification: ' + gv[1], { headers: { 'content-type': 'text/html; charset=utf-8' } });
-    // Старый адрес *.workers.dev: страницы навсегда переезжают на основной домен, API продолжает работать
-    if (url.hostname.endsWith('.workers.dev') && !path.startsWith('/api/')) {
-      return Response.redirect('https://hanzi.lipu.dev' + path + url.search, 301);
-    }
-    // http:// на основном домене: навсегда на https (на случай, если «Always Use HTTPS» в зоне выключен).
+    // Файлы подтверждения — по точному адресу с 200 (html_handling ответил бы 307 на путь без .html).
+    // Сюда доходят только они и /api/* (run_worker_first в wrangler.toml), остальное Cloudflare отдаёт без Worker'а.
+    if (path === '/googled1d667f41fecd0d0.html') return new Response('google-site-verification: googled1d667f41fecd0d0.html', { headers: { 'content-type': 'text/html; charset=utf-8' } });
+    if (path === '/yandex_075f1191e804f3a2.html') return env.ASSETS.fetch(new URL('/yandex_075f1191e804f3a2', url));
+    // http:// на основном домене: навсегда на https. Обычно это делает зона («Always Use HTTPS»), здесь — страховка для API.
     // Схему посетителя берём из CF-Visitor, который ставит край Cloudflare: в wrangler dev его нет, и URL там всегда http.
     if (url.hostname === 'hanzi.lipu.dev' && /"scheme":"http"/.test(request.headers.get('CF-Visitor') || '')) {
       url.protocol = 'https:';
       return Response.redirect(url.toString(), 301);
     }
-    if (!path.startsWith('/api/')) {
-      // ASSETS отвечает 307 на /japanese -> /japanese/ и /c/x.html -> /c/x; для поисковиков это постоянный адрес: 301
-      // Несуществующие пути: 404 со страницей site/404.html (not_found_handling в wrangler.toml)
-      const r = await env.ASSETS.fetch(request);
-      if (r.status === 307 && r.headers.get('Location')) {
-        return Response.redirect(new URL(r.headers.get('Location'), url).toString(), 301);
-      }
-      return r;
-    }
+    if (!path.startsWith('/api/')) return env.ASSETS.fetch(request);   // на случай run_worker_first = true
     const method = request.method;
     if (method !== 'GET' && COOKIE_WRITES.has(path) && !sameOrigin(request)) return json({ error: 'forbidden_origin' }, 403);
 

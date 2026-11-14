@@ -285,11 +285,16 @@ tatoeba.org по номеру в `source`), Wiktionary (CC BY-SA), Common Voice 
 
 ## Бэкенд (Cloudflare Workers + D1)
 
-Один Worker отдаёт статику из `site/` и `/api/*` (`worker/index.js`): вход через Google и список «известных» на сервере
+Статику из `site/` Cloudflare отдаёт сам, без Worker'а: так она не тратит дневной лимит Workers (100 тыс. вызовов
+на аккаунт). Worker (`worker/index.js`) вызывается только для `/api/*` и файлов подтверждения Google и Яндекса
+(`run_worker_first` в `wrangler.toml`). API: вход через Google и список «известных» на сервере
 (код готов, но `GOOGLE_CLIENT_ID` не задан, поэтому вход выключен — см. `ROADMAP.md`), запоминалки
 через Gemini (кэш в D1, лимиты в сутки — `[vars]` в `wrangler.toml`), перевод фразы (`/api/translate`, им же пользуется
 расширение). Без бэкенда (обычный статический сервер) страница работает, кнопки входа и запоминалок просто не показываются.
-`hanzi-burst.komapc.workers.dev` отвечает 301 на hanzi.lipu.dev.
+Постоянные (301) переходы на канонические адреса (`/c/6c34.html` → `/c/6c34`, `/japanese` → `/japanese/`) — в
+`site/_redirects`, его собирает `scripts/redirects.py` по готовому `site/` (без него Cloudflare отвечает 307).
+http → https делает зона («Always Use HTTPS»). `hanzi-burst.komapc.workers.dev` отдаёт тот же сайт с
+`X-Robots-Tag: noindex` (`site/_headers`): редирект оттуда потребовал бы Worker на каждый запрос.
 
 Первоначальная настройка (один раз; сделано всё, кроме `GOOGLE_CLIENT_ID` и `SESSION_SECRET`):
 

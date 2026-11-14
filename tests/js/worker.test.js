@@ -83,3 +83,12 @@ test('a good answer is stored', async () => {
   assert.equal(r.status, 200);
   assert.ok(sql.some(([q, a]) => q.includes('INTO mnemonics') && a.includes('Rain drops')));
 });
+
+test('the Yandex verification file is served at its exact address (200, no redirect)', async () => {
+  const { env } = fakeEnv();
+  let asked = null;
+  env.ASSETS = { fetch: async u => { asked = new URL(u).pathname; return new Response('Verification: 075f1191e804f3a2'); } };
+  const r = await worker.fetch(new Request(SITE + '/yandex_075f1191e804f3a2.html'), env);
+  assert.equal(r.status, 200);
+  assert.equal(asked, '/yandex_075f1191e804f3a2');
+});
