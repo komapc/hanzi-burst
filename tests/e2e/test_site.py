@@ -30,10 +30,17 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         pass
 
 
+class Server(http.server.ThreadingHTTPServer):
+    def handle_error(self, request, client_address):               # the browser closing a context mid-download
+        import sys
+        if not isinstance(sys.exc_info()[1], (BrokenPipeError, ConnectionResetError)):
+            super().handle_error(request, client_address)
+
+
 class Site(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.srv = http.server.ThreadingHTTPServer(("127.0.0.1", 0), functools.partial(Handler, directory=str(SITE)))
+        cls.srv = Server(("127.0.0.1", 0), functools.partial(Handler, directory=str(SITE)))
         threading.Thread(target=cls.srv.serve_forever, daemon=True).start()
         cls.base = f"http://127.0.0.1:{cls.srv.server_address[1]}/"
         cls.pw = sync_playwright().start()
@@ -153,6 +160,26 @@ class Site(unittest.TestCase):
         self.assertEqual(self.tree()[0], "學")                    # the traditional form is broken down
         self.assertIn("學", self.page.inner_text("#gloss"))
 
+    def test_switching_script_rebuilds_the_tree(self):
+        self.open("?open=" + quote("学") + "&lang=en")
+        self.assertEqual(self.tree()[0], "学")
+        self.page.click("#set > summary")
+        self.page.click('.scr label:has(input[value="t"])')
+        self.page.wait_for_function("document.querySelector('#tree > .node').dataset.ch === '學'", timeout=10000)
+        self.page.click('.scr label:has(input[value="s"])')
+        self.page.wait_for_function("document.querySelector('#tree > .node').dataset.ch === '学'", timeout=10000)
+
+    def test_traditional_search_from_url(self):                     # ?q= from other pages: used to race the s2t map
+        self.open("?q=" + quote("学") + "&lang=en", script="t")
+        self.assertEqual(self.tree()[0], "學")
+
+    def test_copy_in_traditional_copies_what_is_shown(self):
+        self.open("?lang=en", script="t")
+        self.page.click("#copy > summary")
+        self.page.click("#cpGo")
+        self.page.wait_for_timeout(300)
+        self.assertTrue(self.page.evaluate("navigator.clipboard.readText()").startswith("我想學漢字"))
+
     def test_traditional_mode_does_not_convert_the_parts(self):
         """你 = 亻 + 尔 in both modes: 尔 must not be drawn as 爾 (its traditional form) in the tree or the card."""
         paths = {}
@@ -175,10 +202,79 @@ class Site(unittest.TestCase):
         chars = self.page.eval_on_selector_all("#phrase .ch", "bs => bs.map(b => b.dataset.ch).join('')")
         self.assertEqual(chars, "最近的地铁站在哪里")
 
+    def test_own_phrase_without_characters_says_so(self):
+        self.open("?t=hello&lang=en")
+        self.page.wait_for_timeout(500)
+        self.assertTrue(self.page.is_visible("#ownMsg"))
+        self.assertIn("No characters", self.page.inner_text("#ownMsg"))
+
+    def test_long_own_phrase_says_it_was_cut(self):
+        self.open("?t=" + quote("我想学汉字。" * 20) + "&mode=zh&lang=en")
+        self.assertLessEqual(self.page.locator("#phrase .ch").count(), 100)
+        self.assertIn("first 100", self.page.inner_text("#trans"))
+
+    def test_lang_switch_updates_the_url(self):                     # else a reload with ?lang=en brings English back
+        self.open("?lang=en")
+        self.page.click('.lang button[data-lang="ru"]')
+        self.assertIn("lang=ru", self.page.url)
+
+    def test_open_param_ignores_object_keys(self):                  # ?open=constructor used to throw
+        self.open("?open=constructor&lang=en")
+        self.assertFalse(self.page.is_visible("#card"))
+
     def test_japanese_mode_loads(self):
         self.open("?mode=ja&lang=en")
         self.assertGreater(self.page.locator("#phrase .ch").count(), 0)
         self.assertEqual(self.page.locator("#phrase .word.ja").count() > 0, True)
+        self.assertIn("kanji", self.page.inner_text("#h1").lower())
+
+    # ---- radicals game ----
+    def game(self, query):
+        self.page.add_init_script("localStorage.setItem('hanzi-consent','denied');")
+        self.page.goto(self.base + "radicals-game" + query)
+        self.page.wait_for_selector("#card .opts button", timeout=10000)
+
+    def test_game_ignores_object_keys_in_lang(self):
+        self.game("?lang=constructor")
+        self.assertTrue(self.page.inner_text("#h1").strip())
+
+    def test_game_counter_names_what_it_counts(self):
+        self.game("?lang=en")
+        self.assertIn("radicals", self.page.inner_text("#prog"))
+        self.page.click('#mode button[data-v="find"]')
+        self.assertIn("characters", self.page.inner_text("#prog"))
+
+    def test_game_reset_asks_first(self):
+        self.game("?lang=en")
+        self.page.click("#card .opts button >> nth=0")
+        self.assertTrue(self.page.evaluate("Object.keys(JSON.parse(localStorage.getItem('hanzi-radicals-srs'))).length") > 0)
+        self.page.click("#reset")
+        self.assertTrue(self.page.evaluate("Object.keys(JSON.parse(localStorage.getItem('hanzi-radicals-srs'))).length") > 0)
+        self.page.click("#reset")
+        self.assertEqual(self.page.evaluate("localStorage.getItem('hanzi-radicals-srs')"), "{}")
+
+    def test_link_to_a_character_outside_the_phrase_data_loads_it(self):   # review 3: xref without loadChars
+        self.open("?open=" + quote("马") + "&lang=en")
+        self.page.click('#info a.xr[data-ch="馬"]')
+        self.page.wait_for_selector('#info h2 [data-c="馬"]')
+        self.assertEqual(self.tree()[0], "馬")
+        self.assertIn("horse", self.page.inner_text("#info"))        # its data, not "no description"
+
+    def test_escape_returns_focus_to_the_phrase(self):
+        self.open("?lang=en")
+        ch = self.page.locator("#phrase .ch").first
+        ch.focus()
+        self.page.keyboard.press("Enter")
+        self.page.wait_for_selector("#card.open")
+        self.page.focus("#explodeAll")                              # focus inside the card, which then hides
+        self.page.keyboard.press("Escape")
+        self.assertFalse(self.page.is_visible("#card"))
+        self.assertEqual(self.page.evaluate("document.activeElement.dataset.ch"), ch.get_attribute("data-ch"))
+
+    def test_close_button_on_desktop(self):
+        self.open("?open=" + quote("想") + "&lang=en")
+        self.page.click("#cardClose")
+        self.assertFalse(self.page.is_visible("#card"))
 
     # ---- first visit ----
     def test_tour_tip_sits_on_top_of_the_card(self):                # desktop grid used to drop it below #info

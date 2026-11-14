@@ -35,7 +35,8 @@
   #howDlg::backdrop { background:rgba(0,0,0,.55); }
   #howDlg h2 { margin:0 0 10px; font-size:1.15rem; }
   #howDlg p { line-height:1.5; }
-  html:not(.ready) .foot, html:not(.ready) #intro { display:none; }   /* футер и вводный текст появляются после контента, иначе они «прыгают» (CLS) */
+  html:not(.ready) .foot, html:not(.ready) #intro, html:not(.ready) #introD, html:not(.ready) #hint { display:none; }   /* футер и вводный текст появляются после контента, иначе они «прыгают» (CLS) */
+  html:not(.ready) #picker { min-height:32px; }   /* место под выбор фразы: его рисует скрипт, а #view под ним сдвигался */
   .foot { margin-top:48px; padding-top:28px; border-top:1px solid var(--soft); color:var(--muted); font-size:.9rem; }
   .fgrid { display:grid; grid-template-columns:minmax(0,1.4fr) repeat(2,minmax(0,1fr)); gap:28px 32px; }
   .fbrand b { color:var(--fg); font-size:1.05rem; }
@@ -139,6 +140,7 @@
   #gloss { margin:0 0 12px; }
   .pk.sel { max-width:60vw; border-radius:10px; background:var(--card); }
   .pk { background:none; border:1px solid var(--soft); border-radius:999px; padding:4px 12px; color:var(--muted); font:inherit; font-size:.95rem; cursor:pointer; font-family:"Noto Serif SC","Songti SC",serif; }
+  button.pk { font-family:inherit; }   /* «Новая фраза» — шрифтом интерфейса; serif — только у списка фраз с иероглифами */
   .pk:hover { border-color:var(--accent); color:var(--accent); }
   .pk.on { background:var(--accent); border-color:var(--accent); color:var(--on,#fff); }
   .trans { margin:6px 0 0; font-size:1.05rem; white-space:pre-line; }
@@ -240,7 +242,10 @@
 
   #card { margin-top:24px; background:var(--card); border:1px solid var(--soft); border-radius:16px; padding:20px; display:none; }
   #card.open { display:block; }
-  #card .grab, #cardClose { display:none; }
+  #card .grab { display:none; }
+  #cardClose { font-size:1.1rem; line-height:1; padding:4px 11px; }   /* и на десктопе: не все знают про Esc */
+  .skip { position:absolute; left:-9999px; top:8px; z-index:60; padding:8px 14px; border-radius:10px; background:var(--card); border:2px solid var(--accent); color:var(--fg); }
+  .skip:focus { left:8px; }
   /* первый вход: пульсирующее кольцо на том, что нажать (см. tour) */
   @keyframes pulse { 0% { box-shadow:0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent); } 75%, 100% { box-shadow:0 0 0 14px transparent; } }
   .pulse { animation:pulse 1.6s ease-out infinite; border-radius:12px; }
@@ -251,7 +256,7 @@
     #card.open { position:fixed; left:0; right:0; bottom:0; z-index:40; margin:0; max-height:72dvh; overflow-y:auto; overscroll-behavior:contain;
                  border-radius:18px 18px 0 0; border-bottom:0; padding:6px 16px 24px; box-shadow:0 -8px 28px rgba(0,0,0,.28); transition:transform .2s; }
     #card .grab { display:block; width:44px; height:5px; border-radius:3px; background:var(--line); margin:4px auto 10px; touch-action:none; }
-    #cardClose { display:inline-flex; font-size:1.1rem; line-height:1; padding:4px 11px; }
+    #cardClose { display:inline-flex; }
     html.sheet main { padding-bottom:74dvh; }
     /* баннер cookies: пока открыта нижняя панель разбора, он спрятан (иначе закрывает то шапку с поиском, то кнопки панели); вернётся, когда панель закроют */
     html.sheet #consent { display:none; }
@@ -322,6 +327,7 @@
     display: flex; flex-wrap: wrap; gap: 8px 10px; align-items: center; box-shadow: 0 4px 18px rgba(0,0,0,.18); z-index: 50; }
   #consent[hidden], #explodeAll[hidden] { display: none; }
   #consent a { color: var(--accent); }
+  #consentMore { display:inline-block; padding:11px 4px; margin:-11px 0; }   /* палец: было 72×18 */
   /* сенсорный экран: зона нажатия не меньше ~40 px; «+» на плитке остаётся маленьким, но ловит касание с запасом */
   @media (pointer:coarse) {
     .kbtn::after, .xbtn::after { content:""; position:absolute; inset:-8px; border-radius:50%; }
@@ -345,6 +351,7 @@
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "7efcd1cc733b4eaf8c293f32b705fbf7"}'></script>
 </head>
 <body>
+<a class="skip" id="skip" href="#phrase">К фразе</a>
 <main>
   <header>
     <span class="brand">Hanzi Burst</span>
@@ -373,18 +380,18 @@
       </span></span>
     </span>
   </header>
-  <nav class="snav" id="snav" aria-label="Sections"></nav>
+  <nav class="snav" id="snav" aria-label="Разделы сайта"><a href="/" class="on" aria-current="page">Фразы</a><a href="/r/">Ключи</a><a href="/c/">Иероглифы</a><a href="/hsk/">HSK</a><a href="/radicals-game?lang=ru">Игра</a><a href="/learned">Мои иероглифы</a></nav><!-- заполнен заранее: пустой nav, заполненный скриптом, сдвигал всю страницу (CLS) -->
   <h1 id="h1">Разбор китайских иероглифов на ключи</h1>
   <noscript><style>.foot,#intro{display:block!important}</style></noscript>
   <noscript><p>Hanzi Burst: учи китайские иероглифы, разбирая их на радикалы. Нужен JavaScript. / Learn Chinese characters by breaking them into radicals. JavaScript required.</p></noscript>
   <div id="picker" role="toolbar"></div>
   <details id="own" hidden><summary id="ownSum"></summary>
-    <textarea id="ownText" rows="2" maxlength="300" lang="zh"></textarea>
+    <textarea id="ownText" rows="2" lang="zh"></textarea>
     <div><span class="seg" id="ownLang" role="group"><button data-tl="auto"></button><button data-tl="zh" lang="zh">中文</button><button data-tl="ja" lang="ja">日本語</button></span>
       <button class="btn" id="ownGo"></button> <span class="hint" id="ownMsg"></span></div>
   </details>
   <div id="view" role="group"><button data-v="py"></button><button data-v="tr"></button><button id="say" class="say" hidden></button><details class="pm cp" id="copy"><summary></summary><div class="pml"><label><input type="checkbox" data-cp="hz"><span></span></label><label><input type="checkbox" data-cp="py"><span></span></label><label><input type="checkbox" data-cp="zy"><span></span></label><label><input type="checkbox" data-cp="pa"><span></span></label><label><input type="checkbox" data-cp="kn"><span></span></label><label><input type="checkbox" data-cp="rl"><span></span></label><label><input type="checkbox" data-cp="rc"><span></span></label><label><input type="checkbox" data-cp="tr"><span></span></label><button class="btn cpgo" id="cpGo"></button></div></details></div>
-  <div id="phrase"></div>
+  <div id="phrase" tabindex="-1"></div>
   <p class="trans" id="trans"></p>
   <ul class="wl" id="gloss"></ul>
   <p class="hint" id="hint"></p>
@@ -420,8 +427,8 @@
   <footer class="foot">
     <div class="fgrid">
       <div class="fbrand"><b>Hanzi Burst</b><p id="ftag"></p><p><a href="https://lipu.dev/">lipu.dev</a></p></div>
-      <nav><h2 id="fh1"></h2><ul id="fl1"><li><a href="/p/">Все фразы</a></li><li><a href="/posters">Плакаты ключей (PDF)</a></li><li><a href="/extension">Расширение для Chrome</a></li><li><a href="/japanese/">Кана (японская азбука)</a></li><li><a href="/k/">Кандзи по классам</a></li></ul></nav>
-      <nav><h2 id="fh2"></h2><ul id="fl2"><li><a href="/about">О проекте</a></li><li><a href="/privacy">Конфиденциальность</a></li></ul></nav>
+      <nav aria-labelledby="fh1"><h2 id="fh1"></h2><ul id="fl1"><li><a href="/p/">Все фразы</a></li><li><a href="/posters">Плакаты ключей (PDF)</a></li><li><a href="/extension">Расширение для Chrome</a></li><li><a href="/japanese/">Кана (японская азбука)</a></li><li><a href="/k/">Кандзи по классам</a></li></ul></nav>
+      <nav aria-labelledby="fh2"><h2 id="fh2"></h2><ul id="fl2"><li><a href="/about">О проекте</a></li><li><a href="/privacy">Конфиденциальность</a></li></ul></nav>
     </div>
     <details class="fdata"><summary id="fdata"></summary><p><a href="https://github.com/skishore/makemeahanzi">Make Me a Hanzi</a> (LGPL, Arphic) · <a href="https://cc-cedict.org/">CC-CEDICT</a> (CC BY-SA) · <a href="https://tatoeba.org/">Tatoeba</a> (CC BY 2.0 FR) · <a href="https://en.wiktionary.org/">Wiktionary</a> via <a href="https://kaikki.org/">kaikki.org</a> (CC BY-SA) · <a href="https://commonvoice.mozilla.org/">Mozilla Common Voice</a> (CC0, machine translation) · Unicode / Unihan · <a href="https://www.edrdg.org/wiki/index.php/JMdict-EDICT_Dictionary_Project">JMdict</a> (EDRDG, CC BY-SA 4.0) via <a href="https://github.com/scriptin/jmdict-simplified">jmdict-simplified</a> · <a href="https://www.edrdg.org/wiki/index.php/KANJIDIC_Project">KANJIDIC2</a> (EDRDG, CC BY-SA 4.0) · <a href="https://kanjivg.tagaini.net/">KanjiVG</a> (Ulrich Apel, CC BY-SA 3.0)</p></details>
   </footer>
@@ -466,15 +473,15 @@ const ICON = {
   burst: '<svg class="i" viewBox="0 0 24 24"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M18.4 5.6l-2.8 2.8M8.4 15.6l-2.8 2.8"/></svg>',
 };
 const T = {
-  ru: { h1:'Разбор китайских иероглифов на ключи', qPh:'想, xiang, сян', qPhJa:'見', qLbl:'Найти иероглиф', qNone:'Не нашёл', daily:'Фраза дня', phraseList:'Фраза', kReadings:'Чтения', kHere:'во фразе', vPy:'Пиньинь', vRd:'Чтение', vTr:'Перевод', vHid:'скрыто: нажми, чтобы показать', tour1:'Нажми на любой иероглиф — он разлетится на части.', tour2:'Нажимай на части: те, у которых есть «+» в правом углу, тоже разлетаются. ★ слева отмечает знак как знакомый.', tourOk:'Понятно', hint:'Нажми на иероглиф.', crumbs:'Нажимай на части',
-        all:'Взорвать всё', ftag:'Учим китайские иероглифы через радикалы', fExplore:'Разделы', fProject:'Проект', fAll:'Все иероглифы', fHsk:'Иероглифы по HSK', fPhrases:'Все фразы', fAbout:'О проекте', fPrivacy:'Конфиденциальность', fHow:'Как это работает', fData:'Источники данных', howTitle:'Как это работает', close:'Закрыть', howBody:'<p>Выбери фразу и нажми на иероглиф: он «разлетится» на радикалы и фонетики, пока не станет неделимым. У каждой части есть значение, пиньинь, слова и иероглифы, где она встречается.</p><p>«＋ Новая фраза» подбирает фразу с минимумом незнакомых тебе иероглифов. В меню «▾» рядом — случайная фраза, фраза дня и «Своя фраза»: она разбирает любой вставленный китайский текст. Лупа в шапке находит знак по иероглифу или пиньиню (xiang, xiang3).</p><p>«Язык фраз» в меню «Настройки» включает японский режим: японские фразы с чтениями, а кандзи — с онными и кунными чтениями и разбором по чертам KanjiVG.</p><p>Кнопки над фразой скрывают пиньинь (чтение) и перевод, чтобы проверить себя: нажми на серую полоску или размытый перевод, и он откроется. Пиньинь раскрашен по тону: 1 красный, 2 зелёный, 3 синий, 4 фиолетовый. «Копировать» копирует фразу так, как она сейчас на экране; галочками можно добавить или убрать строки: иероглифы, пиньинь, чжуинь, Палладий, перевод.</p><p>Фразы взяты из открытых корпусов: Tatoeba, Wiktionary, Common Voice.</p>', newPhrase:'Новая фраза', inPhrase:'В этой фразе', viaParents:'Ещё слова с этой частью', incompl:'В словаре у этого знака не хватает одной части разбора, поэтому дерево неполное.', ownTitle:'Своя фраза', ownGo:'Разобрать', ownRand:'Случайная', lgKnown:'знаю', lgAll:'знаю все части', lgSome:'знаю часть частей', fLearned:'Мои иероглифы', fExt:'Расширение для Chrome', fKana:'Кана (японская азбука)', fKanji:'Кандзи по классам', statsLink:'Что я выучил', trBtn:'Перевести', trBusy:'Перевожу…', trErr:'Не удалось перевести', trLimit:'Лимит переводов на сегодня', trMt:'машинный перевод', ownPh:'Вставьте китайский или японский текст (до 100 знаков)', ownBusy:'Загружаю словарь…', ownEmpty:'Нет иероглифов или каны', tlAuto:'Авто', jaNote:'Японский: разбор в браузере, слова и чтения из словаря JMdict. Нажмите на кану — её чтение и происхождение.', kanaRead:'Чтение', kanaOrigin:'Происхождение', kanaHira:'хирагана', kanaKata:'катакана', jaLemma:'словарная форма', ownErr:'Не удалось загрузить данные', ownNote:'Разбор идёт в вашем браузере. Значения слов из словаря CC-CEDICT. Перевод всей фразы — по кнопке (текст уходит на сервер и в Gemini).', ownTrad:'Традиционные знаки заменены упрощёнными.', noMore:'Фразы в пуле закончились', known:'Знаю', add:'Знаю', xOpen:'Раскрыть на части', xClose:'Свернуть', where:'Где ещё', words:'Слова', chars:'Иероглифы с этой частью',
+  ru: { skip:'К фразе', h1:'Разбор китайских иероглифов на ключи', h1Ja:'Разбор японских кандзи на части', qJaHint:'В японском режиме ищите по самому кандзи: 見', qPh:'想, xiang, сян', qPhJa:'見', qLbl:'Найти иероглиф', qNone:'Не нашёл', daily:'Фраза дня', phraseList:'Фраза', kReadings:'Чтения', kHere:'во фразе', vPy:'Пиньинь', vRd:'Чтение', vTr:'Перевод', vHid:'скрыто: нажми, чтобы показать', tour1:'Нажми на любой иероглиф — он разлетится на части.', tour2:'Нажимай на части: те, у которых есть «+» в правом углу, тоже разлетаются. ★ слева отмечает знак как знакомый.', tourOk:'Понятно', hint:'Нажми на иероглиф.', crumbs:'Нажимай на части',
+        all:'Взорвать всё', ftag:'Учим китайские иероглифы через радикалы', fExplore:'Разделы', fProject:'Проект', fAll:'Все иероглифы', fHsk:'Иероглифы по HSK', fPhrases:'Все фразы', fAbout:'О проекте', fPrivacy:'Конфиденциальность', fHow:'Как это работает', fData:'Источники данных', howTitle:'Как это работает', close:'Закрыть', howBody:'<p>Выбери фразу и нажми на иероглиф: он «разлетится» на радикалы и фонетики, пока не станет неделимым. У каждой части есть значение, пиньинь, слова и иероглифы, где она встречается.</p><p>«＋ Новая фраза» подбирает фразу с минимумом незнакомых тебе иероглифов. В меню «▾» рядом — случайная фраза, фраза дня и «Своя фраза»: она разбирает любой вставленный китайский текст. Лупа в шапке находит знак по иероглифу или пиньиню (xiang, xiang3).</p><p>«Язык фраз» в меню «Настройки» включает японский режим: японские фразы с чтениями, а кандзи — с онными и кунными чтениями и разбором по чертам KanjiVG.</p><p>Кнопки над фразой скрывают пиньинь (чтение) и перевод, чтобы проверить себя: нажми на серую полоску или размытый перевод, и он откроется. Пиньинь раскрашен по тону: 1 красный, 2 зелёный, 3 синий, 4 фиолетовый. «Копировать» копирует фразу так, как она сейчас на экране; галочками можно добавить или убрать строки: иероглифы, пиньинь, чжуинь, Палладий, перевод.</p><p>Фразы взяты из открытых корпусов: Tatoeba, Wiktionary, Common Voice.</p>', newPhrase:'Новая фраза', inPhrase:'В этой фразе', viaParents:'Ещё слова с этой частью', incompl:'В словаре у этого знака не хватает одной части разбора, поэтому дерево неполное.', ownTitle:'Своя фраза', ownGo:'Разобрать', ownRand:'Случайная', lgKnown:'знаю', lgAll:'знаю все части', lgSome:'знаю часть частей', fLearned:'Мои иероглифы', fExt:'Расширение для Chrome', fKana:'Кана (японская азбука)', fKanji:'Кандзи по классам', statsLink:'Что я выучил', trBtn:'Перевести', trBusy:'Перевожу…', trErr:'Не удалось перевести', trLimit:'Лимит переводов на сегодня', trMt:'машинный перевод', ownPh:'Вставьте китайский или японский текст (до 100 знаков)', ownBusy:'Загружаю словарь…', ownEmpty:'Нет иероглифов или каны', tlAuto:'Авто', jaNote:'Японский: разбор в браузере, слова и чтения из словаря JMdict. Нажмите на кану — её чтение и происхождение.', kanaRead:'Чтение', kanaOrigin:'Происхождение', kanaHira:'хирагана', kanaKata:'катакана', jaLemma:'словарная форма', ownErr:'Не удалось загрузить данные', ownNote:'Разбор идёт в вашем браузере. Значения слов из словаря CC-CEDICT. Перевод всей фразы — по кнопке (текст уходит на сервер и в Gemini).', ownTrad:'Традиционные знаки заменены упрощёнными.', ownCut:'Текст длинный: разобраны первые 100 знаков.', noMore:'Фразы в пуле закончились', known:'Знаю', add:'Знаю', xOpen:'Раскрыть на части', xClose:'Свернуть', where:'Где ещё', words:'Слова', chars:'Иероглифы с этой частью',
         seen:'Уже было во фразе:', nodesc:'В словаре нет описания.', derived:'выведено автоматически', mnemo:'Запоминалка', mnemoMore:'Ещё', mnemoLimit:'Лимит на сегодня исчерпан', mnemoLogin:'Запоминалки — после входа через Google', mnemoBusy:'Думаю…', mnemoErr:'Не получилось, попробуй позже', mnemoNote:'Выдумка для памяти, не этимология', logout:'Выйти', atomic:'неделимая часть: радикал или цельный рисунок',
         kOn:'Он', kKun:'Кун', kOnT:'онное чтение (китайское по происхождению)', kKunT:'кунное чтение (японское слово)', kGrade:'класс', kSecondary:'средняя школа', kStrokes:'черт', kParts:'Части', kWordRu:'как слово', kEn:'по-английски',
         lvN:'кандзи до {n} класса', lv7:'кандзи средней школы', lv0:'только кана', jaLoading:'Разбираю фразу…',
         phonetic:'Звук подсказывает', semantic:'смысл —', word:'Слово', known_n:'Известно:',
         types:{ pictophonetic:'смысл + звук', ideographic:'смысловая комбинация', pictographic:'рисунок' } },
-  en: { h1:'Chinese characters broken down into radicals', qPh:'想 or xiang', qPhJa:'見', qLbl:'Find a character', qNone:'Nothing found', daily:'Phrase of the day', phraseList:'Phrase', kReadings:'Readings', kHere:'in this phrase', vPy:'Pinyin', vRd:'Reading', vTr:'Translation', vHid:'hidden: click to show', tour1:'Click any character — it bursts into its parts.', tour2:'Click the parts: those with a “+” in the right corner burst too. The ★ on the left marks a character as known.', tourOk:'Got it', hint:'Click a character.', crumbs:'Click the parts',
-        all:'Explode all', ftag:'Learn Chinese characters by radicals', fExplore:'Explore', fProject:'Project', fAll:'All characters', fHsk:'HSK characters', fPhrases:'All phrases', fAbout:'About', fPrivacy:'Privacy', fHow:'How it works', fData:'Data sources', howTitle:'How it works', close:'Close', howBody:'<p>Pick a phrase and click a character: it breaks into radicals and phonetic parts until it can\'t be split further. Each part has a meaning, pinyin, words and characters that use it.</p><p>“＋ New phrase” picks a phrase with the fewest characters you don\'t know yet. The “▾” menu next to it has a random phrase, the phrase of the day and “Your own phrase”, which breaks down any Chinese text you paste. The magnifier in the header finds a character by the character itself or by pinyin (xiang, xiang3).</p><p>“Phrase language” in the Settings menu turns on Japanese mode: Japanese phrases with readings, and kanji with on/kun readings and KanjiVG stroke breakdowns.</p><p>The buttons above the phrase hide pinyin (reading) and the translation so you can test yourself: click a grey bar or the blurred translation to reveal it. Pinyin is coloured by tone: 1 red, 2 green, 3 blue, 4 purple. “Copy” copies the phrase as it is shown now; tick or untick lines: characters, pinyin, zhuyin, translation.</p><p>Phrases come from open corpora: Tatoeba, Wiktionary, Common Voice.</p>', newPhrase:'New phrase', inPhrase:'In this phrase', viaParents:'More words with this part', incompl:'The dictionary is missing one part of this character\'s breakdown, so the tree is incomplete.', ownTitle:'Your own phrase', ownGo:'Break down', ownRand:'Random', lgKnown:'known', lgAll:'all parts known', lgSome:'some parts known', fLearned:'My characters', fExt:'Chrome extension', fKana:'Kana (Japanese syllabaries)', statsLink:'What I\'ve learned', trBtn:'Translate', trBusy:'Translating…', trErr:'Could not translate', trLimit:'Daily translation limit reached', trMt:'machine translation', ownPh:'Paste Chinese or Japanese text (up to 100 characters)', ownBusy:'Loading dictionary…', ownEmpty:'No characters or kana found', tlAuto:'Auto', jaNote:'Japanese: breakdown runs in your browser; words and readings come from JMdict. Click a kana to see its reading and origin.', kanaRead:'Reading', kanaOrigin:'Origin', kanaHira:'hiragana', kanaKata:'katakana', jaLemma:'dictionary form', ownErr:'Could not load data', ownNote:'Breakdown runs in your browser. Word meanings come from CC-CEDICT. Whole-phrase translation is on request (the text is sent to our server and Gemini).', ownTrad:'Traditional characters were converted to simplified.', noMore:'No more phrases in the pool', known:'Known', add:'Know it', xOpen:'Break into parts', xClose:'Collapse', where:'Where else', words:'Words', chars:'Characters with this part',
+  en: { skip:'Skip to the phrase', h1:'Chinese characters broken down into radicals', h1Ja:'Japanese kanji broken down into parts', qJaHint:'In Japanese mode, search by the kanji itself: 見', qPh:'想 or xiang', qPhJa:'見', qLbl:'Find a character', qNone:'Nothing found', daily:'Phrase of the day', phraseList:'Phrase', kReadings:'Readings', kHere:'in this phrase', vPy:'Pinyin', vRd:'Reading', vTr:'Translation', vHid:'hidden: click to show', tour1:'Click any character — it bursts into its parts.', tour2:'Click the parts: those with a “+” in the right corner burst too. The ★ on the left marks a character as known.', tourOk:'Got it', hint:'Click a character.', crumbs:'Click the parts',
+        all:'Explode all', ftag:'Learn Chinese characters by radicals', fExplore:'Explore', fProject:'Project', fAll:'All characters', fHsk:'HSK characters', fPhrases:'All phrases', fAbout:'About', fPrivacy:'Privacy', fHow:'How it works', fData:'Data sources', howTitle:'How it works', close:'Close', howBody:'<p>Pick a phrase and click a character: it breaks into radicals and phonetic parts until it can\'t be split further. Each part has a meaning, pinyin, words and characters that use it.</p><p>“＋ New phrase” picks a phrase with the fewest characters you don\'t know yet. The “▾” menu next to it has a random phrase, the phrase of the day and “Your own phrase”, which breaks down any Chinese text you paste. The magnifier in the header finds a character by the character itself or by pinyin (xiang, xiang3).</p><p>“Phrase language” in the Settings menu turns on Japanese mode: Japanese phrases with readings, and kanji with on/kun readings and KanjiVG stroke breakdowns.</p><p>The buttons above the phrase hide pinyin (reading) and the translation so you can test yourself: click a grey bar or the blurred translation to reveal it. Pinyin is coloured by tone: 1 red, 2 green, 3 blue, 4 purple. “Copy” copies the phrase as it is shown now; tick or untick lines: characters, pinyin, zhuyin, translation.</p><p>Phrases come from open corpora: Tatoeba, Wiktionary, Common Voice.</p>', newPhrase:'New phrase', inPhrase:'In this phrase', viaParents:'More words with this part', incompl:'The dictionary is missing one part of this character\'s breakdown, so the tree is incomplete.', ownTitle:'Your own phrase', ownGo:'Break down', ownRand:'Random', lgKnown:'known', lgAll:'all parts known', lgSome:'some parts known', fLearned:'My characters', fExt:'Chrome extension', fKana:'Kana (Japanese syllabaries)', statsLink:'What I\'ve learned', trBtn:'Translate', trBusy:'Translating…', trErr:'Could not translate', trLimit:'Daily translation limit reached', trMt:'machine translation', ownPh:'Paste Chinese or Japanese text (up to 100 characters)', ownBusy:'Loading dictionary…', ownEmpty:'No characters or kana found', tlAuto:'Auto', jaNote:'Japanese: breakdown runs in your browser; words and readings come from JMdict. Click a kana to see its reading and origin.', kanaRead:'Reading', kanaOrigin:'Origin', kanaHira:'hiragana', kanaKata:'katakana', jaLemma:'dictionary form', ownErr:'Could not load data', ownNote:'Breakdown runs in your browser. Word meanings come from CC-CEDICT. Whole-phrase translation is on request (the text is sent to our server and Gemini).', ownTrad:'Traditional characters were converted to simplified.', ownCut:'Long text: only the first 100 characters are broken down.', noMore:'No more phrases in the pool', known:'Known', add:'Know it', xOpen:'Break into parts', xClose:'Collapse', where:'Where else', words:'Words', chars:'Characters with this part',
         seen:'Seen in this phrase:', nodesc:'No dictionary description.', derived:'derived automatically', mnemo:'Mnemonic', mnemoMore:'Another', mnemoLimit:'Daily limit reached', mnemoLogin:'Sign in with Google for mnemonics', mnemoBusy:'Thinking…', mnemoErr:'Failed, try again later', mnemoNote:'A memory aid, not etymology', logout:'Sign out', atomic:'indivisible part: a radical or a whole picture',
         kOn:'On', kKun:'Kun', kOnT:'on\'yomi (Chinese-derived reading)', kKunT:'kun\'yomi (native Japanese reading)', kGrade:'grade', kSecondary:'secondary school', kStrokes:'strokes', kParts:'Parts', kWordRu:'as a word', kEn:'in English',
         lvN:'kanji up to grade {n}', lv7:'secondary-school kanji', lv0:'kana only', jaLoading:'Analysing the phrase…',
@@ -536,6 +543,8 @@ function radBtn(ch, rad) {   // кнопка «Ключ …»: сам знак �
 const pick = (o, base) => (lang === 'ru' && o && o[base + '_ru']) || (o && o[base]) || '';
 
 const short = d => d ? d.split(/[;,]/)[0].trim() : '';
+// текст словаря в атрибуте: кавычка в значении («"chair"») обрывала title="…"
+const attr = s => String(s ?? '').replace(/[&"<>]/g, c => ({ '&': '&amp;', '"': '&quot;', '<': '&lt;', '>': '&gt;' })[c]);
 const py = ch => ((D.chars[ch] || {}).pinyin || [])[0] || '';
 /* бопомофо (注音) вместо пиньиня; по умолчанию выключено */
 let phon = 'p'; try { phon = { b: 'b', r: 'r' }[localStorage.getItem('hanzi-phon')] || 'p'; } catch (e) {}
@@ -665,9 +674,10 @@ function hz(ch, cls = '', raw = false) {
   if (!s) return `<span class="serif" data-c="${ch}" data-cls="${cls}"${raw ? ' data-raw="1"' : ''}>${raw ? ch : disp(ch)}</span>`;   // контуры подгружаются позже из шардов data/g: см. upgradeGlyphs
   return `<svg class="hz ${cls}" data-c="${ch}"${raw ? ' data-raw="1"' : ''} viewBox="0 0 1024 1024" role="img" aria-label="${ch}"><g transform="scale(1,-1) translate(0,-900)">${s.map(d => `<path d="${d}"/>`).join('')}</g></svg>`;
 }
-let scriptBusy = false;
-async function syncScript() {
-  if (scriptBusy) return; scriptBusy = true;
+// по очереди, а не «занято — выходим»: второй вызов раньше возвращался сразу, и openRoot после него видел старую запись
+let scriptQ = Promise.resolve();
+const syncScript = () => (scriptQ = scriptQ.then(syncScriptNow));
+async function syncScriptNow() {
   try {
     if (hanziScript.get() === 't') {
       S2T = S2T || await hanziScript.map();
@@ -680,9 +690,15 @@ async function syncScript() {
       const s = glyphPaths(v.dataset.c, !!v.dataset.raw); if (!s) return;
       v.firstElementChild.innerHTML = s.map(d => `<path d="${d}"/>`).join('');
     });
-  } catch (e) {} finally { scriptBusy = false; }
+  } catch (e) {}
 }
-window.addEventListener('hanzi-script', () => { syncScript().then(() => { if (rootCh && $('#card').classList.contains('open') && !JA.KANA.test(rootCh)) openRoot(rootCh); }); });
+window.addEventListener('hanzi-script', () => { syncScript().then(() => {
+  if (!rootCh || !$('#card').classList.contains('open') || JA.KANA.test(rootCh)) return;
+  // пересобираем, только если разобран не тот вид знака: событие приходит и при загрузке страницы в 繁,
+  // и пересборка после клика по части сбрасывала выбор
+  const root = $('#tree > .node');
+  if (!root || root.dataset.ch !== (tradOf(rootCh) || rootCh)) openRoot(rootCh);
+}); });
 
 let rootCh = null, selected = null;
 
@@ -783,7 +799,7 @@ function copyText(k) {
     .join(' ').replace(/ ([,.?!;:…)”])/g, '$1').replace(/([(“]) /g, '$1').trim();
   const syl = w => (w.pinyin || w.chars.map(py));
   const T = {
-    hz: () => ws.map(w => w.word).join(''),
+    hz: () => ws.map(w => w.punct ? w.word : [...w.word].map(disp).join('')).join(''),   // как на экране: в 繁 — традиционные
     py: () => read(w => syl(w).join('')),
     zy: () => read(w => syl(w).map(p => ZY(String(p))).join(' ')),
     pa: () => PALM ? read(w => syl(w).map(p => PAL(String(p))).join('')) : '',
@@ -856,7 +872,7 @@ async function search(go) {
   if (!q || !D) { box.hidden = true; return; }
   const han = [...q].find(c => HAN.test(c));
   if (han) { box.hidden = true; if (go && !(await openSearched(han))) { box.innerHTML = `<p>${t('qNone')}</p>`; box.hidden = false; } return; }
-  if (mode === 'ja') { box.hidden = true; return; }
+  if (mode === 'ja') { box.innerHTML = `<p>${t('qJaHint')}</p>`; box.hidden = false; return; }   // ромадзи и кана: индекса нет
   let qq = q;
   if (/[а-яё]/.test(q)) {   // кириллица по Палладию: сян, сян3 → xiang, xiang3
     const m = await loadPal(); if (!m) { box.hidden = true; return; }
@@ -878,7 +894,7 @@ async function search(go) {
   await loadChars(top);
   // под знаком — чтение, по которому он найден (率 по lv — lǜ, а не shuài)
   const readOf = c => (D.chars[c].pinyin || []).find(p => p.normalize('NFD').toLowerCase().replace(/u\u0308|ü/g, 'v').replace(/[^a-z]/g, '') === base) || py(c);
-  box.innerHTML = top.map(c => `<button data-ch="${c}" title="${short(defOf(c))}"><span class="serif">${c}</span><small>${PYH(readOf(c))}</small></button>`).join('');
+  box.innerHTML = top.map(c => `<button data-ch="${c}" title="${attr(short(defOf(c)))}"><span class="serif">${c}</span><small>${PYH(readOf(c))}</small></button>`).join('');
   box.hidden = false;
   box.querySelectorAll('button').forEach(b => b.onclick = () => openSearched(b.dataset.ch));
   if (go && top.length === 1) openSearched(top[0]);
@@ -952,6 +968,7 @@ async function newPhrase() {
 }
 function syncMode() {
   document.documentElement.classList.toggle('jm', mode === 'ja');
+  $('#h1').textContent = t(mode === 'ja' ? 'h1Ja' : 'h1');
   syncView();
   document.querySelectorAll('.md button').forEach(b => { b.classList.toggle('on', b.dataset.mode === mode); b.setAttribute('aria-pressed', String(b.dataset.mode === mode)); });
 }
@@ -1002,7 +1019,7 @@ function renderPicker() {   // 50+ фраз: стрелки и выпадающ�
 function renderTrans() {
   const ph = L[cur];
   const tr = ph.custom && ph.tr && ph.tr[lang];
-  $('#trans').textContent = ph.custom ? [tr && `${tr}  (${t('trMt')})`, ph.trad && t('ownTrad')].filter(Boolean).join('\n') :
+  $('#trans').textContent = ph.custom ? [tr && `${tr}  (${t('trMt')})`, ph.trad && t('ownTrad'), ph.cut && t('ownCut')].filter(Boolean).join('\n') :
     ((lang === 'ru' ? ph.ru : ph.en) || ph.en || '') + (ph.mt ? (lang === 'ru' ? '  (машинный перевод)' : '  (machine translation)') : '');
   if (ph.ja && ph.lv !== undefined) {
     const lv = document.createElement('span'); lv.className = 'tag'; lv.title = 'KANJIDIC2';
@@ -1249,8 +1266,11 @@ function closeCard() {
   rootCh = null; selected = null;
   $('#card').classList.remove('open'); $('#card').style.transform = ''; $('#hint').style.display = '';
   document.documentElement.classList.remove('sheet');
+  // фокус — обратно на знак фразы, с которого открыли (иначе после Esc/× он терялся в body)
+  const back = document.querySelector('.ch.sel'), lost = $('#card').contains(document.activeElement) || document.activeElement === document.body;
   document.querySelectorAll('.ch.sel').forEach(b => b.classList.remove('sel'));
   markWord(); tourMark();
+  if (back && lost) back.focus({ preventScroll: true });
 }
 $('#cardClose').onclick = closeCard;
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && !document.querySelector('dialog[open]')) closeCard(); });
@@ -1263,10 +1283,15 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape' && !document.
 }
 /* 繁: фраза хранится упрощёнными знаками, а разбор должен быть по традиционной форме (漢 = 氵 + 堇, а не 汉 = 氵 + 又) */
 const tradOf = ch => (mode !== 'ja' && !(L[cur] && L[cur].ja) && window.hanziScript && hanziScript.get() === 't' && S2T && S2T[ch] && S2T[ch] !== ch) ? S2T[ch] : null;
-function openRoot(ch, tried) {
+function openRoot(ch, step = 0) {
   if (JA.KANA.test(ch) && !D.chars[ch]) return openKana(ch);
+  // сначала то, без чего дерево выйдет не тем: карта 繁 (её могли ещё не загрузить: ?q=, поиск в шапке)
+  // и данные самого знака и его 繁-формы (ссылки 左 в тексте, «Где ещё»); возвращает промис, если пришлось ждать
+  if (step < 1 && !S2T && mode !== 'ja' && !isJa() && window.hanziScript && hanziScript.get() === 't')
+    return hanziScript.map().then(m => { S2T = S2T || m; }).then(() => openRoot(ch, 1));
   const tc = tradOf(ch);
-  if (tc && !D.chars[tc] && !tried) { loadChars([tc]).then(() => openRoot(ch, true)).catch(() => openRoot(ch, true)); return; }
+  const miss = [ch, tc].filter(c => c && HAN.test(c) && !(isJa() ? K[c] : D.chars[c]));
+  if (step < 2 && miss.length) { const go = () => openRoot(ch, 2); return (isJa() ? loadKanji(miss) : loadChars(miss)).then(go, go); }
   const tch = tc && D.chars[tc] ? tc : ch;   // знак, который разбираем; во фразе и в выделении остаётся ch
   rootCh = ch;
   $('#card').classList.add('open'); $('#hint').style.display = 'none';
@@ -1344,9 +1369,15 @@ function selectJa(ch, glyphEl) {
   $('#cpChBtn').onclick = async () => { const b = $('#cpChBtn'), ok = await doCopy(ch); b.innerHTML = (ok ? ICON.check + ui('cpOk') : '—'); track('copy', { what: 'char' }); setTimeout(() => { if (b.isConnected) b.innerHTML = ICON.copy + ui('cpBtn'); }, 1500); };
   const ub = $('#usageBtn'); if (ub) ub.onclick = () => $('#usage').classList.toggle('open');
 }
+/* «Где ещё встречается» (usage.json, 1,4 МБ) — при первом открытом знаке, а не при загрузке страницы */
+let usageP = null;
+const loadUsage = () => usageP || (usageP = fetch('usage.json').then(r => r.json()).then(u => {
+  D.usage = u;
+  if (selected && !isJa() && !($('#usage') && $('#usage').classList.contains('open'))) select(selected, document.querySelector(`.node[data-ch="${selected}"] > .gw > .glyph`));
+}).catch(() => { usageP = null; }));
 function select(ch, glyphEl) {
   if (isJa()) return selectJa(ch, glyphEl);
-  selected = ch;
+  selected = ch; loadUsage();
   document.querySelectorAll('.glyph.sel').forEach(g => g.classList.remove('sel'));
   if (glyphEl) glyphEl.classList.add('sel');
   const c = D.chars[ch] || {};
@@ -1398,7 +1429,7 @@ function select(ch, glyphEl) {
     if (inPh.length) h += `<h3>${t('inPhrase')}</h3><ul class="wl">${inPh.map(w => `<li><span class="w serif">${w.word}</span><span class="p">${wordRead(w)}</span>${phGloss(w)}</li>`).join('')}</ul>`;
     if (u && u.words.length) h += `<h3>${t('words')}</h3><ul class="wl">${u.words.map(w => `<li><span class="w serif">${w.w}</span><span class="p">${PYH(w.pinyin)}</span>${pick(w, 'def')}</li>`).join('')}</ul>`;
     if (via.length) h += `<h3>${t('viaParents')}</h3><ul class="wl">${via.slice(0, 8).map(w => `<li><span class="w serif">${w.w}</span><span class="p">${PYH(w.pinyin)}</span>${pick(w, 'def')}</li>`).join('')}</ul>`;
-    if (u && u.chars.length) h += `<h3>${t('chars')}</h3><div class="chips">${u.chars.map(x => `<button class="chip ${known.has(x) ? 'known' : ''}" data-ch="${x}" title="${short(defOf(x))}">${hz(x)}</button>`).join('')}</div>`;
+    if (u && u.chars.length) h += `<h3>${t('chars')}</h3><div class="chips">${u.chars.map(x => `<button class="chip ${known.has(x) ? 'known' : ''}" data-ch="${x}" title="${attr(short(defOf(x)))}">${hz(x)}</button>`).join('')}</div>`;
     h += `</div>`;
   }
   $('#info').innerHTML = h;
@@ -1443,10 +1474,12 @@ function refresh() {
 /* ---------- бэкенд: вход через Google, синхронизация, запоминалки ---------- */
 let backend = false, user = null;
 async function api(path, opt = {}) {
-  const r = await fetch(path, { method: opt.method || 'GET', credentials: 'same-origin',
-    headers: opt.body ? { 'Content-Type': 'application/json' } : {}, body: opt.body ? JSON.stringify(opt.body) : undefined });
-  const ct = r.headers.get('content-type') || '';
-  return { ok: r.ok, status: r.status, data: ct.includes('json') ? await r.json() : null };
+  try {
+    const r = await fetch(path, { method: opt.method || 'GET', credentials: 'same-origin',
+      headers: opt.body ? { 'Content-Type': 'application/json' } : {}, body: opt.body ? JSON.stringify(opt.body) : undefined });
+    const ct = r.headers.get('content-type') || '';
+    return { ok: r.ok, status: r.status, data: ct.includes('json') ? await r.json().catch(() => null) : null };
+  } catch (e) { return { ok: false, status: 0, data: null }; }   // нет сети: вызывающие и так проверяют ok
 }
 function renderAuth() {
   const el = $('#auth');
@@ -1540,6 +1573,7 @@ function renderChrome() {
   $('#setSum').textContent = ui('set'); $('#set summary').title = ui('set'); $('#set summary').setAttribute('aria-label', ui('set')); $('#slMode').textContent = ui('slMode'); $('#slPhon').textContent = ui('slPhon'); $('#slJr').textContent = ui('slJr'); $('#slScr').textContent = ui('slScr');
   document.querySelectorAll('.md button').forEach(b => { b.textContent = ui(b.dataset.mode); });
   document.querySelectorAll('.scr [data-k], .chk [data-k]').forEach(x => { x.textContent = ui(x.dataset.k); });
+  $('#snav').ariaLabel = lang === 'ru' ? 'Разделы сайта' : 'Site sections';   // «Разделы» — у навигации в футере
   $('#snav').innerHTML = ui('nav').map(([h, txt], i) => `<a href="${h}"${i ? '' : ' class="on" aria-current="page"'}>${txt}</a>`).join('');
 }
 // меню настроек закрывается кликом мимо него и по Esc
@@ -1561,7 +1595,7 @@ function applyLang() {
   document.title = head[0]; DESC_EL.content = head[1];
   document.querySelectorAll('.lang button').forEach(b => b.classList.toggle('on', b.dataset.lang === lang));
   $('#hint').textContent = t(tour === 1 ? 'tour1' : 'hint'); if (tour === 2 && $('#tourTip')) tourMark();
-  $('#crumbs').textContent = t('crumbs'); $('#h1').textContent = t('h1');
+  $('#crumbs').textContent = t('crumbs'); $('#skip').textContent = t('skip'); $('#cardClose').ariaLabel = t('close'); $('#h1').textContent = t(mode === 'ja' ? 'h1Ja' : 'h1');
   $('#explodeAll').innerHTML = ICON.burst + t('all');
   renderAuth(); ownLabels(); renderFooter(); syncView();
   if (!D) return;
@@ -1574,6 +1608,8 @@ function applyLang() {
 }
 document.querySelectorAll('.lang button').forEach(b => b.onclick = () => {
   lang = b.dataset.lang; try { localStorage.setItem('hanzi-lang', lang); } catch (e) {}
+  const u = new URL(location.href);   // иначе ?lang= из ссылки при обновлении страницы вернёт старый язык
+  if (u.searchParams.has('lang')) { u.searchParams.set('lang', lang); history.replaceState(history.state, '', u); }
   applyLang();
 });
 
@@ -1581,8 +1617,10 @@ document.querySelectorAll('.lang button').forEach(b => b.onclick = () => {
 const HAN = /[㐀-鿿]/;
 const shardKey = ch => ch.codePointAt(0).toString(16).slice(0, -2);
 const shardCache = {};
+// 404 — шарда нет и не будет (395 блоков без контуров, kanji/38 для 㠯): запоминаем пустым, иначе наблюдатель за DOM
+// запрашивал их заново при каждой перерисовке. Сетевую ошибку и 5xx не запоминаем: повторим в следующий раз.
 const loadShard = (kind, k) => shardCache[kind + k] || (shardCache[kind + k] =
-  fetch(`data/${kind}/${k}.json`).then(r => { if (!r.ok) throw 0; return r.json(); })
+  fetch(`data/${kind}/${k}.json`).then(r => r.ok ? r.json() : r.status === 404 ? {} : Promise.reject(r.status))
     .catch(() => { delete shardCache[kind + k]; return {}; }));
 /* данные иероглифов (и всех их компонентов) из шардов: D.chars и контуры G */
 async function loadChars(han) {
@@ -1633,7 +1671,7 @@ async function analyzeText(raw) {
     const ph = await JA.analyze(raw, loadShard);
     if (!ph.words.some(w => !w.punct)) return null;
     await loadKanji([...ph.zh]);
-    return ph;
+    return Object.assign(ph, { cut: [...raw.trim()].length > 100 });
   }
   tradMap = tradMap || await fetch('data/trad.json').then(r => r.json()).catch(() => ({}));
   let converted = false;
@@ -1668,7 +1706,7 @@ async function analyzeText(raw) {
       if (c && c.definition) { w.gloss = c.definition; w.gloss_ru = c.definition_ru; }
     }
   });
-  return { zh: text, custom: true, trad: converted, words: parts };
+  return { zh: text, custom: true, trad: converted, cut: [...raw.trim()].length > 100, words: parts };
 }
 function syncTextLang() {
   document.querySelectorAll('#ownLang button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.tl === textLang)));
@@ -1798,27 +1836,22 @@ fetch('phrase.json').then(r => r.json())
     const q = new URLSearchParams(location.search);
     if (/^(ru|en)$/.test(q.get('lang') || '')) { lang = q.get('lang'); applyLang(); }   // другие значения: T[lang] нет, applyLang упал бы
     // знак не из phrase.json (ссылки /c/ на иероглифы без страницы, «Мои иероглифы») сначала грузим из шардов
-    if (q.get('open') && HAN.test(q.get('open')) && !D.chars[q.get('open')]) await loadChars([q.get('open')]);
-    if (q.get('open') && D.chars[q.get('open')]) {
-      if (hanziScript.get() === 't') S2T = S2T || await hanziScript.map().catch(() => null);   // 繁: иначе гонка, откроется упрощённый
-      openRoot(q.get('open'));
-      if (q.get('explode')) { explodeAll($('#tree > .node')); }
+    const qo = q.get('open');
+    if (qo && HAN.test(qo) && !D.chars[qo]) await loadChars([qo]);
+    if (qo && Object.hasOwn(D.chars, qo)) {          // hasOwn: ?open=constructor
+      await openRoot(qo);                            // 繁: openRoot сам дождётся карты s2t
+      if (q.get('explode') && $('#tree > .node')) explodeAll($('#tree > .node'));
     }
     if (q.has('day')) await dailyPhrase();
     if (q.get('q')) { $('#q').value = q.get('q').slice(0, 40); await search(true); }   // поиск из шапки других страниц (nav.js, build_static)
     if (q.get('t')) {
-      $('#own').open = true; $('#ownText').value = q.get('t');
+      $('#own').hidden = false; $('#own').open = true; $('#ownText').value = q.get('t');   // виден: иначе «нет иероглифов» никто не увидит
       $('#ownGo').click();
     }
     initBackend();
   }).finally(() => {
     document.documentElement.classList.add('ready');
-    // контуры подгружает наблюдатель (upgradeGlyphs); «где ещё встречается» — после показа
-    upgradeGlyphs();
-    fetch('usage.json').then(r => r.json()).then(u => {
-        D.usage = u;
-        if (selected && $('#usageBtn') && !$('#usage').classList.contains('open')) select(selected, document.querySelector(`.node[data-ch="${selected}"] > .gw > .glyph`));
-      }).catch(() => {});
+    upgradeGlyphs();   // контуры подгружает наблюдатель; usage.json — loadUsage() при первом открытом знаке
   });
 </script>
 </body>

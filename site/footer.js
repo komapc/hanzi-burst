@@ -49,8 +49,8 @@
       ['/extension', T.ext], ['/japanese/', T.kana]].concat(T === EN ? [] : [['/k/', T.kanji]]);
     foot.innerHTML = `<div class="sgrid">
 <div class="sbrand"><b>Hanzi Burst</b><p>${T.tag}</p><p><a href="https://lipu.dev/">lipu.dev</a></p></div>
-<nav><h2>${T.explore}</h2><ul>${links.filter(([h]) => !inTop.has(h.split(/[?#]/)[0])).map(([h, t]) => li(h, t)).join('')}</ul></nav>
-<nav><h2>${T.project}</h2><ul>${li('/about', T.about) + li('/privacy', T.privacy)}</ul></nav>
+<nav aria-label="${T.explore}"><h2>${T.explore}</h2><ul>${links.filter(([h]) => !inTop.has(h.split(/[?#]/)[0])).map(([h, t]) => li(h, t)).join('')}</ul></nav>
+<nav aria-label="${T.project}"><h2>${T.project}</h2><ul>${li('/about', T.about) + li('/privacy', T.privacy)}</ul></nav>
 </div><details><summary>${T.data}</summary><p><a href="https://github.com/skishore/makemeahanzi">Make Me a Hanzi</a> (LGPL, Arphic) · <a href="https://cc-cedict.org/">CC-CEDICT</a> (CC BY-SA) · <a href="https://tatoeba.org/">Tatoeba</a> (CC BY 2.0 FR) · <a href="https://en.wiktionary.org/">Wiktionary</a> via <a href="https://kaikki.org/">kaikki.org</a> (CC BY-SA) · <a href="https://commonvoice.mozilla.org/">Mozilla Common Voice</a> (CC0) · Unicode / Unihan · <a href="https://www.edrdg.org/wiki/index.php/JMdict-EDICT_Dictionary_Project">JMdict</a> (EDRDG, CC BY-SA 4.0) via <a href="https://github.com/scriptin/jmdict-simplified">jmdict-simplified</a> · <a href="https://www.edrdg.org/wiki/index.php/KANJIDIC_Project">KANJIDIC2</a> (EDRDG, CC BY-SA 4.0) · <a href="https://kanjivg.tagaini.net/">KanjiVG</a> (Ulrich Apel, CC BY-SA 3.0)</p></details>`;
   };
   const draw = () => {
