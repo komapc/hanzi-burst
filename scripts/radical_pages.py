@@ -169,7 +169,7 @@ details.more{margin:18px 0}details.more summary{cursor:pointer;font-weight:600;c
 T = {
     "ru": dict(radical="Ключ", hub="Ключи", all214="214 ключей китайских иероглифов", n="Номер", strokes="Черт", pinyin="Пиньинь",
                meaning="Значение", pic="Что нарисовано", variants="Варианты написания", order="Порядок черт", examples="Иероглифы с этим ключом",
-               as_char="Этот знак как иероглиф", top="Частые ключи", more="Показать ещё {k} ключей", by_strokes="{s} черт",
+               as_char="Этот знак как иероглиф", top="Частые ключи", more="Показать ещё {k} {keys}", by_strokes="{s} черт",
                none="Среди иероглифов HSK этого ключа нет: он встречается в редких и старых знаках.", prev="← Ключ", next="Ключ →",
                hsk="знаков HSK с этим ключом: {k}",
                game="Учить ключи в игре →", game_q="?lang=ru",
@@ -184,11 +184,15 @@ T = {
 }
 
 
+def ru_plural(n, one, few, many):
+    """1 черта, 2 черты, 5 черт; 21 ключ, 154 ключа."""
+    if n % 10 == 1 and n % 100 != 11: return one
+    if 2 <= n % 10 <= 4 and not 12 <= n % 100 <= 14: return few
+    return many
+
+
 def strokes_word(n):
-    """«черта/черты/черт» для русского."""
-    if n % 10 == 1 and n % 100 != 11: return "черта"
-    if 2 <= n % 10 <= 4 and not 12 <= n % 100 <= 14: return "черты"
-    return "черт"
+    return ru_plural(n, "черта", "черты", "черт")
 
 
 def load_graphics(need):
@@ -331,7 +335,7 @@ def build(SITE, page, breadcrumbs, E, BASE, chars, allc, first):
             desc = ("All 214 Kangxi radicals with number, meaning, stroke count, variant forms (氵扌亻忄…) and stroke order. "
                     f"The {len(top)} most common radicals first, the rest by stroke count.")
         body = (f"{CSS}<h1>{h1}</h1><p class='m'>{intro}</p><a class='cta' href='/radicals-game{t["game_q"]}'>{t['game']}</a><p><a href='{pre}/r/poster'>{t['poster']}</a><br><a href='/radicals-{lang}.pdf'>{t['pdf']}</a> <span class='m'>· {'другой язык' if lang == 'ru' else 'other language'}: <a href='/radicals-{'en' if lang == 'ru' else 'ru'}.pdf'>{'EN' if lang == 'ru' else 'RU'}</a></span></p><h2>{t['top']}</h2><ul class='rg'>{''.join(cell(r) for r in top)}</ul>"
-                f"<details class='more'><summary>{t['more'].format(k=len(rest))}</summary>{more}</details>")
+                f"<details class='more'><summary>{t['more'].format(k=len(rest), keys=ru_plural(len(rest), 'ключ', 'ключа', 'ключей'))}</summary>{more}</details>")
         ld = [breadcrumbs(("Hanzi Burst", "/"), (t["hub"], f"{pre}/r/")),
               {"@context": "https://schema.org", "@type": "DefinedTermSet", "name": h1, "url": f"{BASE}{pre}/r/", "inLanguage": lang}]
         (SITE / pre.lstrip("/") / "r" / "index.html").write_text(

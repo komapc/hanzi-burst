@@ -8,6 +8,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 import breakdown  # noqa: E402
 import palladius  # noqa: E402
 from radical_names import NAMES, PICTURES  # noqa: E402
+from radical_pages import ru_plural  # noqa: E402
+
+ROOT = Path(__file__).resolve().parents[2]
 
 
 class Pinyin(unittest.TestCase):
@@ -83,6 +86,24 @@ class RadicalPictures(unittest.TestCase):
     def test_hand_is_drawn_not_again(self):          # the case that started it: 又 means "again", depicts a hand
         self.assertEqual(NAMES[29][0], "again")
         self.assertEqual(PICTURES[29], ("a right hand", "правая рука"))
+
+
+class RuPlural(unittest.TestCase):
+    def test_forms(self):
+        for n, w in [(1, "ключ"), (2, "ключа"), (5, "ключей"), (11, "ключей"), (12, "ключей"), (21, "ключ"), (154, "ключа")]:
+            self.assertEqual(ru_plural(n, "ключ", "ключа", "ключей"), w, n)
+
+
+class MainReading(unittest.TestCase):
+    def test_overrides_put_the_main_reading_first(self):     # MMH lists the particle first: 地 de, 子 zi
+        for ch, py in [("地", "dì"), ("子", "zǐ"), ("卜", "bǔ")]:
+            self.assertEqual(breakdown.PINYIN_OVERRIDES[ch][0], py)
+
+    def test_phrase_json_is_regenerated(self):
+        import json
+        chars = json.loads((ROOT / "site/phrase.json").read_text(encoding="utf-8"))["chars"]
+        self.assertEqual(chars["地"]["pinyin"][0], "dì")
+        self.assertEqual(chars["子"]["pinyin"][0], "zǐ")
 
 
 if __name__ == "__main__":
