@@ -44,6 +44,7 @@ def cell(href, ch, pys, g):
             f'<small>{E(pys)}</small><small>{E(g)}</small></a></li>')
 TOP_WORDS, TOP_PHRASES, TOP_PARENTS, TOP_SIMILAR = 10, 8, 20, 12
 EN = lambda s: f'<span lang="en">{s}</span>'
+TYPE_RU = {"pictophonetic": "смысл + звук", "ideographic": "смысловая комбинация", "pictographic": "рисунок"}   # как в приложении
 ZH = lambda s: f'<span lang="zh">{s}</span>'
 def gloss(ru, en):
     """Перевод по-русски; если его нет, английский с lang="en"."""
@@ -246,9 +247,10 @@ def main():
         if c.get("radical"):
             rl = rad_links(c["radical"], bare=True) if c["radical"] != ch else ""
             body.append(f"<p class='m'>Ключ: {link(c['radical'])}" + (f" — ключ Канси {rl}" if rl else "") + "</p>")
-        hint = et.get("hint_ru") or et.get("hint")
-        if et.get("type") or hint:
-            body.append(f"<p class='m'>{EN(E(et['type'])) if et.get('type') else ''} {E(hint or '')}</p>")
+        hint = E(et["hint_ru"]) if et.get("hint_ru") else EN(E(et["hint"])) if et.get("hint") else ""
+        kind = TYPE_RU.get(et.get("type"), et.get("type") or "").capitalize()
+        if kind or hint:
+            body.append("<p class='m'>" + ": ".join(x for x in (E(kind), hint) if x) + "</p>")
         words = top_words(ch)
         if words:
             def wli(w):

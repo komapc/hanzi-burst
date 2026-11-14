@@ -59,9 +59,10 @@ class Site(unittest.TestCase):
         self.ctx.close()
         self.assertEqual(self.errors, [], "JS errors on the page")
 
-    def open(self, query="", script="s", known=None):
-        """Load the home page with a clean profile: tour done, consent declined, the chosen 简/繁."""
-        init = f"localStorage.setItem('hanzi-tour','done');localStorage.setItem('hanzi-consent','denied');localStorage.setItem('hanzi-script','{script}');"
+    def open(self, query="", script="s", known=None, tour=False):
+        """Load the home page with a clean profile: tour done (unless tour=True), consent declined, the chosen 简/繁."""
+        init = ("" if tour else "localStorage.setItem('hanzi-tour','done');") + \
+            f"localStorage.setItem('hanzi-consent','denied');localStorage.setItem('hanzi-script','{script}');"
         if known is not None:
             init += f"localStorage.setItem('hanzi-known', JSON.stringify({list(known)!r}));"
         self.page.add_init_script(init)
@@ -178,6 +179,22 @@ class Site(unittest.TestCase):
         self.open("?mode=ja&lang=en")
         self.assertGreater(self.page.locator("#phrase .ch").count(), 0)
         self.assertEqual(self.page.locator("#phrase .word.ja").count() > 0, True)
+
+    # ---- first visit ----
+    def test_tour_tip_sits_on_top_of_the_card(self):                # desktop grid used to drop it below #info
+        self.open("?lang=en", tour=True)
+        self.page.click("#phrase .ch.pulse")
+        tip = self.page.wait_for_selector("#tourTip:not([hidden])").bounding_box()
+        bar = self.page.locator("#card .toolbar").bounding_box()
+        self.assertLessEqual(tip["y"] + tip["height"], bar["y"] + 1)
+        self.assertIn("+", self.page.inner_text("#tourTip"))
+
+    def test_root_tile_buttons_are_not_clipped(self):               # ★ and +/− stick out 10px above the tile
+        self.open("?open=" + quote("想") + "&lang=en")
+        self.tree()
+        star = self.page.locator("#tree > .node > .gw > .kbtn").bounding_box()
+        box = self.page.locator("#tree").bounding_box()
+        self.assertGreaterEqual(star["y"], box["y"])
 
 
 if __name__ == "__main__":

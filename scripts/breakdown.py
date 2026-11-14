@@ -75,10 +75,21 @@ def load_glyphs(needed):
     return out
 
 
+# MMH даёт этим знакам только лёгкий тон (地 de, 子 zi): так они звучат как суффиксы, а основное чтение знака —
+# тоновое (dì «земля», zǐ «ребёнок»). Без этого /c/ и /hsk/ показывали de/zi, а поиск по di4/zǐ их не находил.
+# У 的 着 么 吗 啊 лёгкий тон и правда основной — их не трогаем.
+PINYIN_OVERRIDES = {
+    "地": ["dì", "de"], "子": ["zǐ", "zi"], "卜": ["bǔ", "bo"], "裳": ["cháng", "shang"],
+    "著": ["zhù", "zhuó", "zhe"], "氺": ["shuǐ"],
+}
+
+
 def load_mmh():
     chars = {}
     for line in MMH.read_text(encoding="utf-8").splitlines():
         d = json.loads(line)
+        if d["character"] in PINYIN_OVERRIDES:
+            d["pinyin"] = PINYIN_OVERRIDES[d["character"]]
         chars[d["character"]] = d
     fill_holes(chars)
     return chars
