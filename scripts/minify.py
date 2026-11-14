@@ -1,4 +1,4 @@
-"""Минификация JS сайта при деплое: встроенный <script> в site/index.html и site/*.js (terser через npx).
+"""Минификация JS сайта при деплое: встроенный <script> в site/index.html, site/en/index.html и site/*.js (terser через npx).
 
 Правит файлы на месте, поэтому работает только в CI (переменная CI) или с --force и каталогом:
   python3 -I scripts/minify.py                 # в CI: site/
@@ -39,8 +39,6 @@ def main():
         if out:
             f.write_text(out, encoding="utf-8")
             before, after = before + len(src), after + len(out)
-    page = site / "index.html"
-    html = page.read_text(encoding="utf-8")
 
     def sub(m):
         nonlocal before, after
@@ -50,9 +48,10 @@ def main():
         before, after = before + len(m.group(2)), after + len(out)
         return m.group(1) + out + m.group(3)
 
-    # только исполняемые встроенные скрипты: без src и не JSON-LD
-    html = re.sub(r"(<script>)(.*?)(</script>)", sub, html, flags=re.S)
-    page.write_text(html, encoding="utf-8")
+    # главная и её английская копия /en/ (build_static.en_home): только исполняемые встроенные скрипты, без src и не JSON-LD
+    for page in [site / "index.html", site / "en" / "index.html"]:
+        if page.exists():
+            page.write_text(re.sub(r"(<script>)(.*?)(</script>)", sub, page.read_text(encoding="utf-8"), flags=re.S), encoding="utf-8")
     print(f"minify: {before} -> {after} bytes")
 
 

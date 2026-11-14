@@ -35,7 +35,7 @@
     } finally { busy = false; }
   }
   function load() {
-    return loading = loading || fetch('data/s2t.json').then(r => r.json()).then(m => { map = m; }).catch(() => { map = {}; });
+    return loading = loading || fetch('/data/s2t.json').then(r => r.json()).then(m => { map = m; }).catch(() => { map = {}; });
   }
   function sync() {
     document.querySelectorAll('.scr:not(.ph) input').forEach(i => { i.checked = i.value === script; });

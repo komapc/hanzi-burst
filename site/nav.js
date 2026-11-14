@@ -8,7 +8,7 @@
   const html = document.documentElement;
   const NAV = {
     ru: [['/', 'Фразы'], ['/r/', 'Ключи'], ['/c/', 'Иероглифы'], ['/hsk/', 'HSK'], ['/radicals-game', 'Игра'], ['/learned', 'Мои иероглифы']],
-    en: [['/?lang=en', 'Phrases'], ['/en/r/', 'Radicals'], ['/en/c/', 'Characters'], ['/en/hsk/', 'HSK'], ['/radicals-game?lang=en', 'Game'], ['/learned', 'My characters']]
+    en: [['/en/', 'Phrases'], ['/en/r/', 'Radicals'], ['/en/c/', 'Characters'], ['/en/hsk/', 'HSK'], ['/radicals-game?lang=en', 'Game'], ['/learned', 'My characters']]
   };
   const css = `
 .tn{display:flex;align-items:center;gap:10px;margin:0 0 14px;padding-bottom:10px;border-bottom:1px solid var(--line,#cfc6b6);font:16px/1.4 system-ui,sans-serif}
@@ -33,20 +33,19 @@
   const own = [...nav.children];
   const brand = document.createElement('a'); brand.className = 'tb';
   const ts = document.createElement('span'); ts.className = 'ts';
-  const form = document.createElement('form'); form.className = 'tq'; form.action = '/'; form.setAttribute('role', 'search');
+  const form = document.createElement('form'); form.className = 'tq'; form.setAttribute('role', 'search');
   nav.prepend(brand, ts, form);
   const here = location.pathname.replace(/\.html$/, '').replace(/\/index$/, '/');
   const render = () => {
     const en = !(html.dataset.l || html.lang || 'ru').startsWith('ru');
-    brand.href = en ? '/?lang=en' : '/'; brand.textContent = 'Hanzi Burst';
+    brand.href = en ? '/en/' : '/'; form.action = brand.href; brand.textContent = 'Hanzi Burst';
     nav.setAttribute('aria-label', en ? 'Site sections' : 'Разделы сайта');   // навигаций на странице несколько: у каждой своё имя
     ts.innerHTML = NAV[en ? 'en' : 'ru'].map(([h, t]) => {
       const p = h.split('?')[0];
-      const on = p !== '/' && (p.endsWith('/') ? here.startsWith(p) : here === p);
+      const on = p !== brand.pathname && (p.endsWith('/') ? here.startsWith(p) : here === p);   // главная (/ или /en/) — не раздел
       return `<a href="${h}"${on ? ' class="on" aria-current="page"' : ''}>${t}</a>`;
     }).join('');
-    form.innerHTML = `<input type="search" name="q" placeholder="${en ? '想 / xiang' : '想, xiang, сян'}" aria-label="${en ? 'Find a character' : 'Найти иероглиф'}" autocomplete="off" spellcheck="false" enterkeyhint="search">`
-      + (en ? '<input type="hidden" name="lang" value="en">' : '');
+    form.innerHTML = `<input type="search" name="q" placeholder="${en ? '想 / xiang' : '想, xiang, сян'}" aria-label="${en ? 'Find a character' : 'Найти иероглиф'}" autocomplete="off" spellcheck="false" enterkeyhint="search">`;
     own.forEach(x => nav.append(x));
     const o = ts.querySelector('.on'); if (o) ts.scrollLeft = o.offsetLeft - ts.offsetLeft - (ts.clientWidth - o.offsetWidth) / 2;   // по центру, не в затухании
   };
