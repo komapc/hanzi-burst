@@ -22,15 +22,15 @@ button{font:inherit;padding:6px 12px;border:1px solid var(--accent);border-radiu
 <p class="m" lang="en">The site is free, has no accounts, and does not ask for your name or e-mail.</p>
 
 <h2>Что хранится в твоём браузере / Stored in your browser</h2>
-<p>Через <code>localStorage</code> (остаётся только на твоём устройстве, на сервер не отправляется): список известных иероглифов (<code>hanzi-known</code>), язык (<code>hanzi-lang</code>), текущая и полученные фразы (<code>hanzi-phrase</code>, <code>hanzi-seen-pool</code>), твой выбор по аналитике (<code>hanzi-consent</code>).</p>
+<p>Через <code>localStorage</code> (остаётся только на твоём устройстве, на сервер не отправляется): список известных иероглифов (<code>hanzi-known</code>), язык (<code>hanzi-lang</code>), текущая и полученные фразы (<code>hanzi-phrase</code>, <code>hanzi-seen-pool</code>), твой выбор по аналитике (<code>lipu-consent</code>, раньше <code>hanzi-consent</code>).</p>
 <p class="m" lang="en">Kept only on your device via localStorage: known characters, language, current/seen phrases and your analytics choice. None of it is sent to the server.</p>
 
 <h2>Аналитика / Analytics</h2>
-<p>Google Analytics 4 включается <b>только после твоего согласия</b>. Он ставит cookies (<code>_ga*</code>) и передаёт Google данные о посещении: страницы, события вроде «новая фраза», примерный регион, тип устройства. IP-адрес анонимизируется. Без согласия Google Analytics не загружается.</p>
+<p>Google Analytics 4 ставит cookies (<code>_ga*</code>) и передаёт Google данные о посещении: страницы, события вроде «новая фраза», примерный регион, тип устройства. IP-адрес анонимизируется. При первом визите сайт спрашивает geo.lipu.dev (Cloudflare Worker), нужен ли в твоём регионе запрос согласия; тот видит IP-адрес, как любой веб-запрос, и отвечает только «да» или «нет». В ЕС/ЕЭЗ, Великобритании и Швейцарии, а также если регион определить не удалось, Google Analytics загружается <b>только после твоего согласия</b>. В остальных странах он включён сразу, об этом показывается уведомление, и можно отказаться. Отказ удаляет cookies Google Analytics.</p>
 <p>Cloudflare Web Analytics считает посещения всегда: страницу, источник перехода, браузер, страну. Он не ставит cookies и не хранит ничего на твоём устройстве, поэтому согласия не спрашивает.</p>
-<p class="m" lang="en">Google Analytics 4 loads <b>only after you consent</b> and sets cookies (<code>_ga*</code>). Without consent Google Analytics does not load.</p>
+<p class="m" lang="en">Google Analytics 4 sets cookies (<code>_ga*</code>). On your first visit the site asks geo.lipu.dev (a Cloudflare Worker) whether your region needs consent; it sees your IP address, as any web request does, and answers only yes or no. In the EU/EEA, the UK and Switzerland, or when the region can't be determined, Google Analytics loads <b>only after you consent</b>. Elsewhere it is on by default, a notice says so, and you can opt out. Opting out deletes the Google Analytics cookies.</p>
 <p class="m" lang="en">Cloudflare Web Analytics always counts visits (page, referrer, browser, country). It sets no cookies and stores nothing on your device, so it does not ask for consent.</p>
-<p><button id="yes">Разрешить / Allow</button><button id="no">Отказаться / Decline</button><span id="st" class="m"></span></p>
+<p><a href="#" data-lipu-consent-open>Настройки аналитики / Analytics settings</a> <span id="st" class="m"></span></p>
 
 <h2>Запоминалки / Mnemonics</h2>
 <p>Когда ты нажимаешь «Запоминалка», на наш сервер уходят иероглиф, его пиньинь, значение, состав и язык интерфейса. Они передаются в Google Gemini API, чтобы получить текст. Готовые тексты кэшируются и показываются всем. Для лимитов на запросы мы храним в базе дневной счётчик, привязанный к хэшу IP-адреса (сам адрес не сохраняется), и этот же хэш помечает созданный текст. Счётчики пока не удаляются автоматически.</p>
@@ -54,12 +54,14 @@ button{font:inherit;padding:6px 12px;border:1px solid var(--accent);border-radiu
 
 <h2>Контакт / Contact</h2>
 <p>Вопросы и просьбы об удалении: <a href="https://github.com/komapc">github.com/komapc</a>.</p>
-<p class="m">Обновлено / Updated: 2026-10-17</p>
+<p class="m">Обновлено / Updated: 2026-11-15</p>
 <div id="sitefoot"></div><script src="/footer.js" defer></script>
 </main>
+<script>/* hanzi-consent → lipu-consent (общий ключ lipu.dev); старый выбор сохраняется */try{var o=localStorage.getItem('hanzi-consent');if(o&&!localStorage.getItem('lipu-consent'))localStorage.setItem('lipu-consent',o==='yes'?'yes':'no');}catch(e){}</script>
 <script>
-const g=()=>{try{return localStorage.getItem('hanzi-consent')}catch(e){return null}};
-const s=v=>{try{localStorage.setItem('hanzi-consent',v)}catch(e){}; r()};
+const g=()=>{try{return localStorage.getItem('lipu-consent')}catch(e){return null}};
 function r(){document.getElementById('st').textContent=({yes:'Сейчас: разрешено / allowed',no:'Сейчас: отказ / declined'})[g()]||'Выбор не сделан / not chosen'}
-document.getElementById('yes').onclick=()=>s('yes');document.getElementById('no').onclick=()=>s('no');r();
-</script></body></html>
+r();document.addEventListener('click',()=>setTimeout(r));
+</script>
+
+<script src="https://geo.lipu.dev/consent.js" data-ga="G-G4GHN6WZ7B" data-accent="var(--accent)" data-privacy="/privacy"></script></body></html>

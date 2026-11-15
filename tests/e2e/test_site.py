@@ -69,7 +69,7 @@ class Site(unittest.TestCase):
     def open(self, query="", script="s", known=None, tour=False):
         """Load the home page with a clean profile: tour done (unless tour=True), consent declined, the chosen 简/繁."""
         init = ("" if tour else "localStorage.setItem('hanzi-tour','done');") + \
-            f"localStorage.setItem('hanzi-consent','denied');localStorage.setItem('hanzi-script','{script}');"
+            f"localStorage.setItem('lipu-consent','no');localStorage.setItem('hanzi-script','{script}');"
         if known is not None:
             init += f"localStorage.setItem('hanzi-known', JSON.stringify({list(known)!r}));"
         self.page.add_init_script(init)
@@ -301,7 +301,7 @@ class Site(unittest.TestCase):
             ctx.close()
 
     def test_search_on_english_pages_lands_on_en_home(self):        # the header search of /en/… pages submits to /en/?q=
-        self.page.add_init_script("localStorage.setItem('hanzi-tour','done');localStorage.setItem('hanzi-consent','denied')")
+        self.page.add_init_script("localStorage.setItem('hanzi-tour','done');localStorage.setItem('lipu-consent','no')")
         self.page.goto(self.base + "en/hsk/")
         self.page.fill(".tq input[name=q]", "学")
         self.page.press(".tq input[name=q]", "Enter")
@@ -333,7 +333,7 @@ class Site(unittest.TestCase):
 
     # ---- radicals game ----
     def game(self, query):
-        self.page.add_init_script("localStorage.setItem('hanzi-consent','denied');")
+        self.page.add_init_script("localStorage.setItem('lipu-consent','no');")
         self.page.goto(self.base + "radicals-game" + query)
         self.page.wait_for_selector("#card .opts button", timeout=10000)
 
