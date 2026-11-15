@@ -110,7 +110,7 @@ python3 -m unittest discover -s tests/e2e -v
 Всё — `localStorage`, ключи с префиксом `hanzi-`: `known` (знаки «Знаю»; событие `hanzi-known-saved` для расширения),
 `lang`, `mode` (中/日), `script` (简/繁), `rd` / `phon` (чтения над китайским), `ja-rd` (чтения над японским), `view`
 (скрытые пиньинь/перевод), `phrase` / `phrase-ja` (текущая фраза), `seen-pool` / `seen-ja` (полученные из пула),
-`textlang`, `tour` (`done` — тур пройден), `consent` (баннер аналитики), `radicals-srs` (игра по ключам).
+`textlang`, `tour` (`done` — тур пройден), `radicals-srs` (игра по ключам). Выбор по аналитике — в `lipu-consent` (общий скрипт https://geo.lipu.dev/consent.js; старый `hanzi-consent` переносится один раз).
 Расширение синхронизирует «известные» с сайтом само (см. `extension/README.md`).
 
 ### Своя фраза (вставка текста)

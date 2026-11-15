@@ -157,17 +157,8 @@ html[data-l="ru"] [lang="en"],html[data-l="en"] [lang="ru"]{display:none}
   [].forEach.call(document.querySelectorAll('.lang button'), function (b) { b.onclick = function () { set(b.dataset.lang, true); }; });
   set(lang, false);
 })();
-/* GA4 только если согласие уже дано на главной (hanzi-consent = 'yes'); баннера тут нет. */
+/* GA4 грузит общий скрипт согласия (ниже); события — только если он уже загружен. */
 (function () {
-  var ok = false;
-  try { ok = localStorage.getItem('hanzi-consent') === 'yes'; } catch (e) {}
-  if (ok) {
-    var gs = document.createElement('script'); gs.async = true;
-    gs.src = 'https://www.googletagmanager.com/gtag/js?id=G-G4GHN6WZ7B'; document.head.append(gs);
-    window.dataLayer = window.dataLayer || [];
-    window.gtag = function () { dataLayer.push(arguments); };
-    gtag('js', new Date()); gtag('config', 'G-G4GHN6WZ7B', { anonymize_ip: true });
-  }
   document.addEventListener('click', function (e) {
     var a = e.target.closest && e.target.closest('a[href]');
     if (!a || !window.gtag) return;
@@ -178,4 +169,6 @@ html[data-l="ru"] [lang="en"],html[data-l="en"] [lang="ru"]{display:none}
   });
 })();
 </script>
+<script>/* hanzi-consent → lipu-consent (общий ключ lipu.dev); старый выбор сохраняется */try{var o=localStorage.getItem('hanzi-consent');if(o&&!localStorage.getItem('lipu-consent'))localStorage.setItem('lipu-consent',o==='yes'?'yes':'no');}catch(e){}</script>
+<script src="https://geo.lipu.dev/consent.js" data-ga="G-G4GHN6WZ7B" data-accent="var(--accent)" data-privacy="/privacy"></script>
 </body></html>
