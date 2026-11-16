@@ -14,6 +14,10 @@ name: extension-release
 # (Chrome Web Store API OAuth, see https://github.com/fregante/chrome-webstore-upload-keys);
 # AMO_JWT_ISSUER, AMO_JWT_SECRET (https://addons.mozilla.org/developers/addon/api/key/) — the
 # Firefox job is skipped with a warning until they are set.
+#
+# The store CLIs run with the store credentials in their environment, so they are pinned to exact
+# versions (bump deliberately, after checking the release); a floating major would let any new
+# npm release of them, or of a compromised maintainer account, read those secrets.
 on:
   workflow_call:
     inputs:
@@ -70,7 +74,7 @@ jobs:
           flags=""
           [ "$PUBLISH" = true ] && flags="--auto-publish"
           set +e
-          npx --yes chrome-webstore-upload-cli@3 upload --source extension.zip $flags 2>&1 | tee upload.log
+          npx --yes chrome-webstore-upload-cli@3.5.0 upload --source extension.zip $flags 2>&1 | tee upload.log
           status=${PIPESTATUS[0]}
           set -e
           # A previous version still in review (or approved but unpublished) blocks uploads: that's
@@ -141,7 +145,7 @@ jobs:
           export WEB_EXT_API_KEY=$(printf %s "$WEB_EXT_API_KEY" | tr -d '[:space:]')
           export WEB_EXT_API_SECRET=$(printf %s "$WEB_EXT_API_SECRET" | tr -d '[:space:]')
           set +e
-          npx --yes web-ext@8 sign --channel listed --source-dir ff --artifacts-dir web-ext-artifacts \
+          npx --yes web-ext@8.10.0 sign --channel listed --source-dir ff --artifacts-dir web-ext-artifacts \
             --approval-timeout 0 2>&1 | tee sign.log
           status=${PIPESTATUS[0]}
           set -e
