@@ -542,6 +542,8 @@ const pick = (o, base) => (lang === 'ru' && o && o[base + '_ru']) || (o && o[bas
 const short = d => d ? d.split(/[;,]/)[0].trim() : '';
 // текст словаря в атрибуте: кавычка в значении («"chair"») обрывала title="…"
 const attr = s => String(s ?? '').replace(/[&"<>]/g, c => ({ '&': '&amp;', '"': '&quot;', '<': '&lt;', '>': '&gt;' })[c]);
+// то же для текста словарей и фраз, что вставляется через innerHTML: в данных бывают «<», «< >» (аудит безопасности 2026-11-16)
+const esc = attr;
 const py = ch => ((D.chars[ch] || {}).pinyin || [])[0] || '';
 /* бопомофо (注音) вместо пиньиня; по умолчанию выключено */
 let phon = 'p'; try { phon = { b: 'b', r: 'r' }[localStorage.getItem('hanzi-phon')] || 'p'; } catch (e) {}
@@ -626,7 +628,7 @@ const toneOf = (syl, sys = phon) => {
   for (const c of syl.toLowerCase()) if (TONE_MARK[c]) return TONE_MARK[c];
   return 5;
 };
-const PYH = (s, sys = phon) => s ? PY(String(s), sys).split(/([\s,，/]+)/).map(x => !x || /^[\s,，/]+$/.test(x) ? x : `<span class="t${toneOf(x, sys)}">${x}</span>`).join('') : '';
+const PYH = (s, sys = phon) => s ? PY(String(s), sys).split(/([\s,，/]+)/).map(x => !x || /^[\s,，/]+$/.test(x) ? x : `<span class="t${toneOf(x, sys)}">${esc(x)}</span>`).join('') : '';
 
 /* японский режим: кандзи из шардов data/kanji/ (KANJIDIC2 + KanjiVG), см. loadKanji; ORIG: 亻 → 人 для значений частей */
 const K = {}, ORIG = {};
@@ -640,7 +642,7 @@ const defOf = ch => {
 const compsOf = ch => ((isJa() ? K[ch] : D.chars[ch]) || {}).components || [];
 const jaRead = w => (lang === 'ru' ? w.cyr : w.lat) || w.reading || '';
 const jaLines = w => jrEff().filter(x => x !== 'f').map(x => (x === 'c' ? w.cyr : w.lat) || w.reading || '').filter(Boolean);
-const wordRead = w => w.ja ? jaRead(w) : PYH((w.pinyin || w.chars.map(py)).join(' '));
+const wordRead = w => w.ja ? esc(jaRead(w)) : PYH((w.pinyin || w.chars.map(py)).join(' '));
 
 /* Иероглиф рисуется по контурам черт (Make Me a Hanzi), а не шрифтом: шрифты теряют черты. */
 /* традиционная запись: данные остаются упрощёнными, подменяется только начертание */
@@ -1029,7 +1031,7 @@ function renderTrans() {
     $('#trans').append(document.createElement('br'), b);
   }
   $('#gloss').innerHTML = ph.words.filter(w => !w.punct && wordMeaning(w)).map(w =>
-    `<li><span class="w serif">${w.word}</span><span class="p">${wordRead(w)}</span>${w.lemma ? `<span class="tag" title="${t('jaLemma')}">${w.lemma}</span> ` : ''}${wordMeaning(w)}</li>`).join('');
+    `<li><span class="w serif">${esc(w.word)}</span><span class="p">${wordRead(w)}</span>${w.lemma ? `<span class="tag" title="${t('jaLemma')}">${esc(w.lemma)}</span> ` : ''}${esc(wordMeaning(w))}</li>`).join('');
 }
 /* значение слова целиком: из CEDICT во фразе, иначе из шарда слов (gloss) */
 function wordMeaning(w) {
@@ -1167,7 +1169,7 @@ function makeNode(ch, ancestors, animate) {
   node.dataset.ch = ch;
   const g = document.createElement('button');
   g.className = 'glyph' + (comps.length ? '' : ' leaf') + (partState(ch) ? ' ' + partState(ch) : '');
-  g.innerHTML = `${hz(ch, '', true)}<span class="m">${short(defOf(ch)) || '&nbsp;'}</span>`;
+  g.innerHTML = `${hz(ch, '', true)}<span class="m">${esc(short(defOf(ch))) || '&nbsp;'}</span>`;
   // the glyph shows the explanation and opens the parts the first time, but never closes them (moving between
   // explanations kept collapsing the tree); + / − opens and closes; the star marks "known" (Kobi 2026-11-13)
   let xb = null;
@@ -1330,12 +1332,12 @@ function selectJa(ch, glyphEl) {
   const k = kj(ch), isKnown = known.has(ch);
   const rd = (list, kun) => list.map(r => {
     const tr = JA.transcribe(r.replace(/[.-]/g, ''), { long: false });
-    return `<span class="rd"><span lang="ja">${kun ? kunShow(r) : r}</span> <small>${lang === 'ru' ? tr.cyr : tr.lat}</small></span>`;
+    return `<span class="rd"><span lang="ja">${esc(kun ? kunShow(r) : r)}</span> <small>${esc(lang === 'ru' ? tr.cyr : tr.lat)}</small></span>`;
   }).join(' ');
-  let h = `<h2>${hz(ch)}${k && k !== K[ch] ? `<small lang="ja">${ORIG[ch]}</small>` : ''}</h2>`;
+  let h = `<h2>${hz(ch)}${k && k !== K[ch] ? `<small lang="ja">${esc(ORIG[ch])}</small>` : ''}</h2>`;
   if (k) {
-    const en = (k.en || []).join(', ');
-    if (lang === 'ru' && k.ru) h += `<p>${k.ru} <span class="tag">${t('kWordRu')}</span></p>${en ? `<p class="hint">${t('kEn')}: ${en}</p>` : ''}`;
+    const en = esc((k.en || []).join(', '));
+    if (lang === 'ru' && k.ru) h += `<p>${esc(k.ru)} <span class="tag">${t('kWordRu')}</span></p>${en ? `<p class="hint">${t('kEn')}: ${en}</p>` : ''}`;
     else if (en) h += `<p>${en}</p>`;
     if ((k.on || []).length) h += `<p class="kr" title="${t('kOnT')}"><b>${t('kOn')}</b> ${rd(k.on, false)}</p>`;
     const kun = [...new Map((k.kun || []).map(r => [kunShow(r), r])).values()].slice(0, 8);   // め и め- (приставка) — одно чтение
@@ -1345,7 +1347,7 @@ function selectJa(ch, glyphEl) {
     if (tags.length) h += `<p>${tags.map(x => `<span class="tag">${x}</span>`).join(' ')}</p>`;
   } else {
     const d = pick(D.chars[ch], 'definition');
-    h += d ? `<p>${d}</p>` : `<p class="hint">${t('nodesc')}</p>`;
+    h += d ? `<p>${esc(d)}</p>` : `<p class="hint">${t('nodesc')}</p>`;
   }
   const parts = compsOf(ch);
   if (parts.length) h += `<p>${t('kParts')}: <span lang="ja">${parts.join(' + ')}</span></p>`;
@@ -1360,7 +1362,7 @@ function selectJa(ch, glyphEl) {
     <a class="btn" target="_blank" rel="noopener" href="https://jisho.org/search/${encodeURIComponent(ch + ' #kanji')}">${ICON.ext}Jisho</a>
     <a class="btn" target="_blank" rel="noopener" href="https://${lang === 'ru' ? 'ru' : 'en'}.wiktionary.org/wiki/${encodeURIComponent(ch)}">${ICON.ext}Wiktionary</a>
   </div>`;
-  if (inPh.length) h += `<div class="usage" id="usage"><h3>${t('inPhrase')}</h3><ul class="wl">${inPh.map(w => `<li><span class="w serif" lang="ja">${w.word}</span><span class="p">${wordRead(w)}</span>${wordMeaning(w)}</li>`).join('')}</ul></div>`;
+  if (inPh.length) h += `<div class="usage" id="usage"><h3>${t('inPhrase')}</h3><ul class="wl">${inPh.map(w => `<li><span class="w serif" lang="ja">${esc(w.word)}</span><span class="p">${wordRead(w)}</span>${esc(wordMeaning(w))}</li>`).join('')}</ul></div>`;
   $('#info').innerHTML = h;
   $('#knownBtn').onclick = () => toggleKnown(ch); if ($('#sayBtn')) $('#sayBtn').onclick = () => TTS.say(ch, sayLang());
   $('#cpChBtn').onclick = async () => { const b = $('#cpChBtn'), ok = await doCopy(ch); b.innerHTML = (ok ? ICON.check + ui('cpOk') : '—'); track('copy', { what: 'char' }); setTimeout(() => { if (b.isConnected) b.innerHTML = ICON.copy + ui('cpBtn'); }, 1500); };
@@ -1383,19 +1385,19 @@ function select(ch, glyphEl) {
   const isKnown = known.has(ch);
   // characters mentioned in the text ("compare 左", "variant of 爲") open their own card (Kobi 2026-11-13)
   const xr = s => String(s || '').split(/(<[^>]*>)/).map(p => p[0] === '<' ? p : p.replace(/[\u3400-\u9fff\uf900-\ufaff]/g, x => x === ch ? x : `<a class="xr serif" href="?open=${x}" data-ch="${x}">${x}</a>`)).join('');
-  const def = xr(pick(c, 'definition')), hint = xr(pick(e, 'hint'));
+  const def = xr(esc(pick(c, 'definition'))), hint = xr(esc(pick(e, 'hint')));   // сначала экранируем, потом ссылки xr
   let h = `<h2 data-noconv>${hz(ch, '', true)}<small>${PYH((c.pinyin || []).join(', '))}</small></h2>`;
   if (def) h += `<p data-noconv>${def}${c.definition_source && c.definition_source !== 'mmh' ? ` <span class="tag">${t('derived')}</span>` : ''}</p>`;
   if (c.readings) {   // 多音字: у знака несколько чтений; чтение во фразе выделено
     const w = (D.phrase || []).find(w => w.chars && w.chars.includes(ch));
     const here = w && w.pinyin ? (w.pinyin[w.chars.indexOf(ch)] || '').toLowerCase() : '';
     h += `<p class="kr"><b>${t('kReadings')}</b></p><ul class="rdl">${c.readings.map(([p, en, ru]) =>
-      `<li class="${p === here ? 'here' : ''}"><span class="p">${PYH(p)}</span>${(lang === 'ru' && ru) || en}${p === here ? ` <span class="tag">${t('kHere')}</span>` : ''}</li>`).join('')}</ul>`;
+      `<li class="${p === here ? 'here' : ''}"><span class="p">${PYH(p)}</span>${esc((lang === 'ru' && ru) || en)}${p === here ? ` <span class="tag">${t('kHere')}</span>` : ''}</li>`).join('')}</ul>`;
   }
   if (c.incomplete) h += `<p class="hint">${t('incompl')}</p>`;
   if (c.atomic) h += `<p><span class="tag">${t('atomic')}</span></p>`;
   if (hint) h += `<p data-noconv>${typeName ? `<span class="tag">${typeName}</span> ` : ''}${hint}</p>`;
-  if (e.type === 'pictophonetic') h += `<p data-noconv>${t('phonetic')} <b>${xr(e.phonetic)}</b>, ${t('semantic')} <b>${xr(e.semantic)}</b>.</p>`;
+  if (e.type === 'pictophonetic') h += `<p data-noconv>${t('phonetic')} <b>${xr(esc(e.phonetic))}</b>, ${t('semantic')} <b>${xr(esc(e.semantic))}</b>.</p>`;
   if (!def && !hint) h += `<p class="hint">${t('nodesc')}</p>`;
   const rootParts = rootCh && rootCh !== ch ? seenInPhrase(ch, rootCh) : [];
   if (rootParts.length) h += `<div class="seen">${t('seen')} ${rootParts.map(x => `<b class="serif">${x}</b>`).join(', ')}.</div>`;
@@ -1423,9 +1425,9 @@ function select(ch, glyphEl) {
   h += `<div id="mnemo" data-noconv></div>`;
   if (u || inPh.length) {
     h += `<div class="usage" id="usage">`;
-    if (inPh.length) h += `<h3>${t('inPhrase')}</h3><ul class="wl">${inPh.map(w => `<li><span class="w serif">${w.word}</span><span class="p">${wordRead(w)}</span>${phGloss(w)}</li>`).join('')}</ul>`;
-    if (u && u.words.length) h += `<h3>${t('words')}</h3><ul class="wl">${u.words.map(w => `<li><span class="w serif">${w.w}</span><span class="p">${PYH(w.pinyin)}</span>${pick(w, 'def')}</li>`).join('')}</ul>`;
-    if (via.length) h += `<h3>${t('viaParents')}</h3><ul class="wl">${via.slice(0, 8).map(w => `<li><span class="w serif">${w.w}</span><span class="p">${PYH(w.pinyin)}</span>${pick(w, 'def')}</li>`).join('')}</ul>`;
+    if (inPh.length) h += `<h3>${t('inPhrase')}</h3><ul class="wl">${inPh.map(w => `<li><span class="w serif">${esc(w.word)}</span><span class="p">${wordRead(w)}</span>${esc(phGloss(w))}</li>`).join('')}</ul>`;
+    if (u && u.words.length) h += `<h3>${t('words')}</h3><ul class="wl">${u.words.map(w => `<li><span class="w serif">${esc(w.w)}</span><span class="p">${PYH(w.pinyin)}</span>${esc(pick(w, 'def'))}</li>`).join('')}</ul>`;
+    if (via.length) h += `<h3>${t('viaParents')}</h3><ul class="wl">${via.slice(0, 8).map(w => `<li><span class="w serif">${esc(w.w)}</span><span class="p">${PYH(w.pinyin)}</span>${esc(pick(w, 'def'))}</li>`).join('')}</ul>`;
     if (u && u.chars.length) h += `<h3>${t('chars')}</h3><div class="chips">${u.chars.map(x => `<button class="chip ${known.has(x) ? 'known' : ''}" data-ch="${x}" title="${attr(short(defOf(x)))}">${hz(x)}</button>`).join('')}</div>`;
     h += `</div>`;
   }
