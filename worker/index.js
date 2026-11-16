@@ -5,6 +5,9 @@ const SESSION_TTL = 60 * 60 * 24 * 30; // 30 дней
 const PROMPT_VERSION = 2;   // поднять при смене промпта: старые запоминалки перестанут показываться
 const MAX_VARIANTS = 3;
 const HAN = /^\p{Script=Han}$/u;
+// «известным» можно отметить иероглиф или часть кандзи (бывает катакана: マ); один символ, без разметки
+const KNOWN_CH = /^[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}]$/u;
+const KNOWN_MAX = 20000;    // строк в known на пользователя: в словаре ~100 тыс. знаков, учащемуся хватит с запасом
 const json = (data, status = 200, headers = {}) =>
   new Response(JSON.stringify(data), { status, headers: { 'Content-Type': 'application/json', 'X-Content-Type-Options': 'nosniff', ...headers } });
 const isJson = request => /^application\/json\s*(;|$)/i.test(request.headers.get('Content-Type') || '');
@@ -55,10 +58,9 @@ async function readSession(env, request) {
 const cookie = (value, maxAge) =>
   `hb_session=${value}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${maxAge}`;
 
-/* ---------- анонимный пользователь: хэш IP, без хранения самого адреса ---------- */
+/* ---------- анонимный пользователь: HMAC от IP, без хранения самого адреса ---------- */
 // IPv6: провайдер обычно выдаёт абоненту целую /64, и каждый адрес из неё считался бы отдельным клиентом
 // (одна /64 выбрала бы весь общий дневной лимит). Поэтому для IPv6 считаем по префиксу /64.
-// IPv4 хэшируется как раньше, байт в байт: сегодняшние счётчики не обнуляются.
 function ipKey(ip) {
   if (!ip.includes(':')) return ip;
   const v4 = /(\d+\.\d+\.\d+\.\d+)$/.exec(ip);   // ::ffff:1.2.3.4 — это IPv4
@@ -69,8 +71,17 @@ function ipKey(ip) {
   const groups = t === undefined ? a : [...a, ...Array(Math.max(0, 8 - a.length - b.length)).fill('0'), ...b];
   return groups.slice(0, 4).map(g => (parseInt(g, 16) || 0).toString(16)).join(':') + '::/64';
 }
-async function ipId(request) {
+// HMAC с секретом IP_HASH_SECRET (wrangler secret put): простой SHA-256 от IPv4 перебирается за минуты
+// (2^32 адресов), и по ключу в таблице usage адрес восстанавливался бы. Без секрета — старый хэш и
+// предупреждение в логе, чтобы не уронить лимиты до настройки (аудит безопасности 2026-11-16).
+let warnedNoIpSecret = false;
+async function ipId(env, request) {
   const ip = ipKey(request.headers.get('CF-Connecting-IP') || 'unknown');
+  if (env.IP_HASH_SECRET) {
+    const sig = await crypto.subtle.sign('HMAC', await hmacKey(env.IP_HASH_SECRET), enc.encode('hanzi-burst:' + ip));
+    return 'ip:' + b64(sig).slice(0, 22);
+  }
+  if (!warnedNoIpSecret) { warnedNoIpSecret = true; console.warn('IP_HASH_SECRET is not set: anonymous rate-limit keys use an unsalted IP hash'); }
   const d = await crypto.subtle.digest('SHA-256', enc.encode('hanzi-burst:' + ip));
   return 'ip:' + b64(d).slice(0, 22);
 }
@@ -222,7 +233,7 @@ export default {
 
     // сессия необязательна: без входа лимиты считаются по хэшу IP
     const session = await readSession(env, request);
-    const uid = session ? session.sub : await ipId(request);
+    const uid = session ? session.sub : await ipId(env, request);
 
     if (path.startsWith('/api/known') && !session) return json({ error: 'unauthorized' }, 401);
 
@@ -232,12 +243,21 @@ export default {
     }
     if (path === '/api/known' && method === 'PUT') {
       if (!isJson(request)) return json({ error: 'unsupported_media_type' }, 415);
-      // тело: {add: [...], remove: [...]}; значения только одиночные символы, не больше 500 за раз
+      // тело: {add: [...], remove: [...]}; не больше 500 за раз. Добавлять можно только иероглифы/кану (KNOWN_CH):
+      // раньше проходил любой символ, и в базу попадали «<», «"». Неподходящие тихо отбрасываются, как и раньше;
+      // удалять можно любой одиночный символ — чтобы убрать старый мусор.
       const body = await request.json().catch(() => ({}));
-      const ok = a => Array.isArray(a) ? a.filter(c => typeof c === 'string' && [...c].length === 1).slice(0, 500) : [];
+      const list = (a, test) => Array.isArray(a) ? a.filter(c => typeof c === 'string' && test(c)).slice(0, 500) : [];
+      const add = list(body.add, c => KNOWN_CH.test(c)), remove = list(body.remove, c => [...c].length === 1);
+      if (add.length) {
+        const { n } = await env.DB.prepare('SELECT COUNT(*) AS n FROM known WHERE user_id = ?1').bind(uid).first();
+        if (n + add.length > KNOWN_MAX) return json({ error: 'too_many', max: KNOWN_MAX }, 409);
+      }
+      // потолок ещё и в самом INSERT: два параллельных запроса оба прошли проверку выше
       const stmts = [
-        ...ok(body.add).map(c => env.DB.prepare('INSERT OR IGNORE INTO known (user_id, ch, added_at) VALUES (?1, ?2, ?3)').bind(uid, c, Date.now())),
-        ...ok(body.remove).map(c => env.DB.prepare('DELETE FROM known WHERE user_id = ?1 AND ch = ?2').bind(uid, c)),
+        ...remove.map(c => env.DB.prepare('DELETE FROM known WHERE user_id = ?1 AND ch = ?2').bind(uid, c)),
+        ...add.map(c => env.DB.prepare('INSERT OR IGNORE INTO known (user_id, ch, added_at) ' +
+          'SELECT ?1, ?2, ?3 WHERE (SELECT COUNT(*) FROM known WHERE user_id = ?1) < ?4').bind(uid, c, Date.now(), KNOWN_MAX)),
       ];
       if (stmts.length) await env.DB.batch(stmts);
       return json({ ok: true });

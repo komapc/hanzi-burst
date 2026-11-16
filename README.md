@@ -308,6 +308,7 @@ wrangler d1 execute hanzi-burst --remote --file worker/schema.sql
 wrangler secret put GOOGLE_CLIENT_ID      # Google Cloud Console -> OAuth client (Web), origin = домен сайта
 wrangler secret put SESSION_SECRET        # openssl rand -base64 32
 wrangler secret put GEMINI_API_KEY
+wrangler secret put IP_HASH_SECRET        # openssl rand -base64 32; ключ HMAC для анонимных лимитов по IP
 ```
 
 Секреты Worker хранятся в Cloudflare и при деплое не трогаются. Изменения схемы D1 (`worker/schema.sql`,
