@@ -133,12 +133,12 @@ test('known: legacy junk can still be removed', async () => {
   assert.ok(sql.some(([q, a]) => q.startsWith('DELETE FROM known') && a[1] === '<'));
 });
 
-test('known: a user is capped (409 past the limit, and the INSERT itself checks it)', async () => {
+test('known: a user is capped (409 past the limit)', async () => {
   const full = fakeEnv({ count: 20000 }); full.env.SESSION_SECRET = 's';
   const r = await putKnown(full.env, { add: ['水'] });
   assert.equal(r.status, 409);
   assert.ok(!full.sql.some(([q]) => q.includes('INTO known')));
   const ok = fakeEnv({ count: 10 }); ok.env.SESSION_SECRET = 's';
   assert.equal((await putKnown(ok.env, { add: ['水'] })).status, 200);
-  assert.ok(ok.sql.some(([q, a]) => q.includes('INTO known') && q.includes('COUNT(*)') && a[3] === 20000));
+  assert.ok(ok.sql.some(([q, a]) => q.includes('INTO known') && a[1] === '水'));
 });

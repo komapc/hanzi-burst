@@ -253,11 +253,11 @@ export default {
         const { n } = await env.DB.prepare('SELECT COUNT(*) AS n FROM known WHERE user_id = ?1').bind(uid).first();
         if (n + add.length > KNOWN_MAX) return json({ error: 'too_many', max: KNOWN_MAX }, 409);
       }
-      // потолок ещё и в самом INSERT: два параллельных запроса оба прошли проверку выше
+      // гонка параллельных запросов может превысить потолок на сотни строк — не страшно. COUNT в каждом INSERT
+      // не ставим: 500 вставок × 20 тыс. строк = миллионы прочитанных строк D1 за один запрос
       const stmts = [
         ...remove.map(c => env.DB.prepare('DELETE FROM known WHERE user_id = ?1 AND ch = ?2').bind(uid, c)),
-        ...add.map(c => env.DB.prepare('INSERT OR IGNORE INTO known (user_id, ch, added_at) ' +
-          'SELECT ?1, ?2, ?3 WHERE (SELECT COUNT(*) FROM known WHERE user_id = ?1) < ?4').bind(uid, c, Date.now(), KNOWN_MAX)),
+        ...add.map(c => env.DB.prepare('INSERT OR IGNORE INTO known (user_id, ch, added_at) VALUES (?1, ?2, ?3)').bind(uid, c, Date.now())),
       ];
       if (stmts.length) await env.DB.batch(stmts);
       return json({ ok: true });
