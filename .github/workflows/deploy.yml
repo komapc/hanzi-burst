@@ -28,7 +28,12 @@ env:
   WRANGLER_VERSION: 4.151.3
 
 jobs:
+  # Unit tests and sanity checks (check.yml) gate the deploy.
+  check:
+    uses: ./.github/workflows/check.yml
+
   deploy:
+    needs: check
     runs-on: ubuntu-latest
     # Never cancel a deploy halfway; PR dry-runs may cancel each other.
     # Tag runs get their own group: in the shared 'deploy' group a queued tag run was replaced (cancelled)
