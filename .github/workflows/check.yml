@@ -1,18 +1,22 @@
 name: check
 
 # Fast sanity checks without data/raw/. The full build + deploy is deploy.yml.
+# Also called by deploy.yml (workflow_call), so a deploy waits for these checks.
 on:
   push:
     branches: [main]
   pull_request:
   workflow_dispatch:
+  workflow_call:
 
 permissions:
   contents: read
 
+# github.workflow is the caller's name when called from deploy.yml, so the standalone run and the
+# deploy's call never share a group (and can't cancel each other). Only PR runs cancel older ones.
 concurrency:
-  group: check-${{ github.ref }}
-  cancel-in-progress: true
+  group: check-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   check:
@@ -24,7 +28,7 @@ jobs:
           python-version: "3.12"
       - uses: actions/setup-node@v7
         with:
-          node-version: 20
+          node-version: 22
       - name: Python scripts compile
         run: python -m compileall -q scripts
       - name: Worker syntax
