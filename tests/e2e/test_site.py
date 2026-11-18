@@ -302,19 +302,25 @@ class Site(unittest.TestCase):
         finally:
             ctx.close()
 
-    def test_link_preview_tags_on_every_kind_of_page(self):            # og:type/locale/image:alt + twitter:card
+    def test_link_preview_tags_on_every_kind_of_page(self):            # the full og: block + twitter:card
         ctx = self.browser.new_context(java_script_enabled=False)
         try:
             page = ctx.new_page()
             for path, typ in [("", "website"), ("en/", "website"), ("c/60f3", "article"), ("en/c/60f3", "article"),
-                              ("r/", "website"), ("en/r/5fc3", "article"), ("eo/r/poster", "website"), ("about", "website")]:
+                              ("r/", "website"), ("en/r/5fc3", "article"), ("eo/r/poster", "website"), ("about", "website"),
+                              ("extension", "website"), ("privacy", "website"), ("radicals-game", "website"), ("japanese/", "website")]:
                 with self.subTest(path=path):
                     page.goto(self.base + path)
                     lang = page.get_attribute("html", "lang")
                     tags = page.eval_on_selector_all(
                         'meta[property^="og:"], meta[name^="twitter:"]',
                         "ms => ms.map(m => [m.getAttribute('property') || m.getAttribute('name'), m.content])")
-                    got = {k: [v for kk, v in tags if kk == k] for k in ("og:type", "og:locale", "og:image:alt", "twitter:card")}
+                    got = {k: [v for kk, v in tags if kk == k] for k in ("og:type", "og:locale", "og:title", "og:description", "og:image",
+                                                                         "og:image:alt", "og:site_name", "og:url", "twitter:card")}
+                    for k in ("og:title", "og:description", "og:image", "og:site_name"):
+                        self.assertEqual(len(got[k]), 1, k)
+                        self.assertTrue(got[k][0], k)
+                    self.assertEqual(got["og:url"], [page.get_attribute('link[rel="canonical"]', "href")])
                     self.assertEqual(got["og:type"], [typ])
                     self.assertEqual(got["og:locale"], [{"ru": "ru_RU", "en": "en_US", "eo": "eo_EO"}[lang]])
                     self.assertEqual(len(got["og:image:alt"]), 1)
