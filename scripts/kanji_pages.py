@@ -232,7 +232,7 @@ def build(SITE, page, breadcrumbs, E, gloss, first, BRAND, BASE, zh_chars, zh_al
         ld = [breadcrumbs((BRAND, "/"), ("Кандзи", "/k/"), (ch, f"/k/{cid(ch)}")),
               {"@context": "https://schema.org", "@type": "DefinedTerm", "name": ch, "inLanguage": "ja",
                "description": " — ".join(x for x in (rd_short, mean) if x), "url": f"{BASE}/k/{cid(ch)}"}]
-        (out / f"{cid(ch)}.html").write_text(page(title, desc[:300], f"/k/{cid(ch)}", "\n".join(body), ld), encoding="utf-8")
+        (out / f"{cid(ch)}.html").write_text(page(title, desc[:300], f"/k/{cid(ch)}", "\n".join(body), ld, og_type="article"), encoding="utf-8")
         if g in sitemap_grades:
             urls.append(f"{BASE}/k/{cid(ch)}")
 

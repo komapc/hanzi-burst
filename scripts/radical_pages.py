@@ -116,7 +116,7 @@ def poster_pages(SITE, page, breadcrumbs, E, BASE, pct):
                "encoding": {"@type": "MediaObject", "contentUrl": f"{BASE}{pdf}", "encodingFormat": "application/pdf"}}]
         out = SITE / t["path"].lstrip("/")
         out.parent.mkdir(parents=True, exist_ok=True)
-        out.with_suffix(".html").write_text(page(t["title"], t["desc"], t["path"], body, ld, lang=lang, alt=alts, image=jpg), encoding="utf-8")
+        out.with_suffix(".html").write_text(page(t["title"], t["desc"], t["path"], body, ld, lang=lang, alt=alts, image=jpg, image_alt=t["alt"]), encoding="utf-8")
         urls += [f"{BASE}{t['path']}", f"{BASE}{pdf}"]
         IMAGES[f"{BASE}{t['path']}"] = [f"{BASE}{jpg}"]
     urls.append(posters_hub(SITE, page, breadcrumbs, E, BASE))
@@ -149,7 +149,7 @@ def posters_hub(SITE, page, breadcrumbs, E, BASE):
     ld = [breadcrumbs(("Hanzi Burst", "/"), ("Posters", "/posters")),
           {"@context": "https://schema.org", "@type": "CollectionPage", "name": "Posters · Плакаты · Afiŝoj", "url": f"{BASE}/posters",
            "description": desc, "inLanguage": list(HUB), "hasPart": [f"{BASE}{POSTER[l]['path']}" for l in HUB]}]
-    (SITE / "posters.html").write_text(page(title, desc, "/posters", body, ld, lang="en", image="/radicals-poster-en.jpg"), encoding="utf-8")
+    (SITE / "posters.html").write_text(page(title, desc, "/posters", body, ld, lang="en", image="/radicals-poster-en.jpg", image_alt=POSTER["en"]["alt"]), encoding="utf-8")
     IMAGES[f"{BASE}/posters"] = [f"{BASE}/radicals-poster-{l}.jpg" for l in HUB]
     return f"{BASE}/posters"
 
@@ -306,7 +306,7 @@ def build(SITE, page, breadcrumbs, E, BASE, chars, allc, first):
                    "description": f"{r['pinyin']} — {name(r)}" + (f" ({t['pic'].lower()}: {pic})" if pic else ""), "url": f"{BASE}{path}",
                    "inDefinedTermSet": f"{BASE}{pre}/r/"}]
             (SITE / path.lstrip("/")).with_suffix(".html").write_text(
-                page(title, desc[:300], path, "\n".join(body), ld, lang=lang, alt=(f"/r/{cid(ch)}", f"/en/r/{cid(ch)}")), encoding="utf-8")
+                page(title, desc[:300], path, "\n".join(body), ld, lang=lang, alt=(f"/r/{cid(ch)}", f"/en/r/{cid(ch)}"), og_type="article"), encoding="utf-8")
             urls.append(f"{BASE}{path}")
 
         def cell(r):
