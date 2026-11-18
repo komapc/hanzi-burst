@@ -134,3 +134,35 @@ class Redirects(unittest.TestCase):
             # no rule sends a page to itself or to a path another rule redirects again (no chains or loops)
             src = {x.split()[0] for x in r}
             self.assertFalse([x for x in r if x.split()[1] in src])
+
+
+class OgTags(unittest.TestCase):
+    """Link previews of the generated pages: og:type, og:locale from the page language, og:image:alt for the
+    image actually shown, twitter:card."""
+    def meta(self, html, key):
+        import re
+        return re.findall(rf'<meta (?:property|name)="{re.escape(key)}" content="([^"]*)">', html)
+
+    def test_page_head(self):
+        import build_static
+        from radical_pages import POSTER
+        cases = [  # (page() arguments, og:type, og:locale, og:image, og:image:alt starts with)
+            (dict(lang="ru", og_type="article"), "article", "ru_RU", "/og.png", "Hanzi Burst — иероглифы через радикалы"),
+            (dict(lang="en"), "website", "en_US", "/og-en.png", "Hanzi Burst — learn Chinese characters"),
+            (dict(lang="eo", image="/radicals-poster-eo.jpg", image_alt=POSTER["eo"]["alt"]), "website", "eo_EO",
+             "/radicals-poster-eo.jpg", "Afiŝo de la 214"),
+        ]
+        for kw, typ, loc, img, alt in cases:
+            with self.subTest(kw=kw):
+                h = build_static.page("t", "d", "/x", "", **kw)
+                self.assertEqual(self.meta(h, "og:type"), [typ])
+                self.assertEqual(self.meta(h, "og:locale"), [loc])
+                self.assertEqual(self.meta(h, "og:image"), [build_static.BASE + img])
+                self.assertEqual(len(self.meta(h, "og:image:alt")), 1)
+                self.assertTrue(self.meta(h, "og:image:alt")[0].startswith(alt))
+                self.assertEqual(self.meta(h, "twitter:card"), ["summary_large_image"])
+
+    def test_a_new_image_needs_its_own_alt(self):
+        import build_static
+        with self.assertRaises(KeyError):
+            build_static.page("t", "d", "/x", "", image="/other.png")

@@ -96,12 +96,22 @@ details.lv summary span{font-weight:400;color:var(--muted);font-size:15px}
 # Cloudflare Web Analytics: без cookies, поэтому без согласия. Тег один, берём его из главной.
 BEACON = re.search(r"<script defer src=\"https://static\.cloudflareinsights\.com/[^>]*></script>",
                    (SITE / "index.html").read_text(encoding="utf-8")).group(0)
+# og:locale — по lang страницы
+LOCALE = {"ru": "ru_RU", "en": "en_US", "eo": "eo_EO"}
+# og:image:alt общих картинок — что на них написано (scripts/og.html, scripts/og-en.html); русский — из главной
+OG_ALT = {"/og.png": html.unescape(re.search(r'<meta property="og:image:alt" content="([^"]*)">',
+                                             (SITE / "index.html").read_text(encoding="utf-8")).group(1)),
+          "/og-en.png": "Hanzi Burst — learn Chinese characters by their radicals: 想 (think) bursts into 相 (mutual) "
+                        "and 心 (heart), 相 into 木 (tree) and 目 (eye)"}
 
 
-def page(title, desc, canon, body, ld=(), lang="ru", alt=None, image=None):
+def page(title, desc, canon, body, ld=(), lang="ru", alt=None, image=None, image_alt=None, og_type="website"):
     """alt = (русский путь, английский путь) или {язык: путь}: взаимные hreflang (x-default — английская версия:
     для тех, чей язык ни русский, ни английский)
-    и ссылки на другие языки в шапке. image — путь картинки для og:image (по умолчанию /og.png, у английских страниц /og-en.png)."""
+    и ссылки на другие языки в шапке. image — путь картинки для og:image (по умолчанию /og.png, у английских страниц /og-en.png),
+    image_alt — её og:image:alt (у /og.png и /og-en.png — из OG_ALT). og_type: website — главные, хабы, списки, плакаты;
+    article — страница одной записи (иероглиф, фраза, кандзи, ключ)."""
+    image = image or ('/og.png' if lang == 'ru' else '/og-en.png')
     alts = alt if isinstance(alt, dict) else ({"ru": alt[0], "en": alt[1]} if alt else {})
     hreflang = ("".join(f'<link rel="alternate" hreflang="{l}" href="{BASE}{u}">' for l, u in alts.items())
                 + f'<link rel="alternate" hreflang="x-default" href="{BASE}{alts.get("en") or alts["ru"]}">\n') if alts else ""
@@ -134,8 +144,9 @@ def page(title, desc, canon, body, ld=(), lang="ru", alt=None, image=None):
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{E(title)}</title><meta name="description" content="{E(desc)}">
 <link rel="canonical" href="{BASE}{canon}"><meta name="robots" content="index,follow">
-{hreflang}<meta property="og:title" content="{E(title)}"><meta property="og:description" content="{E(desc)}">
-<meta property="og:image" content="{BASE}{image or ('/og.png' if lang == 'ru' else '/og-en.png')}"><meta property="og:site_name" content="{BRAND}"><meta property="og:url" content="{BASE}{canon}">
+{hreflang}<meta property="og:type" content="{og_type}"><meta property="og:locale" content="{LOCALE[lang]}"><meta property="og:title" content="{E(title)}"><meta property="og:description" content="{E(desc)}">
+<meta property="og:image" content="{BASE}{image}"><meta property="og:image:alt" content="{E(image_alt or OG_ALT[image])}"><meta property="og:site_name" content="{BRAND}"><meta property="og:url" content="{BASE}{canon}">
+<meta name="twitter:card" content="summary_large_image">
 {ld_script(ld)}{CSS}{BEACON}</head><body><main>{nav}
 {body}<div id="sitefoot"></div><script src="/footer.js" defer></script></main><script src="/static.js" defer></script></body></html>"""
 
@@ -174,6 +185,8 @@ def en_home():
     one(r'<meta property="og:description" content=".*?">', f'<meta property="og:description" content="{E(og_desc)}">')
     one(r'<meta property="og:url" content="https://hanzi.lipu.dev/">', f'<meta property="og:url" content="{BASE}/en/">')
     one(r'<meta property="og:image" content="https://hanzi.lipu.dev/og.png">', f'<meta property="og:image" content="{BASE}/og-en.png">')
+    one(r'<meta property="og:image:alt" content="[^"]*">', f'<meta property="og:image:alt" content="{E(OG_ALT["/og-en.png"])}">')
+    one(r'<meta property="og:locale" content="ru_RU">', f'<meta property="og:locale" content="{LOCALE["en"]}">')
     one(r'"url":"https://hanzi.lipu.dev/","applicationCategory"', f'"url":"{BASE}/en/","applicationCategory"')
     one(r'"inLanguage":\["ru","en"\]', '"inLanguage":"en"')
     # шапка, заголовок, вводный текст и футер — как их рисует скрипт при lang=en (T.en, UI.en.nav, renderFooter)
@@ -354,7 +367,7 @@ def main():
               {"@context": "https://schema.org", "@type": "DefinedTerm", "name": ch, "inLanguage": "zh",
                "description": " — ".join(x for x in (py, first(dru) or first(den)) if x),
                "url": f"{BASE}/c/{cid(ch)}"}]
-        (SITE / "c" / f"{cid(ch)}.html").write_text(page(title, desc[:300], f"/c/{cid(ch)}", "\n".join(body), ld, alt=(f"/c/{cid(ch)}", f"/en/c/{cid(ch)}")), encoding="utf-8")
+        (SITE / "c" / f"{cid(ch)}.html").write_text(page(title, desc[:300], f"/c/{cid(ch)}", "\n".join(body), ld, alt=(f"/c/{cid(ch)}", f"/en/c/{cid(ch)}"), og_type="article"), encoding="utf-8")
         if ch in sitemap_chars:
             urls.append(f"{BASE}/c/{cid(ch)}")
 
@@ -383,7 +396,7 @@ def main():
         title = f"{zh} — перевод и пиньинь: {short} | Hanzi Burst"
         desc = f"{zh} ({pyl}): {tr}. Китайская фраза с пиньинем, переводом и разбором иероглифов на ключи (радикалы)."
         ld = [breadcrumbs((BRAND, "/"), ("Фразы", "/p/"), (zh, f"/p/{pid(zh)}"))]
-        (SITE / "p" / f"{pid(zh)}.html").write_text(page(title, desc[:300], f"/p/{pid(zh)}", "\n".join(body), ld, alt=(f"/p/{pid(zh)}", f"/en/p/{pid(zh)}")), encoding="utf-8")
+        (SITE / "p" / f"{pid(zh)}.html").write_text(page(title, desc[:300], f"/p/{pid(zh)}", "\n".join(body), ld, alt=(f"/p/{pid(zh)}", f"/en/p/{pid(zh)}"), og_type="article"), encoding="utf-8")
 
     comps = {c: "".join(v.get("components") or []) for c, v in chars.items() if v.get("components")}
     (SITE / "comps.json").write_text(json.dumps(comps, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
@@ -503,7 +516,7 @@ def main():
               {"@context": "https://schema.org", "@type": "DefinedTerm", "name": ch, "inLanguage": "zh",
                "description": " — ".join(x for x in (py, meaning) if x), "url": f"{BASE}/en/c/{cid(ch)}"}]
         (SITE / "en" / "c" / f"{cid(ch)}.html").write_text(
-            page(title, desc[:300], f"/en/c/{cid(ch)}", "\n".join(body), ld, lang="en", alt=(f"/c/{cid(ch)}", f"/en/c/{cid(ch)}")), encoding="utf-8")
+            page(title, desc[:300], f"/en/c/{cid(ch)}", "\n".join(body), ld, lang="en", alt=(f"/c/{cid(ch)}", f"/en/c/{cid(ch)}"), og_type="article"), encoding="utf-8")
         if ch in sitemap_chars:
             urls.append(f"{BASE}/en/c/{cid(ch)}")
     (SITE / "en" / "c" / "index.html").write_text(page(f"All Chinese characters and radicals ({len(chars)}) | Hanzi Burst",
@@ -532,7 +545,7 @@ def main():
         desc = f"{zh} ({pyl})" + (f": {en}" if en else "") + ("" if en[-1:] in ".?!…" else ".") + " A Chinese phrase with pinyin, English translation and every character broken down into radicals."
         ld = [breadcrumbs((BRAND, "/"), ("Phrases", "/en/p/"), (zh, f"/en/p/{pid(zh)}"))]
         (SITE / "en" / "p" / f"{pid(zh)}.html").write_text(
-            page(title, desc[:300], f"/en/p/{pid(zh)}", "\n".join(body), ld, lang="en", alt=(f"/p/{pid(zh)}", f"/en/p/{pid(zh)}")), encoding="utf-8")
+            page(title, desc[:300], f"/en/p/{pid(zh)}", "\n".join(body), ld, lang="en", alt=(f"/p/{pid(zh)}", f"/en/p/{pid(zh)}"), og_type="article"), encoding="utf-8")
     li = by_level(lambda p: f'<li><a href="/en/p/{pid(p["zh"])}" lang="zh">{E(p["zh"])}</a>{en_gloss(p.get("en"))}</li>', "phrases")
     (SITE / "en" / "p" / "index.html").write_text(page(f"Simple Chinese phrases with English translation ({len(phrases)}) | Hanzi Burst",
         f"{len(phrases)} simple Chinese phrases with pinyin, English translation and every character broken down into radicals. Made for beginners.", "/en/p/",
