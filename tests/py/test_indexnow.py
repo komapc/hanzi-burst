@@ -25,6 +25,14 @@ class ChangedUrls(unittest.TestCase):
             changed = indexnow.changed_urls(site, fetch=live.get)
         self.assertEqual(changed, [BASE + "/c/57fa", BASE + "/c/gone"])
 
+    def test_cf_beacon_is_not_a_change(self):
+        own = b'<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon=\'{"token": "t"}\'></script>'
+        built = own + b'<script src="/static.js" defer></script></body></html>'
+        live = (own + b'<script src="/static.js" defer></script><script type="module" '
+                b'src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f4847" '
+                b'data-cf-beacon=\'{"token":"x"}\' crossorigin="anonymous"></script>\n</body></html>')
+        self.assertEqual(indexnow.CF_BEACON.sub(b"", live), built)
+
     def test_page_file(self):
         with tempfile.TemporaryDirectory() as d:
             (Path(d) / "poster.pdf").write_bytes(b"pdf")
