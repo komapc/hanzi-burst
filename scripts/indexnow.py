@@ -24,6 +24,10 @@ HOST = "hanzi.lipu.dev"
 KEY = "483e472b63ec64808ac4046f1b87eeb1"
 ENDPOINT = "https://api.indexnow.org/indexnow"
 UA = "hanzi-indexnow/1.0"
+# Cloudflare adds its own Web Analytics beacon to some responses (type="module", a versioned
+# src that changes), so a live page can differ from the built one only by this tag. The pages'
+# own beacon (<script defer src=".../beacon.min.js">, from build_static.py) stays.
+CF_BEACON = re.compile(rb'<script type="module" src="https://static\.cloudflareinsights\.com/beacon\.min\.js/v[^"]*"[^>]*></script>\n?')
 
 
 def sitemap_urls(xml):
@@ -42,10 +46,10 @@ def page_file(site, url):
 
 
 def fetch(url):
-    """The live bytes at url, or None if it cannot be fetched."""
+    """The live bytes at url without Cloudflare's beacon, or None if it cannot be fetched."""
     try:
         with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": UA}), timeout=30) as r:
-            return r.read()
+            return CF_BEACON.sub(b"", r.read())
     except (urllib.error.URLError, OSError):
         return None
 
